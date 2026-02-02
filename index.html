@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SmileCraft - Precision Implant Dentistry</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              page: '#FFFFFF', // Clean White
+              surface: '#F8FAFC', // Light Gray
+              glass: 'rgba(255, 255, 255, 0.8)',
+              smile: {
+                dark: '#0F172A', // Slate 900
+                mid: '#0284C7', // Medical Blue (Sky 600)
+                light: '#E0F2FE', // Light Blue
+                accent: '#0D9488', // Teal 600 (Secondary)
+                gold: '#F59E0B',
+              },
+              darkText: '#0F172A',
+            },
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              heading: ['Poppins', 'sans-serif'],
+            },
+            boxShadow: {
+              'glow': '0 0 40px -10px rgba(2, 132, 199, 0.3)',
+              'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.05)',
+              'card': '0 10px 30px -10px rgba(0, 0, 0, 0.05)',
+            },
+            animation: {
+              'fade-up': 'fadeUp 0.8s ease-out forwards',
+              'blob': 'blob 7s infinite',
+            },
+            keyframes: {
+              fadeUp: {
+                '0%': { opacity: '0', transform: 'translateY(20px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              blob: {
+                "0%": { transform: "translate(0px, 0px) scale(1)" },
+                "33%": { transform: "translate(30px, -50px) scale(1.1)" },
+                "66%": { transform: "translate(-20px, 20px) scale(0.9)" },
+                "100%": { transform: "translate(0px, 0px) scale(1)" }
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        background-color: #FFFFFF;
+        color: #0F172A;
+      }
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #F1F5F9;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #CBD5E1;
+        border-radius: 5px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #0284C7;
+      }
+      
+      .animate-on-scroll {
+        opacity: 0;
+        animation: fadeUp 0.8s ease-out forwards;
+      }
+      .delay-100 { animation-delay: 0.1s; }
+      .delay-200 { animation-delay: 0.2s; }
+      .delay-300 { animation-delay: 0.3s; }
+      
+      .noise-bg {
+         background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E");
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.563.0",
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+    <script>
+      // Simple intersection observer to trigger animations
+      document.addEventListener('DOMContentLoaded', () => {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('animate-on-scroll');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach((el) => {
+          observer.observe(el);
+        });
+      });
+    </script>
+  </body>
+</html>
