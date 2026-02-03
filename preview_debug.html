@@ -1,0 +1,2614 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Debug Preview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&family=Noto+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              page: '#F0F9FF',
+              surface: '#FFFFFF',
+              glass: 'rgba(255, 255, 255, 0.9)',
+              smile: { dark: '#0C4A6E', mid: '#0EA5E9', light: '#BAE6FD', accent: '#FBBF24', gold: '#F59E0B', muted: '#0369A1' },
+              darkText: '#0C4A6E',
+            },
+            fontFamily: { sans: ['Noto Sans', 'sans-serif'], heading: ['Figtree', 'sans-serif'] },
+             boxShadow: {
+              'glow': '0 0 20px -5px rgba(14, 165, 233, 0.3)',
+              'soft': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+            }
+          }
+        }
+      }
+    </script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div id="log-box" style="background:#eee; padding:10px; font-family:monospace; border-bottom:1px solid #ccc;">Initializing...</div>
+    <div id="root"></div>
+
+    <script type="text/babel" data-presets="typescript,react">
+        // Debug Bridge
+        // 1. Error Handler
+window.onerror = function(msg, source, lineno, colno, error) {
+    const errorBox = document.getElementById('error-box') || document.createElement('div');
+    errorBox.id = 'error-box';
+    errorBox.style.cssText = 'position:fixed; top:0; left:0; right:0; background:#fee; color:red; padding:20px; z-index:9999; border-bottom:2px solid red; font-family:monospace; white-space:pre-wrap;';
+    errorBox.innerHTML += '<div><strong>Error:</strong> ' + msg + '<br/><small>' + source + ':' + lineno + '</small></div>';
+    document.body.appendChild(errorBox);
+    console.error(error);
+    return false;
+};
+
+// 2. Logging
+function log(msg) {
+    console.log('[Setup]', msg);
+    const logBox = document.getElementById('log-box');
+    if(logBox) logBox.innerHTML += '<div>' + msg + '</div>';
+}
+
+// 3. Shim Lucide Icons
+const LucideIcons = {};
+log('Checking Lucide...');
+if (window.lucide && window.lucide.icons) {
+  log('Lucide icons found: ' + Object.keys(window.lucide.icons).length);
+  for (const [name, iconData] of Object.entries(window.lucide.icons)) {
+    const pascalName = name.split('-').map(p => p.charAt(0).toUpperCase() + p.slice(1)).join('');
+    LucideIcons[pascalName] = ({color = 'currentColor', size = 24, strokeWidth = 2, children, className, ...props}) => {
+        return React.createElement('svg', {
+            xmlns: 'http://www.w3.org/2000/svg',
+            width: size,
+            height: size,
+            viewBox: '0 0 24 24',
+            fill: 'none',
+            stroke: color,
+            strokeWidth: strokeWidth,
+            strokeLinecap: 'round',
+            strokeLinejoin: 'round',
+            className: className,
+            ...props
+        },
+        ...iconData.map(([tag, attrs]) => React.createElement(tag, attrs)),
+        children
+        );
+    };
+  }
+} else {
+  log('WARNING: Lucide icons NOT found on window.lucide.icons');
+}
+
+// 4. Fallback Proxy for missing icons
+const IconProxy = new Proxy(LucideIcons, {
+    get: function(target, prop) {
+        if (prop in target) {
+            return target[prop];
+        }
+        // If icon missing, return a dummy
+        if (typeof prop === 'string' && /^[A-Z]/.test(prop)) {
+             console.warn('Missing icon:', prop);
+             return (props) => React.createElement('span', {style: {color: 'red', fontSize: '10px'}}, '[' + prop + ']');
+        }
+        return target[prop];
+    }
+});
+
+// Assign to window so components can find them
+Object.assign(window, IconProxy);
+log('Icons assigned to window');
+
+        // Components
+/***** BeforeAfter.tsx *****/
+// import React, { useState } from 'react';
+// import { ArrowRight, ArrowLeft } from 'lucide-react';
+
+const BeforeAfter: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<'before' | 'after'>('after');
+
+  const cases = [
+    {
+      id: 1,
+      patient: "Michael R.",
+      proc: "Veneers",
+      imgBefore: "https://picsum.photos/id/338/400/300", 
+      imgAfter: "https://picsum.photos/id/349/400/300" 
+    },
+    {
+      id: 2,
+      patient: "Emily S.",
+      proc: "Invisalign",
+      imgBefore: "https://picsum.photos/id/129/400/300", 
+      imgAfter: "https://picsum.photos/id/64/400/300" 
+    },
+    {
+      id: 3,
+      patient: "David L.",
+      proc: "Implants",
+      imgBefore: "https://picsum.photos/id/433/400/300", 
+      imgAfter: "https://picsum.photos/id/447/400/300" 
+    },
+     {
+      id: 4,
+      patient: "Jessica M.",
+      proc: "Whitening",
+      imgBefore: "https://picsum.photos/id/531/400/300", 
+      imgAfter: "https://picsum.photos/id/836/400/300" 
+    }
+  ];
+
+  return (
+    <section className="py-24 bg-page relative overflow-hidden" id="results">
+      {/* Background Ambience */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-purple-900/10 rounded-full blur-[120px] pointer-events-none translate-x-1/2 -translate-y-1/2"></div>
+
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-16 reveal">
+             <div className="max-w-2xl">
+                <span className="text-smile-mid font-bold tracking-wider uppercase text-xs mb-3 block">Results</span>
+                <h2 className="font-heading text-4xl md:text-5xl font-bold text-white mb-6">Transformations</h2>
+                <p className="text-slate-400 text-lg">See the life-changing results of precision dentistry.</p>
+             </div>
+             
+             {/* Glass Tabs */}
+             <div className="bg-white/5 border border-white/10 p-1.5 rounded-full flex gap-1 mt-6 md:mt-0 backdrop-blur-md">
+                 <button 
+                    onClick={() => setActiveTab('before')}
+                    className={`px-8 py-3 rounded-full font-bold text-sm transition-all duration-300 ${activeTab === 'before' ? 'bg-white text-page shadow-glow' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}
+                 >
+                    Before
+                 </button>
+                 <button 
+                    onClick={() => setActiveTab('after')}
+                    className={`px-8 py-3 rounded-full font-bold text-sm transition-all duration-300 ${activeTab === 'after' ? 'bg-smile-mid text-black shadow-glow' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}
+                 >
+                    After
+                 </button>
+             </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 reveal delay-100">
+           {cases.map((item) => (
+             <div key={item.id} className="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 hover:border-smile-mid/50 transition-all duration-500 shadow-glass hover:shadow-glow hover:-translate-y-2">
+                <div className="aspect-[3/4] w-full bg-slate-900 relative">
+                    <img 
+                        src={activeTab === 'before' ? item.imgBefore : item.imgAfter} 
+                        alt={`${item.patient} Result`}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-90 group-hover:opacity-100" 
+                    />
+                    
+                    {/* Badge */}
+                    <div className="absolute top-4 right-4 bg-black/60 backdrop-blur border border-white/20 text-white text-[10px] uppercase font-bold px-3 py-1 rounded-full">
+                        {activeTab}
+                    </div>
+                </div>
+                
+                {/* Content Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent flex flex-col justify-end p-6">
+                    <span className="text-smile-mid font-bold text-xs tracking-wide uppercase mb-1">{item.proc}</span>
+                    <h3 className="text-white font-bold text-xl mb-2">{item.patient}</h3>
+                    <div className="h-0 group-hover:h-6 overflow-hidden transition-all duration-300">
+                         <p className="text-slate-300 text-xs flex items-center">View Case Study <ArrowRight size={12} className="ml-1 text-smile-mid" /></p>
+                    </div>
+                </div>
+             </div>
+           ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// export default BeforeAfter;
+/***** Booking.tsx *****/
+// import React from 'react';
+// import { Send } from 'lucide-react';
+
+const Booking: React.FC = () => {
+  return (
+    <section className="py-16 md:py-24 bg-surface relative overflow-hidden">
+      {/* Background Shapes */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-smile-light rounded-full blur-[100px] pointer-events-none opacity-50"></div>
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-100 rounded-full blur-[100px] pointer-events-none opacity-50"></div>
+
+      <div className="container mx-auto px-6 max-w-4xl relative z-10">
+        <div className="bg-gradient-to-br from-smile-mid to-smile-dark rounded-[2.5rem] md:rounded-[3rem] p-6 md:p-16 shadow-2xl relative overflow-hidden">
+          
+          {/* Decorative Circle */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+          
+          <div className="text-center mb-8 md:mb-12 relative z-10">
+            <h2 className="font-heading text-3xl md:text-5xl font-bold text-white mb-4">Book Your Visit</h2>
+            <p className="text-blue-100 text-sm md:text-base">Fill out the form below and we will contact you to confirm your appointment.</p>
+          </div>
+
+          <form className="space-y-4 md:space-y-6 relative z-10">
+            <div className="grid md:grid-cols-2 gap-4 md:gap-6">
+                <div className="space-y-2">
+                    <label className="text-sm font-bold text-blue-100 ml-2">Full Name</label>
+                    <input type="text" placeholder="John Doe" className="w-full bg-white/10 border border-white/20 rounded-xl px-5 py-3 md:py-4 text-white placeholder-blue-200/50 focus:outline-none focus:bg-white/20 focus:border-white transition-all" />
+                </div>
+                <div className="space-y-2">
+                    <label className="text-sm font-bold text-blue-100 ml-2">Phone Number</label>
+                    <input type="tel" placeholder="010-1234-5678" className="w-full bg-white/10 border border-white/20 rounded-xl px-5 py-3 md:py-4 text-white placeholder-blue-200/50 focus:outline-none focus:bg-white/20 focus:border-white transition-all" />
+                </div>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4 md:gap-6">
+                <div className="space-y-2">
+                    <label className="text-sm font-bold text-blue-100 ml-2">Treatment Type</label>
+                    <select className="w-full bg-white/10 border border-white/20 rounded-xl px-5 py-3 md:py-4 text-white focus:outline-none focus:bg-white/20 focus:border-white transition-all appearance-none cursor-pointer">
+                        <option className="text-slate-900">General Consultation</option>
+                        <option className="text-slate-900">Implant Consultation</option>
+                        <option className="text-slate-900">Orthodontics</option>
+                        <option className="text-slate-900">Teeth Whitening</option>
+                        <option className="text-slate-900">Pain / Emergency</option>
+                    </select>
+                </div>
+                <div className="space-y-2">
+                    <label className="text-sm font-bold text-blue-100 ml-2">Preferred Date</label>
+                    <input type="date" className="w-full bg-white/10 border border-white/20 rounded-xl px-5 py-3 md:py-4 text-white focus:outline-none focus:bg-white/20 focus:border-white transition-all" />
+                </div>
+            </div>
+
+            <div className="space-y-2">
+                <label className="text-sm font-bold text-blue-100 ml-2">Message (Optional)</label>
+                <textarea rows={4} placeholder="Tell us about your symptoms or questions..." className="w-full bg-white/10 border border-white/20 rounded-xl px-5 py-3 md:py-4 text-white placeholder-blue-200/50 focus:outline-none focus:bg-white/20 focus:border-white transition-all"></textarea>
+            </div>
+
+            <button type="button" className="w-full bg-white text-smile-mid hover:bg-blue-50 text-lg font-bold py-4 md:py-5 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2 mt-6 md:mt-8">
+                Submit Request <Send size={20} />
+            </button>
+            <p className="text-center text-xs text-blue-200 mt-4">By submitting this form, you agree to our privacy policy.</p>
+          </form>
+
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// export default Booking;
+/***** ChatWidget.tsx *****/
+// import React from 'react';
+// import { MessageCircle } from 'lucide-react';
+
+const ChatWidget: React.FC = () => {
+  return (
+    <div className="fixed bottom-6 right-6 z-40 group">
+      <div className="absolute bottom-full right-0 mb-4 bg-slate-900/90 backdrop-blur-xl shadow-glass border border-white/10 rounded-2xl p-4 w-64 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none group-hover:pointer-events-auto">
+         <p className="text-sm text-slate-200 font-medium">ðŸ‘‹ Hi there! Need help booking your visit? We're online!</p>
+         <button className="mt-3 w-full bg-smile-mid text-black text-xs font-bold py-2 rounded-lg hover:bg-white transition-colors shadow-glow">Start Chat</button>
+      </div>
+      <button className="bg-smile-mid hover:bg-white text-black p-4 rounded-full shadow-[0_0_20px_rgba(45,212,191,0.4)] hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] transition-all hover:scale-110 flex items-center justify-center border border-white/20">
+        <MessageCircle size={28} />
+      </button>
+    </div>
+  );
+};
+
+// export default ChatWidget;
+/***** CinematicIntro.tsx *****/
+// import React from 'react';
+// import { Play } from 'lucide-react';
+
+const CinematicIntro: React.FC = () => {
+  return (
+    <section className="relative h-[60vh] min-h-[500px] bg-slate-900 overflow-hidden flex items-center justify-center">
+       {/* Background Video/Image Parallax Placeholder */}
+       <div className="absolute inset-0 opacity-40">
+           <img 
+             src="https://images.unsplash.com/photo-1629909615184-74f495363b67?auto=format&fit=crop&q=80&w=2000"
+             className="w-full h-full object-cover"
+             alt="Cinematic Dental Background"
+           />
+       </div>
+       <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-slate-900/50"></div>
+       <div className="absolute inset-0 bg-gradient-to-r from-slate-900/80 via-transparent to-transparent"></div>
+       
+       <div className="relative z-10 text-center max-w-4xl px-6">
+           <span className="text-smile-mid font-bold tracking-[0.3em] uppercase text-sm mb-6 block animate-fade-up">The Process</span>
+           <h2 className="font-heading text-5xl md:text-7xl font-bold text-white mb-8 leading-tight animate-fade-up delay-100">
+               Precision in <br/> Every Detail
+           </h2>
+           <p className="text-slate-300 text-lg md:text-xl max-w-2xl mx-auto mb-10 font-light leading-relaxed animate-fade-up delay-200">
+               Experience the intersection of art and science. Our digital workflow ensures millimeter-perfect accuracy for implants and aligners, giving you a smile that feels as good as it looks.
+           </p>
+           <button className="inline-flex items-center gap-3 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white px-8 py-4 rounded-full transition-all group animate-fade-up delay-300 hover:scale-105">
+               <div className="w-10 h-10 rounded-full bg-white text-slate-900 flex items-center justify-center">
+                   <Play size={16} className="ml-1 fill-current" />
+               </div>
+               <span className="font-bold tracking-wide">Watch the Film</span>
+           </button>
+       </div>
+    </section>
+  );
+};
+
+// export default CinematicIntro;
+/***** Facilities.tsx *****/
+// import React from 'react';
+// import { ArrowRight } from 'lucide-react';
+
+const Facilities: React.FC = () => {
+  const facilities = [
+    {
+      title: "Executive Treatment Suites",
+      desc: "Ergonomic comfort with ceiling-mounted entertainment systems for a relaxing experience.",
+      image: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=800",
+      active: true
+    },
+    {
+      title: "3D Imaging Center",
+      desc: "Low-radiation CT scanning for precise implant planning and diagnostics.",
+      image: "https://res.cloudinary.com/dvmxeaefb/image/upload/v1770053278/hf_20260131_132823_93666d77-fbd9-48e5-b8f5-6d57daf7365b_uhjhbh.png",
+      active: false
+    },
+    {
+      title: "Patient Recovery Lounge",
+      desc: "A calming pre-treatment space designed to reduce anxiety and promote wellness.",
+      image: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=800",
+      active: false
+    }
+  ];
+
+  return (
+    <section className="py-16 md:py-24 bg-surface overflow-hidden relative" id="facilities">
+      {/* Background Blobs for Atmosphere */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-100/50 rounded-full blur-[100px] pointer-events-none -translate-y-1/2 translate-x-1/2"></div>
+      <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-teal-500/5 rounded-full blur-[80px] pointer-events-none translate-y-1/2 -translate-x-1/2"></div>
+
+      <div className="container mx-auto px-6 max-w-7xl relative z-10">
+        <div className="flex flex-col lg:flex-row gap-10 lg:gap-20 items-center">
+          
+          {/* Left Content */}
+          <div className="lg:w-5/12 relative text-center lg:text-left">
+            
+            <h2 className="font-heading text-4xl md:text-6xl font-bold text-slate-900 leading-[1.1] mb-6 md:mb-8">
+              Take A Tour <br/>
+              Of Our <span className="text-smile-mid">Facilities</span>
+            </h2>
+            
+            <p className="text-slate-600 text-base md:text-lg leading-relaxed mb-8 md:mb-10 max-w-lg mx-auto lg:mx-0">
+              Reserve a suite for focused treatment or private consultation, and elevate your dental experience with our dedicated amenities designed for your comfort and safety.
+            </p>
+
+            <a href="#booking" className="inline-flex items-center gap-3 text-lg font-bold text-slate-900 group">
+              <span>Book a Visit</span>
+              <div className="w-10 h-10 rounded-full bg-slate-900 text-white flex items-center justify-center group-hover:bg-smile-mid transition-colors duration-300">
+                 <ArrowRight size={18} className="group-hover:translate-x-0.5 transition-transform" />
+              </div>
+            </a>
+          </div>
+
+          {/* Right Content - Gallery */}
+          <div className="lg:w-7/12 w-full mt-4 md:mt-0">
+            <div 
+                className="flex gap-4 md:gap-6 overflow-x-auto pb-12 pt-4 px-4 -mx-4 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden" 
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+              {facilities.map((item, idx) => (
+                <div 
+                  key={idx}
+                  className={`relative shrink-0 snap-center rounded-[2.5rem] overflow-hidden shadow-2xl transition-all duration-500 group select-none ${
+                      idx === 0 
+                        ? 'w-[280px] h-[400px] md:w-[400px] md:h-[500px]' // Featured Card
+                        : 'w-[240px] h-[350px] md:w-[320px] md:h-[420px] mt-auto opacity-90 hover:opacity-100' // Secondary Cards
+                  }`}
+                >
+                  <img 
+                    src={item.image} 
+                    alt={item.title} 
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                  />
+                  
+                  {/* Glassmorphic Overlay Box */}
+                  <div className="absolute bottom-6 left-6 right-6 bg-slate-900/40 backdrop-blur-md border border-white/10 p-5 md:p-6 rounded-2xl text-white shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                    <h3 className="font-heading font-bold text-lg md:text-xl mb-2">{item.title}</h3>
+                    <p className="text-xs text-white/90 leading-relaxed font-light line-clamp-2 group-hover:line-clamp-none transition-all">
+                        {item.desc}
+                    </p>
+                    
+                    {/* Status Dot */}
+                    <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-green-400 shadow-[0_0_10px_rgba(74,222,128,0.8)]"></div>
+                  </div>
+
+                  {/* Top Gradient for contrast if needed */}
+                  <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-black/20 to-transparent pointer-events-none"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// export default Facilities;
+/***** FAQ.tsx *****/
+// import React, { useState } from 'react';
+// import { Plus, Minus } from 'lucide-react';
+
+const FAQ: React.FC = () => {
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
+
+  const faqs = [
+    {
+      q: "Does the teeth whitening procedure cause sensitivity?",
+      a: "Our advanced Zoom! Whitening technology includes desensitizing agents to minimize discomfort. 95% of our patients report little to no sensitivity during or after the treatment."
+    },
+    {
+      q: "Do you accept my dental insurance?",
+      a: "We work with most major PPO insurance providers including Delta Dental, Cigna, MetLife, and Aetna. Our team will handle all the paperwork to maximize your benefits."
+    },
+    {
+      q: "How long do dental implants last?",
+      a: "With proper care and maintenance, dental implants are designed to be a permanent solution and can last a lifetime. We offer a 10-year warranty on all implant procedures."
+    },
+    {
+      q: "Can I get financing for cosmetic procedures?",
+      a: "Absolutely! We offer flexible monthly payment plans through CareCredit and LendingClub, often with 0% interest for up to 24 months."
+    },
+    {
+      q: "What if I have dental anxiety?",
+      a: "You are not alone. We specialize in sedation dentistry and offer nitrous oxide, oral sedation, and a comfort menu (blankets, noise-canceling headphones) to ensure you are completely relaxed."
+    }
+  ];
+
+  return (
+    <section className="py-24 bg-page" id="faq">
+      <div className="container mx-auto px-6 max-w-4xl">
+        <div className="text-center mb-16">
+          <h2 className="font-heading text-3xl md:text-4xl font-bold text-white mb-4">Common Questions</h2>
+          <p className="text-slate-400">Everything you need to know before your visit.</p>
+        </div>
+
+        <div className="space-y-4">
+          {faqs.map((faq, idx) => (
+            <div key={idx} className={`rounded-2xl overflow-hidden transition-all duration-300 ${openIndex === idx ? 'bg-white/5 border border-smile-mid/30 shadow-glow' : 'bg-transparent border border-white/10 hover:border-white/20'}`}>
+              <button 
+                className="w-full flex items-center justify-between p-6 text-left"
+                onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
+              >
+                <span className={`font-bold text-lg pr-4 transition-colors ${openIndex === idx ? 'text-smile-mid' : 'text-slate-200'}`}>{faq.q}</span>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${openIndex === idx ? 'bg-smile-mid text-black' : 'bg-white/5 text-slate-400 border border-white/10'}`}>
+                    {openIndex === idx ? <Minus size={16} /> : <Plus size={16} />}
+                </div>
+              </button>
+              
+              <div 
+                className={`transition-all duration-300 ease-in-out overflow-hidden ${
+                  openIndex === idx ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'
+                }`}
+              >
+                <div className="p-6 pt-0 text-slate-400 leading-relaxed max-w-3xl">
+                  {faq.a}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// export default FAQ;
+/***** FinalCTA.tsx *****/
+// import React from 'react';
+// import { CalendarCheck } from 'lucide-react';
+
+const FinalCTA: React.FC = () => {
+  return (
+    <section className="py-32 relative overflow-hidden bg-page border-t border-white/5">
+       {/* Liquid Gradient Background */}
+       <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/80 z-0"></div>
+       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-smile-mid/10 rounded-full blur-[150px] pointer-events-none"></div>
+       <div className="absolute inset-0 noise-bg opacity-10 pointer-events-none"></div>
+
+       <div className="container mx-auto px-6 relative z-10 text-center">
+          <h2 className="font-heading text-5xl md:text-7xl font-bold text-white mb-8 tracking-tight drop-shadow-lg">
+            Ready to Smile?
+          </h2>
+          <p className="text-slate-300 text-xl max-w-2xl mx-auto mb-12 font-light leading-relaxed">
+            Join over 10,000 patients who have trusted SmileCraft with their confidence. Your journey starts with a conversation.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
+             <button className="bg-white text-page hover:bg-smile-mid hover:text-black text-lg px-10 py-5 rounded-full font-bold transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_40px_rgba(45,212,191,0.6)] flex items-center gap-3 transform hover:scale-105">
+                <CalendarCheck size={20} />
+                Book Consultation
+             </button>
+             <div className="text-white font-medium backdrop-blur-sm bg-white/5 px-6 py-4 rounded-full border border-white/10">
+                <span className="opacity-60 block text-sm sm:inline sm:mr-3">Questions? Call us:</span>
+                <a href="tel:+15551234567" className="text-xl font-bold hover:text-smile-mid transition-colors">(555) 123-4567</a>
+             </div>
+          </div>
+       </div>
+    </section>
+  );
+};
+
+// export default FinalCTA;
+/***** Footer.tsx *****/
+// import React from 'react';
+// import { Facebook, Instagram, Twitter, MapPin, Phone, Mail } from 'lucide-react';
+
+const Footer: React.FC = () => {
+  return (
+    <footer className="bg-[#0F172A] text-slate-300 pt-12 md:pt-20 pb-10 border-t border-slate-800">
+      <div className="container mx-auto px-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 mb-12 md:mb-16">
+          
+          {/* Brand & Social */}
+          <div>
+            <div className="flex items-center gap-2 mb-6">
+                <div className="w-8 h-8 rounded-tr-lg rounded-bl-lg flex items-center justify-center font-bold text-lg bg-smile-mid text-white">
+                    S
+                </div>
+                <span className="font-heading font-bold text-2xl text-white tracking-tight">
+                    Smile<span className="text-smile-mid">Craft</span>
+                </span>
+            </div>
+            <p className="text-slate-400 mb-8 leading-relaxed text-sm">
+                Redefining the dental experience with precision technology and a human touch.
+            </p>
+            <div className="flex gap-4">
+                <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-smile-mid hover:text-white transition-colors border border-white/5">
+                    <Facebook size={18} />
+                </a>
+                <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-smile-mid hover:text-white transition-colors border border-white/5">
+                    <Instagram size={18} />
+                </a>
+                <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-smile-mid hover:text-white transition-colors border border-white/5">
+                    <Twitter size={18} />
+                </a>
+            </div>
+          </div>
+
+          {/* Contact Info */}
+          <div>
+            <h4 className="text-white font-bold text-sm uppercase tracking-wider mb-6">Contact</h4>
+            <ul className="space-y-4 text-sm">
+                <li className="flex items-start gap-3">
+                    <MapPin className="text-smile-mid shrink-0 mt-1" size={16} />
+                    <span>123 Dental Ave, Suite 400<br/>San Francisco, CA 94103</span>
+                </li>
+                <li className="flex items-center gap-3">
+                    <Phone className="text-smile-mid shrink-0" size={16} />
+                    <a href="tel:5551234567" className="hover:text-white transition-colors">(555) 123-4567</a>
+                </li>
+                <li className="flex items-center gap-3">
+                    <Mail className="text-smile-mid shrink-0" size={16} />
+                    <a href="mailto:hello@smilecraft.com" className="hover:text-white transition-colors">hello@smilecraft.com</a>
+                </li>
+            </ul>
+          </div>
+
+          {/* Hours */}
+          <div>
+            <h4 className="text-white font-bold text-sm uppercase tracking-wider mb-6">Hours</h4>
+            <ul className="space-y-3 text-sm">
+                <li className="flex justify-between border-b border-white/5 pb-2">
+                    <span>Monday - Friday</span>
+                    <span className="text-white">8:00 AM - 6:00 PM</span>
+                </li>
+                <li className="flex justify-between border-b border-white/5 pb-2">
+                    <span>Saturday</span>
+                    <span className="text-white">9:00 AM - 3:00 PM</span>
+                </li>
+                <li className="flex justify-between border-b border-white/5 pb-2">
+                    <span>Sunday</span>
+                    <span className="text-smile-mid">Closed</span>
+                </li>
+            </ul>
+          </div>
+
+          {/* Map */}
+          <div>
+            <div className="w-full h-40 bg-slate-800 rounded-2xl overflow-hidden relative border border-white/10 group">
+                {/* Simulated Map */}
+                <div className="absolute inset-0 bg-slate-800"></div>
+                <img 
+                    src="https://picsum.photos/id/10/400/300" 
+                    alt="Map Location" 
+                    className="w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-all duration-500"
+                />
+                <div className="absolute inset-0 flex items-center justify-center">
+                    <button className="bg-white/10 backdrop-blur-md border border-white/20 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-white hover:text-slate-900 transition-colors">
+                        Get Directions
+                    </button>
+                </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-slate-500">
+            <p>&copy; {new Date().getFullYear()} SmileCraft Dentistry. All rights reserved.</p>
+            <div className="flex gap-6 mt-4 md:mt-0">
+                <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+                <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+                <a href="#" className="hover:text-white transition-colors">Sitemap</a>
+            </div>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+// export default Footer;
+/***** Hero.tsx *****/
+// import React, { useState, useEffect } from 'react';
+// import { ArrowRight, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
+
+const Hero: React.FC = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const heroImages = [
+    "https://res.cloudinary.com/dvmxeaefb/image/upload/v1770052188/hf_20260131_134357_f36ac175-f6e4-41e2-b5b6-4e51e0294bfe_jowx70.png",
+    "https://res.cloudinary.com/dvmxeaefb/image/upload/v1770052199/hf_20260131_142702_fc42130c-5540-487a-b206-dc41b87a4f12_ndodup.png",
+    "https://res.cloudinary.com/dvmxeaefb/image/upload/v1770052188/hf_20260131_134357_f36ac175-f6e4-41e2-b5b6-4e51e0294bfe_jowx70.png"
+  ];
+
+  const logos = [
+    { name: "stamps", css: "font-serif italic" },
+    { name: "VENUER", css: "font-sans tracking-[0.2em] font-light" },
+    { name: "manter.", css: "font-serif font-bold opacity-70" },
+    { name: "Adverus", css: "font-sans font-medium" },
+    { name: "spaced", css: "font-serif lowercase text-xl" }
+  ];
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % heroImages.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + heroImages.length) % heroImages.length);
+  };
+
+  // Auto-advance slides
+  useEffect(() => {
+    const timer = setInterval(nextSlide, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <section className="relative min-h-[90vh] flex flex-col pt-28 md:pt-32 overflow-hidden bg-page">
+
+      {/* Background Decor - Soft UI Gradients */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-smile-light/40 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3 z-0 pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-smile-mid/10 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/4 z-0 pointer-events-none"></div>
+
+      <div className="container mx-auto px-6 max-w-7xl relative z-10 flex-grow flex flex-col md:flex-row items-center gap-10 md:gap-12 lg:gap-24">
+
+        {/* Left Content */}
+        <div className="w-full md:w-1/2 text-left mb-6 md:mb-0">
+          <div className="flex items-center gap-2 mb-4 md:mb-6">
+            <div className="w-8 h-8 text-white bg-smile-mid rounded-lg shadow-soft flex items-center justify-center">
+              <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-2h2v2zm0-4h-2V7h2v6z" /></svg>
+            </div>
+            <span className="text-smile-muted font-semibold tracking-wide text-sm uppercase">SmileCraft Dental</span>
+          </div>
+
+          <h1 className="font-heading text-4xl md:text-5xl lg:text-7xl font-bold leading-tight md:leading-[1.1] mb-6 text-darkText tracking-tight">
+            Rediscover your <br />
+            smile with <span className="text-smile-mid relative inline-block">
+              precision
+              {/* Underline decoration */}
+              <svg className="absolute -bottom-2 left-0 w-full h-3 text-smile-accent opacity-60" viewBox="0 0 100 10" preserveAspectRatio="none">
+                <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="3" fill="none" />
+              </svg>
+            </span> <br />
+            implant dentistry
+          </h1>
+
+          <p className="text-slate-600 text-base md:text-lg leading-relaxed mb-8 max-w-lg font-normal">
+            Cutting-edge technology, personalized treatment, and a lifetime of confidence.
+            Start your journey todayâ€”where function meets aesthetics.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-start gap-4 mb-8">
+            <a href="#booking" className="px-8 py-4 rounded-xl bg-smile-accent text-darkText font-bold text-lg hover:bg-smile-gold hover:-translate-y-1 transition-all shadow-lg hover:shadow-xl flex items-center gap-2 w-full sm:w-auto justify-center">
+              Book a Consultation <ArrowRight size={20} />
+            </a>
+            <a href="#services" className="px-8 py-4 rounded-xl bg-white text-smile-mid font-semibold text-lg hover:bg-smile-light/20 border border-smile-light transition-all shadow-soft flex items-center gap-2 w-full sm:w-auto justify-center">
+              View Services
+            </a>
+          </div>
+
+          <div className="flex items-center gap-6 text-sm text-slate-500 font-medium">
+            <span className="flex items-center gap-1.5"><CheckCircle2 size={18} className="text-smile-mid" /> Insurance Accepted</span>
+            <span className="flex items-center gap-1.5"><CheckCircle2 size={18} className="text-smile-mid" /> 0% Financing</span>
+          </div>
+        </div>
+
+        {/* Right Image Slider (Soft Card Style) */}
+        <div className="w-full md:w-1/2 relative h-[400px] md:h-[600px] flex items-center justify-center p-4">
+
+          <div className="relative w-full h-full rounded-[2.5rem] overflow-hidden border-4 border-white shadow-2xl bg-white transform rotate-2 hover:rotate-0 transition-transform duration-500">
+            {heroImages.map((img, index) => (
+              <img
+                key={index}
+                src={img}
+                alt={`Specialist ${index + 1}`}
+                className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out ${index === currentSlide ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`}
+              />
+            ))}
+
+            {/* Navigation Arrows */}
+            <button
+              onClick={prevSlide}
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/80 backdrop-blur-md text-smile-dark shadow-soft hover:bg-white flex items-center justify-center transition-all z-20"
+            >
+              <ChevronLeft size={24} />
+            </button>
+            <button
+              onClick={nextSlide}
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/80 backdrop-blur-md text-smile-dark shadow-soft hover:bg-white flex items-center justify-center transition-all z-20"
+            >
+              <ChevronRight size={24} />
+            </button>
+
+            {/* Floating Social Proof Card */}
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-8 bg-white/90 backdrop-blur-xl border border-white/50 p-4 rounded-2xl shadow-card w-[260px] z-20">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="flex -space-x-2">
+                  {[1, 2, 3].map(i => (
+                    <div key={i} className="w-8 h-8 rounded-full bg-gray-200 border-2 border-white overflow-hidden">
+                      <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="User" />
+                    </div>
+                  ))}
+                </div>
+                <div className="flex flex-col">
+                  <div className="flex text-smile-accent text-xs">
+                    {[1, 2, 3, 4, 5].map(i => <span key={i}>â˜…</span>)}
+                  </div>
+                  <span className="text-xs font-bold text-slate-700">500+ Reviews</span>
+                </div>
+              </div>
+              <p className="text-slate-600 text-xs italic">"Changed my life! The best dental implants in the city."</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      {/* Trusted By Logos (Light) */}
+      <div className="w-full border-t border-smile-light/30 bg-white/50 backdrop-blur-sm py-8 mt-auto relative z-10">
+        <div className="container mx-auto px-6">
+          <p className="text-center text-smile-muted/60 text-xs font-bold mb-6 uppercase tracking-[0.2em]">Trusted by Top Professionals</p>
+          <div className="flex flex-wrap justify-center items-center gap-x-12 gap-y-6 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+            {logos.map((logo, idx) => (
+              <span key={idx} className={`text-xl md:text-2xl text-slate-400 hover:text-smile-mid transition-colors cursor-default ${logo.css}`}>
+                {logo.name}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// export default Hero;
+/***** Location.tsx *****/
+// import React from 'react';
+// import { MapPin, Clock, Car, Bus } from 'lucide-react';
+
+const Location: React.FC = () => {
+  return (
+    <section className="py-24 bg-white border-t border-slate-100">
+      <div className="container mx-auto px-6">
+        <div className="flex flex-col lg:flex-row gap-12">
+            
+            {/* Map Area */}
+            <div className="lg:w-1/2 h-[400px] lg:h-auto bg-slate-100 rounded-[2rem] overflow-hidden relative border border-slate-200 shadow-inner group">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3162.924849887019!2d127.02761031531103!3d37.49794297981068!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca15a3177695b%3A0x6335193297594950!2sGangnam%20Station!5e0!3m2!1sen!2skr!4v1626244726294!5m2!1sen!2skr" 
+                    width="100%" 
+                    height="100%" 
+                    style={{ border: 0 }} 
+                    allowFullScreen 
+                    loading="lazy"
+                    className="opacity-90 group-hover:opacity-100 transition-opacity"
+                ></iframe>
+                <div className="absolute bottom-6 left-6 bg-white text-slate-900 px-4 py-2 rounded-lg font-bold shadow-lg pointer-events-none border border-slate-100">
+                    SmileCraft Dental
+                </div>
+            </div>
+
+            {/* Info Area */}
+            <div className="lg:w-1/2 space-y-8">
+                <div>
+                    <span className="text-smile-mid font-bold tracking-wider uppercase text-xs mb-2 block">Visit Us</span>
+                    <h2 className="font-heading text-4xl font-bold text-slate-900 mb-6">Location & Hours</h2>
+                    <div className="flex items-start gap-4 mb-4">
+                        <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-smile-mid">
+                             <MapPin size={24} />
+                        </div>
+                        <div>
+                            <p className="text-slate-900 text-xl font-bold">123 Teheran-ro, Gangnam-gu</p>
+                            <p className="text-slate-500">Seoul, South Korea (Building A, 4th Floor)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-6">
+                    <div className="bg-surface border border-slate-100 p-6 rounded-2xl">
+                        <div className="flex items-center gap-2 mb-4">
+                            <Car className="text-smile-mid" />
+                            <h4 className="text-slate-900 font-bold">Parking</h4>
+                        </div>
+                        <p className="text-sm text-slate-500">Free valet parking available at the B1 entrance.</p>
+                    </div>
+                    <div className="bg-surface border border-slate-100 p-6 rounded-2xl">
+                        <div className="flex items-center gap-2 mb-4">
+                            <Bus className="text-smile-mid" />
+                            <h4 className="text-slate-900 font-bold">Public Transit</h4>
+                        </div>
+                        <p className="text-sm text-slate-500">Gangnam Station Exit 1 (Subway Line 2), 2 min walk.</p>
+                    </div>
+                </div>
+
+                <div>
+                    <div className="flex items-center gap-2 mb-4">
+                        <Clock className="text-smile-mid" />
+                        <h4 className="text-slate-900 font-bold">Clinic Hours</h4>
+                    </div>
+                    <ul className="space-y-3 text-sm text-slate-600">
+                        <li className="flex justify-between border-b border-slate-100 pb-2">
+                            <span>Mon - Fri</span>
+                            <span className="text-slate-900 font-bold">10:00 AM - 7:00 PM</span>
+                        </li>
+                        <li className="flex justify-between border-b border-slate-100 pb-2">
+                            <span>Saturday</span>
+                            <span className="text-slate-900 font-bold">10:00 AM - 2:00 PM</span>
+                        </li>
+                        <li className="flex justify-between border-b border-slate-100 pb-2">
+                            <span>Lunch Break</span>
+                            <span className="text-slate-900 font-bold">1:00 PM - 2:00 PM</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// export default Location;
+/***** MedicalVideoWidget.tsx *****/
+// import React, { useState, useRef, useEffect } from 'react';
+// import { Volume2, VolumeX, X } from 'lucide-react';
+
+const MedicalVideoWidget: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const toggleWidget = () => {
+    if (isOpen) {
+      // Close
+      setIsOpen(false);
+      if (videoRef.current) {
+        videoRef.current.pause();
+      }
+    } else {
+      // Open
+      setIsOpen(true);
+      if (videoRef.current) {
+        videoRef.current.currentTime = 0;
+        videoRef.current.muted = false;
+        setIsMuted(false);
+        const playPromise = videoRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(() => {
+            // Auto-play prevented
+            if (videoRef.current) {
+              videoRef.current.muted = true;
+              setIsMuted(true);
+              videoRef.current.play();
+            }
+          });
+        }
+      }
+    }
+  };
+
+  const toggleMute = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (videoRef.current) {
+      videoRef.current.muted = !videoRef.current.muted;
+      setIsMuted(videoRef.current.muted);
+    }
+  };
+
+  return (
+    <>
+      <style>{`
+        .premium-widget-root {
+            --widget-primary: #0f172a;
+            --widget-accent: #c0a062;
+            --widget-text: #ffffff;
+            --widget-width: 320px;
+            --widget-height: 560px;
+            font-family: 'Inter', sans-serif;
+            z-index: 9999;
+        }
+
+        /* The Bubble (Minimized State) */
+        .video-widget-trigger {
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 3px solid #fff;
+            position: relative;
+            transition: transform 0.4s ease;
+            animation: pulse-ring 3s infinite;
+        }
+        
+        /* Online Status */
+        .video-widget-trigger::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            right: 12px;
+            width: 12px;
+            height: 12px;
+            background: #22c55e;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            z-index: 10;
+        }
+
+        .video-widget-trigger:hover {
+            transform: scale(1.05);
+        }
+
+        /* The Expanded Player */
+        .video-widget-player {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: var(--widget-width);
+            height: var(--widget-height);
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            transform: scale(0);
+            transform-origin: bottom right;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 10000;
+        }
+
+        .video-widget-player.is-open {
+            transform: scale(1);
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* CTA Button */
+        .video-cta-btn {
+            background: var(--widget-accent);
+            color: #0f172a;
+            border: none;
+            padding: 16px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            text-decoration: none;
+            text-align: center;
+            display: block;
+            box-sizing: border-box;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 20px rgba(192, 160, 98, 0.4);
+        }
+
+        .video-cta-btn:hover {
+            background: #d4b475;
+            transform: translateY(-2px);
+        }
+
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+
+        @media (max-width: 480px) {
+            .video-widget-player {
+                bottom: 0;
+                right: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                border-radius: 0;
+            }
+        }
+      `}</style>
+
+      <div className="premium-widget-root fixed bottom-8 right-8 z-[9999]">
+        
+        {/* 1. The Minimized Bubble */}
+        <div 
+          className={`video-widget-trigger ${isOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`} 
+          onClick={toggleWidget}
+        >
+            <video 
+              autoPlay 
+              muted 
+              loop 
+              playsInline 
+              className="w-full h-full object-cover"
+            >
+                <source src="https://cdn.pixabay.com/video/2016/09/21/5186-183713601_large.mp4" type="video/mp4" />
+            </video>
+        </div>
+
+        {/* 2. The Expanded Player */}
+        <div className={`video-widget-player ${isOpen ? 'is-open' : ''}`}>
+            <div className="relative w-full h-full">
+
+                {/* Premium Brand Badge */}
+                <div className="absolute top-6 left-6 text-white text-sm font-semibold tracking-wide flex items-center gap-2 z-20 drop-shadow-md">
+                   <span className="text-[#c0a062]">LUMIERE DENTAL</span>
+                </div>
+
+                {/* Side Controls */}
+                <div className="absolute top-6 right-6 flex flex-col gap-3 z-20">
+                    <button 
+                        className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-white/30 transition-all hover:scale-105"
+                        onClick={toggleWidget}
+                        title="Close"
+                    >
+                        <X size={20} />
+                    </button>
+                    <button 
+                        className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-white/30 transition-all hover:scale-105"
+                        onClick={toggleMute}
+                        title="Toggle Sound"
+                    >
+                        {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+                    </button>
+                </div>
+
+                {/* Main Video */}
+                <video 
+                    ref={videoRef}
+                    loop 
+                    playsInline 
+                    className="w-full h-full object-cover"
+                >
+                    <source src="https://cdn.pixabay.com/video/2016/09/21/5186-183713601_large.mp4" type="video/mp4" />
+                </video>
+
+                {/* Overlay & Content */}
+                <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent via-60% to-black/90 flex flex-col justify-end p-6 text-white">
+                    <div className="mb-5">
+                        <h3 className="font-heading text-2xl font-bold mb-2 leading-tight">Your Smile.<br/>Perfected.</h3>
+                        <p className="text-sm font-light opacity-90 leading-relaxed">
+                            We specialize in invisible alignment and cinematic restorative dentistry.
+                        </p>
+                    </div>
+
+                    <a href="#offer" onClick={toggleWidget} className="video-cta-btn">
+                        Book Consultation
+                    </a>
+                </div>
+            </div>
+        </div>
+
+      </div>
+    </>
+  );
+};
+
+// export default MedicalVideoWidget;
+/***** Navbar.tsx *****/
+// import React, { useState, useEffect } from 'react';
+// import { Menu, X, Phone } from 'lucide-react';
+
+const Navbar: React.FC = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const navLinks = [
+    { name: 'Services', href: '#services' },
+    { name: 'Facilities', href: '#facilities' },
+    { name: 'Reviews', href: '#reviews' },
+    { name: 'Doctors', href: '#doctors' },
+    { name: 'Pricing', href: '#pricing' },
+    { name: 'Location', href: '#location' },
+  ];
+
+  return (
+    <>
+      <header
+        className={`fixed left-0 right-0 z-50 transition-all duration-300 ${isScrolled
+            ? 'bg-white/90 backdrop-blur-md border-b border-gray-100 py-3 shadow-soft'
+            : 'bg-transparent border-transparent py-5'
+          }`}
+      >
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div className="flex justify-between items-center">
+            {/* Logo */}
+            <div className="flex items-center gap-2">
+              <a href="#home" className={`font-heading font-bold text-2xl tracking-tight flex items-center gap-2 transition-colors ${isScrolled ? 'text-smile-dark' : 'text-smile-dark'}`}>
+                <div className={`w-8 h-8 rounded-xl flex items-center justify-center font-bold text-lg shadow-sm ${isScrolled ? 'bg-smile-mid text-white' : 'bg-smile-mid text-white'}`}>S</div>
+                <span>Smile<span className="text-smile-mid">Craft</span></span>
+              </a>
+            </div>
+
+            {/* Desktop Nav */}
+            <nav className="hidden lg:flex items-center gap-8">
+              {navLinks.map((link) => (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  className={`font-medium text-sm transition-colors uppercase tracking-wide hover:text-smile-mid ${isScrolled ? 'text-slate-600' : 'text-slate-600'}`}
+                >
+                  {link.name}
+                </a>
+              ))}
+            </nav>
+
+            {/* Desktop CTA */}
+            <div className="hidden lg:flex items-center gap-6">
+              <a href="tel:02-1234-5678" className={`flex items-center gap-2 font-bold transition-colors hover:text-smile-mid ${isScrolled ? 'text-smile-dark' : 'text-smile-dark'}`}>
+                <Phone size={18} className="fill-current text-smile-mid" />
+                02-1234-5678
+              </a>
+              <a href="#booking" className={`px-6 py-2.5 rounded-full font-bold text-sm transition-all shadow-md transform hover:scale-105 bg-smile-accent text-darkText hover:bg-smile-gold`}>
+                Book Now
+              </a>
+            </div>
+
+            {/* Mobile Toggle */}
+            <button
+              className={`lg:hidden transition-colors ${isScrolled ? 'text-slate-900' : 'text-slate-900'}`}
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-40 bg-white/95 backdrop-blur-xl pt-24 px-6 animate-fade-in flex flex-col items-center">
+          <div className="flex flex-col space-y-8 text-center w-full max-w-sm">
+            {navLinks.map((link) => (
+              <a
+                key={link.name}
+                href={link.href}
+                className="text-2xl font-heading font-bold text-slate-900 hover:text-smile-mid transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {link.name}
+              </a>
+            ))}
+            <hr className="border-slate-200" />
+            <a href="tel:02-1234-5678" className="text-xl font-bold text-slate-900 flex items-center justify-center gap-2">
+              <Phone size={20} className="text-smile-mid" /> 02-1234-5678
+            </a>
+            <a
+              href="#booking"
+              className="w-full bg-smile-accent text-darkText py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-smile-gold"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Book Appointment
+            </a>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
+// export default Navbar;
+/***** Offer.tsx *****/
+// import React, { useState, useEffect } from 'react';
+// import { Timer, ArrowRight } from 'lucide-react';
+
+const Offer: React.FC = () => {
+  const [timeLeft, setTimeLeft] = useState({ days: 2, hours: 14, minutes: 35, seconds: 12 });
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev.seconds > 0) return { ...prev, seconds: prev.seconds - 1 };
+        if (prev.minutes > 0) return { ...prev, minutes: prev.minutes - 1, seconds: 59 };
+        if (prev.hours > 0) return { ...prev, hours: prev.hours - 1, minutes: 59, seconds: 59 };
+        if (prev.days > 0) return { ...prev, days: prev.days - 1, hours: 23, minutes: 59, seconds: 59 };
+        return prev;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <section className="py-12 bg-page" id="offer">
+      <div className="container mx-auto px-6">
+        <div className="bg-gradient-to-r from-teal-900/40 to-slate-900/40 backdrop-blur-md border border-white/10 rounded-[3rem] p-8 md:p-16 text-white relative overflow-hidden shadow-glass">
+          
+          {/* Background effects */}
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-smile-mid rounded-full filter blur-[120px] opacity-20 translate-x-1/3 -translate-y-1/3 pointer-events-none"></div>
+          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-500 rounded-full filter blur-[120px] opacity-10 -translate-x-1/3 translate-y-1/3 pointer-events-none"></div>
+          <div className="absolute inset-0 noise-bg opacity-10 pointer-events-none"></div>
+
+          <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-16">
+            
+            <div className="lg:w-1/2">
+                <div className="inline-flex items-center gap-2 bg-smile-accent/10 border border-smile-accent/30 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-6 text-smile-accent shadow-[0_0_15px_rgba(245,158,11,0.2)]">
+                    New Patient Special
+                </div>
+                <h2 className="font-heading text-4xl md:text-5xl font-bold mb-6 leading-tight">
+                    Full Consultation <br/>
+                    + <span className="text-transparent bg-clip-text bg-gradient-to-r from-smile-mid to-smile-light">Whitening Kit</span>
+                </h2>
+                <div className="flex items-baseline gap-4 mb-6">
+                    <span className="text-5xl font-bold text-white shadow-glow">$99</span>
+                    <span className="text-xl text-slate-500 line-through decoration-slate-500 decoration-2">was $299</span>
+                </div>
+                <p className="text-slate-300 max-w-md text-lg leading-relaxed">
+                    Includes comprehensive 3D scan, doctor examination, and a professional take-home whitening system.
+                </p>
+            </div>
+
+            <div className="lg:w-1/2 flex flex-col items-center lg:items-end w-full">
+                <div className="bg-black/30 backdrop-blur-xl border border-white/10 p-8 rounded-[2rem] w-full max-w-md shadow-2xl">
+                    <div className="flex items-center gap-2 mb-6 text-smile-mid font-bold uppercase tracking-widest text-xs">
+                        <Timer size={14} />
+                        <span>Offer Expires In</span>
+                    </div>
+                    
+                    <div className="grid grid-cols-4 gap-4 mb-8">
+                        {[
+                            { label: 'Days', val: timeLeft.days },
+                            { label: 'Hrs', val: timeLeft.hours },
+                            { label: 'Mins', val: timeLeft.minutes },
+                            { label: 'Secs', val: timeLeft.seconds }
+                        ].map((item, idx) => (
+                            <div key={idx} className="text-center">
+                                <div className="text-3xl md:text-4xl font-bold font-heading mb-1 text-white">{item.val}</div>
+                                <div className="text-[10px] uppercase tracking-wider text-slate-500">{item.label}</div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <button className="w-full bg-white text-page hover:bg-smile-mid hover:text-black text-lg px-8 py-4 rounded-xl font-bold transition-all flex justify-between items-center group shadow-glow">
+                        Claim Offer
+                        <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                    </button>
+                    <p className="text-center text-xs text-slate-500 mt-4">Limited to first 50 patients this month.</p>
+                </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// export default Offer;
+/***** Pricing.tsx *****/
+// import React from 'react';
+// import { Check } from 'lucide-react';
+
+const Pricing: React.FC = () => {
+  const plans = [
+    {
+      name: "Basic Care",
+      price: "$99",
+      period: "per visit",
+      desc: "Essential preventative care for maintaining optimal oral health.",
+      features: [
+        "Comprehensive Exam",
+        "Digital X-Rays (Bitewing)",
+        "Professional Cleaning",
+        "Fluoride Treatment",
+        "Oral Cancer Screening"
+      ],
+      cta: "Get Started",
+      popular: false
+    },
+    {
+      name: "Cosmetic",
+      price: "$499",
+      period: "starting at",
+      desc: "Aesthetic treatments to brighten and enhance your smile.",
+      features: [
+        "Everything in Basic Care",
+        "Zoom! Teeth Whitening",
+        "Cosmetic Bonding",
+        "Desensitizing Treatment",
+        "Take-home Whitening Kit",
+        "Priority Booking"
+      ],
+      cta: "Get Started",
+      popular: true
+    },
+    {
+      name: "Surgical",
+      price: "$1,200",
+      period: "starting at",
+      desc: "Advanced restoration for complex dental needs.",
+      features: [
+        "Everything in Cosmetic",
+        "Titanium Dental Implants",
+        "Porcelain Veneers",
+        "Invisalign Consultation",
+        "3D CT Scan Analysis",
+        "Lifetime Warranty"
+      ],
+      cta: "Get Started",
+      popular: false
+    }
+  ];
+
+  return (
+    <section className="py-24 bg-white relative">
+      <div className="container mx-auto px-6 max-w-7xl">
+        <div className="text-center mb-16">
+          <h2 className="font-heading text-4xl font-bold text-slate-900 mb-4">Transparent Pricing</h2>
+          <p className="text-slate-500 text-lg">Choose the care plan that fits your needs.</p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {plans.map((plan, i) => (
+            <div 
+              key={i} 
+              className={`relative flex flex-col p-8 rounded-[2rem] border transition-all duration-300 hover:shadow-xl ${
+                plan.popular 
+                  ? 'border-slate-300 shadow-lg bg-slate-50/50' 
+                  : 'border-slate-200 bg-white hover:border-slate-300'
+              }`}
+            >
+              {plan.popular && (
+                <div className="absolute top-6 right-6 bg-slate-200 text-slate-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
+                  Popular
+                </div>
+              )}
+
+              <h3 className="text-xl font-bold text-slate-900 mb-2">{plan.name}</h3>
+              
+              <div className="flex items-baseline gap-1.5 mb-4">
+                <span className="text-5xl font-bold text-slate-900 tracking-tight">{plan.price}</span>
+                <span className="text-slate-500 font-medium text-sm">{plan.period}</span>
+              </div>
+              
+              <p className="text-slate-500 text-sm mb-8 leading-relaxed">
+                {plan.desc}
+              </p>
+
+              <a 
+                href="#booking" 
+                className={`block w-full text-center py-4 rounded-xl font-bold transition-all mb-10 ${
+                    plan.popular
+                    ? 'bg-slate-900 text-white hover:bg-slate-800 shadow-lg'
+                    : 'bg-slate-900 text-white hover:bg-slate-800'
+                }`}
+              >
+                {plan.cta}
+              </a>
+
+              <div className="mt-auto pt-6 border-t border-slate-100">
+                <p className="text-xs font-bold text-slate-900 uppercase tracking-widest mb-6">Features</p>
+                <ul className="space-y-4">
+                  {plan.features.map((feature, idx) => (
+                    <li key={idx} className="flex items-start gap-3">
+                      <div className="w-5 h-5 rounded-full bg-[#84cc16] flex items-center justify-center shrink-0 mt-0.5">
+                        <Check size={12} className="text-white stroke-[3]" />
+                      </div>
+                      <span className="text-sm text-slate-600 font-medium">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// export default Pricing;
+/***** RealResults.tsx *****/
+// import React, { useState, useRef } from 'react';
+// import { ChevronRight, ChevronLeft } from 'lucide-react';
+
+const RealResults: React.FC = () => {
+  const [sliderPosition, setSliderPosition] = useState(50);
+  const [isDragging, setIsDragging] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleMove = (clientX: number) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
+    const percent = Math.max(0, Math.min((x / rect.width) * 100, 100));
+    setSliderPosition(percent);
+  };
+
+  const onMouseDown = () => setIsDragging(true);
+  const onMouseUp = () => setIsDragging(false);
+  const onMouseMove = (e: React.MouseEvent) => {
+    if (isDragging) handleMove(e.clientX);
+  };
+  const onTouchStart = () => setIsDragging(true);
+  const onTouchEnd = () => setIsDragging(false);
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (isDragging) handleMove(e.touches[0].clientX);
+  };
+
+  const gridItems = [
+    {
+        label: "Week 1-4",
+        phase: "Initial Assessment",
+        img: "https://cdn.pixabay.com/photo/2017/02/16/16/06/woman-2071954_1280.jpg"
+    },
+    {
+        label: "Week 12",
+        phase: "Visible Alignment",
+        img: "https://cdn.pixabay.com/photo/2016/11/29/05/11/adult-1867471_1280.jpg"
+    },
+    {
+        label: "Week 24",
+        phase: "Bite Correction",
+        img: "https://cdn.pixabay.com/photo/2018/01/15/07/51/woman-3083377_1280.jpg"
+    },
+    {
+        label: "Week 48",
+        phase: "Use of Retainer",
+        img: "https://cdn.pixabay.com/photo/2016/11/29/13/10/woman-1869761_1280.jpg"
+    }
+  ];
+
+  return (
+    <section className="py-16 md:py-24 bg-blue-50/50">
+      <div className="container mx-auto px-6 max-w-6xl">
+        
+        {/* Header */}
+        <div className="text-center mb-12 md:mb-16">
+            <h2 className="font-heading text-3xl md:text-5xl font-bold text-slate-900 mb-4">
+                Real Results, Real People
+            </h2>
+            <p className="text-slate-600 font-medium text-base md:text-lg">
+                Documented clinical improvements in smile alignment over 12 months.
+            </p>
+        </div>
+
+        {/* Grid Section */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-16 md:mb-20">
+            {gridItems.map((item, idx) => (
+                <div key={idx} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-transform hover:-translate-y-1 duration-300">
+                    <div className="h-32 md:h-48 overflow-hidden bg-slate-100">
+                        <img 
+                            src={item.img} 
+                            alt={item.label} 
+                            className="w-full h-full object-cover"
+                        />
+                    </div>
+                    <div className="p-4 md:p-5">
+                        <span className="block font-extrabold text-smile-dark text-xs md:text-sm mb-1">{item.label}</span>
+                        <span className="block text-slate-500 text-[10px] md:text-xs font-medium">{item.phase}</span>
+                    </div>
+                </div>
+            ))}
+        </div>
+
+        {/* Timeline + Slider Section */}
+        <div className="bg-white rounded-[24px] p-6 md:p-12 shadow-xl border border-slate-100 grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
+            
+            {/* Left: Text Timeline */}
+            <div>
+                <h2 className="font-heading text-2xl md:text-3xl font-bold text-smile-dark mb-4">
+                    Clinically Proven Timeline
+                </h2>
+                <p className="text-slate-600 mb-8 md:mb-10 leading-relaxed text-sm md:text-base">
+                    Follow your smile's journey with a customized timeline that shows steady, measurable progress week by week.
+                </p>
+
+                <div className="relative pl-5 border-l-2 border-slate-200 space-y-8 md:space-y-10">
+                    <div className="relative pl-6">
+                        <div className="absolute -left-[29px] top-0 w-4 h-4 bg-smile-dark border-[4px] border-blue-100 rounded-full"></div>
+                        <span className="block font-bold text-smile-dark text-base md:text-lg mb-1">Month 1-3: Alignment Starts</span>
+                        <span className="block text-slate-500 text-sm leading-relaxed">
+                            Aligners begin to shift teeth. You may feel slight pressure as space is created.
+                        </span>
+                    </div>
+                    <div className="relative pl-6">
+                        <div className="absolute -left-[29px] top-0 w-4 h-4 bg-smile-dark border-[4px] border-blue-100 rounded-full"></div>
+                        <span className="block font-bold text-smile-dark text-base md:text-lg mb-1">Month 4-8: Major Movements</span>
+                        <span className="block text-slate-500 text-sm leading-relaxed">
+                            Noticeable changes in spacing and crowding. Bite alignment improves significantly.
+                        </span>
+                    </div>
+                    <div className="relative pl-6">
+                        <div className="absolute -left-[29px] top-0 w-4 h-4 bg-smile-dark border-[4px] border-blue-100 rounded-full"></div>
+                        <span className="block font-bold text-smile-dark text-base md:text-lg mb-1">Month 9-12: Refinement</span>
+                        <span className="block text-slate-500 text-sm leading-relaxed">
+                            Final detailing to perfect your smile line. Preparation for lifelong retention.
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            {/* Right: Before/After Slider */}
+            <div 
+                ref={containerRef}
+                className="relative w-full h-[250px] md:h-[400px] rounded-[20px] overflow-hidden cursor-ew-resize select-none shadow-inner group ring-1 ring-black/5"
+                onMouseDown={onMouseDown}
+                onMouseUp={onMouseUp}
+                onMouseLeave={onMouseUp}
+                onMouseMove={onMouseMove}
+                onTouchStart={onTouchStart}
+                onTouchEnd={onTouchEnd}
+                onTouchMove={onTouchMove}
+            >
+                {/* Background (Before) */}
+                <img 
+                    src="https://cdn.pixabay.com/photo/2021/04/18/13/35/woman-6188414_1280.jpg" 
+                    className="absolute inset-0 w-full h-full object-cover" 
+                    alt="Before" 
+                />
+                <span className="absolute top-5 right-5 px-3 py-1.5 bg-white/80 backdrop-blur-sm rounded-full font-bold text-xs text-slate-900 z-10 shadow-sm">
+                    Before (Crooked)
+                </span>
+
+                {/* Foreground (After) - Clipped */}
+                <div 
+                    className="absolute inset-0 w-full h-full overflow-hidden border-r-2 border-white"
+                    style={{ width: `${sliderPosition}%` }}
+                >
+                    <img 
+                        src="https://cdn.pixabay.com/photo/2017/06/20/22/14/man-2425121_1280.jpg" 
+                        className="absolute inset-0 w-full h-full object-cover" 
+                        style={{ width: containerRef.current ? containerRef.current.offsetWidth : '100%' }} // Keep image width consistent
+                        alt="After" 
+                    />
+                    {/* CSS Hack to ensure image stays full width inside clipped div */}
+                    <style>{`
+                        .after-img-fixed {
+                            width: ${containerRef.current?.offsetWidth}px;
+                            max-width: none;
+                        }
+                    `}</style>
+                    <span className="absolute top-5 left-5 px-3 py-1.5 bg-white/80 backdrop-blur-sm rounded-full font-bold text-xs text-slate-900 z-10 shadow-sm">
+                        After (Invisalign)
+                    </span>
+                </div>
+
+                {/* Handle */}
+                <div 
+                    className="absolute top-1/2 -translate-y-1/2 w-10 h-10 bg-smile-dark rounded-full flex items-center justify-center text-white shadow-[0_0_0_4px_rgba(255,255,255,0.3)] z-20 pointer-events-none transform -translate-x-1/2"
+                    style={{ left: `${sliderPosition}%` }}
+                >
+                   <div className="flex gap-0.5">
+                        <ChevronLeft size={16} strokeWidth={3} />
+                        <ChevronRight size={16} strokeWidth={3} />
+                   </div>
+                </div>
+            </div>
+
+        </div>
+
+      </div>
+    </section>
+  );
+};
+
+// export default RealResults;
+/***** ResultsTimeline.tsx *****/
+// import React, { useState, useRef } from 'react';
+// import { ChevronRight, ChevronLeft, Sparkles } from 'lucide-react';
+
+const ResultsTimeline: React.FC = () => {
+  const [sliderPosition, setSliderPosition] = useState(50);
+  const [isDragging, setIsDragging] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleMove = (clientX: number) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
+    const percent = Math.max(0, Math.min((x / rect.width) * 100, 100));
+    setSliderPosition(percent);
+  };
+
+  const onMouseDown = () => setIsDragging(true);
+  const onMouseUp = () => setIsDragging(false);
+  const onMouseMove = (e: React.MouseEvent) => {
+    if (isDragging) handleMove(e.clientX);
+  };
+  const onTouchStart = () => setIsDragging(true);
+  const onTouchEnd = () => setIsDragging(false);
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (isDragging) handleMove(e.touches[0].clientX);
+  };
+
+  // Note: In a real production app, these would be clinical photos of the same patient.
+  // Using high-quality dental stock photos for demonstration.
+  const images = [
+    {
+       label: "Month 1",
+       sub: "Initial Assessment",
+       desc: "Baseline alignment mapped.",
+       img: "https://res.cloudinary.com/dvmxeaefb/image/upload/v1770053553/hf_20260131_125141_20d81bf8-70d3-4541-9a67-73432f92940b_av1ouh.jpg", 
+    },
+    {
+       label: "Month 4",
+       sub: "Early Movement",
+       desc: "Crowding begins to resolve.",
+       img: "https://res.cloudinary.com/dvmxeaefb/image/upload/v1770053550/hf_20260131_125212_168b16d5-2183-4ded-883a-44e268fdd06e_akq2p9.png", 
+    },
+    {
+       label: "Month 8",
+       sub: "Visible Alignment",
+       desc: "Arch shape improves.",
+       img: "https://res.cloudinary.com/dvmxeaefb/image/upload/v1770053549/hf_20260131_125250_66e90187-80c4-4ef8-a4f6-605776904beb_wqmhhj.jpg", 
+    },
+    {
+       label: "Month 12",
+       sub: "Final Refinement",
+       desc: "Perfect symmetry.",
+       img: "https://res.cloudinary.com/dvmxeaefb/image/upload/v1770053549/hf_20260131_125327_a4db8b20-d58e-4891-b428-7d7b4594f2f8_qmpjvt.png", 
+    }
+  ];
+
+  return (
+    <section className="py-16 md:py-24 bg-surface border-t border-slate-100">
+      <div className="container mx-auto px-6 max-w-7xl">
+        
+        {/* Header */}
+        <div className="text-center mb-16 md:mb-20">
+          <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-6 text-smile-mid">
+            <Sparkles size={14} className="fill-current" />
+            Clinical Success Stories
+          </div>
+          <h2 className="font-heading text-3xl md:text-5xl font-bold text-slate-900 mb-6">
+            Invisalign Timeline
+          </h2>
+          <p className="text-slate-600 text-lg max-w-2xl mx-auto leading-relaxed">
+            Witness the transformation. Our accelerated clear aligner protocols deliver documented clinical improvements in smile alignment & aesthetics in as little as 12 months.
+          </p>
+        </div>
+
+        {/* Top Grid - Progression */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-8 mb-12 md:mb-24">
+            {images.map((item, idx) => (
+                <div key={idx} className="flex flex-col gap-2 md:gap-4 group">
+                    <div className="aspect-square md:aspect-[4/3] rounded-3xl overflow-hidden bg-white shadow-lg border border-slate-100 relative">
+                        <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-2 py-1 md:px-3 rounded-full text-[10px] md:text-xs font-bold text-slate-900 z-10 shadow-sm border border-slate-100">
+                            {item.label}
+                        </div>
+                        <img 
+                            src={item.img} 
+                            alt={item.label} 
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </div>
+                    <div className="text-center md:text-left px-1">
+                        <h3 className="font-bold text-slate-900 text-xs md:text-lg leading-tight md:leading-normal">{item.sub}</h3>
+                        <p className="text-[10px] md:text-sm text-slate-500 mt-1 leading-tight">{item.desc}</p>
+                    </div>
+                    {/* Connecting Line for Desktop */}
+                    {idx < 3 && (
+                        <div className="hidden md:block absolute top-[20%] right-[-15px] w-8 h-0.5 bg-slate-200 z-0 translate-x-1/2" style={{ left: 'auto', right: '-16px' }}></div>
+                    )}
+                </div>
+            ))}
+        </div>
+
+        {/* Comparison Section */}
+        <div className="bg-white rounded-[2rem] md:rounded-[3rem] p-6 md:p-12 shadow-2xl border border-slate-100 flex flex-col lg:flex-row gap-8 md:gap-12 items-center relative overflow-hidden">
+            {/* Background Decoration */}
+            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-smile-light/30 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
+
+            {/* Timeline Text */}
+            <div className="lg:w-1/2 relative z-10 order-2 lg:order-1">
+                <h3 className="font-heading text-2xl md:text-3xl font-bold text-slate-900 mb-8">
+                    Your Journey to Perfection
+                </h3>
+                <p className="text-slate-600 mb-10 leading-relaxed text-sm md:text-lg">
+                    Follow your smile's journey with a clinically proven timeline that shows steady, measurable improvements month by month using our SmartTrackÂ® material.
+                </p>
+
+                <div className="space-y-10 md:space-y-12 relative before:absolute before:left-[11px] before:top-3 before:bottom-3 before:w-[2px] before:bg-gradient-to-b before:from-smile-mid before:to-slate-200">
+                    {/* Step 1 */}
+                    <div className="relative pl-10 md:pl-12 group">
+                        <div className="absolute left-0 top-1.5 w-6 h-6 rounded-full bg-smile-mid border-[4px] border-white shadow-md ring-1 ring-slate-100 z-10 group-hover:scale-110 transition-transform"></div>
+                        <h4 className="font-bold text-slate-900 mb-2 text-base md:text-lg">Month 1-3: Alignment Initiation</h4>
+                        <p className="text-sm md:text-base text-slate-500 leading-relaxed">
+                            Gentle pressure initiates movement. Complex rotations are addressed early.
+                        </p>
+                    </div>
+                    {/* Step 2 */}
+                    <div className="relative pl-10 md:pl-12 group">
+                        <div className="absolute left-0 top-1.5 w-6 h-6 rounded-full bg-white border-[4px] border-smile-mid shadow-md z-10 group-hover:scale-110 transition-transform"></div>
+                        <h4 className="font-bold text-slate-900 mb-2 text-base md:text-lg">Month 4-8: Expansion & Spacing</h4>
+                        <p className="text-sm md:text-base text-slate-500 leading-relaxed">
+                            Visible gaps begin to close. The dental arch starts to widen, creating a broader smile.
+                        </p>
+                    </div>
+                    {/* Step 3 */}
+                    <div className="relative pl-10 md:pl-12 group">
+                        <div className="absolute left-0 top-1.5 w-6 h-6 rounded-full bg-slate-900 border-[4px] border-white shadow-md ring-1 ring-slate-100 z-10 group-hover:scale-110 transition-transform"></div>
+                        <h4 className="font-bold text-slate-900 mb-2 text-base md:text-lg">Month 9-12: Aesthetic Refinement</h4>
+                        <p className="text-sm md:text-base text-slate-500 leading-relaxed">
+                            Fine-tuning the bite relationship. Teeth appear perfectly straight and radiant.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            {/* Slider Component */}
+            <div className="lg:w-1/2 w-full relative z-10 order-1 lg:order-2">
+                <div 
+                    ref={containerRef}
+                    className="relative w-full aspect-[4/3] rounded-3xl overflow-hidden cursor-ew-resize select-none shadow-[0_20px_50px_-12px_rgba(0,0,0,0.15)] group ring-1 ring-slate-100"
+                    onMouseDown={onMouseDown}
+                    onMouseUp={onMouseUp}
+                    onMouseLeave={onMouseUp}
+                    onMouseMove={onMouseMove}
+                    onTouchStart={onTouchStart}
+                    onTouchEnd={onTouchEnd}
+                    onTouchMove={onTouchMove}
+                >
+                    {/* Background (After) */}
+                    <img 
+                        src="https://res.cloudinary.com/dvmxeaefb/image/upload/v1770055113/hf_20260202_175606_8e01662f-ff9d-4fc8-a041-7e877febe186_pm1dsg.png" 
+                        className="absolute inset-0 w-full h-full object-cover" 
+                        alt="After Invisalign" 
+                    />
+                    <div className="absolute top-6 right-6 bg-smile-mid text-white px-5 py-2 rounded-full text-xs font-bold shadow-lg z-10 uppercase tracking-wider">After</div>
+
+                    {/* Foreground (Before) - Clipped */}
+                    <div 
+                        className="absolute inset-0 w-full h-full overflow-hidden"
+                        style={{ clipPath: `polygon(0 0, ${sliderPosition}% 0, ${sliderPosition}% 100%, 0 100%)` }}
+                    >
+                         <img 
+                            src="https://res.cloudinary.com/dvmxeaefb/image/upload/v1770055117/hf_20260202_175123_ecd60f2e-86ad-4167-8b60-01dd0485bc54_qnqnrt.png" 
+                            className="absolute inset-0 w-full h-full object-cover filter grayscale-[20%] contrast-110" 
+                            alt="Before Invisalign" 
+                        />
+                        <div className="absolute top-6 left-6 bg-slate-900 text-white px-5 py-2 rounded-full text-xs font-bold shadow-lg z-10 uppercase tracking-wider">Before</div>
+                    </div>
+
+                    {/* Divider Handle */}
+                    <div 
+                        className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize z-20 shadow-[0_0_20px_rgba(0,0,0,0.5)]"
+                        style={{ left: `${sliderPosition}%` }}
+                    >
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-2xl border-4 border-slate-50 text-smile-mid transition-transform hover:scale-110">
+                             <div className="flex gap-0.5">
+                                <ChevronLeft size={20} className="stroke-[3]" />
+                                <ChevronRight size={20} className="stroke-[3]" />
+                             </div>
+                        </div>
+                    </div>
+                    
+                    <div className="absolute bottom-6 left-0 right-0 text-center pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <span className="bg-black/50 backdrop-blur-md text-white px-4 py-2 rounded-full text-xs font-bold">Drag to compare</span>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// export default ResultsTimeline;
+/***** Reviews.tsx *****/
+// import React from 'react';
+// import { Star } from 'lucide-react';
+
+const Reviews: React.FC = () => {
+  const reviews = [
+    {
+      name: "Ashley Landazo",
+      role: "CEO & Co-Founder, EQ3",
+      text: "We don't just make your life better, we improve your overall experience. From a mobile app that streamlines onboarding to a modern experience that lets employees sign up for benefits online.",
+      image: "https://randomuser.me/api/portraits/women/44.jpg"
+    },
+    {
+      name: "Michael Chen",
+      role: "Director, TechFlow",
+      text: "The precision and care I received were unmatched. The team explained every step of the implant process, making me feel completely at ease throughout the entire journey.",
+      image: "https://randomuser.me/api/portraits/men/32.jpg"
+    },
+    {
+      name: "Jessica Miller",
+      role: "Marketing Head, Adverus",
+      text: "I was hesitant about veneers for years, but Dr. Mitchell changed everything. The results are so natural that even my close friends can't tellâ€”they just say I look great!",
+      image: "https://randomuser.me/api/portraits/women/68.jpg"
+    }
+  ];
+
+  return (
+    <section className="py-24 bg-white border-t border-slate-100">
+      <div className="container mx-auto px-6 max-w-7xl">
+        <div className="mb-16">
+            <h2 className="font-heading text-4xl font-bold text-slate-900 mb-4">Patient Stories</h2>
+            <p className="text-slate-500">See what our community has to say.</p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8">
+            {reviews.map((review, i) => (
+                <div key={i} className="bg-surface rounded-[2rem] p-8 md:p-10 shadow-sm border border-slate-100 flex flex-col h-full hover:shadow-lg transition-shadow duration-300">
+                    {/* Quote Text */}
+                    <p className="text-slate-600 text-lg leading-relaxed mb-10 flex-grow font-light italic">
+                        "{review.text}"
+                    </p>
+
+                    {/* Profile Section */}
+                    <div className="flex items-center gap-4 mt-auto">
+                        <img 
+                            src={review.image} 
+                            alt={review.name} 
+                            className="w-14 h-14 rounded-full object-cover border-2 border-white shadow-sm" 
+                        />
+                        <div>
+                            <h4 className="font-bold text-slate-900 uppercase text-sm tracking-wide">{review.name}</h4>
+                            <p className="text-slate-400 text-xs mb-1">{review.role}</p>
+                            <div className="flex text-smile-gold">
+                                {[1,2,3,4,5].map(star => <Star key={star} size={14} fill="currentColor" />)}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// export default Reviews;
+/***** Services.tsx *****/
+// import React from 'react';
+// import { ShieldCheck, Sparkles, Activity, User, ArrowRight } from 'lucide-react';
+
+const Services: React.FC = () => {
+  const services = [
+    {
+      icon: <ShieldCheck size={32} />,
+      title: "Dental Implants",
+      desc: "Restore your smile with permanent, natural-looking artificial teeth.",
+      price: "$1,200",
+      highlight: false
+    },
+    {
+      icon: <Activity size={32} />, 
+      title: "Orthodontics",
+      desc: "Straighten teeth discreetly with clear aligners or traditional braces.",
+      price: "$3,500",
+      highlight: true // Simulating the "Popular" card
+    },
+    {
+      icon: <Sparkles size={32} />,
+      title: "Whitening",
+      desc: "Professional laser whitening for a smile up to 8 shades brighter.",
+      price: "$299",
+      highlight: false
+    },
+  ];
+
+  return (
+    <section className="py-16 md:py-24 bg-surface relative">
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="text-center max-w-3xl mx-auto mb-12 md:mb-20">
+          <h2 className="font-heading text-3xl md:text-5xl font-bold text-slate-900 mb-4 md:mb-6">World-Class Treatments</h2>
+          <p className="text-slate-600 text-base md:text-lg">Comprehensive care tailored to your unique needs.</p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
+          {services.map((service, index) => (
+            <div 
+              key={index} 
+              className={`relative rounded-[2rem] p-6 md:p-8 transition-all duration-300 group shadow-card ${
+                service.highlight 
+                  ? 'bg-slate-900 border border-slate-900 shadow-xl transform md:-translate-y-4' 
+                  : 'bg-white border border-slate-100 hover:border-smile-mid/30 hover:shadow-xl'
+              }`}
+            >
+              {service.highlight && (
+                <div className="absolute top-0 right-0 bg-smile-gold text-black text-xs font-bold px-4 py-1.5 rounded-bl-xl rounded-tr-[1.8rem]">
+                    Most Popular
+                </div>
+              )}
+
+              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 transition-colors ${
+                  service.highlight ? 'bg-smile-mid text-white' : 'bg-blue-50 text-smile-mid group-hover:bg-smile-mid group-hover:text-white'
+              }`}>
+                  {service.icon}
+              </div>
+              
+              <h3 className={`text-2xl font-bold mb-4 ${service.highlight ? 'text-white' : 'text-slate-900'}`}>{service.title}</h3>
+              <p className={`text-sm mb-8 leading-relaxed ${service.highlight ? 'text-slate-400' : 'text-slate-500'}`}>
+                  {service.desc}
+              </p>
+              
+              <div className="flex items-end gap-1 mb-8">
+                 <span className={`text-3xl font-bold ${service.highlight ? 'text-white' : 'text-slate-900'}`}>{service.price}</span>
+                 <span className={`text-sm mb-1 ${service.highlight ? 'text-slate-500' : 'text-slate-400'}`}>/ starting</span>
+              </div>
+
+              <a href="#booking" className={`block w-full text-center py-4 rounded-xl font-bold text-sm transition-all ${
+                  service.highlight 
+                    ? 'bg-smile-mid text-white hover:bg-white hover:text-black' 
+                    : 'bg-slate-100 text-slate-900 hover:bg-smile-mid hover:text-white'
+              }`}>
+                  Book Consultation
+              </a>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// export default Services;
+/***** SocialProof.tsx *****/
+// import React from 'react';
+
+const SocialProof: React.FC = () => {
+  const logos = [
+    { name: "stamps", css: "font-serif italic" },
+    { name: "VENUER", css: "font-sans tracking-[0.2em] font-light" },
+    { name: "manter.", css: "font-serif font-bold text-slate-400" },
+    { name: "Adverus", css: "font-sans font-medium flex items-center gap-2" },
+    { name: "spaced", css: "font-serif lowercase text-xl" }
+  ];
+
+  return (
+    <section className="pb-16 pt-8 bg-page border-b border-white/5" id="trusted">
+      <div className="container mx-auto px-6 text-center">
+        <h3 className="text-sm font-medium text-slate-500 uppercase tracking-widest mb-10">Trusted by Top Professionals</h3>
+        
+        <div className="flex flex-wrap justify-center items-center gap-12 md:gap-20 opacity-40 hover:opacity-100 transition-opacity duration-500">
+           {logos.map((logo, idx) => (
+             <div key={idx} className="group cursor-pointer">
+                {logo.name === 'Adverus' ? (
+                    <div className="flex items-center gap-2 text-white/70 group-hover:text-white transition-colors">
+                        <div className="grid grid-cols-2 gap-0.5">
+                            <div className="w-1.5 h-1.5 bg-current rounded-full"></div>
+                            <div className="w-1.5 h-1.5 bg-current rounded-full"></div>
+                            <div className="w-1.5 h-1.5 bg-current rounded-full"></div>
+                            <div className="w-1.5 h-1.5 bg-current rounded-full"></div>
+                        </div>
+                        <span className="text-2xl font-medium tracking-tight">Adverus</span>
+                    </div>
+                ) : (
+                    <span className={`text-2xl md:text-3xl text-white/70 group-hover:text-white transition-colors ${logo.css}`}>
+                        {logo.name}
+                    </span>
+                )}
+             </div>
+           ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// export default SocialProof;
+/***** Stats.tsx *****/
+// import React, { useEffect, useState, useRef } from 'react';
+// import { ArrowRight } from 'lucide-react';
+
+const Stats: React.FC = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  const Counter = ({ end, suffix = "", duration = 2000 }: { end: number, suffix?: string, duration?: number }) => {
+    const [count, setCount] = useState(0);
+
+    useEffect(() => {
+      if (!isVisible) return;
+
+      let startTime: number | null = null;
+      const step = (timestamp: number) => {
+        if (!startTime) startTime = timestamp;
+        const progress = Math.min((timestamp - startTime) / duration, 1);
+        
+        // Easing function for smooth deceleration
+        const easeOutQuart = (x: number): number => 1 - Math.pow(1 - x, 4);
+        
+        setCount(Math.floor(easeOutQuart(progress) * end));
+        
+        if (progress < 1) {
+          window.requestAnimationFrame(step);
+        }
+      };
+      
+      window.requestAnimationFrame(step);
+    }, [isVisible, end, duration]);
+
+    return <span>{count.toLocaleString()}{suffix}</span>;
+  };
+
+  return (
+    <section ref={sectionRef} className="py-16 md:py-24 bg-[#0F172A] text-white">
+      <div className="container mx-auto px-6 max-w-7xl">
+        <h2 className="text-xl md:text-3xl font-heading text-slate-400 mb-10 md:mb-16 font-light">
+          Trusted by our community
+        </h2>
+        
+        <div className="grid md:grid-cols-3 gap-8 md:gap-16">
+            {/* Stat 1: Patients Visited */}
+            <div className="flex flex-col border-l border-slate-700 pl-6 md:pl-8 transition-colors hover:border-slate-500 duration-500 group">
+                <h3 className="text-base md:text-lg font-medium text-slate-300 mb-4 md:mb-8 h-8 md:h-12 flex items-center">
+                    Total Patients Served
+                </h3>
+                <div className="text-5xl md:text-6xl lg:text-7xl font-bold mb-4 md:mb-8 text-white tracking-tight group-hover:text-smile-mid transition-colors">
+                    <Counter end={15000} suffix="+" />
+                </div>
+                <p className="text-slate-400 text-sm leading-relaxed mb-4 md:mb-8 pr-4">
+                    Our innovative, patient-first approach has led to over 15,000 successful smiles, allowing us to refine our techniques for maximum comfort.
+                </p>
+                <a href="#reviews" className="text-white border-b border-white pb-0.5 self-start text-sm hover:text-smile-mid hover:border-smile-mid transition-colors flex items-center gap-2">
+                    Read Patient Stories <ArrowRight size={14} />
+                </a>
+            </div>
+
+            {/* Stat 2: Happy Patients */}
+            <div className="flex flex-col border-l border-slate-700 pl-6 md:pl-8 transition-colors hover:border-slate-500 duration-500 group">
+                <h3 className="text-base md:text-lg font-medium text-slate-300 mb-4 md:mb-8 h-8 md:h-12 flex items-center">
+                    Satisfaction Rate
+                </h3>
+                <div className="text-5xl md:text-6xl lg:text-7xl font-bold mb-4 md:mb-8 text-white tracking-tight group-hover:text-smile-mid transition-colors">
+                    <Counter end={99} suffix="%" />
+                </div>
+                <p className="text-slate-400 text-sm leading-relaxed mb-4 md:mb-8 pr-4">
+                    We maintain a 99% satisfaction rate by prioritizing pain-free procedures and listening to your unique needs before we even start.
+                </p>
+                <a href="#reviews" className="text-white border-b border-white pb-0.5 self-start text-sm hover:text-smile-mid hover:border-smile-mid transition-colors flex items-center gap-2">
+                    See Our Reviews <ArrowRight size={14} />
+                </a>
+            </div>
+
+            {/* Stat 3: Doctor History */}
+            <div className="flex flex-col border-l border-slate-700 pl-6 md:pl-8 transition-colors hover:border-slate-500 duration-500 group">
+                <h3 className="text-base md:text-lg font-medium text-slate-300 mb-4 md:mb-8 h-8 md:h-12 flex items-center">
+                    Clinical Excellence
+                </h3>
+                <div className="text-5xl md:text-6xl lg:text-7xl font-bold mb-4 md:mb-8 text-white tracking-tight group-hover:text-smile-mid transition-colors">
+                    <Counter end={25} suffix="+" />
+                </div>
+                <p className="text-slate-400 text-sm leading-relaxed mb-4 md:mb-8 pr-4">
+                    With over 25 years of combined history in advanced restorative dentistry, our team brings university-level expertise to your neighborhood.
+                </p>
+                <a href="#doctors" className="text-white border-b border-white pb-0.5 self-start text-sm hover:text-smile-mid hover:border-smile-mid transition-colors flex items-center gap-2">
+                    Meet The Team <ArrowRight size={14} />
+                </a>
+            </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// export default Stats;
+/***** Team.tsx *****/
+// import React, { useState, useRef } from 'react';
+// import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Star } from 'lucide-react';
+
+const doctors = [
+  {
+    id: 1,
+    name: "Dr. James Mitchell",
+    role: "Lead Implant Specialist",
+    image: "https://img.freepik.com/free-photo/portrait-smiling-male-doctor-with-stethoscope_171337-1532.jpg?w=800",
+    exp: 15,
+    bio1: "We believe in a holistic approach to healthcare that emphasizes the interconnectedness of the body's systems. By gaining a deep understanding of how various physiological processes interact, we are able to provide personalized care tailored to each patient's unique needs.",
+    bio2: "Using state-of-the-art diagnostic tools and techniques, Dr. Mitchell meticulously analyzes the body's functions to identify underlying issues and develop comprehensive treatment plans for complex restorative cases.",
+    reviews: "+3k"
+  },
+  {
+    id: 2,
+    name: "Dr. Sarah Connors",
+    role: "Senior Orthodontist",
+    image: "https://img.freepik.com/free-photo/pleased-young-female-doctor-wearing-medical-robe-stethoscope-around-neck-standing-with-closed-posture_409827-254.jpg?w=800",
+    exp: 12,
+    bio1: "Dr. Connors specializes in creating perfect alignments using both traditional methods and modern invisible aligner technology. Her philosophy focuses on facial harmony and long-term stability, ensuring your smile looks natural and beautiful.",
+    bio2: "With a gentle touch and a keen eye for detail, she has transformed over 3,000 smiles, helping patients of all ages achieve the confidence they deserve through precision orthodontics.",
+    reviews: "+2.5k"
+  },
+  {
+    id: 3,
+    name: "Dr. David Chen",
+    role: "Cosmetic Dentist",
+    image: "https://img.freepik.com/free-photo/portrait-hansome-young-male-doctor-man_171337-5068.jpg?w=800",
+    exp: 9,
+    bio1: "Passionate about the art of dentistry, Dr. Chen combines technical expertise with an artistic eye to craft stunning veneers and bonding treatments. He is dedicated to minimally invasive procedures that preserve your natural tooth structure.",
+    bio2: "He stays at the forefront of cosmetic dental trends to ensure every patient receives the most advanced treatments available today, creating Hollywood-ready smiles for our community.",
+    reviews: "+1.8k"
+  }
+];
+
+const Team: React.FC = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  const nextDoctor = () => {
+    setCurrentIndex((prev) => (prev + 1) % doctors.length);
+  };
+
+  const prevDoctor = () => {
+    setCurrentIndex((prev) => (prev - 1 + doctors.length) % doctors.length);
+  };
+
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+    if (isLeftSwipe) {
+      nextDoctor();
+    }
+    if (isRightSwipe) {
+      prevDoctor();
+    }
+  };
+
+  const doctor = doctors[currentIndex];
+
+  return (
+    <section className="py-16 md:py-32 bg-white relative overflow-hidden" onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
+      <div className="container mx-auto px-6 max-w-7xl relative z-10">
+        
+        {/* Navigation Header (Mobile/Tablet visible) */}
+        <div className="flex justify-between items-center mb-10 lg:hidden">
+            <h2 className="font-heading text-2xl font-bold text-slate-900">Meet Our Team</h2>
+            <div className="flex gap-3">
+                <button onClick={prevDoctor} className="p-2.5 rounded-full border border-slate-200 hover:bg-slate-100 transition-colors">
+                    <ChevronLeft size={20} className="text-slate-900" />
+                </button>
+                <button onClick={nextDoctor} className="p-2.5 rounded-full border border-slate-200 hover:bg-slate-100 transition-colors">
+                    <ChevronRight size={20} className="text-slate-900" />
+                </button>
+            </div>
+        </div>
+
+        <div className="flex flex-col lg:flex-row items-center gap-10 md:gap-12 lg:gap-24">
+          
+          {/* Left: Image with Badges */}
+          <div className="lg:w-1/2 relative flex justify-center lg:justify-end animate-fade-in key={currentIndex}">
+             
+             {/* Circular Background Decoration */}
+             <div className="absolute inset-0 border border-slate-100 rounded-full scale-150 opacity-50"></div>
+             <div className="absolute inset-0 border border-slate-100 rounded-full scale-125 opacity-50"></div>
+             
+             <div className="relative">
+                 {/* Main Doctor Image */}
+                 <div className="w-[280px] h-[350px] md:w-[400px] md:h-[500px] rounded-full overflow-hidden border-[6px] md:border-[8px] border-white shadow-2xl relative z-10 bg-slate-50 transition-all duration-500">
+                    <img 
+                       src={doctor.image} 
+                       alt={doctor.name} 
+                       className="w-full h-full object-cover"
+                    />
+                 </div>
+
+                 {/* Trusted Badge (Top Right) */}
+                 <div className="absolute top-6 right-0 md:top-10 md:-right-10 z-20 bg-white p-3 md:p-4 rounded-2xl shadow-xl border border-slate-100 animate-[fadeUp_1s_ease-out_0.5s_forwards] scale-90 md:scale-100 origin-top-right">
+                    <div className="flex text-[#2563EB] mb-1 justify-center text-lg">
+                        <Star size={14} fill="currentColor" />
+                        <Star size={14} fill="currentColor" />
+                        <Star size={14} fill="currentColor" />
+                        <Star size={14} fill="currentColor" />
+                        <Star size={14} fill="currentColor" />
+                    </div>
+                    <div className="text-slate-900 font-bold text-xs text-center">Trusted by patient</div>
+                    <div className="flex -space-x-2 mt-2 justify-center">
+                        {[1,2,3].map(i => (
+                             <img key={i} src={`https://randomuser.me/api/portraits/men/${i+20}.jpg`} className="w-8 h-8 rounded-full border-2 border-white" alt="Patient" />
+                        ))}
+                        <div className="w-8 h-8 rounded-full bg-[#2563EB] text-white flex items-center justify-center text-xs border-2 border-white font-bold">{doctor.reviews}</div>
+                    </div>
+                 </div>
+
+                 {/* Experience Badge (Bottom Left) */}
+                 <div className="absolute bottom-4 -left-2 md:bottom-0 md:-left-6 z-20 bg-[#0055FF] text-white p-4 md:p-6 rounded-3xl shadow-xl max-w-[140px] md:max-w-[180px] scale-90 md:scale-100 origin-bottom-left">
+                    <span className="block text-3xl md:text-5xl font-bold mb-1">{doctor.exp}</span>
+                    <span className="text-sm md:text-lg leading-tight font-medium opacity-90">Years of Experience</span>
+                 </div>
+                 
+                 {/* Functional Previous Arrow (Was Next) - Desktop only */}
+                 <button 
+                    onClick={prevDoctor}
+                    className="hidden md:flex absolute top-1/2 -right-16 transform -translate-y-1/2 w-20 h-20 bg-[#0055FF] rounded-full items-center justify-center text-white shadow-[0_10px_40px_-10px_rgba(0,85,255,0.5)] z-30 hover:bg-[#0044CC] transition-all hover:scale-110 cursor-pointer group"
+                    aria-label="Previous Doctor"
+                 >
+                    <ArrowLeft size={32} className="group-hover:-translate-x-1 transition-transform" />
+                 </button>
+
+                 <div className="absolute bottom-10 right-20 w-6 h-6 bg-[#0055FF] rounded-full hidden md:block"></div>
+             </div>
+          </div>
+
+          {/* Right: Content */}
+          <div className="lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left animate-fade-in key={currentIndex}">
+            <div className="flex items-center gap-4 mb-4">
+                <span className="bg-blue-50 text-[#0055FF] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider border border-blue-100">
+                    {doctor.role}
+                </span>
+                
+                {/* Desktop Navigation */}
+                <div className="hidden lg:flex gap-2 ml-auto">
+                    <button onClick={prevDoctor} className="p-2 rounded-full border border-slate-200 hover:bg-slate-50 text-slate-400 hover:text-slate-900 transition-colors">
+                        <ChevronLeft size={20} />
+                    </button>
+                    <button onClick={nextDoctor} className="p-2 rounded-full border border-slate-200 hover:bg-slate-50 text-slate-400 hover:text-slate-900 transition-colors">
+                        <ChevronRight size={20} />
+                    </button>
+                </div>
+            </div>
+
+            <h2 className="font-heading text-4xl md:text-5xl font-bold text-[#0F172A] mb-6 md:mb-8">{doctor.name}</h2>
+            
+            <p className="text-slate-600 text-base md:text-lg leading-relaxed mb-6">
+                {doctor.bio1}
+            </p>
+            
+            <p className="text-slate-600 text-base md:text-lg leading-relaxed mb-8 md:mb-10">
+                {doctor.bio2}
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center gap-6 w-full sm:w-auto">
+                <a href="#booking" className="inline-flex items-center gap-2 bg-[#0055FF] text-white px-8 py-4 md:px-10 md:py-5 rounded-full font-bold text-lg hover:bg-[#0044CC] transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1 w-full sm:w-auto justify-center">
+                    Book An Appointment
+                </a>
+                
+                <div className="flex gap-2">
+                    {doctors.map((_, idx) => (
+                        <button 
+                            key={idx}
+                            onClick={() => setCurrentIndex(idx)}
+                            className={`w-3 h-3 rounded-full transition-all ${idx === currentIndex ? 'bg-[#0055FF] w-8' : 'bg-slate-200 hover:bg-slate-300'}`}
+                            aria-label={`Go to doctor ${idx + 1}`}
+                        />
+                    ))}
+                </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// export default Team;
+/***** VideoWidget.tsx *****/
+// import React, { useState, useRef, useEffect } from 'react';
+// import { X, Play } from 'lucide-react';
+
+const VideoWidget: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const triggerVideoRef = useRef<HTMLVideoElement>(null);
+
+  const toggleWidget = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsOpen(!isOpen);
+  };
+
+  useEffect(() => {
+    if (videoRef.current) {
+        if (isOpen) {
+            videoRef.current.currentTime = 0;
+            videoRef.current.muted = false;
+            videoRef.current.play().catch(e => {
+                console.log("Autoplay prevented", e);
+            });
+        } else {
+            videoRef.current.pause();
+        }
+    }
+  }, [isOpen]);
+
+  return (
+    <>
+      <style>{`
+        @keyframes widget-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(77, 182, 172, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(77, 182, 172, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(77, 182, 172, 0); }
+        }
+        .widget-pulse {
+            animation: widget-pulse 2s infinite;
+        }
+      `}</style>
+      
+      <div className="relative inline-block align-middle ml-2 md:ml-6 align-sub z-50">
+        {/* Trigger Bubble */}
+        <div 
+            className="w-16 h-16 md:w-20 md:h-20 rounded-full border-[3px] border-white/90 shadow-2xl cursor-pointer overflow-hidden relative transform transition-transform hover:scale-105 widget-pulse bg-slate-900 group"
+            onClick={toggleWidget}
+        >
+            <video 
+                ref={triggerVideoRef}
+                autoPlay 
+                muted 
+                loop 
+                playsInline 
+                className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
+            >
+                <source src="https://assets.mixkit.co/videos/preview/mixkit-man-working-in-an-office-1393-large.mp4" type="video/mp4" />
+            </video>
+            {/* Play overlay */}
+            <div className="absolute inset-0 flex items-center justify-center">
+                 <div className="w-8 h-8 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center border border-white/40">
+                    <Play size={14} fill="white" className="text-white ml-0.5" />
+                 </div>
+            </div>
+        </div>
+
+        {/* Expanded Player */}
+        <div 
+            className={`absolute top-1/2 -translate-y-1/2 left-full ml-6 w-[280px] md:w-[300px] aspect-[9/16] bg-slate-900 rounded-2xl overflow-hidden shadow-2xl transition-all duration-400 origin-left border border-white/10 ${
+                isOpen ? 'opacity-100 scale-100 pointer-events-auto translate-x-0' : 'opacity-0 scale-75 pointer-events-none -translate-x-10'
+            }`}
+            style={{ zIndex: 100 }}
+        >
+            <button 
+                onClick={toggleWidget}
+                className="absolute top-4 right-4 z-20 bg-black/20 backdrop-blur-md text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-black/40 transition-colors border border-white/10"
+            >
+                <X size={18} />
+            </button>
+            
+            <video 
+                ref={videoRef}
+                playsInline 
+                loop
+                className="w-full h-full object-cover"
+            >
+                 <source src="https://assets.mixkit.co/videos/preview/mixkit-man-working-in-an-office-1393-large.mp4" type="video/mp4" />
+            </video>
+
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none"></div>
+
+            <div className="absolute bottom-0 left-0 right-0 p-6 z-10 text-white">
+                <h3 className="font-bold text-lg mb-1 text-white drop-shadow-md">Hi, I'm Dr. Mitchell! ðŸ‘‹</h3>
+                <p className="text-sm text-white/90 mb-4 drop-shadow-md leading-relaxed">
+                    Thanks for visiting. Can I help you create your dream smile today?
+                </p>
+                <a 
+                    href="#offer" 
+                    onClick={toggleWidget}
+                    className="block w-full bg-smile-light hover:bg-smile-mid text-white text-center py-3 rounded-xl font-bold transition-colors shadow-lg text-sm"
+                >
+                    Book Free Strategy Call
+                </a>
+            </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+// export default VideoWidget;
+/***** WhyChooseUs.tsx *****/
+// import React from 'react';
+// import { ShieldCheck, CreditCard, Clock, Star, Zap } from 'lucide-react';
+
+const WhyChooseUs: React.FC = () => {
+  return (
+    <section className="py-24 relative overflow-hidden bg-page" id="about">
+      
+      {/* Liquid Background */}
+      <div className="absolute inset-0 opacity-20 noise-bg pointer-events-none"></div>
+      {/* Large subtle gradient blob */}
+      <div className="absolute bottom-0 left-0 w-[800px] h-[800px] bg-smile-mid/10 rounded-full blur-[150px] pointer-events-none translate-y-1/2 -translate-x-1/4"></div>
+
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="flex flex-col lg:flex-row gap-20 items-center">
+            
+            <div className="lg:w-1/2 reveal">
+                <div className="inline-flex items-center gap-2 border border-smile-mid/30 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wider mb-6 text-smile-mid bg-smile-mid/5">
+                    <Zap size={14} className="fill-current" />
+                    The SmileCraft Difference
+                </div>
+                <h2 className="font-heading text-4xl md:text-6xl font-bold mb-8 leading-tight text-white">
+                    Dentistry <br/>
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-smile-light to-smile-mid">Reimagined</span>
+                </h2>
+                <p className="text-slate-400 text-lg mb-10 leading-relaxed max-w-lg">
+                    We've stripped away the cold clinical feel and replaced it with a hospitality-first approach. 
+                    Experience dental care that feels like a retreat.
+                </p>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    {[
+                        "Top 1% of Dental Specialists",
+                        "Hospital-Grade Sterilization",
+                        "Private Treatment Suites",
+                        "Concierge Patient Support"
+                    ].map((item, i) => (
+                        <div key={i} className="flex items-center gap-3 group">
+                            <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-smile-mid shrink-0 group-hover:bg-smile-mid group-hover:text-black transition-colors">
+                                <ShieldCheck size={16} />
+                            </div>
+                            <span className="font-medium text-slate-300 group-hover:text-white transition-colors">{item}</span>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            <div className="lg:w-1/2 grid grid-cols-2 gap-5 reveal delay-200">
+                {/* Card 1 */}
+                <div className="bg-white/5 backdrop-blur-md border border-white/10 p-8 rounded-[2rem] flex flex-col items-center text-center hover:bg-white/10 hover:border-smile-mid/30 transition-all duration-300 group">
+                    <Clock className="text-smile-mid mb-6 group-hover:scale-110 transition-transform" size={40} />
+                    <h3 className="font-bold text-xl mb-2 text-white">Efficiency</h3>
+                    <p className="text-sm text-slate-400">Same-day appointments for urgent care needs</p>
+                </div>
+                
+                {/* Card 2 - Elevated */}
+                <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-md border border-white/10 p-8 rounded-[2rem] flex flex-col items-center text-center shadow-2xl shadow-black/50 transform translate-y-8 hover:translate-y-6 transition-all duration-300 group">
+                    <CreditCard className="text-white mb-6 group-hover:scale-110 transition-transform" size={40} />
+                    <h3 className="font-bold text-xl mb-2 text-white">Flexibility</h3>
+                    <p className="text-sm text-slate-400">0% financing options available for all patients</p>
+                </div>
+
+                {/* Card 3 */}
+                <div className="bg-white/5 backdrop-blur-md border border-white/10 p-8 rounded-[2rem] flex flex-col items-center text-center hover:bg-white/10 hover:border-smile-mid/30 transition-all duration-300 group">
+                    <ShieldCheck className="text-smile-mid mb-6 group-hover:scale-110 transition-transform" size={40} />
+                    <h3 className="font-bold text-xl mb-2 text-white">Warranty</h3>
+                    <p className="text-sm text-slate-400">Lifetime guarantee on implants and veneers</p>
+                </div>
+
+                {/* Card 4 - Elevated */}
+                <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-md border border-white/10 p-8 rounded-[2rem] flex flex-col items-center text-center shadow-2xl shadow-black/50 transform translate-y-8 hover:translate-y-6 transition-all duration-300 group">
+                    <Star className="text-smile-accent mb-6 fill-smile-accent group-hover:scale-110 transition-transform" size={40} />
+                    <h3 className="font-bold text-xl mb-2 text-white">Excellence</h3>
+                    <p className="text-sm text-slate-400">Consistently rated 5-stars by local families</p>
+                </div>
+            </div>
+
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// export default WhyChooseUs;
+/***** App.tsx *****/
+// import React from 'react';
+// import Navbar from './components/Navbar';
+// import Hero from './components/Hero';
+// import Stats from './components/Stats';
+// import Services from './components/Services';
+// import Facilities from './components/Facilities';
+// import Reviews from './components/Reviews';
+// import Team from './components/Team';
+// import Pricing from './components/Pricing';
+// import Booking from './components/Booking';
+// import Location from './components/Location';
+// import Footer from './components/Footer';
+// import ResultsTimeline from './components/ResultsTimeline';
+// import CinematicIntro from './components/CinematicIntro';
+
+const App: React.FC = () => {
+  return (
+    <div className="font-sans text-darkText bg-page min-h-screen selection:bg-smile-mid selection:text-white">
+      <Navbar />
+      <div id="home">
+        <Hero />
+      </div>
+      <Stats />
+      <div id="services">
+        <Services />
+      </div>
+      <Facilities />
+      <CinematicIntro />
+      <ResultsTimeline />
+      <div id="reviews">
+        <Reviews />
+      </div>
+      <div id="doctors">
+        <Team />
+      </div>
+      <div id="pricing">
+        <Pricing />
+      </div>
+      <div id="booking">
+        <Booking />
+      </div>
+      <div id="location">
+        <Location />
+      </div>
+      <Footer />
+    </div>
+  );
+};
+
+// export default App;
+/***** index.tsx *****/
+// import React from 'react';
+// import ReactDOM from 'react-dom/client';
+// import App from './App';
+
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+  throw new Error("Could not find root element to mount to");
+}
+
+const root = ReactDOM.createRoot(rootElement);
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);    </script>
+</body>
+</html>
