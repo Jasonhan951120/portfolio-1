@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus - Deep Space</title>
+    <link href="https://fonts.cdnfonts.com/css/pp-neue-montreal" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: "PPSupplyMono";
+            src: url("https://assets.codepen.io/7558/PPSupplyMono-Regular.ttf") format("truetype");
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        :root {
+            --warm-off-white: #ffffff;
+            --warm-off-white-dim: #cccccc;
+            --text-primary: #ffffff;
+            --text-secondary: #aaaaaa;
+            --background-dark: #050505;
+            --font-primary: "PP Neue Montreal", sans-serif;
+            --font-secondary: "PPSupplyMono", monospace;
+            --font-size-small: 12px;
+            --font-size-regular: 1rem;
+            --font-size-medium: 1.5rem;
+            --font-size-large: 4rem;
+            --spacing-large: 2rem;
+            --transition-fast: 0.3s ease;
+        }
+
+        *,
+        *:before,
+        *:after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+            background-color: var(--background-dark);
+            color: var(--text-primary);
+            font-family: var(--font-secondary);
+            font-size: var(--font-size-small);
+        }
+
+        /* Canvas Background */
+        #container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+        }
+
+        /* UI Layer */
+        .ui-layer {
+            position: relative;
+            z-index: 10;
+            pointer-events: none;
+            /* Let clicks pass to canvas */
+            width: 100%;
+            height: 100vh;
+        }
+
+        /* Header */
+        .header-area {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: var(--spacing-large);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .center-logo h1 {
+            font-family: var(--font-primary);
+            font-weight: 400;
+            font-size: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        /* Hero Content */
+        .hero {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 100%;
+            pointer-events: auto;
+            /* Allow text selection if needed */
+        }
+
+        .hero h1 {
+            font-family: var(--font-primary);
+            font-size: 5vw;
+            /* Responsive size */
+            line-height: 0.9;
+            font-weight: 400;
+            margin-bottom: 2rem;
+            text-transform: none;
+            text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+            /* Better visibility against stars */
+        }
+
+        .hero h2 {
+            font-family: var(--font-secondary);
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            line-height: 1.6;
+            font-weight: normal;
+            opacity: 0.8;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Corner Stats */
+        .coordinates {
+            position: absolute;
+            bottom: var(--spacing-large);
+            right: var(--spacing-large);
+            text-align: right;
+            color: var(--text-secondary);
+        }
+
+        .footer-links {
+            position: absolute;
+            bottom: var(--spacing-large);
+            left: var(--spacing-large);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            pointer-events: auto;
+        }
+
+        .footer-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            transition: color 0.3s;
+        }
+
+        .footer-link:hover {
+            color: #fff;
+        }
+
+        /* Tweakpane Container */
+        #ui-container {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 100;
+            pointer-events: auto;
+        }
+    </style>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.170.0/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+
+<body>
+
+    <!-- 3D Canvas -->
+    <div id="container"></div>
+
+    <!-- UI Layer -->
+    <div class="ui-layer">
+        <!-- Header Removed -->
+
+        <div class="hero">
+            <h1>Where matter becomes<br>thought and thought<br>becomes form</h1>
+            <h2 id="story-text">
+                our vessel drifts at coordinates (0.00, 0.00)<br>
+                gravitational field extends 0.10 units into quantum foam<br>
+                currently merging with 0 other entities
+            </h2>
+        </div>
+
+        <div class="footer-links">
+            <a href="#" class="footer-link">Fluid Dynamics</a>
+            <a href="#" class="footer-link">Organic Shapes</a>
+            <a href="#" class="footer-link">Interactive Forms</a>
+        </div>
+
+        <div class="coordinates" id="status-text">
+            <p>System State • Active</p>
+            <p>where consciousness flows</p>
+        </div>
+    </div>
+
+    <!-- Space Float Script -->
+    <script type="module">
+        import * as THREE from 'three';
+
+        let scene, camera, renderer;
+        let stars, starGeo;
+        let galaxyParticles, galaxyGeo;
+        let shootingStar;
+        let mouseX = 0, mouseY = 0;
+        let targetX = 0, targetY = 0;
+
+        // Settings
+        const STAR_COUNT = 6000; // Increased count
+        const GALAXY_COUNT = 2000;
+
+        init();
+        animate();
+
+        function init() {
+            const container = document.getElementById("container");
+
+            // Scene setup
+            scene = new THREE.Scene();
+
+            // Fog for depth
+            scene.fog = new THREE.FogExp2(0x050505, 0.001);
+
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 1;
+            camera.rotation.x = Math.PI / 2;
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); // Alpha for text overlay if needed
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+
+            // 1. Background Stars (The "Floating" field)
+            starGeo = new THREE.BufferGeometry();
+            const positions = [];
+            const sizes = [];
+            const colors = [];
+            const colorPalette = [
+                new THREE.Color(0xffffff), // White
+                new THREE.Color(0xaabbff), // Blue-ish
+                new THREE.Color(0xffddaa)  // Yellow-ish
+            ];
+
+            for (let i = 0; i < STAR_COUNT; i++) {
+                const x = (Math.random() - 0.5) * 600;
+                const y = (Math.random() - 0.5) * 600;
+                const z = (Math.random() - 0.5) * 600;
+                positions.push(x, y, z);
+
+                // Varied sizes for depth
+                sizes.push(Math.random() * 2.0);
+
+                // Random colors
+                const color = colorPalette[Math.floor(Math.random() * colorPalette.length)];
+                colors.push(color.r, color.g, color.b);
+            }
+
+            starGeo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+            starGeo.setAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
+            starGeo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+            // Custom shader material for round, glowing stars
+            const starMaterial = new THREE.PointsMaterial({
+                size: 0.5,
+                vertexColors: true,
+                map: createCircleTexture(),
+                transparent: true,
+                alphaTest: 0.1,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending
+            });
+
+            stars = new THREE.Points(starGeo, starMaterial);
+            scene.add(stars);
+
+            // 2. "Galaxy" Dust (Subtle dreamy cloud)
+            galaxyGeo = new THREE.BufferGeometry();
+            const gPositions = [];
+            for (let i = 0; i < GALAXY_COUNT; i++) {
+                const x = (Math.random() - 0.5) * 300;
+                const y = (Math.random() - 0.5) * 300;
+                const z = (Math.random() - 0.5) * 300;
+                gPositions.push(x, y, z);
+            }
+            galaxyGeo.setAttribute('position', new THREE.Float32BufferAttribute(gPositions, 3));
+
+            const galaxyMaterial = new THREE.PointsMaterial({
+                size: 4, // Large, soft particles
+                color: 0x4422ff, // Deep purple/blue
+                map: createBlurTexture(),
+                transparent: true,
+                opacity: 0.15, // Very subtle
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+
+            galaxyParticles = new THREE.Points(galaxyGeo, galaxyMaterial);
+            scene.add(galaxyParticles);
+
+            // Event Listeners
+            window.addEventListener('resize', onWindowResize);
+            document.addEventListener('mousemove', onDocumentMouseMove);
+        }
+
+        // Texture Helpers
+        function createCircleTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 32; canvas.height = 32;
+            const ctx = canvas.getContext('2d');
+            ctx.beginPath();
+            ctx.arc(16, 16, 14, 0, 2 * Math.PI);
+            ctx.fillStyle = '#ffffff';
+            ctx.fill();
+            const texture = new THREE.CanvasTexture(canvas);
+            return texture;
+        }
+
+        function createBlurTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 32; canvas.height = 32;
+            const ctx = canvas.getContext('2d');
+            const grad = ctx.createRadialGradient(16, 16, 0, 16, 16, 16);
+            grad.addColorStop(0, 'rgba(255,255,255,1)');
+            grad.addColorStop(1, 'rgba(255,255,255,0)');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 32, 32);
+            return new THREE.CanvasTexture(canvas);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function onDocumentMouseMove(event) {
+            mouseX = (event.clientX - window.innerWidth / 2) * 0.1; // Reduced sensitivity
+            mouseY = (event.clientY - window.innerHeight / 2) * 0.1;
+
+            updateUI(event.clientX, event.clientY);
+        }
+
+        function updateUI(x, y) {
+            const storyText = document.getElementById("story-text");
+            if (storyText) {
+                // Normalize coordinates for display
+                const displayX = (x / window.innerWidth).toFixed(2);
+                const displayY = (y / window.innerHeight).toFixed(2);
+
+                // Simulate "gravitational field" (camera Z or similar)
+                const fieldStrength = (1.0 + Math.sin(Date.now() * 0.001) * 0.1).toFixed(2);
+
+                // Simulate "merging entities" (random nearby star count or similar)
+                const entities = Math.floor(Math.random() * 3);
+
+                storyText.innerHTML =
+                    `our vessel drifts at coordinates (${displayX}, ${displayY})<br>` +
+                    `gravitational field extends ${fieldStrength} units into quantum foam<br>` +
+                    `currently merging with ${entities} other entities`;
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Smooth camera movement based on mouse
+            targetX = mouseX * 0.5;
+            targetY = mouseY * 0.5;
+
+            // Adding a constant "drift" to the stars to simulate floating
+            stars.rotation.y += 0.0005; // Slow rotation
+            galaxyParticles.rotation.y += 0.0002;
+
+            // Camera Sway
+            camera.position.x += (targetX - camera.position.x) * 0.01; // Very smooth lag
+            camera.position.y += (-targetY - camera.position.y) * 0.01;
+
+            // Gentle random float for camera z to simulate breathing
+            const time = Date.now() * 0.0005;
+            camera.position.z = 1 + Math.sin(time) * 0.1;
+
+            renderer.render(scene, camera);
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HANLAN - Digital Ecosystem</title>
+    <style>
+        /* =========================================
+           GLOBAL STYLES & IMPORTS
+           ========================================= */
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@300;400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow-x: hidden;
+        }
+
+        /* Section Commons */
+        section {
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* =========================================
+           SECTION 1: HERO (HANLAN)
+           ========================================= */
+        #hero-section {
+            background: #0a0a0a;
+            color: #d4d4d4;
+            font-family: 'Cormorant Garamond', serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Geometric background pattern */
+        .hero-geometric-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0.04;
+            pointer-events: none;
+        }
+
+        .hero-geo-circle {
+            position: absolute;
+            border: 1px solid #fff;
+            border-radius: 50%;
+            animation: heroPulse 8s ease-in-out infinite;
+        }
+
+        .hero-geo-circle:nth-child(1) {
+            width: 400px;
+            height: 400px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .hero-geo-circle:nth-child(2) {
+            width: 600px;
+            height: 600px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: 2s;
+        }
+
+        .hero-geo-circle:nth-child(3) {
+            width: 800px;
+            height: 800px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: 4s;
+        }
+
+        @keyframes heroPulse {
+
+            0%,
+            100% {
+                opacity: 0.04;
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            50% {
+                opacity: 0.08;
+                transform: translate(-50%, -50%) scale(1.05);
+            }
+        }
+
+        /* Diamond shapes */
+        .hero-diamond {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transform: rotate(45deg);
+            animation: heroRotateDiamond 10s linear infinite;
+        }
+
+        .hero-diamond:nth-child(1) {
+            top: 60px;
+            left: 60px;
+        }
+
+        .hero-diamond:nth-child(2) {
+            top: 60px;
+            right: 60px;
+            animation-delay: 2.5s;
+        }
+
+        .hero-diamond:nth-child(3) {
+            bottom: 60px;
+            left: 60px;
+            animation-delay: 5s;
+        }
+
+        .hero-diamond:nth-child(4) {
+            bottom: 60px;
+            right: 60px;
+            animation-delay: 7.5s;
+        }
+
+        @keyframes heroRotateDiamond {
+
+            0%,
+            100% {
+                transform: rotate(45deg);
+            }
+
+            50% {
+                transform: rotate(135deg);
+            }
+        }
+
+        /* Hero Content */
+        .hero-content {
+            text-align: center;
+            z-index: 10;
+            position: relative;
+            max-width: 900px;
+            padding: 0 40px;
+        }
+
+        .hero-top-symbol {
+            font-size: 28px;
+            color: rgba(255, 215, 0, 0.7);
+            margin-bottom: 35px;
+            opacity: 0;
+            animation: heroSymbolAppear 1.5s ease forwards 0.2s;
+            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
+        }
+
+        .hero-pre-title {
+            font-size: 12px;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            color: #999;
+            margin-bottom: 25px;
+            opacity: 0;
+            animation: heroTextFadeIn 1.2s ease forwards 0.5s;
+            font-family: 'Cinzel', serif;
+            font-weight: 400;
+        }
+
+        .hero h1 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(70px, 12vw, 130px);
+            font-weight: 700;
+            letter-spacing: 20px;
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: heroTitleReveal 1.5s ease forwards 0.8s;
+            color: #ffffff;
+            text-shadow: 0 0 60px rgba(255, 215, 0, 0.8), 0 0 100px rgba(255, 215, 0, 0.5), 0 5px 30px rgba(0, 0, 0, 0.9);
+            position: relative;
+        }
+
+        .hero-accent-line {
+            width: 250px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.9), transparent);
+            margin: 40px auto;
+            position: relative;
+            opacity: 0;
+            animation: heroLineExpand 1.5s ease forwards 1.1s;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+        }
+
+        .hero-description {
+            font-size: clamp(20px, 2.5vw, 26px);
+            line-height: 1.8;
+            color: #e0e0e0;
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: heroTextFadeIn 1.2s ease forwards 1.4s;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            letter-spacing: 1.5px;
+            font-family: 'Cinzel', serif;
+            font-weight: 400;
+        }
+
+        /* Animations */
+        @keyframes heroSymbolAppear {
+            from {
+                opacity: 0;
+                transform: translateY(-30px) rotate(-180deg);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) rotate(0deg);
+            }
+        }
+
+        @keyframes heroTextFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes heroTitleReveal {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+                letter-spacing: 35px;
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                letter-spacing: 20px;
+            }
+        }
+
+        @keyframes heroLineExpand {
+            from {
+                opacity: 0;
+                width: 0;
+            }
+
+            to {
+                opacity: 1;
+                width: 250px;
+            }
+        }
+
+        /* =========================================
+           SECTION 2: INTERACTIVE DIGRAM
+           ========================================= */
+        #diagram-section {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .diagram-container {
+            position: relative;
+            width: 600px;
+            height: 600px;
+        }
+
+        /* Center Hub */
+        .diagram-hub {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: #000;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .diagram-hub-text {
+            color: white;
+            font-size: 36px;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        /* Connection Lines SVG */
+        .diagram-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .diagram-svg-line {
+            stroke: #333;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        /* Main Nodes */
+        .diagram-node {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: white;
+            border: 2px solid #333;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            z-index: 5;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .diagram-node:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .diagram-node-icon {
+            font-size: 32px;
+        }
+
+        .diagram-node-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .node-website {
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .node-social {
+            bottom: 80px;
+            left: 80px;
+        }
+
+        .node-ads {
+            bottom: 80px;
+            right: 80px;
+        }
+
+        /* Orbiting Icons */
+        .orbit-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 500px;
+            height: 500px;
+            transform: translate(-50%, -50%);
+            animation: diagramRotate 30s linear infinite;
+            pointer-events: none;
+        }
+
+        .orbit-icon {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            opacity: 0.3;
+        }
+
+        .orbit-icon:nth-child(1) {
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .orbit-icon:nth-child(2) {
+            top: 7%;
+            right: 20%;
+        }
+
+        .orbit-icon:nth-child(3) {
+            top: 25%;
+            right: 5%;
+        }
+
+        .orbit-icon:nth-child(4) {
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+        }
+
+        .orbit-icon:nth-child(5) {
+            bottom: 25%;
+            right: 5%;
+        }
+
+        .orbit-icon:nth-child(6) {
+            bottom: 7%;
+            right: 20%;
+        }
+
+        .orbit-icon:nth-child(7) {
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .orbit-icon:nth-child(8) {
+            bottom: 7%;
+            left: 20%;
+        }
+
+        .orbit-icon:nth-child(9) {
+            bottom: 25%;
+            left: 5%;
+        }
+
+        .orbit-icon:nth-child(10) {
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+        }
+
+        .orbit-icon:nth-child(11) {
+            top: 25%;
+            left: 5%;
+        }
+
+        .orbit-icon:nth-child(12) {
+            top: 7%;
+            left: 20%;
+        }
+
+        @keyframes diagramRotate {
+            from {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        /* =========================================
+           SECTION 3: HOW WE HELP (ANIMATION)
+           ========================================= */
+        #help-section {
+            background: #f8f9fa;
+            font-family: 'Georgia', serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .help-header {
+            text-align: center;
+            margin-bottom: 60px;
+            max-width: 900px;
+        }
+
+        .help-header h2 {
+            font-size: 64px;
+            font-weight: 400;
+            color: #1a1a1a;
+            margin-bottom: 24px;
+            letter-spacing: -1px;
+        }
+
+        .animation-stage {
+            position: relative;
+            width: 800px;
+            height: 400px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .anim-ground {
+            position: absolute;
+            bottom: 80px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e0e0e0;
+        }
+
+        /* Characters */
+        .char {
+            position: absolute;
+            bottom: 80px;
+        }
+
+        /* Person 1 (Struggling) */
+        .char-1 {
+            left: 150px;
+            animation: char1-sequence 8s ease-in-out infinite;
+        }
+
+        .char-1 .head {
+            width: 40px;
+            height: 40px;
+            background: #333;
+            border-radius: 50%;
+            position: relative;
+            animation: head1-move 8s ease-in-out infinite;
+        }
+
+        .char-1 .body {
+            width: 4px;
+            height: 60px;
+            background: #333;
+            margin: 0 auto;
+            animation: body1-move 8s ease-in-out infinite;
+        }
+
+        .char-1 .arms {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: arms1-move 8s ease-in-out infinite;
+        }
+
+        .char-1 .arm {
+            width: 35px;
+            height: 4px;
+            background: #333;
+            position: absolute;
+        }
+
+        .char-1 .arm-left {
+            transform: rotate(-45deg);
+            left: -30px;
+        }
+
+        .char-1 .arm-right {
+            transform: rotate(45deg);
+            right: -30px;
+        }
+
+        .char-1 .legs {
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: legs1-move 8s ease-in-out infinite;
+        }
+
+        .char-1 .leg {
+            width: 40px;
+            height: 4px;
+            background: #333;
+            position: absolute;
+        }
+
+        .char-1 .leg-left {
+            transform: rotate(90deg);
+            left: -20px;
+        }
+
+        .char-1 .leg-right {
+            transform: rotate(90deg);
+            right: -20px;
+        }
+
+        /* Person 2 (Helper) */
+        .char-2 {
+            left: -100px;
+            animation: char2-sequence 8s ease-in-out infinite;
+        }
+
+        .char-2 .head {
+            width: 40px;
+            height: 40px;
+            background: #2563eb;
+            border-radius: 50%;
+        }
+
+        .char-2 .body {
+            width: 4px;
+            height: 60px;
+            background: #2563eb;
+            margin: 0 auto;
+        }
+
+        .char-2 .arms {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .char-2 .arm {
+            width: 35px;
+            height: 4px;
+            background: #2563eb;
+            position: absolute;
+            animation: helper-arms 8s ease-in-out infinite;
+        }
+
+        .char-2 .arm-left {
+            transform: rotate(-30deg);
+            left: -30px;
+        }
+
+        .char-2 .arm-right {
+            transform: rotate(30deg);
+            right: -30px;
+        }
+
+        .char-2 .legs {
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .char-2 .leg {
+            width: 45px;
+            height: 4px;
+            background: #2563eb;
+            position: absolute;
+            animation: helper-legs 8s ease-in-out infinite;
+        }
+
+        .char-2 .leg-left {
+            transform: rotate(-45deg);
+            left: -15px;
+        }
+
+        .char-2 .leg-right {
+            transform: rotate(45deg);
+            right: -15px;
+        }
+
+        @keyframes char2-sequence {
+            0% {
+                left: -100px;
+            }
+
+            20%,
+            60% {
+                left: 120px;
+            }
+
+            80%,
+            100% {
+                left: 700px;
+            }
+        }
+
+        @keyframes char1-sequence {
+
+            0%,
+            20% {
+                left: 150px;
+                transform: translateY(0);
+            }
+
+            40%,
+            60% {
+                left: 150px;
+                transform: translateY(-50px);
+            }
+
+            80%,
+            100% {
+                left: 700px;
+                transform: translateY(-50px);
+            }
+        }
+
+        /* Sitting/Standing helpers */
+        @keyframes head1-move {
+
+            0%,
+            20% {
+                transform: translateY(30px);
+            }
+
+            40%,
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes body1-move {
+
+            0%,
+            20% {
+                height: 40px;
+            }
+
+            40%,
+            100% {
+                height: 60px;
+            }
+        }
+
+        @keyframes arms1-move {
+
+            0%,
+            20% {
+                top: 70px;
+            }
+
+            40%,
+            100% {
+                top: 50px;
+            }
+        }
+
+        @keyframes legs1-move {
+
+            0%,
+            20% {
+                top: 100px;
+                opacity: 1;
+            }
+
+            40%,
+            100% {
+                top: 100px;
+                opacity: 0;
+            }
+        }
+
+        @keyframes helper-arms {
+            0% {
+                transform: rotate(-30deg);
+            }
+
+            40%,
+            100% {
+                transform: rotate(-60deg);
+            }
+        }
+
+        @keyframes helper-legs {
+
+            0%,
+            60% {
+                animation-timing-function: steps(4);
+            }
+
+            60%,
+            100% {
+                transform: rotate(-45deg);
+            }
+        }
+
+        .stage-label {
+            position: absolute;
+            bottom: 20px;
+            font-size: 14px;
+            color: #666;
+            background: #f0f0f0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            animation: label-fade 8s ease-in-out infinite;
+        }
+
+        .label-1 {
+            left: 100px;
+            animation-delay: 0s;
+        }
+
+        .label-2 {
+            left: 300px;
+            animation-delay: 2s;
+        }
+
+        .label-3 {
+            left: 500px;
+            animation-delay: 4s;
+        }
+
+        @keyframes label-fade {
+
+            0%,
+            20% {
+                opacity: 1;
+            }
+
+            25%,
+            100% {
+                opacity: 0.3;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SECTION 1: HERO -->
+    <section id="hero-section">
+        <div class="hero-geometric-bg">
+            <div class="hero-geo-circle"></div>
+            <div class="hero-geo-circle"></div>
+            <div class="hero-geo-circle"></div>
+        </div>
+
+        <!-- Diamonds -->
+        <div class="hero-diamond"></div>
+        <div class="hero-diamond"></div>
+        <div class="hero-diamond"></div>
+        <div class="hero-diamond"></div>
+
+        <div class="hero-content">
+            <div class="hero-top-symbol">❋</div>
+            <p class="hero-pre-title">Digital Excellence</p>
+            <h1>HANLAN</h1>
+            <div class="hero-accent-line"></div>
+            <p class="hero-description">
+                We don't just build websites.<br>
+                We build your success.
+            </p>
+        </div>
+    </section>
+
+    <!-- SECTION 2: INTERACTIVE DIGRAM -->
+    <section id="diagram-section">
+        <div class="diagram-container">
+            <svg class="diagram-svg">
+                <line class="diagram-svg-line" x1="300" y1="300" x2="300" y2="150" />
+                <line class="diagram-svg-line" x1="300" y1="300" x2="180" y2="470" />
+                <line class="diagram-svg-line" x1="300" y1="300" x2="420" y2="470" />
+            </svg>
+
+            <div class="orbit-container">
+                <div class="orbit-icon">💳</div>
+                <div class="orbit-icon">🔗</div>
+                <div class="orbit-icon">⚡</div>
+                <div class="orbit-icon">📱</div>
+                <div class="orbit-icon">📊</div>
+                <div class="orbit-icon">💬</div>
+                <div class="orbit-icon">👥</div>
+                <div class="orbit-icon">🎯</div>
+                <div class="orbit-icon">📧</div>
+                <div class="orbit-icon">🔍</div>
+                <div class="orbit-icon">📈</div>
+                <div class="orbit-icon">🌐</div>
+            </div>
+
+            <div class="diagram-hub">
+                <div class="diagram-hub-text">H.</div>
+            </div>
+
+            <div class="diagram-node node-website">
+                <div class="diagram-node-icon">🌐</div>
+                <div class="diagram-node-label">Website</div>
+            </div>
+            <div class="diagram-node node-social">
+                <div class="diagram-node-icon">📹</div>
+                <div class="diagram-node-label">Social</div>
+            </div>
+            <div class="diagram-node node-ads">
+                <div class="diagram-node-icon">🎯</div>
+                <div class="diagram-node-label">Ads</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: ANIMATION -->
+    <section id="help-section">
+        <div class="help-header">
+            <h2>How We Help You Win</h2>
+            <p style="font-size: 20px; color: #666; font-style: italic;">
+                Turning strangers into customers.
+            </p>
+        </div>
+
+        <div class="animation-stage">
+            <div class="anim-ground"></div>
+
+            <!-- Struggling Person -->
+            <div class="char char-1">
+                <div class="head"></div>
+                <div class="body"></div>
+                <div class="arms">
+                    <div class="arm arm-left"></div>
+                    <div class="arm arm-right"></div>
+                </div>
+                <div class="legs">
+                    <div class="leg leg-left"></div>
+                    <div class="leg leg-right"></div>
+                </div>
+            </div>
+
+            <!-- Helper Person -->
+            <div class="char char-2">
+                <div class="head"></div>
+                <div class="body"></div>
+                <div class="arms">
+                    <div class="arm arm-left"></div>
+                    <div class="arm arm-right"></div>
+                </div>
+                <div class="legs">
+                    <div class="leg leg-left"></div>
+                    <div class="leg leg-right"></div>
+                </div>
+            </div>
+
+            <div class="stage-label label-1">😔 Struggling</div>
+            <div class="stage-label label-2">🤝 We Help</div>
+            <div class="stage-label label-3">🚀 You Win</div>
+        </div>
+    </section>
+
+</body>
+
+</html>

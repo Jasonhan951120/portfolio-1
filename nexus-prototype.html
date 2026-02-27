@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus - Thought becomes Form</title>
+    <link href="https://fonts.cdnfonts.com/css/pp-neue-montreal" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: "PPSupplyMono";
+            src: url("https://assets.codepen.io/7558/PPSupplyMono-Regular.ttf") format("truetype");
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        :root {
+            --warm-off-white: #ffffff;
+            --warm-off-white-dim: #cccccc;
+            --text-primary: #ffffff;
+            --text-secondary: #aaaaaa;
+            --background-dark: #050505;
+            --font-primary: "PP Neue Montreal", sans-serif;
+            --font-secondary: "PPSupplyMono", monospace;
+            --font-size-small: 12px;
+            --font-size-regular: 1rem;
+            --font-size-medium: 1.5rem;
+            --font-size-large: 4rem;
+            --spacing-large: 2rem;
+            --transition-fast: 0.3s ease;
+        }
+
+        *,
+        *:before,
+        *:after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+            background-color: var(--background-dark);
+            color: var(--text-primary);
+            font-family: var(--font-secondary);
+            font-size: var(--font-size-small);
+        }
+
+        /* Canvas Background */
+        #container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+        }
+
+        /* UI Layer */
+        .ui-layer {
+            position: relative;
+            z-index: 10;
+            pointer-events: none;
+            /* Let clicks pass to canvas */
+            width: 100%;
+            height: 100vh;
+        }
+
+        /* Header */
+        .header-area {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: var(--spacing-large);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .center-logo h1 {
+            font-family: var(--font-primary);
+            font-weight: 400;
+            font-size: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        /* Hero Content */
+        .hero {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 100%;
+            pointer-events: auto;
+            /* Allow text selection if needed */
+        }
+
+        .hero h1 {
+            font-family: var(--font-primary);
+            font-size: 5vw;
+            /* Responsive size */
+            line-height: 0.9;
+            font-weight: 400;
+            margin-bottom: 2rem;
+            text-transform: none;
+            mix-blend-mode: difference;
+            /* Cool effect over metaballs */
+        }
+
+        .hero h2 {
+            font-family: var(--font-secondary);
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            line-height: 1.6;
+            font-weight: normal;
+            opacity: 0.8;
+        }
+
+        /* Corner Stats */
+        .coordinates {
+            position: absolute;
+            bottom: var(--spacing-large);
+            right: var(--spacing-large);
+            text-align: right;
+            color: var(--text-secondary);
+        }
+
+        .footer-links {
+            position: absolute;
+            bottom: var(--spacing-large);
+            left: var(--spacing-large);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            pointer-events: auto;
+        }
+
+        .footer-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            transition: color 0.3s;
+        }
+
+        .footer-link:hover {
+            color: #fff;
+        }
+
+        /* Tweakpane Container */
+        #ui-container {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 100;
+            pointer-events: auto;
+        }
+    </style>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.170.0/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+
+<body>
+
+    <!-- 3D Canvas -->
+    <div id="container"></div>
+
+    <!-- Tweakpane UI -->
+    <div id="ui-container"></div>
+
+    <!-- Nexus UI -->
+    <div class="ui-layer">
+        <div class="header-area">
+            <div class="center-logo">
+                <h1>Nexus.</h1>
+            </div>
+        </div>
+
+        <div class="hero">
+            <h1>Where matter becomes<br>thought and thought<br>becomes form</h1>
+            <h2 id="story-text">
+                our vessel drifts at coordinates (0.00, 0.00)<br>
+                gravitational field extends 0.10 units into quantum foam<br>
+                currently merging with 0 other entities
+            </h2>
+        </div>
+
+        <div class="footer-links">
+            <a href="#" class="footer-link">Fluid Dynamics</a>
+            <a href="#" class="footer-link">Organic Shapes</a>
+            <a href="#" class="footer-link">Interactive Forms</a>
+        </div>
+
+        <div class="coordinates" id="status-text">
+            <p>Nexus State • Active</p>
+            <p>where consciousness flows</p>
+        </div>
+    </div>
+
+    <!-- Metaball Shader Script -->
+    <script type="module">
+        import * as THREE from 'three';
+        import { Pane } from 'https://unpkg.com/tweakpane@4.0.3/dist/tweakpane.js';
+
+        let scene, camera, renderer, material;
+        let clock, mouse = new THREE.Vector2();
+        let cursorSphere3D = new THREE.Vector3(0, 0, 0);
+        let activeMerges = 0;
+        let targetMousePosition = new THREE.Vector2(0.5, 0.5);
+        let mousePosition = new THREE.Vector2(0.5, 0.5);
+        let lastTime = performance.now();
+        let frameCount = 0;
+        let fps = 0;
+
+        const settings = {
+            sphereCount: 6,
+            ambientIntensity: 0.05,
+            diffuseIntensity: 0.8,
+            specularIntensity: 1.6,
+            specularPower: 8,
+            fresnelPower: 1.4,
+            backgroundColor: new THREE.Color(0x050505),
+            sphereColor: new THREE.Color(0x111111), // Dark, sleek metal
+            lightColor: new THREE.Color(0xffffff),
+            lightPosition: new THREE.Vector3(1, 1, 1),
+            smoothness: 0.4,
+            contrast: 1.2,
+            fogDensity: 0.1,
+            cursorGlowIntensity: 0.5,
+            cursorGlowRadius: 1.5,
+            cursorGlowColor: new THREE.Color(0x4477ff), // Nexus Blue
+            // Shader controls
+            fixedTopLeftRadius: 0.8,
+            fixedBottomRightRadius: 0.9,
+            smallTopLeftRadius: 0.3,
+            smallBottomRightRadius: 0.35,
+            cursorRadiusMin: 0.08,
+            cursorRadiusMax: 0.2, // Larger interaction radius
+            animationSpeed: 0.6,
+            movementScale: 1.2,
+            mouseSmoothness: 0.08, // Smoother feel
+            mergeDistance: 1.5,
+            mouseProximityEffect: true,
+            minMovementScale: 0.3,
+            maxMovementScale: 1.0
+        };
+
+        init();
+        animate();
+
+        function init() {
+            const container = document.getElementById("container");
+            scene = new THREE.Scene();
+            camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 10);
+            camera.position.z = 1;
+            clock = new THREE.Clock();
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
+
+            // Shader Material from User snippet (Modified for reliability)
+            material = new THREE.ShaderMaterial({
+                uniforms: {
+                    uTime: { value: 0 },
+                    uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+                    uMousePosition: { value: new THREE.Vector2(0.5, 0.5) },
+                    uCursorSphere: { value: new THREE.Vector3(0, 0, 0) },
+                    uCursorRadius: { value: settings.cursorRadiusMin },
+                    uSphereCount: { value: settings.sphereCount },
+
+                    // Geometry
+                    uFixedTopLeftRadius: { value: settings.fixedTopLeftRadius },
+                    uFixedBottomRightRadius: { value: settings.fixedBottomRightRadius },
+                    uSmallTopLeftRadius: { value: settings.smallTopLeftRadius },
+                    uSmallBottomRightRadius: { value: settings.smallBottomRightRadius },
+                    uMergeDistance: { value: settings.mergeDistance },
+                    uSmoothness: { value: settings.smoothness },
+
+                    // Lighting
+                    uAmbientIntensity: { value: settings.ambientIntensity },
+                    uDiffuseIntensity: { value: settings.diffuseIntensity },
+                    uSpecularIntensity: { value: settings.specularIntensity },
+                    uSpecularPower: { value: settings.specularPower },
+                    uFresnelPower: { value: settings.fresnelPower },
+                    uBackgroundColor: { value: settings.backgroundColor },
+                    uSphereColor: { value: settings.sphereColor },
+                    uLightColor: { value: settings.lightColor },
+                    uLightPosition: { value: settings.lightPosition },
+
+                    // Post-process
+                    uContrast: { value: settings.contrast },
+                    uFogDensity: { value: settings.fogDensity },
+                    uCursorGlowIntensity: { value: settings.cursorGlowIntensity },
+                    uCursorGlowRadius: { value: settings.cursorGlowRadius },
+                    uCursorGlowColor: { value: settings.cursorGlowColor },
+
+                    // Logic
+                    uAnimationSpeed: { value: settings.animationSpeed },
+                    uMovementScale: { value: settings.movementScale },
+                    uMouseProximityEffect: { value: settings.mouseProximityEffect },
+                    uMinMovementScale: { value: settings.minMovementScale },
+                    uMaxMovementScale: { value: settings.maxMovementScale },
+
+                    // Flags
+                    uIsMobile: { value: 0.0 },
+                    uIsLowPower: { value: 0.0 },
+                    uIsSafari: { value: 0.0 }
+                },
+                vertexShader: `
+                    varying vec2 vUv;
+                    void main() {
+                        vUv = uv;
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                    }
+                `,
+                fragmentShader: `
+                    precision highp float;
+                    
+                    uniform float uTime;
+                    uniform vec2 uResolution;
+                    uniform vec2 uMousePosition;
+                    uniform vec3 uCursorSphere;
+                    uniform float uCursorRadius;
+                    uniform int uSphereCount;
+                    uniform float uFixedTopLeftRadius;
+                    uniform float uFixedBottomRightRadius;
+                    uniform float uSmallTopLeftRadius;
+                    uniform float uSmallBottomRightRadius;
+                    uniform float uMergeDistance;
+                    uniform float uSmoothness;
+
+                    uniform float uAmbientIntensity;
+                    uniform float uDiffuseIntensity;
+                    uniform float uSpecularIntensity;
+                    uniform float uSpecularPower;
+                    uniform float uFresnelPower;
+                    uniform vec3 uBackgroundColor;
+                    uniform vec3 uSphereColor;
+                    uniform vec3 uLightColor;
+                    uniform vec3 uLightPosition;
+                    uniform float uContrast;
+                    uniform float uFogDensity;
+                    uniform float uAnimationSpeed;
+                    uniform float uMovementScale;
+
+                    uniform float uCursorGlowIntensity;
+                    uniform float uCursorGlowRadius;
+                    uniform vec3 uCursorGlowColor;
+
+                    const float PI = 3.14159265359;
+                    const float MAX_DIST = 100.0;
+                    const float EPSILON = 0.001;
+
+                    // Smooth Min Function (Metaball magic)
+                    float smin(float a, float b, float k) {
+                        float h = max(k - abs(a - b), 0.0) / k;
+                        return min(a, b) - h * h * k * 0.25;
+                    }
+
+                    float sdSphere(vec3 p, float r) {
+                        return length(p) - r;
+                    }
+
+                    // Map function defining the scene
+                    float sceneSDF(vec3 pos) {
+                        // Base fixed spheres
+                        float d = MAX_DIST;
+                        
+                        // Corner spheres
+                        d = smin(d, sdSphere(pos - vec3(-3.5, 2.0, 0.0), uFixedTopLeftRadius), 0.5);
+                        d = smin(d, sdSphere(pos - vec3(3.5, -2.0, 0.0), uFixedBottomRightRadius), 0.5);
+
+                        // Moving spheres
+                        float t = uTime * uAnimationSpeed;
+                        for(int i = 0; i < 6; i++) {
+                             float fi = float(i);
+                             vec3 offset = vec3(
+                                sin(t * 0.5 + fi) * 2.5 * uMovementScale,
+                                cos(t * 0.3 + fi * 0.5) * 1.5 * uMovementScale,
+                                sin(t * 0.2 + fi) * 0.5
+                             );
+                             d = smin(d, sdSphere(pos - offset, 0.3 + sin(fi)*0.1), uSmoothness);
+                        }
+
+                        // Cursor Sphere
+                        d = smin(d, sdSphere(pos - uCursorSphere, uCursorRadius), uSmoothness);
+
+                        return d;
+                    }
+
+                    vec3 calcNormal(vec3 p) {
+                        return normalize(vec3(
+                            sceneSDF(p + vec3(EPSILON, 0, 0)) - sceneSDF(p - vec3(EPSILON, 0, 0)),
+                            sceneSDF(p + vec3(0, EPSILON, 0)) - sceneSDF(p - vec3(0, EPSILON, 0)),
+                            sceneSDF(p + vec3(0, 0, EPSILON)) - sceneSDF(p - vec3(0, 0, EPSILON))
+                        ));
+                    }
+
+                    void main() {
+                        vec2 uv = (gl_FragCoord.xy * 2.0 - uResolution.xy) / uResolution.y;
+                        
+                        vec3 ro = vec3(uv * 2.5, -4.0); // Camera back
+                        vec3 rd = vec3(0.0, 0.0, 1.0); // Look forward
+                        
+                        // Raymarching
+                        float t = 0.0;
+                        float d = 0.0;
+                        int steps = 0;
+                        for(int i = 0; i < 64; i++) {
+                            vec3 p = ro + rd * t;
+                            d = sceneSDF(p);
+                            if(d < EPSILON) break;
+                            t += d;
+                            if(t > 20.0) break;
+                            steps = i;
+                        }
+
+                        vec3 color = uBackgroundColor;
+
+                        if (t < 20.0) {
+                            vec3 p = ro + rd * t;
+                            vec3 normal = calcNormal(p);
+                            vec3 lightDir = normalize(uLightPosition);
+                            
+                            // Lighting
+                            float diff = max(dot(normal, lightDir), 0.0);
+                            vec3 viewDir = -rd;
+                            vec3 reflectDir = reflect(-lightDir, normal);
+                            float spec = pow(max(dot(viewDir, reflectDir), 0.0), uSpecularPower);
+                            float fresnel = pow(1.0 - max(dot(viewDir, normal), 0.0), uFresnelPower);
+
+                            vec3 ambient = uSphereColor * uAmbientIntensity;
+                            vec3 diffuse = uSphereColor * diff * uDiffuseIntensity;
+                            vec3 specular = uLightColor * spec * uSpecularIntensity;
+                            vec3 rim = uLightColor * fresnel * 0.5;
+
+                            color = ambient + diffuse + specular + rim;
+                            
+                            // Fog
+                            color = mix(color, uBackgroundColor, 1.0 - exp(-t * uFogDensity));
+                        }
+                        
+                        // Glow around cursor (2D effect)
+                        float distToCursor = length(vec3(uv * 2.5, 0) - uCursorSphere);
+                        float glow = exp(-distToCursor * 2.0) * uCursorGlowIntensity;
+                        color += uCursorGlowColor * glow;
+
+                        gl_FragColor = vec4(color, 1.0);
+                    }
+                `
+            });
+
+            const mesh = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material);
+            scene.add(mesh);
+
+            // Tweakpane UI
+            // const pane = new Pane({ container: document.getElementById('ui-container'), title: 'Simulation' });
+            // pane.addBinding(settings, 'smoothness', { min: 0.1, max: 2.0 });
+            // pane.addBinding(settings, 'sphereColor');
+            // pane.addBinding(settings, 'cursorGlowColor');
+
+            window.addEventListener('resize', onWindowResize);
+            window.addEventListener('mousemove', onPointerMove);
+        }
+
+        function onWindowResize() {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            material.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
+        }
+
+        function onPointerMove(e) {
+            // Need to map mouse to the shader's coordinate system (approx -3 to 3 based on camera)
+            const ndc = new THREE.Vector2(
+                (e.clientX / window.innerWidth) * 2 - 1,
+                -(e.clientY / window.innerHeight) * 2 + 1
+            );
+
+            const aspect = window.innerWidth / window.innerHeight;
+            targetMousePosition.set(ndc.x * 2.5 * aspect, ndc.y * 2.5); // Approximate scale 
+
+            // Calculate active merges (fake simple logic for demo text)
+            // Ideally we check distance against all sphere centers
+        }
+
+        function updateUI() {
+            const storyText = document.getElementById("story-text");
+            if (storyText) {
+                storyText.innerHTML =
+                    `our vessel drifts at coordinates (${cursorSphere3D.x.toFixed(2)}, ${cursorSphere3D.y.toFixed(2)})<br>` +
+                    `gravitational field extends ${material.uniforms.uCursorRadius.value.toFixed(2)} units into quantum foam<br>` +
+                    `currently merging with ${activeMerges} other entities`;
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Smooth mouse
+            cursorSphere3D.x += (targetMousePosition.x - cursorSphere3D.x) * settings.mouseSmoothness;
+            cursorSphere3D.y += (targetMousePosition.y - cursorSphere3D.y) * settings.mouseSmoothness;
+
+            material.uniforms.uTime.value = clock.getElapsedTime();
+            material.uniforms.uCursorSphere.value.copy(cursorSphere3D);
+
+            updateUI();
+            renderer.render(scene, camera);
+        }
+    </script>
+</body>
+
+</html>

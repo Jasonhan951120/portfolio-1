@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introducing Animation</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f0f0f0;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #111;
+        }
+
+        /* 1. Grid Background */
+        .grid-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(#e5e5e5 1px, transparent 1px),
+                linear-gradient(90deg, #e5e5e5 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: 1;
+        }
+
+        /* 2. Code/ASCII Cloud Behind */
+        .code-cloud {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 400px;
+            z-index: 5;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0.6;
+            mask-image: radial-gradient(circle, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 70%);
+            -webkit-mask-image: radial-gradient(circle, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 70%);
+        }
+
+        .code-char {
+            position: absolute;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #555;
+            font-weight: bold;
+            user-select: none;
+            animation: flicker 3s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0% {
+                opacity: 0.3;
+            }
+
+            100% {
+                opacity: 0.8;
+            }
+        }
+
+        /* 3. Foreground Text */
+        .main-text {
+            position: relative;
+            z-index: 10;
+            font-size: 8rem;
+            /* Very large text */
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: -2px;
+            color: #111;
+            mix-blend-mode: normal;
+            /* Or multiply/darken if you want blending */
+            animation: textAppear 1.5s ease-out;
+        }
+
+        @keyframes textAppear {
+            0% {
+                opacity: 0;
+                transform: scale(0.9) translateY(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* Specific positions for code "cluster" shape (simulated) */
+        /* I will generate these via JS to create a random organic code cloud */
+    </style>
+</head>
+
+<body>
+
+    <div class="grid-bg"></div>
+
+    <div class="code-cloud" id="codeCloud">
+        <!-- Javascript will populate this with Code characters -->
+    </div>
+
+    <h1 class="main-text">Introducing</h1>
+
+    <script>
+        const cloud = document.getElementById('codeCloud');
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789<>/{}[]*&^%$#@!';
+        const cloudWidth = 600;
+        const cloudHeight = 400;
+        const particleCount = 400; // Number of code bits
+
+        // Create a random cloud of code characters
+        for (let i = 0; i < particleCount; i++) {
+            const span = document.createElement('span');
+            span.textContent = chars.charAt(Math.floor(Math.random() * chars.length));
+            span.classList.add('code-char');
+
+            // Random Position within a circle/oval distribution
+            // Using Box-Muller transform approximation or just rejection sampling for a softer blob
+            let x, y, dist;
+            do {
+                x = (Math.random() - 0.5) * cloudWidth;
+                y = (Math.random() - 0.5) * cloudHeight;
+                // Check distance from center to make it a blob
+                // Ellipse equation: (x/a)^2 + (y/b)^2 <= 1
+                // a = width/2, b = height/2
+                dist = (x / (cloudWidth / 2)) ** 2 + (y / (cloudHeight / 2)) ** 2;
+            } while (Math.random() > Math.exp(-dist * 3)); // Gaussian-ish distribution
+
+            span.style.left = (x + cloudWidth / 2) + 'px';
+            span.style.top = (y + cloudHeight / 2) + 'px';
+
+            // Random Font Size
+            const size = Math.random() * 10 + 8; // 8px to 18px
+            span.style.fontSize = size + 'px';
+
+            // Random Animation Delay
+            span.style.animationDelay = (Math.random() * 5) + 's';
+            span.style.animationDuration = (Math.random() * 2 + 2) + 's'; // 2-4s
+
+            cloud.appendChild(span);
+        }
+
+        // Add drifting movement to the whole cloud slightly
+        let time = 0;
+        function animate() {
+            time += 0.005;
+            // Slight rotation or drift could be added here if needed
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+    </script>
+</body>
+
+</html>

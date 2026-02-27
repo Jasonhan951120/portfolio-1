@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
+
+        p,
+        span {
+            min-width: 5px;
+            display: inline-block;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-size: 0.85em;
+            letter-spacing: 1.5px;
+            color: #FFF;
+        }
+
+        body {
+            background: #111;
+            position: relative;
+            overflow-y: scroll;
+        }
+
+        body,
+        html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .text {
+            overflow: hidden;
+            height: auto;
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <p class="text"
+        data-text="class Matrix {/n    constructor(rows, cols) {/n        this.rows = rows;/n        this.cols = cols;/n        this.data = [];/n/n        for (let i = 0; i < this.rows; i++) {/n            this.data[i] = [];/n            for (let j = 0; j < this.cols; j++) {/n                this.data[i][j] = 0;/n            }/n        }/n    }/n/n    static fromArray(arr) {/n        let m = new Matrix(arr.length, 1);/n        for (let i = 0; i < arr.length; i++) {/n            m.data[i][0] = arr[i];/n        }/n        return m;/n    }/n/n    toArray() {/n        let arr = [];/n        for (let i = 0; i < this.rows; i++) {/n            for (let j = 0; j < this.cols; j++) {/n                arr.push(this.data[i][j]);/n            }/n        }/n        return arr;/n    }/n/n    randomize() {/n        for (let i = 0; i < this.rows; i++) {/n            for (let j = 0; j < this.cols; j++) {/n                this.data[i][j] = Math.random() * 2 - 1;/n            }/n        }/n    }/n/n    add(n) {/n        if (n instanceof Matrix) {/n            for (let i = 0; i < this.rows; i++) {/n                for (let j = 0; j < this.cols; j++) {/n                    this.data[i][j] += n.data[i][j];/n                }/n            }/n        } else {/n            for (let i = 0; i < this.rows; i++) {/n                for (let j = 0; j < this.cols; j++) {/n                    this.data[i][j] += n;/n                }/n            }/n        }/n    }/n/n    static transpose(matrix) {/n        let result = new Matrix(matrix.cols, matrix.rows);/n        for (let i = 0; i < matrix.rows; i++) {/n            for (let j = 0; j < matrix.cols; j++) {/n                result.data[j][i] = matrix.data[i][j];/n            }/n        }/n        return result;/n    }/n/n    static multiply(a, b) {/n        // Matrix product/n        if (a.cols !== b.rows) {/n            console.log('Columns of A must match rows of B.');/n            return undefined;/n        }/n        let result = new Matrix(a.rows, b.cols);/n        for (let i = 0; i < result.rows; i++) {/n            for (let j = 0; j < result.cols; j++) {/n                // Dot product of values in col/n                let sum = 0;/n                for (let k = 0; k < a.cols; k++) {/n                    sum += a.data[i][k] * b.data[k][j];/n                }/n                result.data[i][j] = sum;/n            }/n        }/n        return result;/n    }/n/n    multiply(n) {/n        if (n instanceof Matrix) {/n            // hadamard product/n            for (let i = 0; i < this.rows; i++) {/n                for (let j = 0; j < this.cols; j++) {/n                    this.data[i][j] *= n.data[i][j];/n                }/n            }/n        } else {/n            // Scalar product/n            for (let i = 0; i < this.rows; i++) {/n                for (let j = 0; j < this.cols; j++) {/n                    this.data[i][j] *= n;/n                }/n            }/n        }/n    }/n/n    map(func) {/n        // Apply a function to every element of matrix/n        for (let i = 0; i < this.rows; i++) {/n            for (let j = 0; j < this.cols; j++) {/n                let val = this.data[i][j];/n                this.data[i][j] = func(val);/n            }/n        }/n    }/n/n    static map(matrix, func) {/n        let result = new Matrix(matrix.rows, matrix.cols);/n        // Apply a function to every element of matrix/n        for (let i = 0; i < matrix.rows; i++) {/n            for (let j = 0; j < matrix.cols; j++) {/n                let val = matrix.data[i][j];/n                result.data[i][j] = func(val);/n            }/n        }/n        return result;/n    }/n}/n/nclass NeuralNetwork {/n    constructor(input_nodes, hidden_nodes, output_nodes) {/n        this.input_nodes = input_nodes;/n        this.hidden_nodes = hidden_nodes;/n        this.output_nodes = output_nodes;/n/n        this.weights_ih = new Matrix(this.hidden_nodes, this.input_nodes);/n        this.weights_ho = new Matrix(this.output_nodes, this.hidden_nodes);/n        this.weights_ih.randomize();/n        this.weights_ho.randomize();/n/n        this.bias_h = new Matrix(this.hidden_nodes, 1);/n        this.bias_o = new Matrix(this.output_nodes, 1);/n        this.bias_h.randomize();/n        this.bias_o.randomize();/n        this.learning_rate = 0.1;/n    }/n/n    feedForward(input_array) {/n        // Generating the Hidden Outputs/n        let inputs = Matrix.fromArray(input_array);/n        let hidden = Matrix.multiply(this.weights_ih, inputs);/n        hidden.add(this.bias_h);/n        // activation function!/n        hidden.map(sigmoid);/n/n        // Generating the output's output!/n        let output = Matrix.multiply(this.weights_ho, hidden);/n        output.add(this.bias_o);/n        output.map(sigmoid);/n/n        // Sending back to the caller!/n        return output.toArray();/n    }/n/n    train(input_array, target_array) {/n        // Generate the Outputs/n        let inputs = Matrix.fromArray(input_array);/n        let hidden = Matrix.multiply(this.weights_ih, inputs);/n        hidden.add(this.bias_h);/n        hidden.map(sigmoid);/n/n        let outputs = Matrix.multiply(this.weights_ho, hidden);/n        outputs.add(this.bias_o);/n        outputs.map(sigmoid);/n/n        // Convert array to matrix object/n        let targets = Matrix.fromArray(target_array);/n/n        // Calculate the error/n        // ERROR = TARGETS - OUTPUTS/n        let output_errors = Matrix.subtract(targets, outputs);/n/n        // let gradient = outputs * (1 - outputs);/n        // Calculate gradient/n        let gradients = Matrix.map(outputs, dsigmoid);/n        gradients.multiply(output_errors);/n        gradients.multiply(this.learning_rate);/n/n        // Calculate deltas/n        let hidden_T = Matrix.transpose(hidden);/n        let weight_ho_deltas = Matrix.multiply(gradients, hidden_T);/n/n        // Adjust the weights by deltas/n        this.weights_ho.add(weight_ho_deltas);/n        // Adjust the bias by its deltas (which is just the gradients)/n        this.bias_o.add(gradients);/n/n        // Calculate the hidden layer errors/n        let who_t = Matrix.transpose(this.weights_ho);/n        let hidden_errors = Matrix.multiply(who_t, output_errors);/n/n        // Calculate hidden gradient/n        let hidden_gradient = Matrix.map(hidden, dsigmoid);/n        hidden_gradient.multiply(hidden_errors);/n        hidden_gradient.multiply(this.learning_rate);/n/n        // Calcuate input->hidden deltas/n        let inputs_T = Matrix.transpose(inputs);/n        let weight_ih_deltas = Matrix.multiply(hidden_gradient, inputs_T);/n/n        this.weights_ih.add(weight_ih_deltas);/n        this.bias_h.add(hidden_gradient);/n    }/n}">
+    </p>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        var printText = $('.text').data('text');
+
+        var contentArray = printText.split('/n');
+        $.each(contentArray, function (index, newLine) {
+            $('.text').append('<span style="display:block;" id="' + index + '"></span>');
+
+            var lineID = index;
+            var self = $(this);
+            setTimeout(function () {
+                $.each(self, function (index, chunk) {
+                    setTimeout(function () {
+                        $('#' + lineID).append("<span>" + chunk + "</span>");
+                        $('body, html').scrollTop($(document).height());
+                    }, index * 30); // Changed from 5 to 30 for slower character typing
+                });
+
+            }, index * 150); // Changed from 100 to 150 for slower line progression
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HANLAN - Digital Globe</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #050505;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .lil-gui.root {
+            position: absolute !important;
+            bottom: 20px !important;
+            right: 20px !important;
+            top: auto !important;
+        }
+    </style>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.170.0/examples/jsm/",
+                "lil-gui": "https://unpkg.com/three@0.170.0/examples/jsm/libs/lil-gui.module.min.js"
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import GUI from 'lil-gui';
+
+        // --- 1. PARAMETERS ---
+        const params = {
+            bg: '#050505',
+            globeColor: '#6366f1', // Indigo/Purple tint
+            wireframeColor: '#818cf8',
+
+            radius: 2.0,
+            detail: 40,
+
+            // Animation
+            playing: true,
+            rotateSpeed: 0.2,
+            tilt: 0.4, // Earth tilt
+
+            // "Code" Particles
+            particleCount: 200,
+            particleSpeed: 0.5
+        };
+
+        // --- 2. SCENE ---
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(params.bg);
+        // Add some fog for depth
+        scene.fog = new THREE.FogExp2(params.bg, 0.05);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.set(0, 0, 10);
+
+        const renderer = new THREE.WebGLRenderer({
+            antialias: true,
+            alpha: true
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        document.body.appendChild(renderer.domElement);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.enablePan = false;
+        controls.minDistance = 5;
+        controls.maxDistance = 20;
+
+        // --- 3. LIGHTS ---
+        // Digital look relies more on emissive materials, but lights help depth
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+
+        const dirLight = new THREE.DirectionalLight(0xffffff, 2.0);
+        dirLight.position.set(5, 3, 5);
+        scene.add(dirLight);
+
+        const rimLight = new THREE.SpotLight(0xa78bfa, 5.0); // Purple rim
+        rimLight.position.set(-5, 5, -5);
+        scene.add(rimLight);
+
+        // --- 4. OBJECTS (GLOBE) ---
+        const group = new THREE.Group();
+        scene.add(group);
+
+        // Earth Group (Tilted)
+        const earthGroup = new THREE.Group();
+        earthGroup.rotation.z = params.tilt; // Axial tilt
+        group.add(earthGroup);
+
+        // A. Wireframe Sphere
+        let earthGeo = new THREE.IcosahedronGeometry(params.radius, params.detail);
+        const wireframeMat = new THREE.MeshBasicMaterial({
+            color: params.wireframeColor,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.15
+        });
+        const earthMesh = new THREE.Mesh(earthGeo, wireframeMat);
+        earthGroup.add(earthMesh);
+
+        // B. Points / "Digital Cities" (Random dots on surface)
+        const pointsGeo = new THREE.BufferGeometry();
+        const pointCount = 600;
+        const positions = [];
+
+        // Helper to get random point on sphere surface
+        const vec = new THREE.Vector3();
+        for (let i = 0; i < pointCount; i++) {
+            // Random direction
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos((Math.random() * 2) - 1);
+
+            const r = params.radius + 0.05; // Slightly above surface
+
+            vec.x = r * Math.sin(phi) * Math.cos(theta);
+            vec.y = r * Math.sin(phi) * Math.sin(theta);
+            vec.z = r * Math.cos(phi);
+
+            positions.push(vec.x, vec.y, vec.z);
+        }
+
+        pointsGeo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+
+        const pointsMat = new THREE.PointsMaterial({
+            color: '#ffffff',
+            size: 0.05,
+            transparent: true,
+            opacity: 0.8
+        });
+        const pointsMesh = new THREE.Points(pointsGeo, pointsMat);
+        earthGroup.add(pointsMesh);
+
+        // C. Orbiting "Code" Rings
+        const ringGeo = new THREE.TorusGeometry(params.radius + 1.2, 0.02, 16, 100);
+        const ringMat = new THREE.MeshBasicMaterial({ color: '#4ade80', transparent: true, opacity: 0.3 });
+        const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+        ringMesh.rotation.x = Math.PI / 2;
+        earthGroup.add(ringMesh);
+
+        const ringGeo2 = new THREE.TorusGeometry(params.radius + 0.8, 0.02, 16, 100);
+        const ringMat2 = new THREE.MeshBasicMaterial({ color: '#6366f1', transparent: true, opacity: 0.3 });
+        const ringMesh2 = new THREE.Mesh(ringGeo2, ringMat2);
+        ringMesh2.rotation.x = Math.PI / 2.2;
+        ringMesh2.rotation.y = 0.2;
+        earthGroup.add(ringMesh2);
+
+        // --- 5. GUI ---
+        const gui = new GUI({ title: 'Digital Globe' });
+
+        gui.addColor(params, 'bg').name('Background').onChange(c => {
+            scene.background.set(c);
+            scene.fog.color.set(c);
+        });
+        gui.addColor(params, 'wireframeColor').name('Wire Color').onChange(c => wireframeMat.color.set(c));
+
+        gui.add(params, 'rotateSpeed', -2.0, 2.0, 0.1).name('Rotation Speed');
+        gui.add(params, 'playing').name('Rotate Active');
+
+        // --- 6. ANIMATION ---
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const delta = clock.getDelta();
+
+            if (params.playing) {
+                // Rotate the Earth Group on its axis (Y)
+                earthGroup.rotation.y += delta * params.rotateSpeed;
+
+                // Orbiting Rings - rotate slightly differently for depth
+                ringMesh.rotation.z -= delta * 0.1;
+                ringMesh2.rotation.z += delta * 0.15;
+
+                // Pulse effect
+                const pulse = 1 + Math.sin(clock.elapsedTime) * 0.02;
+                earthMesh.scale.set(pulse, pulse, pulse);
+            }
+
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        window.onresize = () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        };
+
+        animate();
+    </script>
+</body>
+
+</html>

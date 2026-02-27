@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HANLAN - Glass Globe</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #050505;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .lil-gui.root {
+            position: absolute !important;
+            bottom: 20px !important;
+            right: 20px !important;
+            top: auto !important;
+        }
+    </style>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.170.0/examples/jsm/",
+                "lil-gui": "https://unpkg.com/three@0.170.0/examples/jsm/libs/lil-gui.module.min.js"
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+        import GUI from 'lil-gui';
+
+        // --- 1. PARAMETERS ---
+        const params = {
+            bg: '#050505',
+
+            // Glass Physics
+            ior: 1.5,
+            thickness: 1.2,
+            transmission: 1.0,
+            roughness: 0.1,
+            metalness: 0.1,
+            clearcoat: 1.0,
+            glassColor: '#ffffff',
+
+            // Animation
+            rotateSpeed: 0.2,
+
+            // Rings
+            showRings: true,
+            ringColor: '#6366f1'
+        };
+
+        // --- 2. SCENE SETUP ---
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(params.bg);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.set(0, 0, 8);
+
+        const renderer = new THREE.WebGLRenderer({
+            antialias: true,
+            alpha: true
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.0;
+        document.body.appendChild(renderer.domElement);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.enablePan = false;
+        controls.minDistance = 4;
+        controls.maxDistance = 15;
+
+        // --- 3. LIGHTING & ENVIRONMENT (Crucial for Glass) ---
+        // HDRI for reflections
+        new RGBELoader().load('https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/2k/royal_esplanade_2k.hdr', (texture) => {
+            texture.mapping = THREE.EquirectangularReflectionMapping;
+            scene.environment = texture;
+            scene.environmentIntensity = 0.8; // Control brightness
+        });
+
+        // Scene Lights - Enhanced for Black Background
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+        scene.add(ambientLight);
+
+        const mainLight = new THREE.DirectionalLight(0xffffff, 2.0);
+        mainLight.position.set(5, 5, 10);
+        scene.add(mainLight);
+
+        // Rim Light 1 (Purple - Left) - Helps outline against black
+        const rimLight1 = new THREE.SpotLight(0xa78bfa, 20.0);
+        rimLight1.position.set(-7, 5, -5);
+        rimLight1.lookAt(0, 0, 0);
+        scene.add(rimLight1);
+
+        // Rim Light 2 (Cyan - Right) - Adds definition
+        const rimLight2 = new THREE.SpotLight(0x22d3ee, 20.0);
+        rimLight2.position.set(7, -5, -5);
+        rimLight2.lookAt(0, 0, 0);
+        scene.add(rimLight2);
+
+        // Floor Grid (Faint) - Gives the glass something to refract/distort
+        const gridHelper = new THREE.GridHelper(20, 20, 0x333333, 0x111111);
+        gridHelper.position.y = -2.5;
+        gridHelper.material.transparent = true;
+        gridHelper.material.opacity = 0.3;
+        scene.add(gridHelper);
+
+        // --- 4. OBJECTS ---
+        const group = new THREE.Group();
+        scene.add(group);
+
+        // A. THE GLASS SPHERE (Globe)
+        const geo = new THREE.SphereGeometry(1.5, 64, 64);
+        const glassMat = new THREE.MeshPhysicalMaterial({
+            color: params.glassColor,
+            roughness: params.roughness,
+            metalness: params.metalness,
+            transmission: params.transmission,
+            thickness: params.thickness,
+            ior: params.ior,
+            clearcoat: params.clearcoat,
+            side: THREE.DoubleSide,
+            envMapIntensity: 1.5 // Boost reflections
+        });
+        const glassSphere = new THREE.Mesh(geo, glassMat);
+        group.add(glassSphere);
+
+        // B. DIGITAL RINGS (The "Code" element)
+        const ringGroup = new THREE.Group();
+        group.add(ringGroup);
+
+        const ringMat = new THREE.MeshBasicMaterial({ color: params.ringColor, transparent: true, opacity: 0.5, side: THREE.DoubleSide });
+
+        // Ring 1
+        const ring1 = new THREE.Mesh(new THREE.TorusGeometry(2.2, 0.01, 16, 100), ringMat);
+        ring1.rotation.x = Math.PI / 1.8;
+        ringGroup.add(ring1);
+
+        // Ring 2
+        const ring2 = new THREE.Mesh(new THREE.TorusGeometry(1.9, 0.01, 16, 100), ringMat);
+        ring2.rotation.x = Math.PI / 2.2;
+        ring2.rotation.y = 0.5;
+        ringGroup.add(ring2);
+
+        // C. INNER WIREFRAME (Optional "Digital Core" inside the glass)
+        const coreGeo = new THREE.IcosahedronGeometry(0.8, 1);
+        const coreMat = new THREE.MeshBasicMaterial({ color: '#ffffff', wireframe: true, opacity: 0.2, transparent: true });
+        const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+        group.add(coreMesh);
+
+
+        // --- 5. GUI CONTROLS ---
+        const gui = new GUI({ title: 'Glass Globe Settings' });
+
+        const matFolder = gui.addFolder('Glass Material');
+        matFolder.add(params, 'roughness', 0, 1).onChange(v => glassMat.roughness = v);
+        matFolder.add(params, 'metalness', 0, 1).onChange(v => glassMat.metalness = v);
+        matFolder.add(params, 'transmission', 0, 1).onChange(v => glassMat.transmission = v);
+        matFolder.add(params, 'ior', 1, 2.33).onChange(v => glassMat.ior = v);
+        matFolder.addColor(params, 'glassColor').onChange(v => glassMat.color.set(v));
+
+        const animFolder = gui.addFolder('Animation');
+        animFolder.add(params, 'rotateSpeed', 0, 1);
+
+        const decoFolder = gui.addFolder('Deco');
+        decoFolder.addColor(params, 'ringColor').onChange(v => ringMat.color.set(v));
+
+
+        // --- 6. ANIMATION LOOP ---
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const delta = clock.getDelta();
+
+            // Rotate the whole group
+            group.rotation.y += delta * params.rotateSpeed;
+
+            // Independent ring rotation
+            ring1.rotation.z -= delta * 0.2;
+            ring2.rotation.z += delta * 0.1;
+
+            // Inner core rotation
+            coreMesh.rotation.x += delta * 0.5;
+            coreMesh.rotation.y += delta * 0.5;
+
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        window.onresize = () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        };
+
+        animate();
+    </script>
+</body>
+
+</html>

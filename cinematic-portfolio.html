@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HANLAN - Cinematic Intro</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Cinzel:wght@400;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #e5e5e5;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            /* 스크롤 없이 영상처럼 연출 */
+            height: 100vh;
+            color: #111;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 1. 배경: 그리드 & 코딩 - 항상 존재 */
+        .grid-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(#d4d4d4 1px, transparent 1px),
+                linear-gradient(90deg, #d4d4d4 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 0;
+        }
+
+        /* 코딩 파티클들이 모이는 레이어 */
+        .code-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .code-char {
+            position: absolute;
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            color: rgba(0, 0, 0, 0.2);
+            font-size: 14px;
+            transition: all 1s ease;
+            /* 부드러운 움직임 */
+        }
+
+        /* 2. 중앙 컨텐츠 컨테이너 */
+        .stage {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 장면 1: INTRODUCING */
+        .scene-intro {
+            position: absolute;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.8s ease-out;
+        }
+
+        .scene-intro.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .intro-text {
+            font-size: clamp(60px, 15vw, 150px);
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            color: #111;
+        }
+
+        /* 장면 2: HANLAN & Copy (영상처럼 전환) */
+        .scene-main {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            /* 위아래 배치 */
+            padding: 60px;
+            text-align: left;
+            transition: opacity 1s ease;
+            pointer-events: none;
+            /* 클릭 방지 */
+        }
+
+        .scene-main.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* 왼쪽 상단 브랜드명 */
+        .brand-top {
+            font-size: 40px;
+            font-weight: 700;
+            transform: translateY(-20px);
+            opacity: 0;
+            transition: all 0.8s ease 0.2s;
+        }
+
+        .scene-main.active .brand-top {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 중앙 하단 메인 카피 */
+        .copy-container {
+            margin-top: auto;
+            border-top: 4px solid #111;
+            padding-top: 40px;
+            width: 100%;
+            transform: translateY(30px);
+            opacity: 0;
+            transition: all 0.8s ease 0.5s;
+        }
+
+        .scene-main.active .copy-container {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .main-headline {
+            font-size: clamp(40px, 6vw, 100px);
+            font-weight: 900;
+            text-transform: uppercase;
+            line-height: 0.95;
+            letter-spacing: -0.02em;
+            margin-bottom: 30px;
+        }
+
+        .sub-desc {
+            font-size: 24px;
+            color: #444;
+            max-width: 800px;
+            line-height: 1.4;
+        }
+
+        .cta-button {
+            display: inline-block;
+            margin-top: 40px;
+            background: #000;
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 18px;
+            transition: transform 0.2s;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="grid-bg"></div>
+    <!-- 코드가 그려질 캔버스 -->
+    <div class="code-canvas" id="codeCanvas"></div>
+
+    <div class="stage">
+        <!-- 장면 1: 'Introducing' -->
+        <div class="scene-intro" id="sceneIntro">
+            <h1 class="intro-text">Introducing</h1>
+        </div>
+
+        <!-- 장면 2: HANLAN & Message -->
+        <div class="scene-main" id="sceneMain">
+            <div class="brand-top">HANLAN</div>
+
+            <div class="copy-container">
+                <div class="main-headline">
+                    We don't just build websites.<br>
+                    We build success.
+                </div>
+                <div class="sub-desc">
+                    It's not just design. It's about strategic structure and high-conversion marketing.
+                    <strong>We deliver both.</strong>
+                </div>
+                <a href="full-portfolio.html" class="cta-button">View Full Portfolio →</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('codeCanvas');
+        const chars = 'XYZ010101<>{}[]@#&H'; // H 글자 포함
+        const particleCount = 400; // 파티클 개수
+        const particles = [];
+
+        const sceneIntro = document.getElementById('sceneIntro');
+        const sceneMain = document.getElementById('sceneMain');
+
+        // 1. 파티클 초기화 (전체 화면에 퍼뜨리기)
+        for (let i = 0; i < particleCount; i++) {
+            const el = document.createElement('div');
+            el.classList.add('code-char');
+            el.innerText = chars[Math.floor(Math.random() * chars.length)];
+
+            // 랜덤 위치
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight;
+
+            el.style.left = x + 'px';
+            el.style.top = y + 'px';
+
+            // 랜덤 속도 (깜빡임용)
+            el.dataset.speed = Math.random() * 200 + 100;
+
+            canvas.appendChild(el);
+            particles.push({
+                el,
+                x, y,
+                targetX: x, targetY: y, // 원래는 랜덤
+                state: 'random' // 'random' -> 'h-shape' -> 'rain'
+            });
+        }
+
+        // H 모양 좌표 데이터 (간략화된 점들)
+        // 화면 중앙 기준 H 모양 픽셀 좌표
+        function getHShapePoints(count) {
+            const points = [];
+            const cx = window.innerWidth / 2;
+            const cy = window.innerHeight / 2;
+            const size = 300; // H 사이즈
+            const thickness = 60; // H 두께
+
+            for (let i = 0; i < count; i++) {
+                // H는 두 개의 기둥과 중간 다리
+                // 랜덤하게 3 구역 중 하나 선택
+                const part = Math.floor(Math.random() * 3);
+                let px, py;
+
+                if (part === 0) { // 왼쪽 기둥
+                    px = cx - size / 2 + Math.random() * thickness;
+                    py = cy - size / 2 + Math.random() * size;
+                } else if (part === 1) { // 오른쪽 기둥
+                    px = cx + size / 2 - thickness + Math.random() * thickness;
+                    py = cy - size / 2 + Math.random() * size;
+                } else { // 중간 다리
+                    px = cx - size / 2 + Math.random() * size;
+                    py = cy - thickness / 2 + Math.random() * thickness;
+                }
+                points.push({ x: px, y: py });
+            }
+            return points;
+        }
+
+        const hPoints = getHShapePoints(particleCount);
+
+        // --- 시나리오 실행 ---
+
+        // 1. 시작: Introducing 등장 + 코드는 배경에 랜덤하게
+        setTimeout(() => {
+            sceneIntro.classList.add('active');
+        }, 500);
+
+        // 2. 2초 뒤: 코드가 중앙으로 모여 'H' 모양 형성
+        setTimeout(() => {
+            particles.forEach((p, i) => {
+                p.el.style.left = hPoints[i].x + 'px';
+                p.el.style.top = hPoints[i].y + 'px';
+                p.el.style.color = 'rgba(0,0,0,0.8)'; // 진하게
+                p.el.innerText = Math.random() > 0.5 ? 'H' : p.el.innerText; // 일부는 H로 변경
+            });
+        }, 2500);
+
+        // 3. 4초 뒤: Introducing 사라짐 & HANLAN 등장 & 코드는 다시 퍼짐
+        setTimeout(() => {
+            // Intro -> Out
+            sceneIntro.classList.remove('active');
+            sceneIntro.style.transform = 'scale(1.5)';
+            sceneIntro.style.opacity = '0';
+
+            // HANLAN -> In
+            sceneMain.classList.add('active');
+
+            // 코드는 다시 비처럼 내리는(랜덤) 형태로 변경 (Typing animation continues)
+            particles.forEach((p) => {
+                const nx = Math.random() * window.innerWidth;
+                const ny = Math.random() * window.innerHeight;
+                p.el.style.left = nx + 'px';
+                p.el.style.top = ny + 'px';
+                p.el.style.color = 'rgba(0, 0, 0, 0.15)'; // 다시 연하게
+            });
+
+        }, 4500);
+
+        // 계속 타이핑(글자 변경) 애니메이션
+        setInterval(() => {
+            particles.forEach(p => {
+                if (Math.random() < 0.1) {
+                    p.el.innerText = chars[Math.floor(Math.random() * chars.length)];
+                }
+            });
+        }, 100);
+
+    </script>
+</body>
+
+</html>

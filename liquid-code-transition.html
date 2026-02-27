@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HANLAN - Liquid to Digital</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body,
+        html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #ffffff;
+            /* Start Light */
+            font-family: 'Inter', sans-serif;
+            transition: background-color 1.5s ease;
+        }
+
+        /* State Class for Dark Mode */
+        body.dark-mode {
+            background-color: #050505;
+        }
+
+        /* 1. LAYER: LIQUID CANVAS (Intro) */
+        #canvas-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            transition: opacity 1.5s ease;
+            opacity: 1;
+        }
+
+        body.dark-mode #canvas-wrapper {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #liquid-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* 2. LAYER: INTRO TEXT (HANLAN) */
+        #intro-text-layer {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 20;
+            text-align: center;
+            mix-blend-mode: difference;
+            /* Cool blend with liquid */
+            color: white;
+            pointer-events: none;
+            transition: all 1s ease;
+        }
+
+        body.dark-mode #intro-text-layer {
+            opacity: 0;
+            transform: translate(-50%, -60%) scale(1.2);
+        }
+
+        .intro-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(60px, 15vw, 150px);
+            font-weight: 900;
+            letter-spacing: -5px;
+            white-space: nowrap;
+        }
+
+        /* 3. LAYER: FINAL DARK UI (Hidden initially) */
+        #final-ui-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+            /* Behind liquid initially */
+            opacity: 0;
+            transition: opacity 2s ease 1s;
+            /* Delay appearance */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            padding: 40px;
+        }
+
+        body.dark-mode #final-ui-layer {
+            opacity: 1;
+            z-index: 30;
+            /* Bring to front */
+        }
+
+        /* Background Code Grid for Final Layer */
+        .code-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            /* Behind UI text */
+            font-family: 'JetBrains Mono', monospace;
+            color: rgba(255, 255, 255, 0.05);
+            font-size: 14px;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .code-char {
+            position: absolute;
+            transition: color 0.2s;
+        }
+
+        .code-char.active {
+            color: rgba(255, 255, 255, 0.8);
+            text-shadow: 0 0 5px white;
+        }
+
+        /* Final UI Elements */
+        .final-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 1200px;
+        }
+
+        .top-nav {
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            pointer-events: auto;
+        }
+
+        .free-audit-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 30px;
+            border-radius: 30px;
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s;
+        }
+
+        .free-audit-btn:hover {
+            background: white;
+            color: black;
+        }
+
+        .logo-large {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(50px, 8vw, 100px);
+            font-weight: 900;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+        }
+
+        .logo-large span {
+            color: #facc15;
+            /* Yellow dot */
+        }
+
+        .slogan-main {
+            font-size: clamp(30px, 5vw, 60px);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #fff, #aaa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .slogan-sub {
+            font-size: clamp(30px, 5vw, 60px);
+            font-weight: 800;
+            line-height: 1.1;
+            background: linear-gradient(to right, #facc15, #fbbf24);
+            /* Gold */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 50px;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 80px;
+            pointer-events: auto;
+        }
+
+        .btn-purple {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            padding: 16px 40px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+            transition: transform 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-purple:hover {
+            transform: translateY(-3px);
+        }
+
+        .btn-outline {
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 16px 40px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 60px;
+            justify-content: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 40px;
+            color: #666;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .stat-item strong {
+            display: block;
+            color: white;
+            font-size: 20px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- LAYER 1: LIQUID BACKGROUND -->
+    <div id="canvas-wrapper">
+        <canvas id="liquid-canvas"></canvas>
+    </div>
+
+    <!-- LAYER 2: INTRO TEXT -->
+    <div id="intro-text-layer">
+        <h1 class="intro-title" id="introTitle">HANLAN</h1>
+    </div>
+
+    <!-- LAYER 3: FINAL DARK UI -->
+    <div id="final-ui-layer">
+        <div class="code-bg" id="codeBg"></div>
+
+        <div class="top-nav">
+            <a href="#" class="free-audit-btn">Get Free Audit</a>
+        </div>
+
+        <div class="final-content">
+            <div class="logo-large">HANLAN<span>.</span></div>
+            <div class="slogan-main">WE DON'T JUST BUILD WEBSITES.</div>
+            <div class="slogan-sub">WE BUILD YOUR SUCCESS.</div>
+
+            <div class="cta-group">
+                <a href="#" class="btn-purple">✨ Book a demo</a>
+                <a href="#" class="btn-outline">Try it free</a>
+            </div>
+
+            <div class="stats-bar">
+                <div class="stat-item">Conversion <strong>+150%</strong></div>
+                <div class="stat-item">Latency <strong>45ms</strong></div>
+                <div class="stat-item">Revenue <strong>Maximized</strong></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script type="module">
+        import LiquidBackground from 'https://cdn.jsdelivr.net/npm/threejs-components@0.0.27/build/backgrounds/liquid1.min.js';
+
+        const canvas = document.getElementById('liquid-canvas');
+        const introTitle = document.getElementById('introTitle');
+        const body = document.body;
+
+        // 1. Initialize Liquid Background
+        const app = LiquidBackground(canvas);
+        app.loadImage('https://assets.codepen.io/33787/liquid.webp'); // Standard liquid map
+
+        // Custom Liquid Settings
+        app.liquidPlane.material.metalness = 0.75;
+        app.liquidPlane.material.roughness = 0.25;
+        app.liquidPlane.uniforms.displacementScale.value = 5;
+        app.setRain(false); // Start calm
+
+        // 2. Animate Sequence
+
+        // Step 1: Start (Calm Light Mode) - 0s
+
+        // Step 2: "Water Drops" increasing chaos - 2s
+        setTimeout(() => {
+            app.setRain(true); // Start drops
+            app.liquidPlane.uniforms.displacementScale.value = 8;
+        }, 2000);
+
+        // Step 3: Text Glitch to Code - 3.5s
+        setTimeout(() => {
+            glitchText(introTitle, "HANLAN", "01{}<>/;", 800);
+        }, 3500);
+
+        // Step 4: Dark Mode Transition - 4.5s
+        setTimeout(() => {
+            body.classList.add('dark-mode');
+            initCodeRain(); // Start bg effect
+        }, 4500);
+
+        // Helper: Glitch Text Function
+        function glitchText(element, originalText, charSet, duration) {
+            let start = Date.now();
+            let interval = setInterval(() => {
+                let timePassed = Date.now() - start;
+                if (timePassed > duration) {
+                    clearInterval(interval);
+                    element.innerText = originalText; // Restore or leave glitches? 
+                    // Actually, let's leave it as crazy code before it disappears
+                    element.style.opacity = '0'; // Hide it as scene changes
+                    return;
+                }
+
+                // Generate Random Glitch String
+                let str = "";
+                for (let i = 0; i < originalText.length; i++) {
+                    str += charSet[Math.floor(Math.random() * charSet.length)];
+                }
+                element.innerText = str;
+
+            }, 50);
+        }
+
+        // Helper: Code Rain Background Logic
+        function initCodeRain() {
+            const container = document.getElementById('codeBg');
+            const chars = "H01{}[]XYZ@#&";
+            const particleCount = 200;
+
+            for (let i = 0; i < particleCount; i++) {
+                const span = document.createElement('span');
+                span.classList.add('code-char');
+                span.innerText = chars[Math.floor(Math.random() * chars.length)];
+
+                // Random Pos
+                span.style.left = Math.random() * 100 + '%';
+                span.style.top = Math.random() * 100 + '%';
+
+                container.appendChild(span);
+
+                // Twinkle
+                animateParticle(span);
+            }
+        }
+
+        function animateParticle(el) {
+            // Simple random fade in/out loop
+            const duration = 1000 + Math.random() * 2000;
+
+            el.animate([
+                { opacity: 0.1, color: 'rgba(255,255,255,0.05)' },
+                { opacity: 0.8, color: 'rgba(255,255,255,0.5)', offset: 0.5 },
+                { opacity: 0.1, color: 'rgba(255,255,255,0.05)' }
+            ], {
+                duration: duration,
+                iterations: Infinity
+            });
+        }
+
+    </script>
+</body>
+
+</html>

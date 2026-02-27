@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How We Help You Win</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 60px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            max-width: 900px;
+        }
+
+        h1 {
+            font-size: 64px;
+            font-weight: 400;
+            color: #1a1a1a;
+            margin-bottom: 24px;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: 20px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .subtitle strong {
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        /* Animation Container */
+        .animation-container {
+            position: relative;
+            width: 800px;
+            height: 400px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        /* Ground Line */
+        .ground {
+            position: absolute;
+            bottom: 80px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e0e0e0;
+        }
+
+        /* Person (Simple Stick Figure Style) */
+        .person {
+            position: absolute;
+            bottom: 80px;
+        }
+
+        /* Person 1 - Sitting */
+        .person1 {
+            left: 150px;
+            animation: person1-sequence 8s ease-in-out infinite;
+        }
+
+        .person1 .head {
+            width: 40px;
+            height: 40px;
+            background: #333;
+            border-radius: 50%;
+            position: relative;
+            animation: head1-move 8s ease-in-out infinite;
+        }
+
+        .person1 .body {
+            width: 4px;
+            height: 60px;
+            background: #333;
+            margin: 0 auto;
+            animation: body1-move 8s ease-in-out infinite;
+        }
+
+        .person1 .arms {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: arms1-move 8s ease-in-out infinite;
+        }
+
+        .person1 .arm {
+            width: 35px;
+            height: 4px;
+            background: #333;
+            position: absolute;
+        }
+
+        .person1 .arm-left {
+            transform: rotate(-45deg);
+            left: -30px;
+        }
+
+        .person1 .arm-right {
+            transform: rotate(45deg);
+            right: -30px;
+        }
+
+        .person1 .legs {
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: legs1-move 8s ease-in-out infinite;
+        }
+
+        .person1 .leg {
+            width: 40px;
+            height: 4px;
+            background: #333;
+            position: absolute;
+        }
+
+        .person1 .leg-left {
+            transform: rotate(90deg);
+            left: -20px;
+        }
+
+        .person1 .leg-right {
+            transform: rotate(90deg);
+            right: -20px;
+        }
+
+        /* Person 2 - Helper */
+        .person2 {
+            left: -100px;
+            animation: person2-sequence 8s ease-in-out infinite;
+        }
+
+        .person2 .head {
+            width: 40px;
+            height: 40px;
+            background: #2563eb;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .person2 .body {
+            width: 4px;
+            height: 60px;
+            background: #2563eb;
+            margin: 0 auto;
+        }
+
+        .person2 .arms {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .person2 .arm {
+            width: 35px;
+            height: 4px;
+            background: #2563eb;
+            position: absolute;
+            animation: helper-arms 8s ease-in-out infinite;
+        }
+
+        .person2 .arm-left {
+            transform: rotate(-30deg);
+            left: -30px;
+        }
+
+        .person2 .arm-right {
+            transform: rotate(30deg);
+            right: -30px;
+        }
+
+        .person2 .legs {
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .person2 .leg {
+            width: 45px;
+            height: 4px;
+            background: #2563eb;
+            position: absolute;
+            animation: helper-legs 8s ease-in-out infinite;
+        }
+
+        .person2 .leg-left {
+            transform: rotate(-45deg);
+            left: -15px;
+        }
+
+        .person2 .leg-right {
+            transform: rotate(45deg);
+            right: -15px;
+        }
+
+        /* Animation Keyframes */
+
+        /* Person 2 Movement */
+        @keyframes person2-sequence {
+            0% {
+                left: -100px;
+            }
+
+            20% {
+                left: 120px;
+            }
+
+            40% {
+                left: 120px;
+            }
+
+            60% {
+                left: 120px;
+            }
+
+            80% {
+                left: 700px;
+            }
+
+            100% {
+                left: 700px;
+            }
+        }
+
+        /* Person 1 Movement */
+        @keyframes person1-sequence {
+            0% {
+                left: 150px;
+                transform: translateY(0);
+            }
+
+            20% {
+                left: 150px;
+                transform: translateY(0);
+            }
+
+            40% {
+                left: 150px;
+                transform: translateY(-50px);
+            }
+
+            60% {
+                left: 150px;
+                transform: translateY(-50px);
+            }
+
+            80% {
+                left: 700px;
+                transform: translateY(-50px);
+            }
+
+            100% {
+                left: 700px;
+                transform: translateY(-50px);
+            }
+        }
+
+        /* Person 1 Head - Sitting to Standing */
+        @keyframes head1-move {
+            0% {
+                transform: translateY(30px);
+            }
+
+            20% {
+                transform: translateY(30px);
+            }
+
+            40% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        /* Person 1 Body */
+        @keyframes body1-move {
+            0% {
+                height: 40px;
+            }
+
+            20% {
+                height: 40px;
+            }
+
+            40% {
+                height: 60px;
+            }
+
+            100% {
+                height: 60px;
+            }
+        }
+
+        /* Person 1 Arms */
+        @keyframes arms1-move {
+            0% {
+                top: 70px;
+            }
+
+            20% {
+                top: 70px;
+            }
+
+            40% {
+                top: 50px;
+            }
+
+            100% {
+                top: 50px;
+            }
+        }
+
+        /* Person 1 Legs - Sitting to Carried */
+        @keyframes legs1-move {
+            0% {
+                top: 100px;
+                opacity: 1;
+            }
+
+            20% {
+                top: 100px;
+                opacity: 1;
+            }
+
+            40% {
+                top: 100px;
+                opacity: 0;
+            }
+
+            100% {
+                top: 100px;
+                opacity: 0;
+            }
+        }
+
+        /* Helper Arms - Carrying */
+        @keyframes helper-arms {
+            0% {
+                transform: rotate(-30deg);
+            }
+
+            40% {
+                transform: rotate(-60deg);
+            }
+
+            100% {
+                transform: rotate(-60deg);
+            }
+        }
+
+        /* Helper Legs - Running */
+        @keyframes helper-legs {
+
+            0%,
+            60% {
+                animation-timing-function: steps(4);
+            }
+
+            60% {
+                transform: rotate(-45deg);
+            }
+
+            65% {
+                transform: rotate(45deg);
+            }
+
+            70% {
+                transform: rotate(-45deg);
+            }
+
+            75% {
+                transform: rotate(45deg);
+            }
+
+            80% {
+                transform: rotate(-45deg);
+            }
+
+            85% {
+                transform: rotate(45deg);
+            }
+
+            90% {
+                transform: rotate(-45deg);
+            }
+
+            95% {
+                transform: rotate(45deg);
+            }
+
+            100% {
+                transform: rotate(-45deg);
+            }
+        }
+
+        /* Stage Labels */
+        .stage-label {
+            position: absolute;
+            bottom: 20px;
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+            padding: 8px 16px;
+            background: #f0f0f0;
+            border-radius: 20px;
+            animation: label-fade 8s ease-in-out infinite;
+        }
+
+        .label-1 {
+            left: 100px;
+            animation-delay: 0s;
+        }
+
+        .label-2 {
+            left: 300px;
+            animation-delay: 2s;
+        }
+
+        .label-3 {
+            left: 500px;
+            animation-delay: 4s;
+        }
+
+        @keyframes label-fade {
+
+            0%,
+            20% {
+                opacity: 1;
+            }
+
+            25%,
+            100% {
+                opacity: 0.3;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>How We Help You Win</h1>
+        <p class="subtitle">
+            We don't just provide services. We build a <strong>unified digital ecosystem</strong> that turns strangers
+            into customers.
+        </p>
+    </div>
+
+    <div class="animation-container">
+        <div class="ground"></div>
+
+        <!-- Person 1 (Struggling) -->
+        <div class="person person1">
+            <div class="head"></div>
+            <div class="body"></div>
+            <div class="arms">
+                <div class="arm arm-left"></div>
+                <div class="arm arm-right"></div>
+            </div>
+            <div class="legs">
+                <div class="leg leg-left"></div>
+                <div class="leg leg-right"></div>
+            </div>
+        </div>
+
+        <!-- Person 2 (Helper) -->
+        <div class="person person2">
+            <div class="head"></div>
+            <div class="body"></div>
+            <div class="arms">
+                <div class="arm arm-left"></div>
+                <div class="arm arm-right"></div>
+            </div>
+            <div class="legs">
+                <div class="leg leg-left"></div>
+                <div class="leg leg-right"></div>
+            </div>
+        </div>
+
+        <!-- Stage Labels -->
+        <div class="stage-label label-1">😔 Struggling</div>
+        <div class="stage-label label-2">🤝 We Help</div>
+        <div class="stage-label label-3">🚀 You Win</div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orbitz - Cinematic Earth</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            아
+        }
+
+        body {
+            overflow: hidden;
+            background: radial-gradient(ellipse at center, #0a0e27 0%, #000000 100%);
+            font-family: 'Orbitron', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* --- MULTI-LAYER STARFIELD --- */
+        .stars-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .stars-layer::before,
+        .stars-layer::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(2px 2px at 20px 30px, white, transparent),
+                radial-gradient(2px 2px at 60px 70px, white, transparent),
+                radial-gradient(1px 1px at 50px 50px, white, transparent),
+                radial-gradient(1px 1px at 130px 80px, white, transparent),
+                radial-gradient(2px 2px at 90px 10px, white, transparent);
+            background-size: 200px 200px;
+            background-repeat: repeat;
+            opacity: 0.5;
+        }
+
+        .stars-layer::after {
+            background-size: 300px 300px;
+            opacity: 0.3;
+            animation: twinkle 4s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+
+            0%,
+            100% {
+                opacity: 0.3;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        /* --- EARTH CONTAINER --- */
+        .earth-container {
+            position: relative;
+            width: 500px;
+            height: 500px;
+            z-index: 5;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        /* --- ATMOSPHERE GLOW --- */
+        .atmosphere {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 520px;
+            height: 520px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 200, 255, 0.3) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+            z-index: 4;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.6;
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.05);
+                opacity: 0.8;
+            }
+        }
+
+        /* --- THE GLOBE (CSS GRADIENT) --- */
+        .globe {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: relative;
+
+            /* Realistic Earth gradient */
+            background:
+                radial-gradient(circle at 30% 30%,
+                    rgba(100, 150, 255, 0.3) 0%,
+                    rgba(20, 50, 100, 0.8) 40%,
+                    rgba(5, 15, 40, 1) 100%);
+
+            /* Lighting effects */
+            box-shadow:
+                inset -40px -40px 80px rgba(0, 0, 0, 0.9),
+                inset 40px 40px 60px rgba(100, 200, 255, 0.2),
+                0 0 80px rgba(0, 150, 255, 0.4),
+                0 0 120px rgba(0, 100, 200, 0.2);
+
+            animation: rotateGlobe 40s linear infinite;
+            overflow: hidden;
+        }
+
+        /* Rotating texture overlay */
+        .globe::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background:
+                repeating-linear-gradient(90deg,
+                    transparent 0px,
+                    rgba(255, 255, 255, 0.03) 10px,
+                    transparent 20px),
+                repeating-linear-gradient(0deg,
+                    transparent 0px,
+                    rgba(255, 255, 255, 0.02) 10px,
+                    transparent 20px);
+            animation: rotateTexture 40s linear infinite;
+        }
+
+        @keyframes rotateGlobe {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes rotateTexture {
+            from {
+                transform: translateX(0);
+            }
+
+            to {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* City lights effect */
+        .globe::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background:
+                radial-gradient(circle at 40% 60%, rgba(255, 200, 100, 0.4) 0%, transparent 3%),
+                radial-gradient(circle at 60% 40%, rgba(255, 200, 100, 0.3) 0%, transparent 2%),
+                radial-gradient(circle at 30% 70%, rgba(255, 200, 100, 0.4) 0%, transparent 2%),
+                radial-gradient(circle at 70% 30%, rgba(255, 200, 100, 0.3) 0%, transparent 3%);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+
+            0%,
+            100% {
+                opacity: 0.6;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* --- UI OVERLAY --- */
+        #ui-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            pointer-events: none;
+            animation: logoFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes logoFloat {
+
+            0%,
+            100% {
+                transform: translate(-50%, -50%) translateY(0px);
+            }
+
+            50% {
+                transform: translate(-50%, -50%) translateY(-10px);
+            }
+        }
+
+        .logo-icon {
+            width: 90px;
+            height: 90px;
+            filter: drop-shadow(0 0 20px rgba(0, 200, 255, 0.8));
+            animation: iconPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes iconPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .logo-text {
+            font-size: 6rem;
+            font-weight: 900;
+            letter-spacing: -3px;
+            line-height: 1;
+            background: linear-gradient(135deg, #ffffff 0%, #00d4ff 50%, #0080ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 30px rgba(0, 200, 255, 0.6));
+            text-transform: uppercase;
+        }
+
+        .tm {
+            font-size: 1.2rem;
+            vertical-align: super;
+            margin-left: 8px;
+            color: #00d4ff;
+            opacity: 0.8;
+        }
+
+        /* --- ENHANCED SHOOTING STARS --- */
+        .shooting-star {
+            position: absolute;
+            width: 3px;
+            height: 100px;
+            background: linear-gradient(to bottom,
+                    rgba(255, 255, 255, 1) 0%,
+                    rgba(0, 200, 255, 0.8) 50%,
+                    transparent 100%);
+            z-index: 2;
+            opacity: 0;
+            animation: shoot 3s linear infinite;
+            filter: drop-shadow(0 0 6px rgba(0, 200, 255, 0.8));
+        }
+
+        @keyframes shoot {
+            0% {
+                opacity: 0;
+                transform: translateY(-100px) translateX(0) rotate(45deg);
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 0.3;
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(100vh) translateX(150px) rotate(45deg);
+            }
+        }
+
+        .shooting-star:nth-child(1) {
+            left: 15%;
+            animation-delay: 0s;
+            animation-duration: 2.3s;
+        }
+
+        .shooting-star:nth-child(2) {
+            left: 35%;
+            animation-delay: 1.5s;
+            animation-duration: 2.8s;
+        }
+
+        .shooting-star:nth-child(3) {
+            left: 55%;
+            animation-delay: 0.8s;
+            animation-duration: 2.5s;
+        }
+
+        .shooting-star:nth-child(4) {
+            left: 75%;
+            animation-delay: 2.2s;
+            animation-duration: 3s;
+        }
+
+        .shooting-star:nth-child(5) {
+            left: 25%;
+            animation-delay: 3s;
+            animation-duration: 2.6s;
+        }
+
+        .shooting-star:nth-child(6) {
+            left: 65%;
+            animation-delay: 1s;
+            animation-duration: 2.9s;
+        }
+
+        .shooting-star:nth-child(7) {
+            left: 45%;
+            animation-delay: 2.8s;
+            animation-duration: 2.4s;
+        }
+
+        .shooting-star:nth-child(8) {
+            left: 85%;
+            animation-delay: 0.5s;
+            animation-duration: 3.2s;
+        }
+
+        .shooting-star:nth-child(9) {
+            left: 10%;
+            animation-delay: 3.5s;
+            animation-duration: 2.7s;
+        }
+
+        .shooting-star:nth-child(10) {
+            left: 90%;
+            animation-delay: 1.8s;
+            animation-duration: 2.5s;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="stars-layer"></div>
+
+    <!-- Enhanced Shooting Stars -->
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+
+    <div class="earth-container">
+        <div class="atmosphere"></div>
+        <div class="globe"></div>
+    </div>
+
+    <div id="ui-container">
+        <svg class="logo-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="hexGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1" />
+                </linearGradient>
+            </defs>
+            <path d="M50 25 L71.65 37.5 V62.5 L50 75 L28.35 62.5 V37.5 Z" fill="url(#hexGradient)" />
+            <circle cx="50" cy="10" r="8" fill="url(#hexGradient)" />
+            <circle cx="85" cy="30" r="8" fill="url(#hexGradient)" />
+            <circle cx="85" cy="70" r="8" fill="url(#hexGradient)" />
+            <circle cx="50" cy="90" r="8" fill="url(#hexGradient)" />
+            <circle cx="15" cy="70" r="8" fill="url(#hexGradient)" />
+            <circle cx="15" cy="30" r="8" fill="url(#hexGradient)" />
+        </svg>
+
+        <div class="logo-text">
+            orbitz<span class="tm">TM</span>
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HANLAN - Introducing</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Cinzel:wght@400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #e8e8e8;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            color: #111;
+        }
+
+        /* =========================================
+           1. GRID BACKGROUND (Fixed)
+           ========================================= */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(#d4d4d4 1px, transparent 1px),
+                linear-gradient(90deg, #d4d4d4 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* =========================================
+           2. CODE CLOUD ANIMATION (Fixed Background)
+           ========================================= */
+        .code-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .code-particle {
+            position: absolute;
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            color: rgba(0, 0, 0, 0.15);
+            /* Subtle dark grey */
+            user-select: none;
+        }
+
+        /* =========================================
+           3. SCROLL SECTIONS
+           ========================================= */
+        .content-container {
+            position: relative;
+            z-index: 10;
+        }
+
+        section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            position: relative;
+        }
+
+        /* --- INTRO SECTION --- */
+        #intro-section {
+            height: 100vh;
+        }
+
+        .intro-text {
+            font-size: clamp(60px, 15vw, 180px);
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            color: #111;
+            opacity: 0;
+            animation: bounceIn 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 0.5s;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* --- HANLAN MAIN SECTION --- */
+        #brand-section {
+            align-items: flex-start;
+            /* Align left per Ref 1 */
+            justify-content: space-between;
+            text-align: left;
+            padding: 60px;
+        }
+
+        .brand-header {
+            font-size: clamp(40px, 8vw, 80px);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease;
+        }
+
+        .visible .brand-header {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .slogan-container {
+            margin-top: auto;
+            width: 100%;
+            padding-top: 100px;
+        }
+
+        /* Big Typographic Slogan (Replacing "Re-hex") */
+        .big-slogan {
+            font-size: clamp(32px, 5vw, 90px);
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -0.03em;
+            color: #111;
+            text-transform: uppercase;
+            border-top: 4px solid #111;
+            padding-top: 40px;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s ease 0.3s;
+        }
+
+        .visible .big-slogan {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .sub-slogan {
+            font-size: 24px;
+            font-weight: 500;
+            margin-top: 30px;
+            color: #444;
+            max-width: 800px;
+            line-height: 1.5;
+            opacity: 0;
+            transition: all 1s ease 0.6s;
+        }
+
+        .visible .sub-slogan {
+            opacity: 1;
+        }
+
+        /* --- CTA SECTION (Dark Mode - Ref 2) --- */
+        #cta-section {
+            background: #000;
+            color: #fff;
+            min-height: 60vh;
+            clip-path: polygon(0 10%, 100% 0, 100% 100%, 0 100%);
+            /* Slight angle */
+            margin-top: -10vh;
+            /* Overlap */
+            padding-top: 10vh;
+        }
+
+        .cta-btn {
+            background: #fff;
+            color: #000;
+            font-size: 24px;
+            font-weight: 700;
+            padding: 25px 60px;
+            border-radius: 100px;
+            /* Pill shape */
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-bottom: 60px;
+        }
+
+        .cta-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
+        }
+
+        .cta-arrow {
+            font-size: 28px;
+        }
+
+        .cta-text {
+            font-family: 'Cinzel', serif;
+            color: #ffd700;
+            /* Gold */
+            font-size: 24px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 20px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+            opacity: 0.9;
+        }
+
+        /* UI Elements from Ref 1 (Bottom info bar) */
+        .info-bar {
+            display: flex;
+            gap: 40px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            margin-top: 60px;
+            border-top: 1px solid #999;
+            padding-top: 20px;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 1. Grid Background -->
+    <div class="grid-bg"></div>
+
+    <!-- 2. Animated Code Cloud -->
+    <div class="code-layer" id="codeLayer"></div>
+
+    <!-- 3. Main Content -->
+    <div class="content-container">
+
+        <!-- Section 1: INTRODUCING -->
+        <section id="intro-section">
+            <h1 class="intro-text">Introducing</h1>
+        </section>
+
+        <!-- Section 2: BRAND & SLOGAN -->
+        <section id="brand-section">
+            <div class="brand-header">HANLAN</div>
+
+            <div class="slogan-container">
+                <div class="big-slogan">
+                    We don't just<br>build websites.<br>We build<br>your success.
+                </div>
+                <div class="sub-slogan">
+                    It's not just design. It's about strategic structure and high-conversion marketing.
+                    <strong>We deliver both.</strong>
+                </div>
+
+                <!-- Bottom Info Bar (Ref 1 style) -->
+                <div class="info-bar">
+                    <span>5 STRATEGIES</span>
+                    <span>8:5 ASPECT RATIO</span>
+                    <span>HIGH CONVERSION</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: CTA (Dark) -->
+        <section id="cta-section">
+            <a href="#" class="cta-btn">
+                Get Free Website Audit
+                <span class="cta-arrow">→</span>
+            </a>
+            <p class="cta-text">
+                See exactly where you're losing customers
+            </p>
+            <div style="font-size: 30px; color: #555; margin-top: 40px;">⚜</div>
+        </section>
+
+    </div>
+
+    <script>
+        // --- Code Cloud Animation ---
+        const codeLayer = document.getElementById('codeLayer');
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789<>/{}[]*&^%$#@!HANLAN';
+        const particleCount = 150;
+
+        // Create particles
+        for (let i = 0; i < particleCount; i++) {
+            const span = document.createElement('span');
+            span.textContent = getRandomChar();
+            span.className = 'code-particle';
+
+            // Initial Random Position
+            resetParticle(span);
+
+            // Random styling
+            span.style.fontSize = Math.floor(Math.random() * 20 + 10) + 'px';
+
+            codeLayer.appendChild(span);
+        }
+
+        function getRandomChar() {
+            return chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+
+        function resetParticle(element) {
+            element.style.left = Math.random() * 100 + 'vw';
+            element.style.top = Math.random() * 100 + 'vh';
+            element.style.opacity = 0;
+            element.dataset.speed = Math.random() * 2 + 0.5; // fall speed or change speed
+        }
+
+        // Animation Loop: Typing/Flickering Effect + Movement
+        function animateCode() {
+            const particles = document.querySelectorAll('.code-particle');
+
+            particles.forEach(p => {
+                // 1. Random Character Change (Typing effect)
+                if (Math.random() < 0.05) {
+                    p.textContent = getRandomChar();
+                }
+
+                // 2. Flicker Opacity
+                let currentOp = parseFloat(p.style.opacity);
+                if (Math.random() < 0.1) {
+                    p.style.opacity = Math.random() * 0.4; // Low opacity
+                }
+            });
+
+            requestAnimationFrame(animateCode);
+        }
+        animateCode();
+
+        // --- Scroll Observer for Animations ---
+        const observerOptions = {
+            threshold: 0.3
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelector('#brand-section').classList.add('hidden-section'); // Initial state helper if needed
+        observer.observe(document.querySelector('#brand-section'));
+
+    </script>
+</body>
+
+</html>

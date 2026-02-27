@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Code Stream</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+            font-family: 'Source Sans Pro', monospace;
+            color: #FFF;
+        }
+
+        /* 3D Container */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* UI Overlay */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            padding: 20px;
+            box-sizing: border-box;
+            pointer-events: none;
+            /* Let clicks pass through to canvas if needed */
+            overflow-y: auto;
+            /* Allow scrolling text */
+        }
+
+        .text {
+            /* overflow: hidden; Removed to allow natural flow in overlay */
+            height: auto;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+            /* readable against stars */
+        }
+
+        /* The user's span style */
+        span {
+            min-width: 5px;
+            display: inline-block;
+            letter-spacing: 1.5px;
+            color: #d4d4d4;
+        }
+
+        /* Scrollbar styling for cool effect */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+    </style>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.170.0/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <script>
+        window.onerror = function (message, source, lineno, colno, error) {
+            alert("Error: " + message + "\nSource: " + source + "\nLine: " + lineno);
+        };
+    </script>
+
+
+    <div id="canvas-container"></div>
+
+    <div class="overlay">
+        <!-- data-text contains REAL C code, separated by /n -->
+        <p class="text"
+            data-text="/*/n * Core Kernel Memory Management Subsystem/n * Copyright (C) 2024 System Architecture Labs/n *//n/n#include <linux/mm.h>/n#include <linux/slab.h>/n#include <linux/sched.h>/n#include <linux/export.h>/n/n#define MAX_ORDER 11/n#define SLAB_LIMIT_SIZE (1024 * 1024)/n/nstruct kmem_cache *kmem_cache_create(const char *name, size_t size, /n                                   size_t align, unsigned long flags,/n                                   void (*ctor)(void *))/n{/n    struct kmem_cache *s = NULL;/n    const char *cache_name;/n    int err;/n/n    get_online_cpus();/n    get_online_mems();/n    /n    mutex_lock(&slab_mutex);/n/n    err = kmem_cache_sanity_check(name, size);/n    if (err) {/n        goto out_unlock;/n    }/n/n    /* Refuse requests with allocator specific flags *//n    if (flags & ~SLAB_FLAGS_PERMITTED) {/n        err = -EINVAL;/n        goto out_unlock;/n    }/n/n    s = __kmem_cache_alias(name, size, align, flags, ctor);/n    if (s) {/n        goto out_unlock;/n    }/n/n    cache_name = kstrdup_const(name, GFP_KERNEL);/n    if (!cache_name) {/n        err = -ENOMEM;/n        goto out_unlock;/n    }/n/n    s = create_cache(cache_name, size, /n                     calculate_alignment(flags, align, size),/n                     flags, ctor);/n                     /n    if (IS_ERR(s)) {/n        err = PTR_ERR(s);/n        kfree_const(cache_name);/n    }/n/n out_unlock:/n    mutex_unlock(&slab_mutex);/n    put_online_mems();/n    put_online_cpus();/n/n    if (err) {/n        if (flags & SLAB_PANIC)/n            panic('kmem_cache_create: Failed to create slab %s.', name);/n        else /n            pr_warn('kmem_cache_create(%s) failed.', name);/n    }/n    return s;/n}/nEXPORT_SYMBOL(kmem_cache_create);/n/nstatic int __init slab_proc_init(void)/n{/n#ifdef CONFIG_DEBUG_SLAB_LEAK/n    proc_create_seq('slab_allocators', 0, NULL, &proc_slabstats_op);/n#endif/n    return 0;/n}/nmodule_init(slab_proc_init);/n/n/*/n * Memory Reclaim Path/n * Iterates over lru lists and evicts pages./n *//nstatic unsigned long do_try_to_free_pages(struct zonelist *zonelist,/n                                        struct scan_control *sc)/n{/n    int initial_priority = sc->priority;/n    unsigned long total_scanned = 0;/n    unsigned long total_reclaimed = 0;/n/n retry:/n    delayacct_freepages_start();/n/n    if (global_reclaim(sc))/n        __count_zid_vm_events(ALLOCSTALL, sc->reclaim_idx, 1);/n/n    do {/n        vmpressure_prio(sc->gfp_mask, sc->target_mem_cgroup,/n                        sc->priority);/n        /n        sc->nr_scanned = 0;/n        /n        total_reclaimed += shrink_zones(zonelist, sc);/n        total_scanned += sc->nr_scanned;/n/n        if (total_reclaimed >= sc->nr_to_reclaim)/n            break;/n/n    } while (--sc->priority >= 0);/n/n    delayacct_freepages_end();/n/n    if (total_reclaimed >= sc->nr_to_reclaim)/n        return total_reclaimed;/n     /n    return 0;/n}/n/nvoid *__vmalloc_node_range(unsigned long size, /n                          unsigned long align,/n                          unsigned long start, /n                          unsigned long end, /n                          gfp_t gfp_mask,/n                          pgprot_t prot, /n                          unsigned long vm_flags, /n                          int node,/n                          const void *caller)/n{/n    struct vm_struct *area;/n    void *addr;/n/n    size = PAGE_ALIGN(size);/n    if (!size || (size >> PAGE_SHIFT) > totalram_pages())/n        goto fail;/n/n    area = __get_vm_area_node(size, align, VM_ALLOC | VM_UNINITIALIZED |/n                            vm_flags, start, end, node, gfp_mask, caller);/n    if (!area)/n        goto fail;/n/n    addr = __vmalloc_area_node(area, gfp_mask, prot, node);/n    if (!addr)/n        return NULL;/n/n    clear_vm_uninitialized_flag(area);/n    kmemleak_vmalloc(area, size, gfp_mask);/n/n    return addr;/n/n fail:/n    return NULL;/n}/n">
+        </p>
+    </div>
+
+    <!-- Typing Animation Script -->
+    <script>
+        var printText = $('.text').data('text');
+        var contentArray = printText.split('/n');
+
+        var lineIndex = 0;
+
+        function typeNextLine() {
+            if (lineIndex >= contentArray.length) return;
+
+            var currentLineText = contentArray[lineIndex];
+
+            // Create container for this line
+            var lineId = "line-" + lineIndex;
+            $('.text').append('<span style="display:block;" id="' + lineId + '"></span>');
+
+            var charIndex = 0;
+            var chars = currentLineText.split("");
+
+            function typeNextChar() {
+                if (charIndex >= chars.length) {
+                    // Line finished, move to next line after a small pause
+                    lineIndex++;
+                    setTimeout(typeNextLine, 100);
+                    return;
+                }
+
+                var char = chars[charIndex];
+                $('#' + lineId).append("<span>" + char + "</span>");
+
+                // Auto scroll overlay
+                var overlay = document.querySelector('.overlay');
+                overlay.scrollTop = overlay.scrollHeight;
+
+                charIndex++;
+                setTimeout(typeNextChar, 20);
+            }
+
+            typeNextChar();
+        }
+
+        $(document).ready(function () {
+            typeNextLine();
+        });
+    </script>
+
+    <!-- Three.js Space Effect -->
+    <script type="module">
+        import * as THREE from 'three';
+
+        // --- SCENE SETUP ---
+        const scene = new THREE.Scene();
+        // Add minimal fog for depth
+        scene.fog = new THREE.FogExp2(0x000000, 0.001);
+
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 10; // Start slightly back
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        // --- STARFIELD ---
+        const starsGeometry = new THREE.BufferGeometry();
+        const starsCount = 8000;
+        const posArray = new Float32Array(starsCount * 3);
+        const sizesArray = new Float32Array(starsCount);
+        const colorsArray = new Float32Array(starsCount * 3);
+
+        const colorPalette = [
+            new THREE.Color(0xffffff), // White
+            new THREE.Color(0xccccff), // Blue-white
+            new THREE.Color(0xffffee)  // Yellow-white
+        ];
+
+        for (let i = 0; i < starsCount; i++) {
+            // X, Y, Z
+            // Spread them out in a long tunnel
+            const x = (Math.random() - 0.5) * 500;
+            const y = (Math.random() - 0.5) * 500;
+            const z = -Math.random() * 500; // Extend deep into screen
+
+            posArray[i * 3] = x;
+            posArray[i * 3 + 1] = y;
+            posArray[i * 3 + 2] = z;
+
+            // Size variation
+            sizesArray[i] = Math.random() * 1.5;
+
+            // Color variation
+            const color = colorPalette[Math.floor(Math.random() * colorPalette.length)];
+            colorsArray[i * 3] = color.r;
+            colorsArray[i * 3 + 1] = color.g;
+            colorsArray[i * 3 + 2] = color.b;
+        }
+
+        starsGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        starsGeometry.setAttribute('size', new THREE.BufferAttribute(sizesArray, 1));
+        starsGeometry.setAttribute('color', new THREE.BufferAttribute(colorsArray, 3));
+
+        // Use a points material with vertex colors
+        const starsMaterial = new THREE.PointsMaterial({
+            size: 0.5,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.9,
+            sizeAttenuation: true
+        });
+
+        const starField = new THREE.Points(starsGeometry, starsMaterial);
+        scene.add(starField);
+
+
+        // --- SHOOTING STARS ---
+        // We actally use a line for shooting stars
+        const shootingStars = [];
+
+        function createShootingStar() {
+            // Start from random position
+            const startX = (Math.random() - 0.5) * 300;
+            const startY = (Math.random() - 0.5) * 300;
+            const startZ = -Math.random() * 200; // Closer than background stars
+
+            const geometry = new THREE.BufferGeometry().setFromPoints([
+                new THREE.Vector3(startX, startY, startZ),
+                new THREE.Vector3(startX, startY, startZ - 5) // Trail length
+            ]);
+
+            const material = new THREE.LineBasicMaterial({
+                color: 0xffffff,
+                transparent: true,
+                opacity: 1
+            });
+
+            const line = new THREE.Line(geometry, material);
+
+            // Random direction, mostly towards Z
+            const velocity = new THREE.Vector3(
+                (Math.random() - 0.5) * 0.5,
+                (Math.random() - 0.5) * 0.5,
+                2 + Math.random() * 3 // Fast Z speed
+            );
+
+            scene.add(line);
+            shootingStars.push({ mesh: line, velocity: velocity, life: 0 });
+        }
+
+
+        // --- ANIMATION LOOP ---
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // 1. Move the starfield towards camera to create warp effect
+            // We manipulate the positions directly for an infinite tunnel effect
+            const positions = starField.geometry.attributes.position.array;
+
+            for (let i = 0; i < starsCount; i++) {
+                // The Z index is at i*3 + 2
+                // Move Z closer to camera (positive direction)
+                positions[i * 3 + 2] += 0.8; // Speed of warp
+
+                // Reset star if it passes camera
+                if (positions[i * 3 + 2] > 20) {
+                    positions[i * 3 + 2] = -500; // Send back to far distance
+
+                    // Optional: Randomize X/Y again for less repetitive patterns
+                    positions[i * 3] = (Math.random() - 0.5) * 500;
+                    positions[i * 3 + 1] = (Math.random() - 0.5) * 500;
+                }
+            }
+            starField.geometry.attributes.position.needsUpdate = true;
+
+            // Rotate the whole field slightly for dizziness/space feeling
+            starField.rotation.z += 0.0005;
+
+
+            // 2. Handle Shooting Stars
+            if (Math.random() < 0.03) { // 3% chance per frame to spawn
+                createShootingStar();
+            }
+
+            for (let i = shootingStars.length - 1; i >= 0; i--) {
+                const s = shootingStars[i];
+                s.mesh.position.add(s.velocity);
+                s.life++;
+
+                // Fade out
+                if (s.life > 50) {
+                    s.mesh.material.opacity -= 0.05;
+                }
+
+                // Remove if dead or off screen
+                if (s.life > 70 || s.mesh.position.z > 50) {
+                    scene.remove(s.mesh);
+                    s.mesh.geometry.dispose();
+                    s.mesh.material.dispose();
+                    shootingStars.splice(i, 1);
+                }
+            }
+
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // --- RESIZE HANDLER ---
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+
+</html>

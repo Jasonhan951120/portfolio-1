@@ -1,0 +1,102 @@
+<!-- 
+  Wave Text Effect - 글자 효과만
+  기존 HTML에 이 코드를 추가하세요
+-->
+
+<!-- 1. CSS를 <head> 안에 추가 -->
+<style>
+    /* Wave 애니메이션을 위한 perspective */
+    .wave-text {
+        perspective: 1000px;
+        display: inline-block;
+    }
+
+    /* 각 글자에 적용될 wave 효과 */
+    .wave-char {
+        display: inline-block;
+        animation: wave 3s ease-in-out infinite;
+        transform-origin: center bottom;
+        position: relative;
+    }
+
+    @keyframes wave {
+
+        0%,
+        100% {
+            transform: translateY(0) rotateX(0deg) scale(1);
+            color: inherit;
+            /* 원래 색상 유지 */
+            text-shadow:
+                0 0 20px rgba(255, 255, 255, 0.5),
+                0 0 40px rgba(0, 212, 255, 0.3);
+        }
+
+        25% {
+            transform: translateY(-15px) rotateX(20deg) scale(1.05);
+            color: #00d4ff;
+            /* Electric Blue */
+            text-shadow:
+                0 0 30px rgba(0, 212, 255, 1),
+                0 0 60px rgba(0, 212, 255, 0.6),
+                0 0 90px rgba(0, 212, 255, 0.3);
+        }
+
+        50% {
+            transform: translateY(0) rotateX(0deg) scale(1);
+            color: #00ffff;
+            /* Cyan */
+            text-shadow:
+                0 0 30px rgba(0, 255, 255, 1),
+                0 0 60px rgba(0, 255, 255, 0.6);
+        }
+
+        75% {
+            transform: translateY(-15px) rotateX(-20deg) scale(1.05);
+            color: #7df9ff;
+            /* Sky Blue */
+            text-shadow:
+                0 0 30px rgba(125, 249, 255, 1),
+                0 0 60px rgba(125, 249, 255, 0.6),
+                0 0 90px rgba(125, 249, 255, 0.3);
+        }
+    }
+</style>
+
+<!-- 2. HTML - 효과를 적용할 텍스트 -->
+<!-- 예시: -->
+<h1 class="wave-text" id="waveText">HANLAN.</h1>
+
+<!-- 3. JavaScript를 </body> 전에 추가 -->
+<script>
+    // Wave 효과를 적용할 요소 선택
+    const waveElement = document.getElementById('waveText');
+
+    if (waveElement) {
+        const text = waveElement.textContent;
+        waveElement.textContent = ''; // 텍스트 비우기
+
+        // 각 글자를 span으로 감싸기
+        text.split('').forEach((char, index) => {
+            const span = document.createElement('span');
+            span.className = 'wave-char';
+            span.textContent = char;
+
+            // Ripple 효과를 위한 순차적 딜레이
+            span.style.animationDelay = `${index * 0.1}s`;
+
+            waveElement.appendChild(span);
+        });
+    }
+</script>
+
+<!-- 
+  사용 방법:
+  1. 위의 <style> 부분을 복사해서 <head> 안에 붙여넣기
+  2. 효과를 적용하고 싶은 텍스트에 class="wave-text" id="waveText" 추가
+  3. <script> 부분을 복사해서 </body> 바로 위에 붙여넣기
+  
+  여러 요소에 적용하려면:
+  - 각 요소에 다른 id 부여 (예: id="waveText1", id="waveText2")
+  - JavaScript에서 각각 처리하거나
+  - class로 선택해서 forEach로 처리
+-->

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Hub Diagram</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            width: 600px;
+            height: 600px;
+        }
+
+        /* Center Hub */
+        .hub {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: #000;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .hub-text {
+            color: white;
+            font-size: 36px;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        /* Connection Lines */
+        .connection {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform-origin: 0 0;
+            z-index: 1;
+        }
+
+        .connection-line {
+            width: 120px;
+            height: 2px;
+            background: #333;
+            transform-origin: 0 0;
+        }
+
+        /* Main Nodes */
+        .node {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: white;
+            border: 2px solid #333;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            z-index: 5;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .node:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .node-icon {
+            font-size: 32px;
+        }
+
+        .node-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* Position main nodes */
+        .node-website {
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .node-social {
+            bottom: 80px;
+            left: 80px;
+        }
+
+        .node-ads {
+            bottom: 80px;
+            right: 80px;
+        }
+
+        /* Orbiting Icons */
+        .orbit-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 500px;
+            height: 500px;
+            transform: translate(-50%, -50%);
+            animation: rotate 30s linear infinite;
+        }
+
+        .orbit-icon {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            opacity: 0.3;
+            transition: opacity 0.3s ease;
+        }
+
+        .orbit-icon:hover {
+            opacity: 0.8;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        /* Position orbiting icons in a circle */
+        .orbit-icon:nth-child(1) {
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .orbit-icon:nth-child(2) {
+            top: 7%;
+            right: 20%;
+        }
+
+        .orbit-icon:nth-child(3) {
+            top: 25%;
+            right: 5%;
+        }
+
+        .orbit-icon:nth-child(4) {
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+        }
+
+        .orbit-icon:nth-child(5) {
+            bottom: 25%;
+            right: 5%;
+        }
+
+        .orbit-icon:nth-child(6) {
+            bottom: 7%;
+            right: 20%;
+        }
+
+        .orbit-icon:nth-child(7) {
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .orbit-icon:nth-child(8) {
+            bottom: 7%;
+            left: 20%;
+        }
+
+        .orbit-icon:nth-child(9) {
+            bottom: 25%;
+            left: 5%;
+        }
+
+        .orbit-icon:nth-child(10) {
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+        }
+
+        .orbit-icon:nth-child(11) {
+            top: 25%;
+            left: 5%;
+        }
+
+        .orbit-icon:nth-child(12) {
+            top: 7%;
+            left: 20%;
+        }
+
+        /* SVG Lines */
+        svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .svg-line {
+            stroke: #333;
+            stroke-width: 2;
+            fill: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- SVG for connection lines -->
+        <svg>
+            <!-- Line to Website (top) -->
+            <line class="svg-line" x1="300" y1="300" x2="300" y2="150" />
+            <!-- Line to Social (bottom-left diagonal) -->
+            <line class="svg-line" x1="300" y1="300" x2="180" y2="470" />
+            <!-- Line to Ads (bottom-right diagonal) -->
+            <line class="svg-line" x1="300" y1="300" x2="420" y2="470" />
+        </svg>
+
+        <!-- Orbiting Icons -->
+        <div class="orbit-container">
+            <div class="orbit-icon">💳</div>
+            <div class="orbit-icon">🔗</div>
+            <div class="orbit-icon">⚡</div>
+            <div class="orbit-icon">📱</div>
+            <div class="orbit-icon">📊</div>
+            <div class="orbit-icon">💬</div>
+            <div class="orbit-icon">👥</div>
+            <div class="orbit-icon">🎯</div>
+            <div class="orbit-icon">📧</div>
+            <div class="orbit-icon">🔍</div>
+            <div class="orbit-icon">📈</div>
+            <div class="orbit-icon">🌐</div>
+        </div>
+
+        <!-- Center Hub -->
+        <div class="hub">
+            <div class="hub-text">H.</div>
+        </div>
+
+        <!-- Main Nodes -->
+        <div class="node node-website">
+            <div class="node-icon">🌐</div>
+            <div class="node-label">Website</div>
+        </div>
+
+        <div class="node node-social">
+            <div class="node-icon">📹</div>
+            <div class="node-label">Social</div>
+        </div>
+
+        <div class="node node-ads">
+            <div class="node-icon">🎯</div>
+            <div class="node-label">Ads</div>
+        </div>
+    </div>
+</body>
+
+</html>

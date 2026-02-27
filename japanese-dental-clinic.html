@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>スマイル歯科クリニック - 安心の歯科治療</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #5BA4CF;
+            --light-blue: #E8F4F8;
+            --soft-green: #A8D5BA;
+            --warm-white: #FAFAFA;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --accent-pink: #FFB6C1;
+            --shadow: rgba(0, 0, 0, 0.08);
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            color: var(--text-dark);
+            background: var(--warm-white);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* Header & Navigation */
+        .header {
+            background: white;
+            box-shadow: 0 2px 20px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .header-top {
+            background: linear-gradient(135deg, var(--primary-blue), var(--soft-green));
+            padding: 8px 0;
+            text-align: center;
+            color: white;
+            font-size: 14px;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--soft-green));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 35px;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-blue);
+            transition: width 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary-blue);
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, var(--primary-blue), var(--soft-green));
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(91, 164, 207, 0.3);
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(91, 164, 207, 0.4);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--light-blue) 0%, white 100%);
+            padding: 100px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(91, 164, 207, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-30px);
+            }
+        }
+
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content h1 {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .hero-content .highlight {
+            color: var(--primary-blue);
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero-content .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            width: 100%;
+            height: 12px;
+            background: rgba(91, 164, 207, 0.2);
+            z-index: -1;
+        }
+
+        .hero-content p {
+            font-size: 18px;
+            color: var(--text-light);
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .hero-features {
+            display: flex;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .feature-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--soft-green));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .hero-image {
+            position: relative;
+        }
+
+        .hero-image-main {
+            width: 100%;
+            height: 500px;
+            background: linear-gradient(135deg, rgba(91, 164, 207, 0.1), rgba(168, 213, 186, 0.1));
+            border-radius: 30px;
+            box-shadow: 0 20px 60px var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-image-main::before {
+            content: '😊';
+            font-size: 200px;
+            opacity: 0.3;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 0.5;
+            }
+        }
+
+        .trust-badge {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px var(--shadow);
+            text-align: center;
+        }
+
+        .trust-badge .number {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+
+        .trust-badge .label {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        /* Services Section */
+        .services {
+            padding: 100px 40px;
+            background: white;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-subtitle {
+            color: var(--primary-blue);
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            font-size: 40px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+        }
+
+        .section-description {
+            font-size: 16px;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .services-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .service-card {
+            background: white;
+            border: 2px solid var(--light-blue);
+            border-radius: 25px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--light-blue), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px var(--shadow);
+            border-color: var(--primary-blue);
+        }
+
+        .service-card:hover::before {
+            opacity: 1;
+        }
+
+        .service-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--soft-green));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .service-card h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+            position: relative;
+            z-index: 1;
+        }
+
+        .service-card p {
+            font-size: 15px;
+            color: var(--text-light);
+            line-height: 1.8;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* About Section */
+        .about {
+            padding: 100px 40px;
+            background: var(--light-blue);
+        }
+
+        .about-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .about-image {
+            width: 100%;
+            height: 500px;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 100px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-content h2 {
+            font-size: 38px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: var(--text-dark);
+        }
+
+        .about-content p {
+            font-size: 16px;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            line-height: 1.9;
+        }
+
+        .about-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .stat-box {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 100px 40px;
+            background: white;
+        }
+
+        .testimonials-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .testimonial-card {
+            background: var(--light-blue);
+            padding: 35px;
+            border-radius: 25px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px var(--shadow);
+        }
+
+        .quote-icon {
+            font-size: 50px;
+            color: var(--primary-blue);
+            opacity: 0.3;
+            line-height: 1;
+            margin-bottom: 15px;
+        }
+
+        .testimonial-text {
+            font-size: 15px;
+            color: var(--text-dark);
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--soft-green));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .author-info .name {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 3px;
+        }
+
+        .author-info .age {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .rating {
+            margin-top: 15px;
+            color: #FFD700;
+            font-size: 18px;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 100px 40px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--soft-green));
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-content h2 {
+            font-size: 42px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .cta-content p {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 40px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--primary-blue);
+            padding: 18px 45px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 16px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            padding: 18px 45px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 16px;
+            border: 2px solid white;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: var(--primary-blue);
+        }
+
+        /* Footer */
+        .footer {
+            background: #2C3E50;
+            color: white;
+            padding: 60px 40px 30px;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-about h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .footer-about p {
+            font-size: 14px;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .footer-links h4 {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links ul li a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 14px;
+        }
+
+        .footer-links ul li a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+        }
+
+        /* Floating Contact Button */
+        .floating-contact {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 999;
+        }
+
+        .floating-btn {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--soft-green));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 30px;
+            box-shadow: 0 8px 25px rgba(91, 164, 207, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .floating-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 35px rgba(91, 164, 207, 0.5);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+
+            .hero-container,
+            .about-container {
+                grid-template-columns: 1fr;
+            }
+
+            .services-grid,
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+
+            .hero-content h1 {
+                font-size: 36px;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-top">
+            📞 予約・お問い合わせ: 03-1234-5678 | 📧 info@smile-dental.jp
+        </div>
+        <nav class="nav-container">
+            <div class="logo">
+                <div class="logo-icon">🦷</div>
+                スマイル歯科
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home">ホーム</a></li>
+                <li><a href="#services">診療内容</a></li>
+                <li><a href="#about">当院について</a></li>
+                <li><a href="#testimonials">患者様の声</a></li>
+                <li><a href="#contact">アクセス</a></li>
+            </ul>
+            <a href="#booking" class="cta-button">ご予約はこちら</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1>
+                    <span class="highlight">痛くない</span>、<br>
+                    安心の歯科治療
+                </h1>
+                <p>
+                    患者様一人ひとりに寄り添った、丁寧で優しい治療を心がけています。<br>
+                    最新の設備と確かな技術で、あなたの笑顔を守ります。
+                </p>
+                <a href="#booking" class="cta-button">初診予約はこちら</a>
+
+                <div class="hero-features">
+                    <div class="feature-badge">
+                        <div class="feature-icon">✓</div>
+                        <div>
+                            <strong>無痛治療</strong><br>
+                            <small>痛みに配慮</small>
+                        </div>
+                    </div>
+                    <div class="feature-badge">
+                        <div class="feature-icon">⏰</div>
+                        <div>
+                            <strong>土日診療</strong><br>
+                            <small>平日忙しい方も</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="hero-image-main"></div>
+                <div class="trust-badge">
+                    <div class="number">15年</div>
+                    <div class="label">地域密着の実績</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <div class="section-header">
+            <div class="section-subtitle">診療内容</div>
+            <h2 class="section-title">幅広い診療メニュー</h2>
+            <p class="section-description">
+                一般歯科から審美歯科まで、患者様のニーズに合わせた最適な治療をご提案いたします。
+            </p>
+        </div>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">🦷</div>
+                <h3>一般歯科</h3>
+                <p>虫歯治療、歯周病治療など、お口の健康を守る基本的な治療を行います。</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">✨</div>
+                <h3>審美歯科</h3>
+                <p>ホワイトニング、セラミック治療で、美しい白い歯を実現します。</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🔧</div>
+                <h3>インプラント</h3>
+                <p>失った歯を取り戻す、最先端のインプラント治療をご提供します。</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">👶</div>
+                <h3>小児歯科</h3>
+                <p>お子様の歯の健康を守り、楽しく通える環境づくりを心がけています。</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🦴</div>
+                <h3>矯正歯科</h3>
+                <p>目立たない矯正装置で、美しい歯並びを実現します。</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🛡️</div>
+                <h3>予防歯科</h3>
+                <p>定期検診とクリーニングで、虫歯や歯周病を未然に防ぎます。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="about-container">
+            <div class="about-image">👨‍⚕️</div>
+            <div class="about-content">
+                <h2>患者様に寄り添う<br>安心の歯科医療</h2>
+                <p>
+                    当院は、患者様一人ひとりのお悩みに真摯に向き合い、最適な治療法をご提案することを大切にしています。
+                </p>
+                <p>
+                    最新の医療設備と、経験豊富な歯科医師・スタッフが、皆様の健康な歯と美しい笑顔をサポートいたします。
+                </p>
+                <p>
+                    痛みの少ない治療、丁寧なカウンセリング、清潔で快適な院内環境で、安心して通っていただける歯科医院を目指しています。
+                </p>
+
+                <div class="about-stats">
+                    <div class="stat-box">
+                        <div class="stat-number">15年</div>
+                        <div class="stat-label">診療実績</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">5,000+</div>
+                        <div class="stat-label">患者様</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">98%</div>
+                        <div class="stat-label">満足度</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials" id="testimonials">
+        <div class="section-header">
+            <div class="section-subtitle">患者様の声</div>
+            <h2 class="section-title">喜びの声をいただいています</h2>
+            <p class="section-description">
+                実際に治療を受けられた患者様からの感想をご紹介します。
+            </p>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="quote-icon">"</div>
+                <p class="testimonial-text">
+                    歯医者が苦手でしたが、こちらの先生は本当に優しくて、痛みもほとんど感じませんでした。安心して通えています。
+                </p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">A</div>
+                    <div class="author-info">
+                        <div class="name">田中 愛子様</div>
+                        <div class="age">32歳 女性</div>
+                    </div>
+                </div>
+                <div class="rating">★★★★★</div>
+            </div>
+            <div class="testimonial-card">
+                <div class="quote-icon">"</div>
+                <p class="testimonial-text">
+                    インプラント治療を受けました。丁寧な説明と確かな技術で、自分の歯のように快適です。本当に感謝しています。
+                </p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">S</div>
+                    <div class="author-info">
+                        <div class="name">佐藤 俊介様</div>
+                        <div class="age">58歳 男性</div>
+                    </div>
+                </div>
+                <div class="rating">★★★★★</div>
+            </div>
+            <div class="testimonial-card">
+                <div class="quote-icon">"</div>
+                <p class="testimonial-text">
+                    子供が怖がらずに通えるのが嬉しいです。スタッフの皆さんが優しく、院内も清潔で安心できます。
+                </p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">Y</div>
+                    <div class="author-info">
+                        <div class="name">山田 由美様</div>
+                        <div class="age">40歳 女性</div>
+                    </div>
+                </div>
+                <div class="rating">★★★★★</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" id="booking">
+        <div class="cta-content">
+            <h2>まずはお気軽にご相談ください</h2>
+            <p>
+                初診の方も安心してお越しいただけるよう、丁寧なカウンセリングを行っています。<br>
+                お電話またはオンラインでご予約を承っております。
+            </p>
+            <div class="cta-buttons">
+                <a href="tel:03-1234-5678" class="btn-primary">📞 電話で予約</a>
+                <a href="#" class="btn-secondary">📅 オンライン予約</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" id="contact">
+        <div class="footer-container">
+            <div class="footer-about">
+                <h3>スマイル歯科クリニック</h3>
+                <p>
+                    患者様の笑顔と健康を第一に考え、地域に根ざした歯科医療を提供しています。
+                    お口のことでお悩みがございましたら、お気軽にご相談ください。
+                </p>
+            </div>
+            <div class="footer-links">
+                <h4>診療案内</h4>
+                <ul>
+                    <li><a href="#">一般歯科</a></li>
+                    <li><a href="#">審美歯科</a></li>
+                    <li><a href="#">インプラント</a></li>
+                    <li><a href="#">矯正歯科</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>医院情報</h4>
+                <ul>
+                    <li><a href="#">アクセス</a></li>
+                    <li><a href="#">診療時間</a></li>
+                    <li><a href="#">院長紹介</a></li>
+                    <li><a href="#">設備紹介</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>診療時間</h4>
+                <ul>
+                    <li>平日: 9:00-13:00 / 14:30-19:00</li>
+                    <li>土日: 9:00-13:00 / 14:00-17:00</li>
+                    <li>休診日: 祝日</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 スマイル歯科クリニック. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Floating Contact Button -->
+    <div class="floating-contact">
+        <a href="tel:03-1234-5678" class="floating-btn">📞</a>
+    </div>
+
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Header shadow on scroll
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 50) {
+                header.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.15)';
+            } else {
+                header.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.08)';
+            }
+        });
+    </script>
+</body>
+
+</html>

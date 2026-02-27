@@ -1,0 +1,7 @@
+{
+    "functions": {
+        "send-pt-link": {
+            "verify_jwt": false
+        }
+    }
+}

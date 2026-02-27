@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orbitz - Cinematic Earth</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* UI Overlay */
+        #ui-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            text-align: center;
+            pointer-events: none;
+            /* Let clicks pass through to 3D */
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+        }
+
+        .logo-text {
+            color: #fff;
+            font-size: 5rem;
+            font-weight: 500;
+            letter-spacing: -2px;
+            line-height: 1;
+        }
+
+        .tm {
+            font-size: 1rem;
+            vertical-align: super;
+            margin-left: 5px;
+            color: #ccc;
+        }
+
+        /* Hexagon Icon SVG Animation */
+        .hex-dot {
+            fill: #fff;
+        }
+    </style>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.170.0/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+
+<body>
+
+    <div id="container"></div>
+
+    <div id="ui-container">
+        <!-- Recreated Orbitz Hexagon Logo -->
+        <svg class="logo-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Center Hex -->
+            <path d="M50 25 L71.65 37.5 V62.5 L50 75 L28.35 62.5 V37.5 Z" fill="white" />
+            <!-- Surrounding Dots/Hexes imitation -->
+            <circle cx="50" cy="10" r="8" fill="white" />
+            <circle cx="85" cy="30" r="8" fill="white" />
+            <circle cx="85" cy="70" r="8" fill="white" />
+            <circle cx="50" cy="90" r="8" fill="white" />
+            <circle cx="15" cy="70" r="8" fill="white" />
+            <circle cx="15" cy="30" r="8" fill="white" />
+        </svg>
+
+        <div class="logo-text">
+            orbitz<span class="tm">TM</span>
+        </div>
+    </div>
+
+    <!-- Vertex Shader for Atmosphere -->
+    <script type="x-shader/x-vertex" id="vertexShader">
+        varying vec3 vNormal;
+        void main() {
+            vNormal = normalize(normalMatrix * normal);
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+    </script>
+
+    <!-- Fragment Shader for Atmosphere -->
+    <script type="x-shader/x-fragment" id="fragmentShader">
+        varying vec3 vNormal;
+        void main() {
+            float intensity = pow(0.6 - dot(vNormal, vec3(0, 0, 1.0)), 4.0);
+            gl_FragColor = vec4(0.3, 0.6, 1.0, 1.0) * intensity * 1.5;
+        }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        // --- SCENE SETUP ---
+        const scene = new THREE.Scene();
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.set(0, 0, 12); // Front view
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.outputColorSpace = THREE.SRGBColorSpace;
+        document.getElementById('container').appendChild(renderer.domElement);
+
+        // --- EARTH textures ---
+        const textureLoader = new THREE.TextureLoader();
+        // High-res textures
+        const mapUrl = 'https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg';
+        const bumpUrl = 'https://unpkg.com/three-globe/example/img/earth-topology.png';
+
+        // --- EARTH MESH ---
+        const earthGeo = new THREE.SphereGeometry(3.5, 64, 64);
+        const earthMat = new THREE.MeshStandardMaterial({
+            map: textureLoader.load(mapUrl),
+            bumpMap: textureLoader.load(bumpUrl),
+            bumpScale: 0.05,
+            roughness: 0.6,
+            metalness: 0.1,
+            color: 0xaaaaaa // Slightly dim to allow light to pop
+        });
+        const earth = new THREE.Mesh(earthGeo, earthMat);
+        // Tilt axis
+        earth.rotation.z = 23.5 * Math.PI / 180;
+        scene.add(earth);
+
+        // --- ATMOSPHERE GLOW ---
+        const atmoGeo = new THREE.SphereGeometry(3.5 + 0.2, 64, 64); // Slightly larger
+        const atmoMat = new THREE.ShaderMaterial({
+            vertexShader: document.getElementById('vertexShader').textContent,
+            fragmentShader: document.getElementById('fragmentShader').textContent,
+            blending: THREE.AdditiveBlending,
+            side: THREE.BackSide, // Only render back so it doesn't occlude earth
+            transparent: true
+        });
+        const atmosphere = new THREE.Mesh(atmoGeo, atmoMat);
+        scene.add(atmosphere);
+
+        // --- STARS ---
+        const starsGeo = new THREE.BufferGeometry();
+        const count = 2000;
+        const positions = new Float32Array(count * 3);
+        for (let i = 0; i < count * 3; i++) {
+            positions[i] = (Math.random() - 0.5) * 80; // Spread wide
+        }
+        starsGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        const starsMat = new THREE.PointsMaterial({
+            size: 0.05,
+            color: 0xffffff,
+            transparent: true,
+            opacity: 0.8,
+            sizeAttenuation: true
+        });
+        const stars = new THREE.Points(starsGeo, starsMat);
+        scene.add(stars);
+
+
+        // --- LIGHTING ---
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.05); // Very dark ambient
+        scene.add(ambientLight);
+
+        // Main Sun key light - from top right
+        const sunLight = new THREE.DirectionalLight(0xffffff, 2.5);
+        sunLight.position.set(10, 10, 5);
+        scene.add(sunLight);
+
+        // Rim light - blueish from back/left to accentuate edge
+        const rimLight = new THREE.SpotLight(0x4488ff, 5.0);
+        rimLight.position.set(-10, 5, -5);
+        rimLight.lookAt(earth.position);
+        scene.add(rimLight);
+
+
+        // --- ANIMATION ---
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.enableZoom = false;
+        controls.enablePan = false;
+        controls.rotateSpeed = 0.5;
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Rotate Earth
+            earth.rotation.y += 0.0015;
+
+            // Slowly rotate stars background
+            stars.rotation.y -= 0.0002;
+
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        animate();
+
+    </script>
+</body>
+
+</html>

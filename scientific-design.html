@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Most Scientific Way</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+            background-color: #050505;
+            /* Black background */
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+        }
+
+        /* Ambient Glow */
+        .ambient-glow {
+            position: absolute;
+            top: 50%;
+            left: 70%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Main container */
+        .container {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1400px;
+            padding: 0 80px;
+            gap: 60px;
+        }
+
+        /* Left Column: Text */
+        .text-section {
+            flex: 1;
+            text-align: left;
+            max-width: 650px;
+        }
+
+        .text-section h1 {
+            font-size: 5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 40px;
+            color: #ffffff;
+            text-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+            letter-spacing: -0.02em;
+        }
+
+        .text-section h1 .highlight {
+            color: #34d399;
+            /* Mint highlight */
+            text-shadow: 0 0 40px rgba(52, 211, 153, 0.4);
+        }
+
+        .text-section p {
+            font-size: 1.15rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.7;
+            font-weight: 300;
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+
+        .text-section p .bold {
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        .text-section p .accent {
+            color: #34d399;
+            font-weight: 600;
+            text-decoration: underline;
+            text-decoration-color: rgba(52, 211, 153, 0.5);
+            text-underline-offset: 4px;
+        }
+
+        /* Right Column: Diagram with Animation */
+        .diagram-column {
+            flex: 1;
+            height: 600px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Canvas confined to right visual area */
+        #particle-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.8;
+            mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+            -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+        }
+
+        /* Vertical Line */
+        .timeline-line {
+            position: absolute;
+            left: 60px;
+            top: 50px;
+            bottom: 50px;
+            width: 2px;
+            background: linear-gradient(to bottom, transparent, rgba(52, 211, 153, 0.3) 20%, rgba(52, 211, 153, 0.3) 80%, transparent);
+            z-index: 5;
+        }
+
+        .nodes-container {
+            position: relative;
+            z-index: 10;
+            height: 100%;
+            padding: 50px 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 100%;
+        }
+
+        .node-item {
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding-left: 60px;
+            /* Align with line */
+        }
+
+        .node-dot {
+            position: absolute;
+            left: 51px;
+            /* Center on 60px line (60 - 18/2) */
+            width: 20px;
+            height: 20px;
+            background: #050505;
+            border: 2px solid #34d399;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(52, 211, 153, 0.4);
+            z-index: 20;
+            transition: all 0.3s ease;
+        }
+
+        /* Active/Glow effect matching the video orbs */
+        .node-dot.glow {
+            background: #34d399;
+            box-shadow: 0 0 30px rgba(52, 211, 153, 0.8);
+        }
+
+        .node-label {
+            margin-left: 40px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 24px;
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+            font-weight: 500;
+            text-transform: uppercase;
+            backdrop-filter: blur(4px);
+            transition: all 0.3s ease;
+        }
+
+        .node-item:hover .node-dot {
+            transform: scale(1.2);
+            background: #34d399;
+            box-shadow: 0 0 40px rgba(52, 211, 153, 1);
+        }
+
+        .node-item:hover .node-label {
+            border-color: #34d399;
+            color: #34d399;
+            background: rgba(52, 211, 153, 0.1);
+            transform: translateX(10px);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .text-section h1 {
+                font-size: 3.5rem;
+            }
+
+            .container {
+                padding: 0 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                overflow-y: auto;
+                padding: 40px 20px;
+            }
+
+            .text-section {
+                text-align: center;
+                margin-bottom: 40px;
+            }
+
+            .text-section p {
+                margin: 0 auto 2rem;
+            }
+
+            .ambient-glow {
+                left: 50%;
+                top: 50%;
+            }
+
+            .diagram-column {
+                width: 100%;
+                height: 500px;
+            }
+
+            .timeline-line {
+                left: 50%;
+                margin-left: -1px;
+            }
+
+            .node-item {
+                justify-content: flex-start;
+                padding-left: 50%;
+            }
+
+            .node-dot {
+                left: -10px;
+            }
+
+            /* Relative to padding box */
+            .node-label {
+                margin-left: 30px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="ambient-glow"></div>
+
+    <div class="container">
+        <!-- Text Section -->
+        <div class="text-section">
+            <h1>The most <br><span class="highlight">scientific</span> way <br>to design your <br>website</h1>
+            <p>Design isn't art. It's <span class="bold">engineering</span>.</p>
+            <p>Every pixel placement is backed by data. Every color choice validated by A/B tests. We don't guess what
+                converts.</p>
+            <p>We <span class="accent">measure</span>, <span class="accent">test</span>, and <span
+                    class="accent">optimize</span> until the numbers prove it works.</p>
+        </div>
+
+        <!-- Diagram Section -->
+        <div class="diagram-column">
+            <!-- Falling Particles Background -->
+            <canvas id="particle-canvas"></canvas>
+
+            <!-- Timeline -->
+            <div class="timeline-line"></div>
+
+            <div class="nodes-container">
+                <div class="node-item">
+                    <div class="node-dot"></div>
+                    <div class="node-label">Data Backed</div>
+                </div>
+                <div class="node-item">
+                    <div class="node-dot glow"></div> <!-- Highlighted one -->
+                    <div class="node-label"
+                        style="border-color: #34d399; color: #34d399; background: rgba(52,211,153,0.1);">A/B Validated
+                    </div>
+                </div>
+                <div class="node-item">
+                    <div class="node-dot"></div>
+                    <div class="node-label">User Metrics</div>
+                </div>
+                <div class="node-item">
+                    <div class="node-dot"></div>
+                    <div class="node-label">Conversion Optimized</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        const column = document.querySelector('.diagram-column');
+
+        function resize() {
+            canvas.width = column.clientWidth;
+            canvas.height = column.clientHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // Particles falling like coins/orbs
+        class Particle {
+            constructor() {
+                this.reset();
+                this.y = Math.random() * canvas.height; // Start randomly
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = -20;
+                this.size = Math.random() * 15 + 5; // Smaller decorative particles
+                this.speed = Math.random() * 1 + 0.5;
+                this.opacity = Math.random() * 0.5 + 0.1;
+                this.life = Math.random() * 100 + 100;
+            }
+
+            update() {
+                this.y += this.speed;
+                this.life--;
+
+                if (this.y > canvas.height + 20 || this.life <= 0) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(52, 211, 153, ${this.opacity})`; // Mint color
+
+                // Glow effect
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = `rgba(52, 211, 153, ${this.opacity})`;
+
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        const particles = [];
+        const particleCount = 20; // Subtle amount
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Typing Animation</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #111;
+            position: relative;
+            margin: 0;
+            padding: 20px;
+            overflow-x: hidden;
+            color: #FFF;
+        }
+
+        body,
+        html {
+            height: 100%;
+        }
+
+        .text {
+            overflow: hidden;
+            height: auto;
+            font-family: 'Source Sans Pro', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        /* The user's span style */
+        span {
+            min-width: 5px;
+            display: inline-block;
+            letter-spacing: 1.5px;
+            color: #d4d4d4;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- data-text contains REAL C code, separated by /n -->
+    <p class="text"
+        data-text="/*/n * Core Kernel Memory Management Subsystem/n * Copyright (C) 2024 System Architecture Labs/n *//n/n#include <linux/mm.h>/n#include <linux/slab.h>/n#include <linux/sched.h>/n#include <linux/export.h>/n/n#define MAX_ORDER 11/n#define SLAB_LIMIT_SIZE (1024 * 1024)/n/nstruct kmem_cache *kmem_cache_create(const char *name, size_t size, /n                                   size_t align, unsigned long flags,/n                                   void (*ctor)(void *))/n{/n    struct kmem_cache *s = NULL;/n    const char *cache_name;/n    int err;/n/n    get_online_cpus();/n    get_online_mems();/n    /n    mutex_lock(&slab_mutex);/n/n    err = kmem_cache_sanity_check(name, size);/n    if (err) {/n        goto out_unlock;/n    }/n/n    /* Refuse requests with allocator specific flags *//n    if (flags & ~SLAB_FLAGS_PERMITTED) {/n        err = -EINVAL;/n        goto out_unlock;/n    }/n/n    s = __kmem_cache_alias(name, size, align, flags, ctor);/n    if (s) {/n        goto out_unlock;/n    }/n/n    cache_name = kstrdup_const(name, GFP_KERNEL);/n    if (!cache_name) {/n        err = -ENOMEM;/n        goto out_unlock;/n    }/n/n    s = create_cache(cache_name, size, /n                     calculate_alignment(flags, align, size),/n                     flags, ctor);/n                     /n    if (IS_ERR(s)) {/n        err = PTR_ERR(s);/n        kfree_const(cache_name);/n    }/n/n out_unlock:/n    mutex_unlock(&slab_mutex);/n    put_online_mems();/n    put_online_cpus();/n/n    if (err) {/n        if (flags & SLAB_PANIC)/n            panic('kmem_cache_create: Failed to create slab %s.', name);/n        else /n            pr_warn('kmem_cache_create(%s) failed.', name);/n    }/n    return s;/n}/nEXPORT_SYMBOL(kmem_cache_create);/n/nstatic int __init slab_proc_init(void)/n{/n#ifdef CONFIG_DEBUG_SLAB_LEAK/n    proc_create_seq('slab_allocators', 0, NULL, &proc_slabstats_op);/n#endif/n    return 0;/n}/nmodule_init(slab_proc_init);/n/n/*/n * Memory Reclaim Path/n * Iterates over lru lists and evicts pages./n *//nstatic unsigned long do_try_to_free_pages(struct zonelist *zonelist,/n                                        struct scan_control *sc)/n{/n    int initial_priority = sc->priority;/n    unsigned long total_scanned = 0;/n    unsigned long total_reclaimed = 0;/n/n retry:/n    delayacct_freepages_start();/n/n    if (global_reclaim(sc))/n        __count_zid_vm_events(ALLOCSTALL, sc->reclaim_idx, 1);/n/n    do {/n        vmpressure_prio(sc->gfp_mask, sc->target_mem_cgroup,/n                        sc->priority);/n        /n        sc->nr_scanned = 0;/n        /n        total_reclaimed += shrink_zones(zonelist, sc);/n        total_scanned += sc->nr_scanned;/n/n        if (total_reclaimed >= sc->nr_to_reclaim)/n            break;/n/n    } while (--sc->priority >= 0);/n/n    delayacct_freepages_end();/n/n    if (total_reclaimed >= sc->nr_to_reclaim)/n        return total_reclaimed;/n     /n    return 0;/n}/n/nvoid *__vmalloc_node_range(unsigned long size, /n                          unsigned long align,/n                          unsigned long start, /n                          unsigned long end, /n                          gfp_t gfp_mask,/n                          pgprot_t prot, /n                          unsigned long vm_flags, /n                          int node,/n                          const void *caller)/n{/n    struct vm_struct *area;/n    void *addr;/n/n    size = PAGE_ALIGN(size);/n    if (!size || (size >> PAGE_SHIFT) > totalram_pages())/n        goto fail;/n/n    area = __get_vm_area_node(size, align, VM_ALLOC | VM_UNINITIALIZED |/n                            vm_flags, start, end, node, gfp_mask, caller);/n    if (!area)/n        goto fail;/n/n    addr = __vmalloc_area_node(area, gfp_mask, prot, node);/n    if (!addr)/n        return NULL;/n/n    clear_vm_uninitialized_flag(area);/n    kmemleak_vmalloc(area, size, gfp_mask);/n/n    return addr;/n/n fail:/n    return NULL;/n}/n">
+    </p>
+
+    <script>
+        // Revised logic to ensure lines are typed SEQUENTIALLY
+        // One line must finish before the next starts.
+
+        var printText = $('.text').data('text');
+        var contentArray = printText.split('/n');
+
+        var lineIndex = 0;
+
+        function typeNextLine() {
+            if (lineIndex >= contentArray.length) return;
+
+            var currentLineText = contentArray[lineIndex];
+
+            // Create container for this line
+            var lineId = "line-" + lineIndex;
+            $('.text').append('<span style="display:block;" id="' + lineId + '"></span>');
+
+            var charIndex = 0;
+            var chars = currentLineText.split("");
+
+            function typeNextChar() {
+                if (charIndex >= chars.length) {
+                    // Line finished, move to next line after a small pause
+                    lineIndex++;
+                    setTimeout(typeNextLine, 100); // Pause between lines
+                    return;
+                }
+
+                var char = chars[charIndex];
+                $('#' + lineId).append("<span>" + char + "</span>"); // Using spans as requested by user aesthetic
+
+                // Auto scroll
+                $('body, html').scrollTop($(document).height());
+
+                charIndex++;
+
+                // Typing speed for characters
+                // 10ms-30ms is a good "fast typer" range
+                setTimeout(typeNextChar, 20);
+            }
+
+            // Start typing characters for this line
+            typeNextChar();
+        }
+
+        // Start appropriate
+        $(document).ready(function () {
+            typeNextLine();
+        });
+
+    </script>
+</body>
+
+</html>
