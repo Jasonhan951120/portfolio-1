@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { useEffect, useState } from "react";
 import { Calendar } from "lucide-react";
 
-export default function MobileStickyCTA() {
+export default function MobileStickyCTA({ clinic }: { clinic: any }) {
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {

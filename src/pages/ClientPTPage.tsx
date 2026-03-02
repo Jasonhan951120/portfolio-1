@@ -7,43 +7,11 @@ import {
 } from "lucide-react";
 import { supabase, type ConsultationRequest } from "../lib/supabase";
 
-// Reuse assets and values (In a real app, these should be in a shared lib/constants)
-const PT_ASSETS: Record<string, { image: string; title: string; benefit: string; script: string }> = {
-    "Dental Implants": {
-        image: "/brain/0774c8b3-dc9c-4ab9-82fe-cc27c1e404a8/dental_implant_3d_visual_1772134009341.png",
-        title: "Precision Implantology",
-        benefit: "Implants look and function like natural teeth, preserving your jawbone and facial structure.",
-        script: "We've curated this precision plan to restore your smile with world-class implant technology."
-    },
-    "Veneers": {
-        image: "/brain/0774c8b3-dc9c-4ab9-82fe-cc27c1e404a8/veneer_before_after_mockup_1772134023178.png",
-        title: "Hollywood Smile Makeover",
-        benefit: "Ultra-thin porcelain veneers correct shape, color, and alignment in as little as two visits.",
-        script: "This transformation plan is designed to give you the confidence of a perfect, natural-looking smile."
-    },
-    "Invisalign / Aligners": {
-        image: "/brain/0774c8b3-dc9c-4ab9-82fe-cc27c1e404a8/invisalign_simulation_ui_1772134037487.png",
-        title: "SmartSmile Aligner Simulation",
-        benefit: "Straighten your teeth invisibly with removable aligners and see your final result before you start.",
-        script: "Your digital alignment journey starts here. See how your smile will evolve over the coming months."
-    }
-};
-
-const TREATMENT_VALUES: Record<string, number> = {
-    "Dental Implants": 3000,
-    "Invisalign / Aligners": 2500,
-    "Veneers": 1200,
-    "Composite Bonding": 800,
-    "Teeth Whitening": 500,
-    "Dental Crown": 900,
-    "Emergency Appointment": 300,
-    "General Inquiry": 1500,
-    "Other": 1000,
-};
-
 export default function ClientPTPage() {
     const { id } = useParams<{ id: string }>();
     const [lead, setLead] = useState<ConsultationRequest | null>(null);
+    const [clinic, setClinic] = useState<any>(null);
+    const [treatments, setTreatments] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [showReviews, setShowReviews] = useState(false);
     const [showDepositModal, setShowDepositModal] = useState(false);
@@ -51,20 +19,33 @@ export default function ClientPTPage() {
     const [cardData, setCardData] = useState({ number: '', expiry: '', cvc: '' });
 
     useEffect(() => {
-        async function fetchLead() {
+        async function fetchData() {
             if (!id) return;
-            const { data, error } = await supabase
+
+            // 1. Fetch Lead
+            const { data: leadData, error: leadError } = await supabase
                 .from('consultation_requests')
                 .select('*')
                 .eq('id', id)
                 .single();
 
-            if (!error && data) {
-                setLead(data);
+            if (!leadError && leadData) {
+                setLead(leadData);
+
+                // 2. Fetch Clinic & Treatments if clinic_id exists
+                if (leadData.clinic_id) {
+                    const [clinicRes, treatmentsRes] = await Promise.all([
+                        supabase.from('clinics').select('*').eq('id', leadData.clinic_id).single(),
+                        supabase.from('clinic_treatments').select('*').eq('clinic_id', leadData.clinic_id)
+                    ]);
+
+                    if (clinicRes.data) setClinic(clinicRes.data);
+                    if (treatmentsRes.data) setTreatments(treatmentsRes.data);
+                }
             }
             setLoading(false);
         }
-        fetchLead();
+        fetchData();
     }, [id]);
 
     if (loading) {
@@ -91,19 +72,30 @@ export default function ClientPTPage() {
         );
     }
 
-    const asset = lead ? (PT_ASSETS[lead.service] || {
-        image: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=1200",
-        title: `${lead.name.toUpperCase()}'S SMILE PLAN`,
-        benefit: "World-class treatment using clinical precision and the latest dental innovations.",
-        script: "We've prepared a treatment plan optimized for your specific clinical needs. We're committed to delivering a safe, beautiful result powered by years of expert skill."
-    }) : null;
+    // Dynamic asset selection
+    const treatmentInfo = treatments.find(t => t.service_name === lead.service);
+
+    const asset = {
+        image: treatmentInfo?.image_url || "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=1200",
+        title: treatmentInfo?.title || `${lead.name.toUpperCase()}'S SMILE PLAN`,
+        benefit: treatmentInfo?.benefit_text || "World-class treatment using clinical precision and the latest dental innovations.",
+        script: "We've prepared a treatment plan optimized for your specific clinical needs. We're committed to delivering a safe, beautiful result powered by years of expert skill.",
+        price: treatmentInfo?.price || 1000
+    };
 
     return (
         <div className="min-h-screen bg-[#050505] text-white selection:bg-cyan-400/30 flex flex-col items-center justify-start overflow-y-auto">
             {/* Navigation Header */}
             <nav className="fixed top-0 inset-x-0 z-50 p-8 flex justify-between items-center backdrop-blur-md bg-black/20">
-                <Link to="/" className="text-2xl font-display font-bold tracking-tighter">
-                    LONDON<span className="text-white/40">SMILE</span>
+                <Link to="/" className="text-2xl font-display font-bold tracking-tighter uppercase">
+                    {clinic?.name ? (
+                        <>
+                            {clinic.name.split(' ')[0]}
+                            <span className="text-white/40">{clinic.name.split(' ').slice(1).join(' ')}</span>
+                        </>
+                    ) : (
+                        <>LONDON<span className="text-white/40">SMILE</span></>
+                    )}
                 </Link>
                 <div className="flex items-center gap-6">
                     <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-white/5 rounded-full border border-white/10">
@@ -163,7 +155,7 @@ export default function ClientPTPage() {
                                     <div className="flex justify-between items-start">
                                         <div>
                                             <p className="text-[10px] text-white/30 font-bold uppercase tracking-[0.3em] mb-3">Investment Summary</p>
-                                            <p className="text-5xl font-display font-bold text-white tracking-tighter">£{TREATMENT_VALUES[lead.service]?.toLocaleString() || "1,000"}</p>
+                                            <p className="text-5xl font-display font-bold text-white tracking-tighter">£{asset.price.toLocaleString()}</p>
                                         </div>
                                         <div className="text-right">
                                             <p className="text-[10px] text-white/30 font-bold uppercase tracking-[0.3em] mb-3">Finance Options</p>
@@ -178,7 +170,7 @@ export default function ClientPTPage() {
                                             </div>
                                             <div>
                                                 <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/30 mb-1">Monthly Cost</p>
-                                                <p className="text-3xl font-bold text-white tracking-tighter italic">£{Math.round((TREATMENT_VALUES[lead.service] || 1000) / 24).toLocaleString()}</p>
+                                                <p className="text-3xl font-bold text-white tracking-tighter italic">£{Math.round(asset.price / 24).toLocaleString()}</p>
                                             </div>
                                         </div>
                                         <span className="px-4 py-2 bg-white/10 text-[9px] font-bold uppercase tracking-[0.3em] rounded-full border border-white/20 text-white/60">Apply In-App</span>
@@ -375,11 +367,7 @@ export default function ClientPTPage() {
                                         <button
                                             onClick={async () => {
                                                 setPaymentStatus('processing');
-
-                                                // 1. Simulate payment processing delay
                                                 await new Promise(resolve => setTimeout(resolve, 2000));
-
-                                                // 2. Update Supabase record
                                                 if (lead?.id) {
                                                     const { error } = await supabase
                                                         .from('consultation_requests')
@@ -392,7 +380,6 @@ export default function ClientPTPage() {
                                                         // but we'll still show success for the demo flow if the card goes through
                                                     }
                                                 }
-
                                                 setPaymentStatus('success');
                                             }}
                                             disabled={paymentStatus === 'processing' || !cardData.number}

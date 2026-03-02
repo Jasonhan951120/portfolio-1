@@ -74,7 +74,7 @@ const portfolioData = {
     }
 };
 
-export default function PortfolioPage() {
+export default function PortfolioPage({ clinic }: { clinic: any }) {
     const { id } = useParams();
     const data = portfolioData[id as keyof typeof portfolioData];
 
@@ -84,7 +84,7 @@ export default function PortfolioPage() {
 
     if (!data) return (
         <div className="min-h-screen bg-white flex flex-col items-center justify-center p-8 text-center uppercase">
-            <Navbar />
+            <Navbar clinic={clinic} />
             <h1 className="text-4xl font-display font-bold text-black mb-4">Case file not found</h1>
             <Link to="/specialists" className="btn-dark">Back to Registry</Link>
         </div>
@@ -92,7 +92,7 @@ export default function PortfolioPage() {
 
     return (
         <div className="min-h-screen bg-white">
-            <Navbar />
+            <Navbar clinic={clinic} />
 
             {/* Dynamic Hero */}
             <section className="pt-40 pb-20 bg-primary text-white relative overflow-hidden">
@@ -160,73 +160,6 @@ export default function PortfolioPage() {
                                 <p className="text-xl text-muted font-medium leading-relaxed">
                                     {data.bestCase.story}
                                 </p>
-                            </div>
-
-                            {/* Case Details Cards */}
-                            <div className="space-y-4">
-                                {data.bestCase.caseDetails.map((detail, i) => (
-                                    <motion.div
-                                        key={i}
-                                        initial={{ opacity: 0, x: 20 }}
-                                        whileInView={{ opacity: 1, x: 0 }}
-                                        viewport={{ once: true }}
-                                        transition={{ delay: i * 0.1 }}
-                                        className="p-8 bg-surface rounded-[30px] border border-black/5 hover:border-accent transition-colors group"
-                                    >
-                                        <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted mb-2 group-hover:text-primary transition-colors">{detail.label}</h4>
-                                        <p className="text-lg font-bold text-black uppercase tracking-tight">{detail.value}</p>
-                                    </motion.div>
-                                ))}
-                            </div>
-
-                            {/* Technical Validation */}
-                            <div>
-                                <h4 className="text-xs font-black uppercase tracking-[0.4em] text-primary mb-10 flex items-center gap-4">
-                                    <div className="w-8 h-[1px] bg-black/20" /> Clinical Tech Proof
-                                </h4>
-                                <div className="grid gap-10">
-                                    {data.techProof.map((tp, i) => (
-                                        <div key={i} className="flex gap-6 items-start">
-                                            <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center text-white shrink-0 shadow-lg shadow-primary/20">
-                                                {tp.icon}
-                                            </div>
-                                            <div>
-                                                <h5 className="text-lg font-bold text-black uppercase mb-1">{tp.title}</h5>
-                                                <p className="text-sm text-muted font-medium leading-relaxed">{tp.desc}</p>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* 9:16 Reels Testimonial Section */}
-            <section className="py-24 md:py-32 bg-surface">
-                <div className="container mx-auto px-8 max-w-6xl">
-                    <div className="flex flex-col lg:flex-row gap-20 items-center">
-
-                        {/* Reels Video Placeholder */}
-                        <div className="w-full max-w-[400px] shrink-0">
-                            <div className="relative aspect-[9/16] bg-primary rounded-[50px] overflow-hidden shadow-[0_40px_80px_-20px_rgba(0,0,0,0.3)] group cursor-pointer border-[8px] border-white">
-                                {/* Mock Video Content */}
-                                <img src="https://images.unsplash.com/photo-1593059276181-7928e442886f?q=80&w=800&auto=format&fit=crop" alt="Patient Reel" className="w-full h-full object-cover opacity-60 grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
-
-                                {/* Overlays */}
-                                <div className="absolute inset-x-0 bottom-0 p-10 bg-gradient-to-t from-black via-black/40 to-transparent">
-                                    <div className="flex items-center gap-4 mb-6">
-                                        <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center text-black font-bold">P</div>
-                                        <p className="text-white text-sm font-bold uppercase tracking-widest">Patient Review</p>
-                                    </div>
-                                    <p className="text-white/60 text-xs font-medium italic mb-8">
-                                        "Seeing the 3D plan first made all the difference. Beyond happy with my result!"
-                                    </p>
-                                    <div className="flex items-center gap-2">
-                                        {[...Array(5)].map((_, i) => <Star key={i} className="w-3 h-3 text-accent fill-current" />)}
-                                    </div>
-                                </div>
 
                                 {/* Play Button */}
                                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">

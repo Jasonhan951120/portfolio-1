@@ -1,12 +1,12 @@
 import { motion } from "motion/react";
 import { ArrowRight } from "lucide-react";
 
-export default function FreshApproach() {
+export default function FreshApproach({ clinic }: { clinic: any }) {
   return (
     <section className="py-32 bg-white">
       <div className="container mx-auto px-8">
         <div className="grid lg:grid-cols-2 gap-20 items-center">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -22,7 +22,7 @@ export default function FreshApproach() {
             </div>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -37,12 +37,12 @@ export default function FreshApproach() {
               <span className="text-primary inline-block mt-2 underline decoration-black/10 underline-offset-8">Philosophy.</span>
             </h2>
             <p className="text-xl text-muted mb-12 leading-relaxed font-medium">
-              At London Smile Excellence, we’re changing the way you experience dental visits. 
-              From routine cleanings and Invisalign to crowns, our skilled team provides 
-              top-quality care in a welcoming, judgment-free environment, with convenient 
+              At London Smile Excellence, we’re changing the way you experience dental visits.
+              From routine cleanings and Invisalign to crowns, our skilled team provides
+              top-quality care in a welcoming, judgment-free environment, with convenient
               locations throughout London.
             </p>
-            
+
             <button className="btn-yellow flex items-center gap-4 group">
               Learn More <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
             </button>

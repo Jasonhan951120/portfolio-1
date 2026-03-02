@@ -393,7 +393,7 @@ function StoryCard({ c, onCTA }: { c: Case; onCTA: () => void }) {
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
-export default function ResultsPage() {
+export default function ResultsPage({ clinic }: { clinic: any }) {
     const [activeCategory, setActiveCategory] = useState<Category>("All");
     const [activeIndex, setActiveIndex] = useState(0);
     const navigate = useNavigate();
@@ -410,7 +410,7 @@ export default function ResultsPage() {
 
     return (
         <div className="min-h-screen bg-[#FBFBFB]">
-            <Navbar />
+            <Navbar clinic={clinic} />
 
             {/* ── Hero ── */}
             <section className="pt-36 pb-12 container mx-auto px-8">

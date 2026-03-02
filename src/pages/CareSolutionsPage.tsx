@@ -3,7 +3,7 @@ import { Search, ShieldAlert, Zap, Layers, Microscope, Layout, ArrowRight, Check
 import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
 
-export default function CareSolutionsPage() {
+export default function CareSolutionsPage({ clinic }: { clinic: any }) {
     const solutions = [
         {
             title: "The Confidence Reconstruction",
@@ -30,7 +30,7 @@ export default function CareSolutionsPage() {
 
     return (
         <div className="min-h-screen bg-white">
-            <Navbar />
+            <Navbar clinic={clinic} />
 
             {/* Solutions Hero */}
             <section className="pt-40 pb-24 bg-primary text-white relative overflow-hidden">

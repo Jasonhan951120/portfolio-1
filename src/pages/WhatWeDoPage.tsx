@@ -3,7 +3,7 @@ import { Heart, Sparkles, Award, Users, ArrowRight, Quote, CheckCircle2, Shield 
 import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
 
-export default function WhatWeDoPage() {
+export default function WhatWeDoPage({ clinic }: { clinic: any }) {
     const journey = [
         {
             title: "The Emotional Discovery",
@@ -39,7 +39,7 @@ export default function WhatWeDoPage() {
 
     return (
         <div className="min-h-screen bg-white">
-            <Navbar />
+            <Navbar clinic={clinic} />
 
             {/* Vision Hero */}
             <section className="pt-40 pb-24 bg-primary text-white relative overflow-hidden">

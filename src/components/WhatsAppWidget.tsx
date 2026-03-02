@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import { MessageCircle } from "lucide-react";
 
-export default function WhatsAppWidget() {
+export default function WhatsAppWidget({ clinic }: { clinic: any }) {
     const WHATSAPP_NUMBER = "442071234567"; // Replace with actual clinic number
     const MESSAGE = encodeURIComponent("Hello! I'd like to inquire about a dental treatment.");
     const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${MESSAGE}`;

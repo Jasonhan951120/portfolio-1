@@ -33,10 +33,10 @@ const specialists = [
     }
 ];
 
-export default function SpecialistsPage() {
+export default function SpecialistsPage({ clinic }: { clinic: any }) {
     return (
         <div className="min-h-screen bg-white">
-            <Navbar />
+            <Navbar clinic={clinic} />
 
             {/* Header Section */}
             <section className="pt-40 pb-20 bg-white overflow-hidden relative border-b border-black/5">

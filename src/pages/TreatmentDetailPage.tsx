@@ -5,7 +5,7 @@ import { TREATMENTS } from "../lib/treatmentData";
 import Navbar from "../components/Navbar";
 import { useEffect } from "react";
 
-export default function TreatmentDetailPage() {
+export default function TreatmentDetailPage({ clinic }: { clinic: any }) {
     const { slug } = useParams();
     const navigate = useNavigate();
     const treatment = slug ? TREATMENTS[slug] : null;
@@ -31,7 +31,7 @@ export default function TreatmentDetailPage() {
 
     return (
         <div className="min-h-screen bg-surface">
-            <Navbar />
+            <Navbar clinic={clinic} />
 
             <main className="pt-20">
                 {/* Hero Section */}

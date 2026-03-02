@@ -372,7 +372,7 @@ const TRUST = [
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
-export default function TestimonialsPage() {
+export default function TestimonialsPage({ clinic }: { clinic: any }) {
     const [activeTag, setActiveTag] = useState<Tag>("All");
     const navigate = useNavigate();
 
@@ -380,7 +380,7 @@ export default function TestimonialsPage() {
 
     return (
         <div className="min-h-screen bg-[#FBFBFB]">
-            <Navbar />
+            <Navbar clinic={clinic} />
 
             {/* ── Hero ── */}
             <section className="pt-36 pb-16 container mx-auto px-8">

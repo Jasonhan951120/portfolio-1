@@ -9,7 +9,7 @@ const images = [
   { src: "https://res.cloudinary.com/dvmxeaefb/image/upload/v1771270807/hf_20260216_191842_7e69bacc-29b8-48ef-a76a-a7b74c73f48b_1_yjb1ci.png", className: "col-span-1 row-span-2" },
 ];
 
-export default function Gallery() {
+export default function Gallery({ clinic }: { clinic: any }) {
   return (
     <section className="py-32 bg-white">
       <div className="container mx-auto px-8">

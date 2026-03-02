@@ -18,7 +18,7 @@ const services = [
   },
 ];
 
-export default function Services() {
+export default function Services({ clinic }: { clinic: any }) {
   return (
     <section className="py-32 bg-white">
       <div className="container mx-auto px-8">

@@ -44,10 +44,10 @@ const protocols = [
     }
 ];
 
-export default function ExpertsPage() {
+export default function ExpertsPage({ clinic }: { clinic: any }) {
     return (
         <div className="min-h-screen bg-white">
-            <Navbar />
+            <Navbar clinic={clinic} />
 
             {/* Dynamic Header */}
             <section className="pt-40 pb-20 bg-primary text-white overflow-hidden relative">

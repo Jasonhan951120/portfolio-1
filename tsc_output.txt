@@ -1,0 +1,92 @@
+pages/Dashboard.tsx(144,37): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { type: string; stiffness: number; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; }; }' is not assignable to type '{ transition?: Transition<any>; transitionEnd?: ResolvedValues$1; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ type: string; stiffness: number; }' is not assignable to type 'Transition<any>'.
+              Type '{ type: string; stiffness: number; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ type: string; stiffness: number; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'type' are incompatible.
+                    Type 'string' is not assignable to type 'AnimationGeneratorType'.
+pages/Dashboard.tsx(149,29): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { type: string; stiffness: number; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; }; }' is not assignable to type '{ transition?: Transition<any>; transitionEnd?: ResolvedValues$1; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ type: string; stiffness: number; }' is not assignable to type 'Transition<any>'.
+              Type '{ type: string; stiffness: number; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ type: string; stiffness: number; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'type' are incompatible.
+                    Type 'string' is not assignable to type 'AnimationGeneratorType'.
+pages/Dashboard.tsx(156,33): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { type: string; stiffness: number; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; }; }' is not assignable to type '{ transition?: Transition<any>; transitionEnd?: ResolvedValues$1; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ type: string; stiffness: number; }' is not assignable to type 'Transition<any>'.
+              Type '{ type: string; stiffness: number; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ type: string; stiffness: number; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'type' are incompatible.
+                    Type 'string' is not assignable to type 'AnimationGeneratorType'.
+pages/Dashboard.tsx(180,25): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { type: string; stiffness: number; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; }; }' is not assignable to type '{ transition?: Transition<any>; transitionEnd?: ResolvedValues$1; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ type: string; stiffness: number; }' is not assignable to type 'Transition<any>'.
+              Type '{ type: string; stiffness: number; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ type: string; stiffness: number; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'type' are incompatible.
+                    Type 'string' is not assignable to type 'AnimationGeneratorType'.
+pages/Dashboard.tsx(242,25): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { type: string; stiffness: number; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; }; }' is not assignable to type '{ transition?: Transition<any>; transitionEnd?: ResolvedValues$1; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ type: string; stiffness: number; }' is not assignable to type 'Transition<any>'.
+              Type '{ type: string; stiffness: number; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ type: string; stiffness: number; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'type' are incompatible.
+                    Type 'string' is not assignable to type 'AnimationGeneratorType'.
+pages/Dashboard.tsx(274,25): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { type: string; stiffness: number; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; }; }' is not assignable to type '{ transition?: Transition<any>; transitionEnd?: ResolvedValues$1; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ type: string; stiffness: number; }' is not assignable to type 'Transition<any>'.
+              Type '{ type: string; stiffness: number; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ type: string; stiffness: number; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'type' are incompatible.
+                    Type 'string' is not assignable to type 'AnimationGeneratorType'.
+pages/Dashboard.tsx(342,25): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { type: string; stiffness: number; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; }; }' is not assignable to type '{ transition?: Transition<any>; transitionEnd?: ResolvedValues$1; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ type: string; stiffness: number; }' is not assignable to type 'Transition<any>'.
+              Type '{ type: string; stiffness: number; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ type: string; stiffness: number; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'type' are incompatible.
+                    Type 'string' is not assignable to type 'AnimationGeneratorType'.
+skills/ui-ux-pro-max/cli/src/commands/init.ts(3,19): error TS2307: Cannot find module 'chalk' or its corresponding type declarations.
+skills/ui-ux-pro-max/cli/src/commands/init.ts(4,17): error TS2307: Cannot find module 'ora' or its corresponding type declarations.
+skills/ui-ux-pro-max/cli/src/commands/init.ts(5,21): error TS2307: Cannot find module 'prompts' or its corresponding type declarations.
+skills/ui-ux-pro-max/cli/src/commands/update.ts(1,19): error TS2307: Cannot find module 'chalk' or its corresponding type declarations.
+skills/ui-ux-pro-max/cli/src/commands/update.ts(2,17): error TS2307: Cannot find module 'ora' or its corresponding type declarations.
+skills/ui-ux-pro-max/cli/src/commands/versions.ts(1,19): error TS2307: Cannot find module 'chalk' or its corresponding type declarations.
+skills/ui-ux-pro-max/cli/src/commands/versions.ts(2,17): error TS2307: Cannot find module 'ora' or its corresponding type declarations.
+skills/ui-ux-pro-max/cli/src/index.ts(3,25): error TS2307: Cannot find module 'commander' or its corresponding type declarations.
+skills/ui-ux-pro-max/cli/src/utils/logger.ts(1,19): error TS2307: Cannot find module 'chalk' or its corresponding type declarations.
+supabase/functions/retarget-webhook/index.ts(8,1): error TS2304: Cannot find name 'Deno'.
+supabase/functions/send-notification/index.ts(3,24): error TS2304: Cannot find name 'Deno'.
+supabase/functions/send-notification/index.ts(4,21): error TS2304: Cannot find name 'Deno'.
+supabase/functions/send-notification/index.ts(7,1): error TS2304: Cannot find name 'Deno'.
+supabase/functions/send-pt-link/index.ts(3,24): error TS2304: Cannot find name 'Deno'.
+supabase/functions/send-pt-link/index.ts(6,1): error TS2304: Cannot find name 'Deno'.

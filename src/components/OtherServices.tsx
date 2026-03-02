@@ -40,7 +40,7 @@ const otherServices = [
   }
 ];
 
-export default function OtherServices() {
+export default function OtherServices({ clinic }: { clinic: any }) {
   return (
     <section className="py-32 bg-surface">
       <div className="container mx-auto px-8">

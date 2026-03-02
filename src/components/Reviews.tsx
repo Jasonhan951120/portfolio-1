@@ -34,7 +34,7 @@ const reviews = [
   { name: "Sarah L.", text: "Pain-free implants. The team is amazing. I can finally smile with confidence again." },
 ];
 
-export default function Reviews() {
+export default function Reviews({ clinic }: { clinic: any }) {
   const [current, setCurrent] = useState(0);
 
   const next = () => setCurrent((prev) => (prev + 1) % reviews.length);
@@ -46,7 +46,7 @@ export default function Reviews() {
         <div className="max-w-7xl mx-auto">
           {/* Stats Section */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-32 py-16 border-y border-black/5">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -58,7 +58,7 @@ export default function Reviews() {
               <div className="text-xs font-bold text-muted uppercase tracking-[0.4em]">Visited Customers</div>
             </motion.div>
 
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -71,7 +71,7 @@ export default function Reviews() {
               <div className="text-xs font-bold text-muted uppercase tracking-[0.4em]">Google Reviews</div>
             </motion.div>
 
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -98,15 +98,15 @@ export default function Reviews() {
               <p className="text-xl text-muted mb-16 font-medium leading-relaxed max-w-md">
                 We take pride in delivering exceptional care. Read about the experiences of our patients and their journey to a better smile.
               </p>
-              
+
               <div className="flex items-center gap-6">
-                <button 
+                <button
                   onClick={prev}
                   className="w-16 h-16 rounded-full bg-accent flex items-center justify-center hover:scale-110 transition-all text-black shadow-lg shadow-accent/20"
                 >
                   <ChevronLeft className="w-6 h-6" />
                 </button>
-                <button 
+                <button
                   onClick={next}
                   className="w-16 h-16 rounded-full bg-accent flex items-center justify-center hover:scale-110 transition-all text-black shadow-lg shadow-accent/20"
                 >

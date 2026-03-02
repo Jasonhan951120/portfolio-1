@@ -9,15 +9,22 @@ export type Clinic = {
     id: string;
     name: string;
     created_at: string;
+    subscription_status: 'active' | 'past_due' | 'none' | 'trialing';
+    stripe_customer_id?: string | null;
+    subscription_id?: string | null;
 };
 
 export type Profile = {
     id: string;
-    clinic_id: string;
+    clinic_id: string | null;
     full_name: string | null;
+    email?: string | null;
     role: "admin" | "staff" | "owner";
-    created_at: string;
+    updated_at: string | null;
+    is_admin: boolean;
 };
+
+
 
 export type ConsultationRequest = {
     id: string;
@@ -27,7 +34,7 @@ export type ConsultationRequest = {
     phone: string;
     service: string;
     notes: string | null;
-    status: "New" | "Contacted" | "Consultation Booked" | "Visited" | "Treatment Started" | "Abandoned" | "Archived";
+    status: "New Lead" | "Booked" | "Visited" | "Treated" | "Abandoned" | "Archived" | "New" | "Contacted" | "Consultation Booked" | "Treatment Started";
     created_at: string;
     first_contact_at?: string;
     review_requested_at?: string;
@@ -38,6 +45,11 @@ export type ConsultationRequest = {
     utm_campaign?: string;
     utm_term?: string;
     referrer?: string;
+    appointment_date?: string;
+    treated_at?: string;
+    doctor_id?: string;
+    resource_id?: string;
+    duration_minutes?: number;
 };
 
 export type Resource = {
@@ -69,9 +81,37 @@ export type Patient = {
 export type Appointment = {
     id: string;
     clinic_id: string;
-    patient_id: string;
-    status: "draft" | "pending" | "confirmed" | "no_show" | "completed";
-    scheduled_at: string | null;
+    consultation_request_id?: string;
+    patient_id?: string;
+    doctor_id: string;
+    resource_id: string;
+    status: "pending" | "confirmed" | "no_show" | "completed" | "cancelled";
+    scheduled_at: string;
+    duration_minutes: number;
     notes: string | null;
     created_at: string;
+};
+
+export type Invitation = {
+    id: string;
+    clinic_id: string;
+    email: string;
+    role: "admin" | "staff";
+    status: "pending" | "accepted" | "expired";
+    token: string;
+    expires_at: string;
+    created_at: string;
+};
+
+export type AuditLog = {
+    id: string;
+    clinic_id: string;
+    lead_id: string;
+    user_id: string;
+    user_name: string;
+    lead_name: string;
+    action_type: string;
+    previous_value: string;
+    new_value: string;
+    timestamp: string;
 };

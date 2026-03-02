@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
 
-export default function BeforeAfter() {
+export default function BeforeAfter({ clinic }: { clinic: any }) {
   const [sliderPos, setSliderPos] = useState(50);
   const navigate = useNavigate();
 

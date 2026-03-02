@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Settings, Save, X, TrendingUp, Users, DollarSign, Calendar, ChevronRight, LayoutDashboard, Database, Activity } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 
 export const Dashboard: React.FC = () => {
@@ -94,7 +94,7 @@ export const Dashboard: React.FC = () => {
         }
     };
 
-    const containerVariants = {
+    const containerVariants: any = {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
@@ -102,7 +102,7 @@ export const Dashboard: React.FC = () => {
         }
     };
 
-    const cardVariants = {
+    const cardVariants: any = {
         hidden: { opacity: 0, y: 20 },
         visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100 } }
     };

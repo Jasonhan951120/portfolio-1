@@ -24,7 +24,8 @@ const QUESTIONS = [
   { id: "notes", question: "Any specific concerns?", subtext: "Tell us anything else we should know (Optional)", type: "textarea", placeholder: "I'm interested in..." },
 ];
 
-export default function LeadForm() {
+export default function LeadForm({ clinic }: { clinic: any }) {
+  const clinicName = clinic?.name || "London Smile";
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -60,7 +61,8 @@ export default function LeadForm() {
         email: formData.email,
         service: formData.service,
         status: 'New',
-        notes: formData.notes
+        notes: formData.notes,
+        clinic_id: clinic?.id
       }).select().single();
 
       if (data) {
@@ -93,11 +95,23 @@ export default function LeadForm() {
     }
 
     setStatus("success");
+
+    // [INTEGRATION] hanlan-oc-dashboard tracking placeholder
+    // This will send lead event to the main tracking system
+    console.log(`[TRACKING] Firing lead event for clinic: ${clinic?.id || 'default'}`);
+    /* 
+    window.hanlanOC?.track('lead_submission', {
+      clinic_id: clinic?.id,
+      service: formData.service,
+      timestamp: new Date().toISOString()
+    });
+    */
+
     // Fire-and-forget: send admin alert
     fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-notification`, {
       method: "POST",
       headers: { "Content-Type": "application/json", "apikey": import.meta.env.VITE_SUPABASE_ANON_KEY },
-      body: JSON.stringify({ ...formData }),
+      body: JSON.stringify({ ...formData, clinic_id: clinic?.id }),
     }).catch(console.warn);
   };
 
@@ -117,7 +131,7 @@ export default function LeadForm() {
               </div>
               <h2 className="text-5xl font-display font-bold text-black uppercase tracking-tighter mb-4">You're All Set.</h2>
               <p className="text-xl text-black/40 font-medium max-w-md mx-auto mb-12">
-                Our treatment coordinator will reach out within 24 hours to confirm your priority consultation.
+                Our treatment coordinator at {clinicName} will reach out within 24 hours to confirm your priority consultation.
               </p>
               <button
                 onClick={() => { setStatus("idle"); setStep(0); setFormData({ name: "", email: "", phone: "", service: "General Inquiry", notes: "" }); }}
@@ -193,7 +207,7 @@ export default function LeadForm() {
                         key={opt}
                         onClick={() => { setFormData({ ...formData, service: opt }); nextStep(); }}
                         className={`p-6 rounded-2xl text-left text-lg font-bold transition-all border ${formData.service === opt
-                          ? "bg-black text-white border-black"
+                          ? "bg-accent text-black border-accent"
                           : "bg-white border-black/10 text-black/40 hover:border-black hover:text-black"
                           }`}
                       >
@@ -207,7 +221,7 @@ export default function LeadForm() {
                   <div className="space-y-8">
                     <div className="grid grid-cols-4 gap-4">
                       {['MON', 'TUE', 'WED', 'THU'].map((d, i) => (
-                        <div key={d} className={`p-6 text-center rounded-2xl border transition-all ${i === 1 ? 'bg-black text-white border-black' : 'bg-white border-black/10 text-black/40 hover:border-black hover:text-black'}`}>
+                        <div key={d} className={`p-6 text-center rounded-2xl border transition-all ${i === 1 ? 'bg-accent text-black border-accent' : 'bg-white border-black/10 text-black/40 hover:border-black hover:text-black'}`}>
                           <span className="text-[10px] block mb-2 font-bold tracking-widest">{d}</span>
                           <span className="text-2xl font-bold">{12 + i}</span>
                         </div>
@@ -215,7 +229,7 @@ export default function LeadForm() {
                     </div>
                     <div className="grid grid-cols-3 gap-4">
                       {['09:00', '14:00', '17:00'].map((t, i) => (
-                        <div key={t} className={`p-4 text-center rounded-xl border text-sm font-bold transition-all ${i === 1 ? 'bg-black text-white border-black' : 'bg-white border-black/10 text-black/40 hover:border-black hover:text-black'}`}>
+                        <div key={t} className={`p-4 text-center rounded-xl border text-sm font-bold transition-all ${i === 1 ? 'bg-accent text-black border-accent' : 'bg-white border-black/10 text-black/40 hover:border-black hover:text-black'}`}>
                           {t}
                         </div>
                       ))}

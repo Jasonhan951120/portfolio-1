@@ -1,0 +1,54 @@
+[dotenv@17.3.1] injecting env (2) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+Clinics: [
+  {
+    "id": "11111111-1111-1111-1111-111111111111",
+    "name": "London Smile Default Clinic",
+    "created_at": "2026-02-26T21:18:14.374031+00:00",
+    "subscription_plan": "basic",
+    "phone": null,
+    "address": null,
+    "logo_url": null,
+    "brand_color": "#22d3ee",
+    "slug": null
+  },
+  {
+    "id": "74c99e5e-768e-4154-bd95-5e68b17a7e26",
+    "name": "London Smile Dental",
+    "created_at": "2026-02-28T11:19:20.306126+00:00",
+    "subscription_plan": "basic",
+    "phone": "020 7123 4567",
+    "address": "123 Harley Street, London W1G 6AB",
+    "logo_url": "https://london-smile-dental.vercel.app/logo.png",
+    "brand_color": "#22d3ee",
+    "slug": "london-smile"
+  }
+]
+Treatments: [
+  {
+    "id": "5986c0a5-50c6-4b4b-bf48-69ea251219a4",
+    "clinic_id": "74c99e5e-768e-4154-bd95-5e68b17a7e26",
+    "service_name": "Dental Implants",
+    "price": 3000,
+    "image_url": "/brain/0774c8b3-dc9c-4ab9-82fe-cc27c1e404a8/dental_implant_3d_visual_1772134009341.png",
+    "benefit_text": "Implants look and function like natural teeth, preserving your jawbone and facial structure.",
+    "title": "Precision Implantology"
+  },
+  {
+    "id": "47495590-ece8-4dd7-b7f5-74c0913fbe7e",
+    "clinic_id": "74c99e5e-768e-4154-bd95-5e68b17a7e26",
+    "service_name": "Veneers",
+    "price": 1200,
+    "image_url": "/brain/0774c8b3-dc9c-4ab9-82fe-cc27c1e404a8/veneer_before_after_mockup_1772134023178.png",
+    "benefit_text": "Ultra-thin porcelain veneers correct shape, color, and alignment in as little as two visits.",
+    "title": "Hollywood Smile Makeover"
+  },
+  {
+    "id": "ae4dd00d-7f6e-4922-b75f-fe9020d6940a",
+    "clinic_id": "74c99e5e-768e-4154-bd95-5e68b17a7e26",
+    "service_name": "Invisalign / Aligners",
+    "price": 2500,
+    "image_url": "/brain/0774c8b3-dc9c-4ab9-82fe-cc27c1e404a8/invisalign_simulation_ui_1772134037487.png",
+    "benefit_text": "Straighten your teeth invisibly with removable aligners and see your final result before you start.",
+    "title": "SmartSmile Aligner Simulation"
+  }
+]

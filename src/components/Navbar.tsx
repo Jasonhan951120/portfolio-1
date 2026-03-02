@@ -41,9 +41,13 @@ const navItems: NavItem[] = [
 ];
 
 
-const Navbar = () => {
+const Navbar = ({ clinic }: { clinic: any }) => {
   const navigate = useNavigate();
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+
+  const brandColor = clinic?.brand_color || "#E9F11E";
+  const clinicName = clinic?.name || "LONDON SMILE";
+  const clinicLogo = clinic?.logo_url;
 
 
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>, href: string) => {
@@ -71,7 +75,16 @@ const Navbar = () => {
           to="/"
           className="text-2xl font-display font-bold tracking-tighter text-black flex items-center gap-2 cursor-pointer group"
         >
-          LONDON<span className="underline decoration-black/10 underline-offset-4">SMILE</span>
+          {clinicLogo ? (
+            <img src={clinicLogo} alt={clinicName} className="h-8 w-auto" />
+          ) : (
+            <>
+              {clinicName.split(' ')[0]}
+              <span className="underline decoration-accent underline-offset-4">
+                {clinicName.split(' ').slice(1).join(' ') || "SMILE"}
+              </span>
+            </>
+          )}
         </Link>
 
         <div className="hidden lg:flex items-center gap-10">
@@ -169,8 +182,7 @@ const Navbar = () => {
                 navigate("/", { state: { scrollTo: "lead-form" } });
               }
             }}
-            className="px-6 py-2.5 bg-cyan-400 text-black font-bold uppercase tracking-widest text-xs rounded-xl hover:scale-105 transition-all shadow-[0_0_15px_rgba(34,211,238,0.5)] hover:shadow-[0_0_25px_rgba(34,211,238,0.7)]"
-
+            className="px-6 py-2.5 bg-accent text-black font-bold uppercase tracking-widest text-xs rounded-xl hover:scale-105 transition-all shadow-[0_4px_15px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_25px_rgba(0,0,0,0.15)]"
           >
             Book Appointment
           </button>

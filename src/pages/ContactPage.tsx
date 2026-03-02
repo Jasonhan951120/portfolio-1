@@ -15,7 +15,7 @@ const TRUST_SIGNALS = [
     { icon: Zap, text: "Emergency Appointments Available" },
 ];
 
-export default function ContactPage() {
+export default function ContactPage({ clinic }: { clinic: any }) {
     const [currentImage, setCurrentImage] = useState(0);
     const [formData, setFormData] = useState({ name: "", email: "", phone: "", service: "General Inquiry" });
     const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
@@ -49,7 +49,7 @@ export default function ContactPage() {
 
     return (
         <div className="min-h-screen bg-[#FBFBFB]">
-            <Navbar />
+            <Navbar clinic={clinic} />
 
             {/* Conversion Hero */}
             <section className="pt-32 pb-24">

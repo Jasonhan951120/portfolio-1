@@ -128,12 +128,12 @@ const treatments = [
     }
 ];
 
-export default function ServicesPage() {
+export default function ServicesPage({ clinic }: { clinic: any }) {
     const [selectedService, setSelectedService] = useState<typeof treatments[0] | null>(null);
 
     return (
         <div className="min-h-screen bg-white">
-            <Navbar />
+            <Navbar clinic={clinic} />
 
             {/* Services Header */}
             <section className="pt-40 pb-20 bg-primary text-white overflow-hidden relative">
