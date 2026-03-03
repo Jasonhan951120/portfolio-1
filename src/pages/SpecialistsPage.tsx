@@ -1,39 +1,36 @@
 import { motion } from "motion/react";
-import { ArrowUpRight, GraduationCap, Award, Heart } from "lucide-react";
+import { ArrowUpRight, GraduationCap, Award, Heart, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
-
-const specialists = [
-    {
-        name: "Dr. Sarah Mitchell",
-        slug: "dr-sarah-mitchell",
-        role: "Lead Cosmetic Dentist",
-        image: "https://images.unsplash.com/photo-1559839734-2b71f153678f?auto=format&fit=crop&q=80&w=800",
-        bio: "Specializing in smile makeovers and advanced porcelain veneers with over 15 years of experience.",
-        education: "DDS, Advanced Cosmetic Dentistry - Royal College of London",
-        specialty: "Aesthetic Restoration"
-    },
-    {
-        name: "Dr. Marcus Thorne",
-        slug: "dr-marcus-thorne",
-        role: "Implant Surgeon",
-        image: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=800",
-        bio: "Renowned for precision implantology and restorative surgery using the latest digital workflows.",
-        education: "DDS, Diploma in Implant Dentistry",
-        specialty: "Oral Rehabilitation"
-    },
-    {
-        name: "Dr. Elena Vance",
-        slug: "dr-elena-vance",
-        role: "Aesthetic Specialist",
-        image: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&q=80&w=800",
-        bio: "Expert in facial aesthetics and restorative bonding, dedicated to natural-looking transformations.",
-        education: "BDS, Advanced Aesthetics Specialist",
-        specialty: "Facial Aesthetics"
-    }
-];
+import { useEffect, useState } from "react";
+import { supabase, type Profile } from "../lib/supabase";
 
 export default function SpecialistsPage({ clinic }: { clinic: any }) {
+    const [specialists, setSpecialists] = useState<Profile[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        async function fetchSpecialists() {
+            try {
+                const { data, error } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('is_public', true)
+                    .order('full_name', { ascending: true });
+
+                if (error) throw error;
+                setSpecialists(data || []);
+            } catch (err) {
+                console.error("Error fetching specialists:", err);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchSpecialists();
+    }, []);
+
+    const defaultImage = "https://images.unsplash.com/photo-1559839734-2b71f153678f?auto=format&fit=crop&q=80&w=800";
+
     return (
         <div className="min-h-screen bg-white">
             <Navbar clinic={clinic} />
@@ -63,76 +60,94 @@ export default function SpecialistsPage({ clinic }: { clinic: any }) {
             </section>
 
             {/* Specialists List */}
-            <section className="py-24 md:py-32">
+            <section className="py-24 md:py-32 min-h-[400px]">
                 <div className="container mx-auto px-8 max-w-6xl">
-                    <div className="space-y-32">
-                        {specialists.map((person, i) => (
-                            <motion.div
-                                key={person.name}
-                                initial={{ opacity: 0, y: 50 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.8, delay: i * 0.1 }}
-                                className={`flex flex-col ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} gap-16 md:gap-24 items-center`}
-                            >
-                                {/* Image */}
-                                <div className="w-full md:w-1/2">
-                                    <div className="aspect-[4/5] overflow-hidden rounded-[50px] shadow-2xl border border-black/5 relative group">
-                                        <img
-                                            src={person.image}
-                                            alt={person.name}
-                                            className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000"
-                                        />
-                                        <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-                                    </div>
-                                </div>
-
-                                {/* Content */}
-                                <div className="w-full md:w-1/2">
-                                    <div className="mb-8">
-                                        <p className="text-xs font-black uppercase tracking-[0.3em] text-primary mb-4">
-                                            {person.role}
-                                        </p>
-                                        <h2 className="text-4xl md:text-6xl font-display font-bold text-black uppercase tracking-tight mb-6">
-                                            {person.name}
-                                        </h2>
-                                        <p className="text-lg text-muted font-medium mb-10 leading-relaxed italic">
-                                            "{person.bio}"
-                                        </p>
-                                    </div>
-
-                                    <div className="space-y-8">
-                                        <div className="flex items-start gap-5">
-                                            <div className="w-12 h-12 rounded-2xl bg-surface flex items-center justify-center shrink-0">
-                                                <GraduationCap className="w-5 h-5 text-black" />
-                                            </div>
-                                            <div>
-                                                <h4 className="text-[10px] font-black uppercase tracking-widest text-muted mb-1">Education</h4>
-                                                <p className="text-sm font-bold text-black uppercase tracking-tight">{person.education}</p>
-                                            </div>
-                                        </div>
-
-                                        <div className="flex items-start gap-5">
-                                            <div className="w-12 h-12 rounded-2xl bg-surface flex items-center justify-center shrink-0">
-                                                <Award className="w-5 h-5 text-black" />
-                                            </div>
-                                            <div>
-                                                <h4 className="text-[10px] font-black uppercase tracking-widest text-muted mb-1">Key Specialty</h4>
-                                                <p className="text-sm font-bold text-black uppercase tracking-tight">{person.specialty}</p>
-                                            </div>
+                    {loading ? (
+                        <div className="flex flex-col items-center justify-center py-20">
+                            <Loader2 className="w-8 h-8 animate-spin text-primary mb-4" />
+                            <p className="text-muted text-sm font-bold uppercase tracking-widest">Loading Specialist Directory...</p>
+                        </div>
+                    ) : specialists.length === 0 ? (
+                        <div className="text-center py-20 border-2 border-dashed border-black/5 rounded-[50px]">
+                            <p className="text-muted font-medium italic mb-2 text-lg">No specialists are currently set to public.</p>
+                            <p className="text-xs font-bold uppercase tracking-widest opacity-40">Manage visibility in Admin Dashboard</p>
+                        </div>
+                    ) : (
+                        <div className="space-y-32">
+                            {specialists.map((person, i) => (
+                                <motion.div
+                                    key={person.id}
+                                    initial={{ opacity: 0, y: 50 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.8, delay: i * 0.1 }}
+                                    className={`flex flex-col ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} gap-16 md:gap-24 items-center`}
+                                >
+                                    {/* Image */}
+                                    <div className="w-full md:w-1/2">
+                                        <div className="aspect-[4/5] overflow-hidden rounded-[50px] shadow-2xl border border-black/5 relative group">
+                                            <img
+                                                src={person.avatar_url || defaultImage}
+                                                alt={person.full_name || "Specialist"}
+                                                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000"
+                                            />
+                                            <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                                         </div>
                                     </div>
 
-                                    <Link
-                                        to={`/portfolio/${person.slug}`}
-                                        className="mt-12 btn-outline flex items-center gap-3 w-fit"
-                                    >
-                                        View Portfolio <ArrowUpRight className="w-4 h-4" />
-                                    </Link>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </div>
+                                    {/* Content */}
+                                    <div className="w-full md:w-1/2">
+                                        <div className="mb-8">
+                                            <p className="text-xs font-black uppercase tracking-[0.3em] text-primary mb-4">
+                                                {person.title || person.role}
+                                            </p>
+                                            <h2 className="text-4xl md:text-6xl font-display font-bold text-black uppercase tracking-tight mb-6">
+                                                {person.full_name}
+                                            </h2>
+                                            {person.bio && (
+                                                <p className="text-lg text-muted font-medium mb-10 leading-relaxed italic">
+                                                    "{person.bio}"
+                                                </p>
+                                            )}
+                                        </div>
+
+                                        <div className="space-y-8">
+                                            {person.education && (
+                                                <div className="flex items-start gap-5">
+                                                    <div className="w-12 h-12 rounded-2xl bg-surface flex items-center justify-center shrink-0">
+                                                        <GraduationCap className="w-5 h-5 text-black" />
+                                                    </div>
+                                                    <div>
+                                                        <h4 className="text-[10px] font-black uppercase tracking-widest text-muted mb-1">Education</h4>
+                                                        <p className="text-sm font-bold text-black uppercase tracking-tight">{person.education}</p>
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {person.specialty && (
+                                                <div className="flex items-start gap-5">
+                                                    <div className="w-12 h-12 rounded-2xl bg-surface flex items-center justify-center shrink-0">
+                                                        <Award className="w-5 h-5 text-black" />
+                                                    </div>
+                                                    <div>
+                                                        <h4 className="text-[10px] font-black uppercase tracking-widest text-muted mb-1">Key Specialty</h4>
+                                                        <p className="text-sm font-bold text-black uppercase tracking-tight">{person.specialty}</p>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <Link
+                                            to={`/portfolio/${person.id}`}
+                                            className="mt-12 btn-outline flex items-center gap-3 w-fit"
+                                        >
+                                            View Portfolio <ArrowUpRight className="w-4 h-4" />
+                                        </Link>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </section>
 
@@ -155,3 +170,4 @@ export default function SpecialistsPage({ clinic }: { clinic: any }) {
         </div>
     );
 }
+

@@ -1,0 +1,4 @@
+1810: <div className="text-sm text-gray-900/90 leading-relaxed font-medium min-h-[100px] max-h-[250px] overflow-y-auto whitespace-pre-wrap bg-black/5 p-4 rounded-xl border border-black/5">
+3028: <div className="absolute top-0 right-0 w-96 h-96 bg-transparent blur-[100px] rounded-full -mr-20 -mt-20 group-hover:bg-transparent transition-colors duration-700" />
+3154: <div className="absolute top-0 right-0 w-96 h-96 bg-[#C5A059]/5 blur-[100px] rounded-full -mr-20 -mt-20" />
+3442: className="w-full h-[100px] bg-black/5 border border-black/10 rounded-2xl py-4 px-6 text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all resize-none"

@@ -1,0 +1,3 @@
+468: <div className="relative z-10 pointer-events-none">
+2397: <div className="absolute -right-20 -top-20 w-64 h-64 bg-[#87A96B]/10 blur-[80px] rounded-full pointer-events-none group-hover:bg-[#87A96B]/20 transition-colors duration-700" />
+2552: <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />

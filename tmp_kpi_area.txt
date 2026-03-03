@@ -1,0 +1,35 @@
+1732: <p className="text-sm text-gray-500 leading-relaxed mb-8">
+1735: <div className="flex flex-col gap-3">
+1757: className="w-full py-4 bg-white text-gray-900 font-black uppercase tracking-widest text-xs rounded-2xl hover:bg-black/5 border border-black/10 transition-all"
+1763: className="w-full py-4 bg-black/5 text-gray-500 font-bold uppercase tracking-widest text-[10px] rounded-2xl hover:bg-black/5 transition-all"
+1767: </div>
+1768: </motion.div>
+1769: </motion.div>
+1773: <motion.div
+1777: className="fixed inset-0 z-[3000] bg-black/80 backdrop-blur-md flex flex-col items-center justify-center p-6"
+1779: <motion.div
+1783: className="bg-white border border-black/10 p-8 rounded-[32px] max-w-2xl w-full text-left relative overflow-hidden flex flex-col shadow-2xl"
+1787: className="absolute top-6 right-6 p-2 bg-black/5 hover:bg-black/5 rounded-full transition-colors"
+1789: <X className="w-5 h-5 text-gray-500" />
+1792: <div className="flex items-center gap-4 mb-8">
+1793: <div className="w-16 h-16 bg-black/5 rounded-2xl flex items-center justify-center border border-black/10">
+1794: <UserCheck className="w-8 h-8 text-gray-500" strokeWidth={1.5} />
+1795: </div>
+1796: <div>
+1797: <h2 className="text-3xl font-display font-bold text-gray-900 uppercase tracking-tight">{selectedLead.name}</h2>
+1798: <div className="flex items-center gap-3 mt-1.5 text-xs font-bold text-gray-500 uppercase tracking-widest">
+1800: <span className="w-1 h-1 bg-white/20 rounded-full" />
+1802: </div>
+1803: </div>
+1804: </div>
+1806: <div className="bg-white/[0.02] border border-black/5 rounded-2xl p-6 mb-6">
+1807: <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-4 flex items-center gap-2">
+1808: <FileText className="w-3.5 h-3.5" strokeWidth={1.5} /> {selectedLead.status === "Visited" || selectedLead.status === "Treatment Started" ? "Clinical Notes & Chart" : "Initial Inquiry & Notes"}
+1810: <div className="text-sm text-gray-900/90 leading-relaxed font-medium min-h-[100px] max-h-[250px] overflow-y-auto whitespace-pre-wrap bg-black/5 p-4 rounded-xl border border-black/5">
+1811: {selectedLead.notes || <span className="text-gray-500 italic">No detailed inquiry notes provided.</span>}
+1812: </div>
+1813: </div>
+1815: <div className="relative mb-6">
+1820: className="w-full h-32 bg-black/5 border border-black/10 rounded-2xl p-5 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all resize-none"
+1825: className={`absolute bottom-4 right-4 p-4 rounded-xl shadow-lg transition-all ${isRecording
+1830: <div className="flex items-center gap-2 font-bold uppercase tracking-widest text-[10px]">

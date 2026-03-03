@@ -1,0 +1,1 @@
+641: <div key={i} className="flex-shrink-0 w-[280px] bg-[#121212] border border-[#ffffff0d] rounded-[32px] p-5 flex flex-col h-[65vh]">

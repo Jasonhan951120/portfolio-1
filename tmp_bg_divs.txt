@@ -1,0 +1,33 @@
+243: className="fixed top-0 right-0 h-full w-[380px] bg-[#0a0a0a] border-l border-black/10 shadow-[-20px_0_50px_rgba(0,0,0,0.5)] z-[101] p-10 backdrop-blur-3xl overflow-y-auto custom-scrollbar"
+256: <div className="p-6 bg-[#C5A059]/5 border border-[#C5A059]/20 rounded-3xl group cursor-pointer hover:bg-[#C5A059]/10 transition-all">
+523: className="p-1.5 text-[#C5A059] hover:text-[#C5A059]/80 bg-[#C5A059]/10 hover:bg-[#C5A059]/20 rounded-lg transition-all border border-[#C5A059]/20 disabled:opacity-50"
+652: <div className="h-8 w-20 bg-[#ffffff0d] rounded-full"></div>
+653: <div className="h-8 w-12 bg-[#ffffff0d] rounded-full"></div>
+1628: <div className="min-h-screen bg-[#F9FAFB] text-gray-900 p-6 md:p-10 font-sans selection:bg-[#C5A059]/30 selection:text-gray-900">
+1642: className="mb-6 mx-auto max-w-7xl bg-[#C5A059]/10 border border-[#C5A059]/20 rounded-2xl p-5 flex items-center justify-between shadow-[0_20px_40px_-15px_rgba(0,0,0,0.4)]"
+1659: className="px-5 py-2.5 bg-[#C5A059]/20 hover:bg-[#C5A059]/30 text-[#C5A059] font-bold uppercase tracking-widest text-xs rounded-xl transition-all border border-[#C5A059]/30 hover:shadow-[0_8px_20px_-8
+1699: className="mb-8 mx-auto max-w-7xl bg-[#C5A059]/10 border border-[#C5A059]/20 rounded-2xl p-5 flex flex-col md:flex-row items-start md:items-center justify-between shadow-[0_20px_40px_-15px_rgba(0,0,0,
+1885: <div className="w-16 h-16 bg-[#E9F11E]/20 rounded-full flex items-center justify-center mx-auto mb-6">
+1900: className="w-full py-4 bg-[#E9F11E] text-black font-bold uppercase tracking-widest text-sm rounded-xl hover:bg-yellow-400 transition-colors"
+1924: <div className="absolute top-0 right-0 w-32 h-32 bg-[#87A96B]/10 blur-3xl rounded-full -mr-16 -mt-16"></div>
+1934: <div className="w-14 h-14 bg-[#87A96B]/10 rounded-2xl flex items-center justify-center border border-[#87A96B]/20">
+2004: className="w-full py-5 bg-gray-900 text-white font-black uppercase tracking-[0.2em] text-[11px] rounded-3xl hover:bg-[#87A96B] hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-a
+2259: <div className="lg:col-span-2 bg-[#0a0a0a] border border-black/5 rounded-[32px] p-6 shadow-xl relative overflow-hidden">
+2309: <div className="bg-[#0a0a0a] border border-black/5 rounded-[32px] p-6 shadow-xl flex flex-col items-center justify-center">
+2335: <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-[#C5A059]" />Veneers</div>
+2397: <div className="absolute -right-20 -top-20 w-64 h-64 bg-[#87A96B]/10 blur-[80px] rounded-full pointer-events-none group-hover:bg-[#87A96B]/20 transition-colors duration-700" />
+2496: <div className="absolute top-0 right-0 w-64 h-64 bg-[#C5A059]/5 blur-3xl -mr-32 -mt-32 rounded-full" />
+2529: <div className="inline-flex items-center gap-2 bg-[#87A96B]/10 border border-[#87A96B]/20 text-[#87A96B] px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider">
+2662: <div className="p-3 bg-[#C5A059]/10 rounded-2xl">
+2762: className={`w-12 h-6 rounded-full transition-all relative ${clinic?.has_financing ? 'bg-[#C5A059]' : 'bg-black/5'}`}
+2830: <div className="p-3 bg-[#C5A059]/10 rounded-2xl">
+2897: className="px-4 py-2 bg-[#C5A059]/10 hover:bg-[#C5A059]/20 text-[#C5A059] rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all flex items-center gap-2"
+3027: <div className="bg-[#0a0a0a] border border-black/5 rounded-[40px] p-10 shadow-2xl relative overflow-hidden group">
+3084: <div className="bg-[#0a0a0a] border border-black/5 rounded-[40px] overflow-hidden shadow-2xl">
+3130: className={`h-full rounded-full ${s.conversion >= 60 ? "bg-[#C5A059] shadow-[0_0_10px_rgba(0,255,204,0.3)]" : "bg-[#C5A059]"}`}
+3154: <div className="absolute top-0 right-0 w-96 h-96 bg-[#C5A059]/5 blur-[100px] rounded-full -mr-20 -mt-20" />
+3214: className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all ${member.is_public ? 'bg-[#87A96B]/10 border-[#87A96B]/30 text-[#87A96B]' : 'bg-black/5 border-black/10 text-gray-500 o
+3331: <div className="w-20 h-20 bg-[#C5A059]/10 rounded-3xl flex items-center justify-center mb-8">
+3364: className="w-full py-5 bg-gray-900 text-white font-black uppercase tracking-widest text-[10px] rounded-2xl hover:bg-[#C5A059] hover:text-white transition-all shadow-[0_10px_30px_rgba(0,0,0,0.06)] acti
+3395: <div className="w-20 h-20 bg-[#C5A059]/10 rounded-3xl flex items-center justify-center mb-8">
+3482: className="w-full py-5 bg-white text-gray-900 font-black uppercase tracking-widest text-[10px] rounded-2xl hover:bg-[#C5A059] hover:text-white transition-all shadow-[0_10px_30px_rgba(0,0,0,0.03)] bord

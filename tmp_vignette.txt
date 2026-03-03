@@ -1,0 +1,35 @@
+src\components\AdminDashboard.bak.tsx:2397: <div className="absolute -right-20 -top-20 w-64 h-64 bg-green-500/10 blur-[80px] rounded-full pointer-events-none group-hover:bg-green-500/20 transition-colors duration-700" />
+src\components\AdminDashboard.bak.tsx:2495: <div className="lg:col-span-2 bg-gradient-to-br from-blue-500/10 to-purple-500/5 border border-white/10 p-8 rounded-[32px] flex flex-col justify-between">
+src\components\AdminDashboard.bak.tsx:2817: <div className="lg:col-span-5 bg-gradient-to-br from-blue-500/10 to-purple-500/5 border border-white/10 rounded-3xl p-8 relative overflow-hidden group">
+src\components\AdminDashboard.bak.tsx:3027: <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/5 blur-[100px] rounded-full -mr-20 -mt-20 group-hover:bg-blue-500/10 transition-colors duration-700" />
+src\components\AdminDashboard.bak.tsx:3152: <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/10 border border-white/10 rounded-[40px] p-10 relative overflow-hidden group">
+src\components\AdminDashboard.bak.tsx:3153: <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 blur-[100px] rounded-full -mr-20 -mt-20" />
+src\components\AdminDashboard.clinical-premium.bak.tsx:2397: <div className="absolute -right-20 -top-20 w-64 h-64 bg-[#87A96B]/10 blur-[80px] rounded-full pointer-events-none group-hover:bg-[#87A96B]/20 transition-colors duration-700" />
+src\components\AdminDashboard.clinical-premium.bak.tsx:3028: <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/5 blur-[100px] rounded-full -mr-20 -mt-20 group-hover:bg-blue-500/10 transition-colors duration-700" />
+src\components\AdminDashboard.clinical-premium.bak.tsx:3154: <div className="absolute top-0 right-0 w-96 h-96 bg-[#C5A059]/5 blur-[100px] rounded-full -mr-20 -mt-20" />
+src\components\AdminDashboard.tsx:2397: <div className="absolute -right-20 -top-20 w-64 h-64 bg-[#87A96B]/10 blur-[80px] rounded-full pointer-events-none group-hover:bg-[#87A96B]/20 transition-colors duration-700" />
+src\components\AdminDashboard.tsx:3028: <div className="absolute top-0 right-0 w-96 h-96 bg-transparent blur-[100px] rounded-full -mr-20 -mt-20 group-hover:bg-transparent transition-colors duration-700" />
+src\components\AdminDashboard.tsx:3154: <div className="absolute top-0 right-0 w-96 h-96 bg-[#C5A059]/5 blur-[100px] rounded-full -mr-20 -mt-20" />
+src\components\AdminLogin.tsx:139: <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none" />
+src\components\AdminOnboarding.tsx:76: <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-500/10 rounded-full blur-[120px]" />
+src\components\AdminOnboarding.tsx:77: <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-500/10 rounded-full blur-[120px]" />
+src\components\Insurance.tsx:37: <div className="absolute top-0 right-0 w-96 h-96 bg-sage/10 blur-[120px] rounded-full -mr-48 -mt-48" />
+src\index.css:45: @apply bg-[#1E1E1E] rounded-[32px] p-10 transition-all duration-300 hover:shadow-[0_20px_40px_-5px_rgba(197, 160, 89, 0.15)] border border-[#ffffff0d] shadow-[inset_0_1px_0_rgba(255, 255, 255, 0.05)];
+src\index.css:49: @apply bg-[#1A1A1A]/60 backdrop-blur-md border border-[#ffffff1a] shadow-[inset_0_1px_0_rgba(255, 255, 255, 0.05)];
+src\pages\CareSolutionsPage.tsx:130: <div className="absolute top-1/2 -right-20 w-80 h-80 bg-accent/20 rounded-full blur-[120px] -z-10 animate-pulse" />
+src\pages\CareSolutionsPage.tsx:134: <div className="absolute top-0 right-0 w-full h-full opacity-5 pointer-events-none bg-[radial-gradient(#ffffff_2px,transparent_2px)] [background-size:32px_32px]" />
+src\pages\ClientPTPage.tsx:151: className="p-10 rounded-[40px] bg-white/[0.03] border border-white/10 backdrop-blur-[100px] mb-12 relative overflow-hidden shadow-2xl"
+src\pages\PricingPage.bak.tsx:45: <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-[#00D2FF]/5 rounded-full blur-[160px]" />
+src\pages\PricingPage.bak.tsx:46: <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-[#87A96B]/5 rounded-full blur-[160px]" />
+src\pages\PricingPage.bak.tsx:73: className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#1E1E1E] shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] border border-[#ffffff0d] text-[#87A96B] text-[10px] font-black uppercase tracking-[0.2em] mb-8"
+src\pages\PricingPage.bak.tsx:126: <div className="w-10 h-10 rounded-[12px] bg-[#1E1E1E] border border-[#ffffff0d] shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] flex items-center justify-center text-[#2AF598] shrink-0">
+src\pages\PricingPage.bak.tsx:164: className="w-full py-6 rounded-2xl bg-[#2AF598] text-[#121212] font-black uppercase tracking-[0.15em] text-[12px] flex items-center justify-center gap-3 hover:bg-[#4FFFB0] transition-all duration-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.4),_0_0_20px_rgba(42,245,152,0.4)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.6),_0_0_30px_rgba(42,245,152,0.6)] group/btn relative overflow-hidden"
+src\pages\PricingPage.tsx:31: <div className="absolute top-[-10%] left-[-5%] w-[50%] h-[50%] bg-[#2AF598]/5 rounded-full blur-[140px]" />
+src\pages\PricingPage.tsx:32: <div className="absolute bottom-[-10%] right-[-5%] w-[50%] h-[50%] bg-[#00D2FF]/5 rounded-full blur-[140px]" />
+src\pages\ReviewPage.tsx:50: <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full animate-pulse" />
+src\pages\ReviewPage.tsx:51: <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-500/10 blur-[120px] rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
+src\pages\ReviewPage.tsx:134: <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-500/5 blur-[120px] rounded-full" />
+src\pages\ServicesPage.tsx:314: <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:20px_20px]" />
+src\pages\SpecialistsPage.tsx:168: <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:20px_20px]" />
+src\pages\TestimonialsPage.tsx:456: <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-primary/10 rounded-full blur-[80px]" />
+src\pages\TreatmentDetailPage.tsx:50: <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]" />

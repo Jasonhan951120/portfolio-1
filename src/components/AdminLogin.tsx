@@ -15,6 +15,14 @@ export default function AdminLogin() {
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
+
+        // Developer Bypass: Enable demo mode via URL parameter
+        if (params.get("demo") === "true") {
+            localStorage.setItem("demo_mode", "true");
+            window.location.href = "/admin";
+            return;
+        }
+
         const token = params.get("invite");
         if (token) {
             setInviteToken(token);

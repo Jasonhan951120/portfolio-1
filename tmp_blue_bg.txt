@@ -1,0 +1,12 @@
+595: <div className="h-[1px] w-full bg-gradient-to-r from-white/10 to-transparent mt-3"></div>
+1827: : 'bg-blue-500 text-white hover:bg-blue-600 border border-[#C5A059]/50'
+2047: className="w-full bg-black/5 border border-black/10 rounded-xl px-4 py-3 text-gray-900 text-[11px] focus:outline-none focus:border-blue-500 transition-colors"
+2056: className="w-full bg-black/5 border border-black/10 rounded-xl px-4 py-3 text-gray-900 text-[11px] focus:outline-none focus:border-blue-500 transition-colors"
+2066: className="w-full bg-black/5 border border-black/10 rounded-xl px-4 py-3 text-gray-900 text-[11px] focus:outline-none focus:border-blue-500 transition-colors"
+2081: className="w-full bg-black/5 border border-black/10 rounded-xl px-4 py-3 text-gray-900 text-[11px] focus:outline-none focus:border-blue-500 transition-colors"
+2094: className="w-full bg-black/5 border border-black/10 rounded-xl px-4 py-3 text-gray-900 text-[11px] focus:outline-none focus:border-blue-500 transition-colors"
+2333: <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-blue-500" />Implants</div>
+2396: <div className="md:col-span-2 bg-gradient-to-r from-green-500/10 to-transparent border border-black/10 rounded-3xl p-6 md:p-8 flex flex-col justify-center relative overflow-hidden group">
+2422: className={`h-full rounded-full ${monthlySecuredRevenue >= 50000 ? "bg-green-400 " : "bg-gradient-to-r from-orange-500 to-yellow-400 shadow-[0_0_10px_rgba(249,115,22,0.5)]"}`}
+2818: <div className="lg:col-span-5 bg-gradient-to-br from-[#C5A059]/5 to-white/0 border border-black/10 rounded-3xl p-8 relative overflow-hidden group">
+2941: {chat.source === "Website" && <Globe className="w-4 h-4 absolute -bottom-1 -right-1 text-[#C5A059] fill-blue-400 bg-black rounded-full p-0.5" strokeWidth={1.5} />}

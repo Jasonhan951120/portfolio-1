@@ -1,7 +1,6 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
-const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
-const FROM = "onboarding@resend.dev"; // Default Resend test email
+const FROM = "onboarding@resend.dev";
 
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
@@ -14,71 +13,90 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    const { email, role, token, clinic_name, origin, invited_by } = await req.json();
+    const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+    const { email, role, token, clinic_name, origin } = await req.json();
 
     if (!RESEND_API_KEY) {
-      console.error("RESEND_API_KEY not set");
-      return new Response(JSON.stringify({ error: "RESEND_API_KEY not set" }), { status: 500 });
+      return new Response(JSON.stringify({
+        success: false,
+        error: "RESEND_API_KEY not set"
+      }), {
+        status: 200,
+        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+      });
     }
 
-    const baseUrl = origin || "http://localhost:5173";
-    const inviteLink = `${baseUrl}/login?invite=${token}`;
     const practiceName = clinic_name || "London Smile Dental";
+    const inviteLink = `${origin || "http://localhost:5173"}/login?invite=${token}`;
+    const roleTitle = role === 'admin' ? 'Clinic Administrator' : 'Staff Specialist';
 
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${RESEND_API_KEY}`,
+        "Authorization": `Bearer ${RESEND_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: `${practiceName} <${FROM}>`,
+        from: FROM,
         to: [email],
         subject: `You've been invited to join ${practiceName} on AntiGravity ✨`,
         html: `
           <!DOCTYPE html>
           <html>
           <head>
+            <meta charset="utf-8">
             <style>
               @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
             </style>
           </head>
-          <body style="margin: 0; padding: 0; background-color: #f9fafb; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased;">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #f9fafb; padding: 40px 0;">
+          <body style="margin: 0; padding: 0; background-color: #000000; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #050505; padding: 60px 0;">
               <tr>
                 <td align="center">
-                  <table width="500" border="0" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border-radius: 16px; border: 1px solid #e5e7eb; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
+                  <table width="560" border="0" cellspacing="0" cellpadding="0" style="background-color: #0a0a0a; border-radius: 24px; border: 1px solid #1f1f1f; overflow: hidden; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);">
+                    <!-- Header with Gradient -->
                     <tr>
-                      <td style="padding: 40px;">
-                        <div style="text-align: center; margin-bottom: 24px;">
-                           <h1 style="color: #111827; font-size: 24px; font-weight: 700; margin: 0;">${practiceName}</h1>
-                        </div>
-                        
-                        <p style="color: #374151; font-size: 16px; line-height: 1.5; margin: 0 0 24px 0;">
-                          Hello,
-                          <br><br>
-                          You have been invited to join <strong>${practiceName}</strong> as a <strong>${role === 'admin' ? 'Clinic Administrator' : 'Staff Specialist'}</strong> on the AntiGravity Dental Platform.
-                        </p>
-
-                        <div style="background-color: #f3f4f6; border-radius: 12px; padding: 24px; text-align: center; border: 1px dashed #d1d5db; margin-bottom: 24px;">
-                           <p style="color: #6b7280; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin: 0 0 12px 0;">Your Secure Invite Link</p>
-                           <a href="${inviteLink}" style="display: inline-block; background-color: #3b82f6; color: #ffffff; text-decoration: none; font-weight: 600; font-size: 14px; padding: 12px 24px; border-radius: 8px;">
-                             Accept Invitation
-                           </a>
-                        </div>
-                        
-                        <p style="color: #6b7280; font-size: 14px; line-height: 1.5; margin: 0 0 16px 0;">
-                          If the button doesn't work, copy and paste this link into your browser:
-                        </p>
-                        <p style="color: #3b82f6; font-size: 12px; word-break: break-all; margin: 0;">
-                          ${inviteLink}
-                        </p>
+                      <td style="background: linear-gradient(135deg, #1e1e1e 0%, #000000 100%); padding: 60px 40px; text-align: center; border-bottom: 1px solid #1f1f1f;">
+                        <h1 style="color: #ffffff; font-size: 32px; font-weight: 700; margin: 0; letter-spacing: -0.02em;">AntiGravity</h1>
+                        <p style="color: #888888; font-size: 14px; margin-top: 8px; text-transform: uppercase; letter-spacing: 0.2em;">Secure Dental OS</p>
                       </td>
                     </tr>
+                    
+                    <!-- Content -->
                     <tr>
-                      <td style="background-color: #f9fafb; padding: 24px 40px; border-top: 1px solid #e5e7eb; text-align: center;">
-                        <p style="color: #9ca3af; font-size: 12px; margin: 0;">
-                          Powered by AntiGravity • Secure Dental Operations
+                      <td style="padding: 60px 50px;">
+                        <p style="color: #ffffff; font-size: 20px; font-weight: 600; margin: 0 0 24px 0;">
+                          Welcome to the future of dentistry.
+                        </p>
+                        
+                        <p style="color: #a0a0a0; font-size: 16px; line-height: 1.6; margin: 0 0 40px 0;">
+                          You have been invited to join <strong style="color: #ffffff;">${practiceName}</strong> as a <strong style="color: #ffffff;">${roleTitle}</strong>. Access your new clinical workspace through the secure gateway below.
+                        </p>
+
+                        <!-- CTA Button -->
+                        <div style="text-align: center; margin-bottom: 40px;">
+                          <a href="${inviteLink}" style="display: inline-block; background: #ffffff; color: #000000; text-decoration: none; font-weight: 700; font-size: 16px; padding: 18px 45px; border-radius: 14px; box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);">
+                            Accept Invitation
+                          </a>
+                        </div>
+
+                        <!-- Info Card -->
+                        <div style="background-color: #111111; border-radius: 16px; padding: 24px; border: 1px solid #1f1f1f;">
+                          <p style="color: #666666; font-size: 14px; line-height: 1.5; margin: 0;">
+                            <strong>Security Note:</strong> This invitation is unique to your account. If you cannot click the button, copy the link below:
+                            <br><br>
+                            <span style="color: #444444; word-break: break-all; font-family: monospace; font-size: 12px;">${inviteLink}</span>
+                          </p>
+                        </div>
+                      </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                      <td style="background-color: #000000; padding: 40px; text-align: center; border-top: 1px solid #1f1f1f;">
+                        <p style="color: #444444; font-size: 13px; margin: 0;">
+                          © 2026 AntiGravity Labs. All rights reserved.<br>
+                          Precision-engineered for modern clinical workflows.
                         </p>
                       </td>
                     </tr>
@@ -92,20 +110,22 @@ Deno.serve(async (req: Request) => {
       }),
     });
 
+    const resText = await res.text();
     if (!res.ok) {
-      const err = await res.text();
-      console.error("Staff invite email error:", err);
-      throw new Error(err);
+      return new Response(JSON.stringify({ success: false, error: `Resend Error: ${resText}` }), {
+        status: 200,
+        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+      });
     }
 
-    return new Response(JSON.stringify({ success: true }), {
+    return new Response(JSON.stringify({ success: true, data: JSON.parse(resText) }), {
       headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
     });
-  } catch (err) {
-    console.error("Edge function error:", err);
-    return new Response(JSON.stringify({ error: String(err) }), {
-      status: 500,
-      headers: { "Access-Control-Allow-Origin": "*" },
+
+  } catch (err: any) {
+    return new Response(JSON.stringify({ success: false, error: err.message }), {
+      status: 200,
+      headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
     });
   }
 });

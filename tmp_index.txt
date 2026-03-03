@@ -2,15 +2,15 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #F9FAFB;
-  --color-navy: #FFFFFF;
-  --color-surface: #FFFFFF;
-  --color-accent: var(--accent-color, #87A96B);
+  --color-primary: #121212;
+  --color-navy: #0A0F1E;
+  --color-surface: #1E1E1E;
+  --color-accent: var(--accent-color, #2AF598);
   --color-trust-gold: #C5A059;
   --color-alert-urgent: #E2725B;
   --color-alert-muted: #800020;
-  --color-ink: #111827;
-  --color-muted: #6B7280;
+  --color-ink: #FFFFFF;
+  --color-muted: #A0A0A0;
 
   --font-sans: "Inter", "SF Pro", "Geist", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Space Grotesk", sans-serif;
@@ -19,19 +19,15 @@
 
 
 @layer base {
-  html {
-    background-color: #F9FAFB;
-  }
-
   body {
-    @apply bg-[#F9FAFB] text-gray-900 font-sans antialiased;
+    @apply bg-[#121212] text-white font-sans antialiased;
   }
 
   h1,
   h2,
   h3,
   h4 {
-    @apply font-sans font-bold tracking-[-0.02em] leading-tight text-gray-900;
+    @apply font-sans font-bold tracking-[-0.02em] leading-tight text-white;
   }
 }
 
@@ -59,8 +55,11 @@
 }
 
 .card-premium {
-  @apply bg-white rounded-2xl transition-all duration-300 border border-black/5;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+  @apply bg-[#1E1E1E] rounded-2xl transition-all duration-300;
+  box-shadow:
+    0 20px 40px -15px rgba(0, 0, 0, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  /* Linear-style 1px hairline border */
 }
 
 .card-light {

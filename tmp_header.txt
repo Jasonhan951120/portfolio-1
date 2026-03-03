@@ -1,0 +1,12 @@
+1703: <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E2725B]/60 opacity-75"></span>
+1704: <span className="relative inline-flex rounded-full h-4 w-4 bg-[#E2725B]"></span>
+1707: <span className="font-bold uppercase tracking-widest text-xs mr-3 text-[#C5A059] bg-[#C5A059]/20 px-2 py-1 rounded-md">🚨 ACTION REQUIRED</span>
+1726: className="bg-white border border-black/10 p-10 rounded-[40px] max-w-md w-full text-center shadow-2xl relative"
+1783: className="bg-white border border-black/10 p-8 rounded-[32px] max-w-2xl w-full text-left relative overflow-hidden flex flex-col shadow-2xl"
+1825: className={`absolute bottom-4 right-4 p-4 rounded-xl shadow-lg transition-all ${isRecording
+1885: <div className="w-16 h-16 bg-[#E9F11E]/20 rounded-full flex items-center justify-center mx-auto mb-6">
+1900: className="w-full py-4 bg-[#E9F11E] text-black font-bold uppercase tracking-widest text-sm rounded-xl hover:bg-yellow-400 transition-colors"
+1922: className="bg-white border border-black/10 p-10 rounded-[40px] max-w-lg w-full relative overflow-hidden shadow-2xl"
+1924: <div className="absolute top-0 right-0 w-32 h-32 bg-[#87A96B]/10 blur-3xl rounded-full -mr-16 -mt-16"></div>
+1934: <div className="w-14 h-14 bg-[#87A96B]/10 rounded-2xl flex items-center justify-center border border-[#87A96B]/20">
+1971: className="w-full bg-black/5 border border-black/10 rounded-2xl px-5 py-4 text-gray-900 text-sm focus:outline-none focus:border-green-400 transition-all font-bold placeholder:text-gray-300 shadow-[inner_0_2px_4px_rgba(0,0,0,0.3)]"

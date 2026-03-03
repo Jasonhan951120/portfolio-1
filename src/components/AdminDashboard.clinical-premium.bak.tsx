@@ -84,10 +84,10 @@ const TREATMENT_VALUES: Record<string, number> = {
 
 const STATUS_COLORS: Record<string, string> = {
   "New Lead": "text-[#C5A059] border-[#C5A059]/40 bg-[#C5A059]/10",
-  "Booked": "text-purple-400 border-purple-400/40 bg-transparent",
+  "Booked": "text-purple-400 border-purple-400/40 bg-purple-400/10",
   "Visited": "text-yellow-400 border-yellow-400/40 bg-yellow-400/10",
   "Treated": "text-[#87A96B] border-[#87A96B]/40 bg-[#87A96B]/10",
-  "Abandoned": "text-gray-400 border-black/10 bg-black/5",
+  "Abandoned": "text-white/30 border-white/10 bg-white/5",
 };
 
 // Static staff list removed. Using dynamic list from teamMembers and leads instead.
@@ -157,13 +157,13 @@ function DonutChart({ segments, total, totalValue }: { segments: DonutSegment[];
         {/* Centre label */}
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 mt-1">
           <div className="flex flex-col items-center">
-            <span className="text-xl font-bold text-gray-900 leading-none">{total}</span>
-            <span className="text-[9px] text-gray-500 uppercase tracking-widest font-bold">Leads</span>
+            <span className="text-xl font-bold text-white leading-none">{total}</span>
+            <span className="text-[9px] text-white/40 uppercase tracking-widest font-bold">Leads</span>
           </div>
           <div className="w-8 h-px bg-white/20 my-0.5" />
           <div className="flex flex-col items-center">
             <span className="text-[15px] font-bold text-[#C5A059] leading-none">£{(totalValue / 1000).toFixed(1)}k</span>
-            <span className="text-[9px] text-gray-500 uppercase tracking-widest font-bold">Value</span>
+            <span className="text-[9px] text-white/40 uppercase tracking-widest font-bold">Value</span>
           </div>
         </div>
       </div>
@@ -176,10 +176,10 @@ function DonutChart({ segments, total, totalValue }: { segments: DonutSegment[];
             <div key={seg.label} className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: seg.hex }} />
-                <span className="text-[11px] text-gray-500 font-medium">{seg.label}</span>
+                <span className="text-[11px] text-white/50 font-medium">{seg.label}</span>
               </div>
-              <span className="text-[11px] font-bold text-gray-900/80">
-                {seg.count} <span className="text-gray-400">({pct}%)</span>
+              <span className="text-[11px] font-bold text-white/80">
+                {seg.count} <span className="text-white/30">({pct}%)</span>
               </span>
             </div>
           );
@@ -196,31 +196,31 @@ function NotificationDropdown({ notifications, onClose, onDismiss }: { notificat
       initial={{ opacity: 0, y: 10, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 10, scale: 0.95 }}
-      className="absolute top-full right-0 mt-4 w-80 bg-white border border-black/10 rounded-3xl shadow-2xl p-6 z-[100] backdrop-blur-xl"
+      className="absolute top-full right-0 mt-4 w-80 bg-[#0f0f0f] border border-white/10 rounded-3xl shadow-2xl p-6 z-[100] backdrop-blur-xl"
     >
       <div className="flex justify-between items-center mb-6">
-        <h3 className="text-xs font-bold text-gray-900 uppercase tracking-widest">Recent Activity</h3>
-        <button onClick={onClose} className="p-1 hover:bg-black/5 rounded-lg text-gray-500">
+        <h3 className="text-xs font-bold text-white uppercase tracking-widest">Recent Activity</h3>
+        <button onClick={onClose} className="p-1 hover:bg-white/5 rounded-lg text-white/40">
           <X className="w-4 h-4" />
         </button>
       </div>
       <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
         {notifications.length === 0 ? (
-          <p className="text-[10px] text-gray-400 text-center py-8 italic">No new activity</p>
+          <p className="text-[10px] text-white/30 text-center py-8 italic">No new activity</p>
         ) : (
           notifications.map((n) => (
-            <div key={n.id} className="relative p-4 bg-white/[0.03] border border-black/5 rounded-2xl group transition-all hover:bg-white/[0.05]">
+            <div key={n.id} className="relative p-4 bg-white/[0.03] border border-white/5 rounded-2xl group transition-all hover:bg-white/[0.05]">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   onDismiss(n.id);
                 }}
-                className="absolute top-3 right-3 p-1 rounded-md text-gray-400 hover:text-gray-900 hover:bg-black/5 transition-colors"
+                className="absolute top-3 right-3 p-1 rounded-md text-white/30 hover:text-white hover:bg-white/10 transition-colors"
                 title="Dismiss"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
-              <p className="text-[11px] text-gray-900/80 leading-relaxed mb-2 pr-6">{n.message}</p>
+              <p className="text-[11px] text-white/80 leading-relaxed mb-2 pr-6">{n.message}</p>
               <span className="text-[8px] font-bold text-[#C5A059] uppercase tracking-tighter">{n.time}</span>
             </div>
           ))
@@ -240,14 +240,14 @@ function WaitlistPanel({ isOpen, onClose, waitlist, onInvite }: { isOpen: boolea
           animate={{ x: 0 }}
           exit={{ x: 400 }}
           transition={{ type: "spring", damping: 25, stiffness: 200 }}
-          className="fixed top-0 right-0 h-full w-[380px] bg-white border-l border-black/10 shadow-[-20px_0_50px_rgba(0,0,0,0.5)] z-[101] p-10 backdrop-blur-3xl overflow-y-auto custom-scrollbar"
+          className="fixed top-0 right-0 h-full w-[380px] bg-[#0a0a0a] border-l border-white/10 shadow-[-20px_0_50px_rgba(0,0,0,0.5)] z-[101] p-10 backdrop-blur-3xl overflow-y-auto custom-scrollbar"
         >
           <div className="flex justify-between items-center mb-10">
             <div>
-              <h2 className="text-2xl font-display font-bold text-gray-900">Smart Waitlist</h2>
-              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">Gap Filling Automation</p>
+              <h2 className="text-2xl font-display font-bold text-white">Smart Waitlist</h2>
+              <p className="text-[10px] text-white/30 font-bold uppercase tracking-widest mt-1">Gap Filling Automation</p>
             </div>
-            <button onClick={onClose} className="p-3 bg-black/5 hover:bg-black/5 rounded-2xl text-gray-900 transition-all">
+            <button onClick={onClose} className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl text-white transition-all">
               <X className="w-6 h-6" />
             </button>
           </div>
@@ -255,8 +255,8 @@ function WaitlistPanel({ isOpen, onClose, waitlist, onInvite }: { isOpen: boolea
           <div className="space-y-6 mb-24">
             <div className="p-6 bg-[#C5A059]/5 border border-[#C5A059]/20 rounded-3xl group cursor-pointer hover:bg-[#C5A059]/10 transition-all">
               <p className="text-[10px] font-bold text-[#C5A059] uppercase tracking-[0.2em] mb-3 leading-none">Intelligence Pack</p>
-              <h3 className="text-lg font-bold text-gray-900 mb-2 underline decoration-[#C5A059]/30 underline-offset-4">1-Click Gap Filler</h3>
-              <p className="text-xs text-gray-500 leading-relaxed mb-6">We found a 2:00 PM slot tomorrow. Notify all matching waitlist patients?</p>
+              <h3 className="text-lg font-bold text-white mb-2 underline decoration-[#C5A059]/30 underline-offset-4">1-Click Gap Filler</h3>
+              <p className="text-xs text-white/50 leading-relaxed mb-6">We found a 2:00 PM slot tomorrow. Notify all matching waitlist patients?</p>
               <button className="w-full py-4 bg-[#C5A059] text-black font-black uppercase tracking-widest text-[11px] rounded-2xl hover:scale-[1.02] transition-transform active:scale-95 shadow-[0_0_30px_rgba(0,255,204,0.3)]">
                 Broadcast Availability
               </button>
@@ -264,13 +264,13 @@ function WaitlistPanel({ isOpen, onClose, waitlist, onInvite }: { isOpen: boolea
 
             <div className="space-y-3">
               <div className="flex justify-between items-center mb-1 ml-1">
-                <h4 className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Priority Waitlist</h4>
-                <span className="text-[9px] font-bold text-gray-400 bg-black/5 px-2 py-0.5 rounded-full">{waitlist.length} waiting</span>
+                <h4 className="text-[9px] font-bold text-white/30 uppercase tracking-widest">Priority Waitlist</h4>
+                <span className="text-[9px] font-bold text-white/20 bg-white/5 px-2 py-0.5 rounded-full">{waitlist.length} waiting</span>
               </div>
 
               <AnimatePresence>
                 {waitlist.length === 0 ? (
-                  <p className="text-[10px] text-gray-400 italic pb-4">No patients currently on the waitlist.</p>
+                  <p className="text-[10px] text-white/30 italic pb-4">No patients currently on the waitlist.</p>
                 ) : (
                   waitlist.map(w => (
                     <motion.div
@@ -279,11 +279,11 @@ function WaitlistPanel({ isOpen, onClose, waitlist, onInvite }: { isOpen: boolea
                       initial={{ opacity: 0, y: 10, scale: 0.95 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
-                      className="p-5 bg-white/[0.02] border border-black/5 rounded-2xl flex justify-between items-center group hover:bg-white/[0.04] transition-all"
+                      className="p-5 bg-white/[0.02] border border-white/5 rounded-2xl flex justify-between items-center group hover:bg-white/[0.04] transition-all"
                     >
                       <div>
-                        <h5 className="font-bold text-gray-900 text-sm truncate max-w-[120px]">{w.name}</h5>
-                        <p className="text-[10px] text-gray-400 font-medium truncate max-w-[120px]">{w.service}</p>
+                        <h5 className="font-bold text-white text-sm truncate max-w-[120px]">{w.name}</h5>
+                        <p className="text-[10px] text-white/30 font-medium truncate max-w-[120px]">{w.service}</p>
                       </div>
                       <div className="flex flex-col items-end gap-1">
                         <span className="text-[10px] font-bold text-[#C5A059]/70 bg-[#C5A059]/10 px-2 py-0.5 rounded border border-[#C5A059]/20">
@@ -293,7 +293,7 @@ function WaitlistPanel({ isOpen, onClose, waitlist, onInvite }: { isOpen: boolea
                           <span className="text-[8px] font-bold text-[#C5A059]/60 uppercase">{timeAgo(w.created_at)}</span>
                           <button
                             onClick={() => onInvite(w.id)}
-                            className="text-[9px] font-bold text-gray-900 opacity-0 group-hover:opacity-100 transition-opacity uppercase tracking-tighter underline ml-1"
+                            className="text-[9px] font-bold text-white opacity-0 group-hover:opacity-100 transition-opacity uppercase tracking-tighter underline ml-1"
                           >
                             Invite
                           </button>
@@ -307,9 +307,9 @@ function WaitlistPanel({ isOpen, onClose, waitlist, onInvite }: { isOpen: boolea
           </div>
 
           <div className="absolute bottom-6 left-6 right-6">
-            <div className="flex items-center gap-3 p-4 bg-black/5 rounded-2xl border border-black/10">
-              <ShieldCheck className="w-5 h-5 text-gray-400 shrink-0" strokeWidth={1.5} />
-              <p className="text-[9px] text-gray-400 font-medium leading-tight select-none">HIPAA Compliant Automation Protocol active for all patient communications.</p>
+            <div className="flex items-center gap-3 p-4 bg-white/5 rounded-2xl border border-white/10">
+              <ShieldCheck className="w-5 h-5 text-white/20 shrink-0" />
+              <p className="text-[9px] text-white/30 font-medium leading-tight select-none">HIPAA Compliant Automation Protocol active for all patient communications.</p>
             </div>
           </div>
         </motion.div>
@@ -369,7 +369,7 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
     if (sec <= 0) return "text-red-500 font-black animate-pulse";
     if (sec < 300) return "text-red-500 font-bold animate-pulse";
     if (sec < 600) return "text-yellow-400 font-bold";
-    return "text-gray-500 font-bold";
+    return "text-white/40 font-bold";
   };
 
   const {
@@ -448,17 +448,17 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
           boxShadow: isDragging
             ? "0 30px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1)"
             : isOverdue
-              ? "0 10px 30px rgba(226,114,91,0.15), inset 0 0 0 1px rgba(0,0,0,0.05)" /* Terracotta shadow */
-              : "0 10px 30px -10px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(0,0,0,0.05)", /* Soft Matte Shadow */
+              ? "0 10px 30px rgba(226,114,91,0.15), inset 0 1px 0 rgba(255,255,255,0.05)" /* Terracotta shadow */
+              : "0 10px 30px -10px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)", /* Soft Matte Shadow */
           opacity: isDragging ? 0.95 : 1,
-          backgroundColor: isDragging ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,1)",
+          backgroundColor: isDragging ? "rgba(30,30,30,0.95)" : "rgba(30,30,30,1)",
           y: isDragging ? -10 : 0
         }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
         className={`rounded-2xl p-4 relative group focus:outline-none transition-all
-          ${isDragging ? 'border-black/10 cursor-grabbing bg-white/95' :
-            isOverdue ? 'border-[#E2725B]/40 hover:border-[#E2725B]/70 cursor-grab animate-[pulse_3s_ease-in-out_infinite] bg-white' :
-              'border-black/5 hover:border-black/10 cursor-grab hover:bg-white/[0.02] bg-white'
+          ${isDragging ? 'border-white/10 cursor-grabbing bg-[#1E1E1E]/95' :
+            isOverdue ? 'border-[#E2725B]/40 hover:border-[#E2725B]/70 cursor-grab animate-[pulse_3s_ease-in-out_infinite] bg-[#1E1E1E]' :
+              'border-white/5 hover:border-white/10 cursor-grab hover:bg-white/[0.02] bg-[#1E1E1E]'
           }`}
       >
         {/* Drag Handle Area */}
@@ -468,21 +468,21 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
         <div className="relative z-10 pointer-events-none">
           <div className="flex justify-between items-start mb-3">
             <div>
-              <h4 className="font-bold text-[13px] tracking-[-0.02em] text-gray-900 truncate mr-2">{lead.name}</h4>
+              <h4 className="font-bold text-[13px] tracking-[-0.02em] text-white truncate mr-2">{lead.name}</h4>
               <p className="text-label mt-1 lowercase opacity-70">Joined {timeAgo(lead.created_at)}</p>
             </div>
 
             {/* Urgent Tag (Terracotta) */}
             {isOverdue && (
               <span className="text-[9px] font-bold text-[#E2725B] bg-[#E2725B]/10 px-1.5 py-0.5 rounded uppercase tracking-wider flex items-center gap-1">
-                <AlertTriangle className="w-2 h-2" strokeWidth={1.5} /> Urgent
+                <AlertTriangle className="w-2 h-2" /> Urgent
               </span>
             )}
           </div>
 
           {/* Tags */}
           <div className="flex flex-wrap gap-1 mb-1">
-            <span className="text-[10px] font-medium text-gray-500 bg-black/5 px-2 py-0.5 rounded-md border border-black/5">
+            <span className="text-[10px] font-medium text-white/50 bg-white/5 px-2 py-0.5 rounded-md border border-white/5">
               {lead.service}
             </span>
             {lead.appointment_date && !isNaN(new Date(lead.appointment_date).getTime()) && (
@@ -501,10 +501,10 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
               {lead.status === "New" && (
                 <button
                   onClick={handleWaitlistClick}
-                  className="px-3 py-1.5 text-gray-500 hover:text-gray-900 bg-black/5 hover:bg-black/5 rounded-xl transition-all border border-black/5 text-[10px] font-medium flex items-center gap-1.5 self-center mr-1"
+                  className="px-3 py-1.5 text-white/50 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl transition-all border border-white/5 text-[10px] font-medium flex items-center gap-1.5 self-center mr-1"
                   title="Move to Waitlist"
                 >
-                  <Users className="w-3 h-3" strokeWidth={1.5} /> Waitlist
+                  <Users className="w-3 h-3" /> Waitlist
                 </button>
               )}
               <button
@@ -512,10 +512,10 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
                   e.stopPropagation();
                   setSelectedLead(lead);
                 }}
-                className="p-1.5 text-gray-500 hover:text-gray-900 bg-black/5 hover:bg-black/5 rounded-lg transition-all border border-black/10"
+                className="p-1.5 text-white/40 hover:text-white bg-white/5 hover:bg-white/10 rounded-lg transition-all border border-white/10"
                 title="View Inquiry details"
               >
-                <FileText className="w-3.5 h-3.5" strokeWidth={1.5} />
+                <FileText className="w-3.5 h-3.5" />
               </button>
               <button
                 onClick={handleSendEmail}
@@ -523,7 +523,7 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
                 className="p-1.5 text-[#C5A059] hover:text-[#C5A059]/80 bg-[#C5A059]/10 hover:bg-[#C5A059]/20 rounded-lg transition-all border border-[#C5A059]/20 disabled:opacity-50"
                 title="Send PT Link via Email"
               >
-                {isSendingEmail ? <RefreshCw className="w-3.5 h-3.5 animate-spin text-[#C5A059]" strokeWidth={1.5} /> : <Send className="w-3.5 h-3.5" strokeWidth={1.5} />}
+                {isSendingEmail ? <RefreshCw className="w-3.5 h-3.5 animate-spin text-[#C5A059]" /> : <Send className="w-3.5 h-3.5" />}
               </button>
             </div>
           </div>
@@ -585,7 +585,7 @@ function KanbanColumn({
         <div className="flex justify-between items-center mb-1">
           <h3 className="text-label flex items-center gap-2">
             {columnId}
-            <span className="text-[10px] font-bold opacity-30 bg-black/5 px-2 py-0.5 rounded-md">{columnLeads.length}</span>
+            <span className="text-[10px] font-bold opacity-30 bg-white/5 px-2 py-0.5 rounded-md">{columnLeads.length}</span>
           </h3>
         </div>
         {/* Pipeline Value Header (Apple-Style Numbers, Tight Tracking) */}
@@ -620,7 +620,7 @@ function KanbanColumn({
         {/* Postel's Law: Graceful Empty State */}
         {columnLeads.length === 0 && (
           <div className="h-32 rounded-[16px] flex flex-col items-center justify-center opacity-40 mt-2 border border-dashed border-[#A0A0A0]/20 bg-white/[0.01]">
-            <Sparkles className="w-4 h-4 text-[#C5A059] mb-2 opacity-50" strokeWidth={1.5} />
+            <Sparkles className="w-4 h-4 text-[#C5A059] mb-2 opacity-50" />
             <span className="text-[11px] font-medium text-[#A0A0A0]">Drop here</span>
           </div>
         )}
@@ -638,16 +638,16 @@ function KanbanSkeleton() {
   return (
     <div className="flex min-w-max animate-pulse gap-6 overflow-hidden">
       {[1, 2, 3, 4].map(i => (
-        <div key={i} className="flex-shrink-0 w-[280px] bg-white border border-black/5 rounded-[32px] p-5 flex flex-col h-[65vh]">
+        <div key={i} className="flex-shrink-0 w-[280px] bg-[#121212] border border-[#ffffff0d] rounded-[32px] p-5 flex flex-col h-[65vh]">
           <div className="flex items-center justify-between mb-6">
-            <div className="h-4 w-24 bg-black/5 rounded-full"></div>
-            <div className="h-5 w-8 bg-black/5 rounded-full"></div>
+            <div className="h-4 w-24 bg-[#ffffff0d] rounded-full"></div>
+            <div className="h-5 w-8 bg-[#ffffff0d] rounded-full"></div>
           </div>
           <div className="flex-1 space-y-4 overflow-hidden">
             {[1, 2, 3].map(j => (
-              <div key={j} className="bg-black/[0.02] p-5 rounded-[24px] h-36 border border-black/5">
-                <div className="h-4 w-3/4 bg-black/5 rounded-full mb-3"></div>
-                <div className="h-3 w-1/2 bg-black/5 rounded-full mb-5"></div>
+              <div key={j} className="bg-[#1E1E1E] p-5 rounded-[24px] h-36 border border-[#ffffff0d]">
+                <div className="h-4 w-3/4 bg-[#ffffff0d] rounded-full mb-3"></div>
+                <div className="h-3 w-1/2 bg-[#ffffff0d] rounded-full mb-5"></div>
                 <div className="flex gap-2">
                   <div className="h-8 w-20 bg-[#ffffff0d] rounded-full"></div>
                   <div className="h-8 w-12 bg-[#ffffff0d] rounded-full"></div>
@@ -1625,10 +1625,10 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 font-sans selection:bg-[#C5A059]/30 selection:text-gray-900 overflow-x-hidden">
+    <div className="min-h-screen bg-[#0f0f12] text-white p-6 md:p-10 font-sans selection:bg-[#C5A059]/30 selection:text-white">
       {session === null ? (
         <div className="flex items-center justify-center h-[calc(100vh-80px)]">
-          <RefreshCw className="w-6 h-6 text-gray-400 animate-spin" strokeWidth={1.5} />
+          <RefreshCw className="w-6 h-6 text-white/20 animate-spin" />
         </div>
       ) : (
         <>
@@ -1670,7 +1670,7 @@ export default function AdminDashboard() {
               className="mb-6 mx-auto max-w-7xl bg-red-500/10 border border-red-500/20 rounded-2xl p-5 flex items-center justify-between shadow-[0_20px_40px_-15px_rgba(226,114,91,0.2)]"
             >
               <div className="flex items-center gap-4">
-                <AlertTriangle className="w-5 h-5 text-red-500" strokeWidth={1.5} />
+                <AlertTriangle className="w-5 h-5 text-red-500" />
                 <p className="text-red-500 text-sm font-medium">
                   <span className="font-bold uppercase tracking-widest text-xs mr-3 text-red-500 bg-red-500/20 px-2 py-1 rounded-md">Database Corruption</span>
                   {leads.filter(l => !KANBAN_COLUMNS.includes(l.status)).length} leads have invalid status data and are hidden.
@@ -1685,7 +1685,7 @@ export default function AdminDashboard() {
                   fetchLeads();
                   alert("Database repair complete! All corrupted leads reset to 'New'.");
                 }}
-                className="px-5 py-2.5 bg-red-500 text-gray-900 font-bold uppercase tracking-widest text-xs rounded-xl transition-all border border-red-400/30 hover:shadow-[0_8px_20px_-8px_rgba(226,114,91,0.3)] hover:scale-105 active:scale-95 duration-200">
+                className="px-5 py-2.5 bg-red-500 text-white font-bold uppercase tracking-widest text-xs rounded-xl transition-all border border-red-400/30 hover:shadow-[0_8px_20px_-8px_rgba(226,114,91,0.3)] hover:scale-105 active:scale-95 duration-200">
                 Fix Database Now
               </button>
             </motion.div>
@@ -1705,7 +1705,7 @@ export default function AdminDashboard() {
                 </span>
                 <p className="text-[#C5A059] text-sm font-medium">
                   <span className="font-bold uppercase tracking-widest text-xs mr-3 text-[#C5A059] bg-[#C5A059]/20 px-2 py-1 rounded-md">🚨 ACTION REQUIRED</span>
-                  High-value lead is waiting. Call now to secure <strong className="text-gray-900">£{newLeadsValue.toLocaleString()}</strong> revenue.
+                  High-value lead is waiting. Call now to secure <strong className="text-white">£{newLeadsValue.toLocaleString()}</strong> revenue.
                 </p>
               </div>
             </motion.div>
@@ -1723,13 +1723,13 @@ export default function AdminDashboard() {
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   exit={{ scale: 0.9, opacity: 0 }}
-                  className="bg-white border border-black/10 p-10 rounded-[40px] max-w-md w-full text-center shadow-2xl relative"
+                  className="bg-[#0f0f0f] border border-white/10 p-10 rounded-[40px] max-w-md w-full text-center shadow-2xl relative"
                 >
                   <div className="w-20 h-20 bg-yellow-400/10 rounded-3xl flex items-center justify-center mx-auto mb-6">
-                    <Star className="w-10 h-10 text-yellow-500 fill-yellow-500" strokeWidth={1.5} />
+                    <Star className="w-10 h-10 text-yellow-500 fill-yellow-500" />
                   </div>
-                  <h2 className="text-2xl font-display font-bold text-gray-900 mb-2">Review Automation</h2>
-                  <p className="text-sm text-gray-500 leading-relaxed mb-8">
+                  <h2 className="text-2xl font-display font-bold text-white mb-2">Review Automation</h2>
+                  <p className="text-sm text-white/50 leading-relaxed mb-8">
                     Excellent! {reviewPrompt.leadName} has started treatment. Shall we send a Google Review request link to capture this success?
                   </p>
                   <div className="flex flex-col gap-3">
@@ -1754,13 +1754,13 @@ export default function AdminDashboard() {
                         setReviewPrompt(null);
                         alert("Review request sent successfully!");
                       }}
-                      className="w-full py-4 bg-white text-gray-900 font-black uppercase tracking-widest text-xs rounded-2xl hover:bg-black/5 border border-black/10 transition-all"
+                      className="w-full py-4 bg-white text-black font-black uppercase tracking-widest text-xs rounded-2xl hover:bg-gray-200 transition-all"
                     >
                       Send Review Request
                     </button>
                     <button
                       onClick={() => setReviewPrompt(null)}
-                      className="w-full py-4 bg-black/5 text-gray-500 font-bold uppercase tracking-widest text-[10px] rounded-2xl hover:bg-black/5 transition-all"
+                      className="w-full py-4 bg-white/5 text-white/40 font-bold uppercase tracking-widest text-[10px] rounded-2xl hover:bg-white/10 transition-all"
                     >
                       Maybe Later
                     </button>
@@ -1780,22 +1780,22 @@ export default function AdminDashboard() {
                   initial={{ scale: 0.95, opacity: 0, y: 30 }}
                   animate={{ scale: 1, opacity: 1, y: 0 }}
                   exit={{ scale: 0.95, opacity: 0, y: -20 }}
-                  className="bg-white border border-black/10 p-8 rounded-[32px] max-w-2xl w-full text-left relative overflow-hidden flex flex-col shadow-2xl"
+                  className="bg-[#0f0f0f] border border-white/10 p-8 rounded-[32px] max-w-2xl w-full text-left relative overflow-hidden flex flex-col shadow-2xl"
                 >
                   <button
                     onClick={() => setSelectedLead(null)}
-                    className="absolute top-6 right-6 p-2 bg-black/5 hover:bg-black/5 rounded-full transition-colors"
+                    className="absolute top-6 right-6 p-2 bg-white/5 hover:bg-white/10 rounded-full transition-colors"
                   >
-                    <X className="w-5 h-5 text-gray-500" />
+                    <X className="w-5 h-5 text-white/40" />
                   </button>
 
                   <div className="flex items-center gap-4 mb-8">
-                    <div className="w-16 h-16 bg-black/5 rounded-2xl flex items-center justify-center border border-black/10">
-                      <UserCheck className="w-8 h-8 text-gray-500" strokeWidth={1.5} />
+                    <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10">
+                      <UserCheck className="w-8 h-8 text-white/50" />
                     </div>
                     <div>
-                      <h2 className="text-3xl font-display font-bold text-gray-900 uppercase tracking-tight">{selectedLead.name}</h2>
-                      <div className="flex items-center gap-3 mt-1.5 text-xs font-bold text-gray-500 uppercase tracking-widest">
+                      <h2 className="text-3xl font-display font-bold text-white uppercase tracking-tight">{selectedLead.name}</h2>
+                      <div className="flex items-center gap-3 mt-1.5 text-xs font-bold text-white/40 uppercase tracking-widest">
                         <span>{selectedLead.service}</span>
                         <span className="w-1 h-1 bg-white/20 rounded-full" />
                         <span>{selectedLead.phone}</span>
@@ -1803,12 +1803,12 @@ export default function AdminDashboard() {
                     </div>
                   </div>
 
-                  <div className="bg-white/[0.02] border border-black/5 rounded-2xl p-6 mb-6">
-                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-4 flex items-center gap-2">
-                      <FileText className="w-3.5 h-3.5" strokeWidth={1.5} /> {selectedLead.status === "Visited" || selectedLead.status === "Treatment Started" ? "Clinical Notes & Chart" : "Initial Inquiry & Notes"}
+                  <div className="bg-white/[0.02] border border-white/5 rounded-2xl p-6 mb-6">
+                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/30 mb-4 flex items-center gap-2">
+                      <FileText className="w-3.5 h-3.5" /> {selectedLead.status === "Visited" || selectedLead.status === "Treatment Started" ? "Clinical Notes & Chart" : "Initial Inquiry & Notes"}
                     </h3>
-                    <div className="text-sm text-gray-900/90 leading-relaxed font-medium min-h-[100px] max-h-[250px] overflow-y-auto whitespace-pre-wrap bg-black/5 p-4 rounded-xl border border-black/5">
-                      {selectedLead.notes || <span className="text-gray-500 italic">No detailed inquiry notes provided.</span>}
+                    <div className="text-sm text-white/90 leading-relaxed font-medium min-h-[100px] max-h-[250px] overflow-y-auto whitespace-pre-wrap bg-white/5 p-4 rounded-xl border border-white/5">
+                      {selectedLead.notes || <span className="text-white/40 italic">No detailed inquiry notes provided.</span>}
                     </div>
                   </div>
 
@@ -1817,7 +1817,7 @@ export default function AdminDashboard() {
                       value={dictationText}
                       onChange={(e) => setDictationText(e.target.value)}
                       placeholder="Type notes or click the microphone to dictate..."
-                      className="w-full h-32 bg-black/5 border border-black/10 rounded-2xl p-5 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all resize-none"
+                      className="w-full h-32 bg-white/5 border border-white/10 rounded-2xl p-5 text-sm text-white placeholder:text-white/20 focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all resize-none"
                     />
 
                     <button
@@ -1846,16 +1846,16 @@ export default function AdminDashboard() {
                   <div className="flex justify-end gap-3">
                     <button
                       onClick={() => { setDictationText(""); setSelectedLead(null); }}
-                      className="px-6 py-3 rounded-xl bg-black/5 text-gray-500 hover:bg-black/5 hover:text-gray-900 text-xs font-bold uppercase tracking-widest transition-colors"
+                      className="px-6 py-3 rounded-xl bg-white/5 text-white/50 hover:bg-white/10 hover:text-white text-xs font-bold uppercase tracking-widest transition-colors"
                     >
                       Cancel
                     </button>
                     <button
                       onClick={saveNotes}
                       disabled={!dictationText.trim()}
-                      className="px-6 py-3 rounded-xl bg-white text-gray-900 hover:bg-black/5 border border-black/10 text-xs font-bold uppercase tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                      className="px-6 py-3 rounded-xl bg-white text-black hover:bg-gray-200 text-xs font-bold uppercase tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                     >
-                      <FileText className="w-4 h-4" strokeWidth={1.5} /> {selectedLead.status === "Visited" || selectedLead.status === "Treatment Started" ? "Save to Chart" : "Save Notes"}
+                      <FileText className="w-4 h-4" /> {selectedLead.status === "Visited" || selectedLead.status === "Treatment Started" ? "Save to Chart" : "Save Notes"}
                     </button>
                   </div>
                 </motion.div>
@@ -1873,25 +1873,25 @@ export default function AdminDashboard() {
                   initial={{ scale: 0.9, opacity: 0, y: 20 }}
                   animate={{ scale: 1, opacity: 1, y: 0 }}
                   exit={{ scale: 0.9, opacity: 0 }}
-                  className="bg-white border border-black/10 p-8 rounded-3xl max-w-md w-full text-center relative overflow-hidden"
+                  className="bg-[#0f0f0f] border border-white/10 p-8 rounded-3xl max-w-md w-full text-center relative overflow-hidden"
                 >
                   <button
                     onClick={() => setDepositModal({ isOpen: false, leadName: "", payUrl: "" })}
-                    className="absolute top-4 right-4 p-2 bg-black/5 hover:bg-black/5 rounded-full transition-colors"
+                    className="absolute top-4 right-4 p-2 bg-white/5 hover:bg-white/10 rounded-full transition-colors"
                   >
-                    <X className="w-5 h-5 text-gray-500" />
+                    <X className="w-5 h-5 text-white/40" />
                   </button>
 
                   <div className="w-16 h-16 bg-[#E9F11E]/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <Send className="w-8 h-8 text-[#E9F11E] ml-1" strokeWidth={1.5} />
+                    <Send className="w-8 h-8 text-[#E9F11E] ml-1" />
                   </div>
-                  <h2 className="text-2xl font-display font-bold text-gray-900 mb-2 uppercase tracking-tight">Deposit Requested</h2>
-                  <p className="text-gray-900/60 mb-6 text-sm">
+                  <h2 className="text-2xl font-display font-bold text-white mb-2 uppercase tracking-tight">Deposit Requested</h2>
+                  <p className="text-white/60 mb-6 text-sm">
                     A secure payment link has been sent to <strong>{depositModal.leadName}</strong> via SMS and Email.
                   </p>
 
-                  <div className="bg-black/5 border border-black/5 p-4 rounded-xl text-left mb-8">
-                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-2">Generated Link (Copied to Clipboard)</span>
+                  <div className="bg-white/5 border border-white/5 p-4 rounded-xl text-left mb-8">
+                    <span className="text-[10px] font-bold text-white/30 uppercase tracking-widest block mb-2">Generated Link (Copied to Clipboard)</span>
                     <code className="text-[10px] text-[#C5A059] break-all select-all">{depositModal.payUrl}</code>
                   </div>
 
@@ -1919,31 +1919,31 @@ export default function AdminDashboard() {
                   initial={{ scale: 0.9, opacity: 0, y: 20 }}
                   animate={{ scale: 1, opacity: 1, y: 0 }}
                   exit={{ scale: 0.9, opacity: 0 }}
-                  className="bg-white border border-black/10 p-10 rounded-[40px] max-w-lg w-full relative overflow-hidden shadow-2xl"
+                  className="bg-[#0f0f0f] border border-white/10 p-10 rounded-[40px] max-w-lg w-full relative overflow-hidden shadow-2xl"
                 >
                   <div className="absolute top-0 right-0 w-32 h-32 bg-[#87A96B]/10 blur-3xl rounded-full -mr-16 -mt-16"></div>
 
                   <button
                     onClick={() => setTreatmentModal(null)}
-                    className="absolute top-8 right-8 p-3 bg-black/5 hover:bg-black/5 rounded-2xl transition-all border border-black/5"
+                    className="absolute top-8 right-8 p-3 bg-white/5 hover:bg-white/10 rounded-2xl transition-all border border-white/5"
                   >
-                    <X className="w-5 h-5 text-gray-500" />
+                    <X className="w-5 h-5 text-white/40" />
                   </button>
 
                   <div className="flex items-center gap-4 mb-8">
                     <div className="w-14 h-14 bg-[#87A96B]/10 rounded-2xl flex items-center justify-center border border-[#87A96B]/20">
-                      <UserCheck className="w-7 h-7 text-[#87A96B]" strokeWidth={1.5} />
+                      <UserCheck className="w-7 h-7 text-[#87A96B]" />
                     </div>
                     <div>
-                      <h2 className="text-2xl font-display font-bold text-gray-900 uppercase tracking-tight">Log Treatment</h2>
-                      <p className="text-[10px] text-gray-500 font-bold uppercase tracking-[0.2em] mt-1">Finalizing Patient Case: <span className="text-gray-900">{treatmentModal.leadName}</span></p>
+                      <h2 className="text-2xl font-display font-bold text-white uppercase tracking-tight">Log Treatment</h2>
+                      <p className="text-[10px] text-white/40 font-bold uppercase tracking-[0.2em] mt-1">Finalizing Patient Case: <span className="text-white">{treatmentModal.leadName}</span></p>
                     </div>
                   </div>
 
                   <div className="space-y-6 mb-10">
                     <div className="grid grid-cols-2 gap-5">
                       <div className="space-y-2">
-                        <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Treatment Type</label>
+                        <label className="block text-[10px] font-bold text-white/40 uppercase tracking-widest ml-1">Treatment Type</label>
                         <select
                           value={treatmentForm.treatmentName}
                           onChange={e => {
@@ -1954,7 +1954,7 @@ export default function AdminDashboard() {
                               amount: TREATMENT_VALUES[val] || 1000
                             }));
                           }}
-                          className="w-full bg-black/5 border border-black/10 rounded-2xl px-5 py-4 text-gray-900 text-sm focus:outline-none focus:border-green-500 transition-all font-medium appearance-none"
+                          className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white text-sm focus:outline-none focus:border-green-500 transition-all font-medium appearance-none"
                         >
                           <option value="" className="bg-black">Select Treatment</option>
                           {Object.keys(TREATMENT_VALUES).map(t => (
@@ -1963,22 +1963,22 @@ export default function AdminDashboard() {
                         </select>
                       </div>
                       <div className="space-y-2">
-                        <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Final Value (£)</label>
+                        <label className="block text-[10px] font-bold text-white/40 uppercase tracking-widest ml-1">Final Value (£)</label>
                         <input
                           type="number"
                           value={treatmentForm.amount}
                           onChange={e => setTreatmentForm(prev => ({ ...prev, amount: parseInt(e.target.value) || 0 }))}
-                          className="w-full bg-black/5 border border-black/10 rounded-2xl px-5 py-4 text-gray-900 text-sm focus:outline-none focus:border-green-400 transition-all font-bold placeholder:text-gray-300 shadow-[inner_0_2px_4px_rgba(0,0,0,0.3)]"
+                          className="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-white text-sm focus:outline-none focus:border-green-400 transition-all font-bold placeholder:text-white/10 shadow-[inner_0_2px_4px_rgba(0,0,0,0.3)]"
                         />
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Performing Doctor</label>
+                      <label className="block text-[10px] font-bold text-white/40 uppercase tracking-widest ml-1">Performing Doctor</label>
                       <select
                         value={treatmentForm.doctorId}
                         onChange={e => setTreatmentForm(prev => ({ ...prev, doctorId: e.target.value }))}
-                        className="w-full bg-black/5 border border-black/10 rounded-2xl px-5 py-4 text-gray-900 text-sm focus:outline-none focus:border-green-500 transition-all font-medium appearance-none"
+                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white text-sm focus:outline-none focus:border-green-500 transition-all font-medium appearance-none"
                       >
                         <option value="" className="bg-black">Assigned Surgeon</option>
                         {doctors.map(d => (
@@ -1988,12 +1988,12 @@ export default function AdminDashboard() {
                     </div>
 
                     <div className="space-y-2">
-                      <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Clinical Outcome Notes</label>
+                      <label className="block text-[10px] font-bold text-white/40 uppercase tracking-widest ml-1">Clinical Outcome Notes</label>
                       <textarea
                         value={treatmentForm.notes}
                         onChange={e => setTreatmentForm(prev => ({ ...prev, notes: e.target.value }))}
                         placeholder="Briefly describe the procedure results..."
-                        className="w-full h-32 bg-black/5 border border-black/10 rounded-[24px] p-5 text-sm text-gray-900 focus:outline-none focus:border-green-500 transition-all resize-none font-medium placeholder:text-gray-300"
+                        className="w-full h-32 bg-white/5 border border-white/10 rounded-[24px] p-5 text-sm text-white focus:outline-none focus:border-green-500 transition-all resize-none font-medium placeholder:text-white/10"
                       />
                     </div>
                   </div>
@@ -2001,9 +2001,9 @@ export default function AdminDashboard() {
                   <button
                     onClick={handleSaveTreatment}
                     disabled={!treatmentForm.treatmentName || !treatmentForm.amount || !treatmentForm.doctorId || loading}
-                    className="w-full py-5 bg-gray-900 text-white font-black uppercase tracking-[0.2em] text-[11px] rounded-3xl hover:bg-[#87A96B] hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-[0_10px_30px_rgba(0,0,0,0.06)] active:scale-95 duration-200 flex items-center justify-center gap-3"
+                    className="w-full py-5 bg-white text-black font-black uppercase tracking-[0.2em] text-[11px] rounded-3xl hover:bg-[#87A96B] transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-[0_20px_40px_rgba(0,0,0,0.3)] active:scale-95 duration-200 flex items-center justify-center gap-3"
                   >
-                    {loading ? <Loader2 className="w-4 h-4 animate-spin" strokeWidth={1.5} /> : <Save className="w-4 h-4" strokeWidth={1.5} />}
+                    {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                     Lock Treatment & Record Revenue
                   </button>
                 </motion.div>
@@ -2024,46 +2024,46 @@ export default function AdminDashboard() {
                   initial={{ scale: 0.9, opacity: 0, y: 20 }}
                   animate={{ scale: 1, opacity: 1, y: 0 }}
                   exit={{ scale: 0.9, opacity: 0 }}
-                  className="bg-white border border-black/10 p-8 rounded-3xl max-w-sm w-full relative overflow-hidden shadow-2xl"
+                  className="bg-[#0f0f0f] border border-white/10 p-8 rounded-3xl max-w-sm w-full relative overflow-hidden shadow-2xl"
                 >
                   <button
                     onClick={() => setSchedulingLead(null)}
-                    className="absolute top-4 right-4 p-2 bg-black/5 hover:bg-black/5 rounded-full transition-colors"
+                    className="absolute top-4 right-4 p-2 bg-white/5 hover:bg-white/10 rounded-full transition-colors"
                   >
-                    <X className="w-5 h-5 text-gray-500" />
+                    <X className="w-5 h-5 text-white/40" />
                   </button>
 
-                  <h2 className="text-xl font-display font-bold text-gray-900 mb-2 uppercase tracking-tight">Schedule Consultation</h2>
-                  <p className="text-gray-900/60 mb-6 text-sm">Select a date and time for <strong>{schedulingLead.name}</strong>.</p>
+                  <h2 className="text-xl font-display font-bold text-white mb-2 uppercase tracking-tight">Schedule Consultation</h2>
+                  <p className="text-white/60 mb-6 text-sm">Select a date and time for <strong>{schedulingLead.name}</strong>.</p>
 
                   <div className="space-y-4 mb-8">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Date</label>
+                        <label className="block text-[10px] font-bold text-white/40 uppercase tracking-widest mb-2">Date</label>
                         <input
                           type="date"
                           value={appointmentDateInput.date}
                           onChange={e => setAppointmentDateInput(prev => ({ ...prev, date: e.target.value }))}
-                          className="w-full bg-black/5 border border-black/10 rounded-xl px-4 py-3 text-gray-900 text-[11px] focus:outline-none focus:border-blue-500 transition-colors"
+                          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-[11px] focus:outline-none focus:border-blue-500 transition-colors"
                         />
                       </div>
                       <div>
-                        <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Time</label>
+                        <label className="block text-[10px] font-bold text-white/40 uppercase tracking-widest mb-2">Time</label>
                         <input
                           type="time"
                           value={appointmentDateInput.time}
                           onChange={e => setAppointmentDateInput(prev => ({ ...prev, time: e.target.value }))}
-                          className="w-full bg-black/5 border border-black/10 rounded-xl px-4 py-3 text-gray-900 text-[11px] focus:outline-none focus:border-blue-500 transition-colors"
+                          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-[11px] focus:outline-none focus:border-blue-500 transition-colors"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Assigned Doctor</label>
+                      <label className="block text-[10px] font-bold text-white/40 uppercase tracking-widest mb-2">Assigned Doctor</label>
                       <select
                         value={appointmentDateInput.doctorId}
                         onChange={e => setAppointmentDateInput(prev => ({ ...prev, doctorId: e.target.value }))}
-                        className="w-full bg-black/5 border border-black/10 rounded-xl px-4 py-3 text-gray-900 text-[11px] focus:outline-none focus:border-blue-500 transition-colors"
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-[11px] focus:outline-none focus:border-blue-500 transition-colors"
                       >
                         <option value="" className="bg-black">Select Surgeon</option>
                         {doctors.map(d => (
@@ -2074,11 +2074,11 @@ export default function AdminDashboard() {
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Chair / Room</label>
+                        <label className="block text-[10px] font-bold text-white/40 uppercase tracking-widest mb-2">Chair / Room</label>
                         <select
                           value={appointmentDateInput.resourceId}
                           onChange={e => setAppointmentDateInput(prev => ({ ...prev, resourceId: e.target.value }))}
-                          className="w-full bg-black/5 border border-black/10 rounded-xl px-4 py-3 text-gray-900 text-[11px] focus:outline-none focus:border-blue-500 transition-colors"
+                          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-[11px] focus:outline-none focus:border-blue-500 transition-colors"
                         >
                           <option value="" className="bg-black">Select Bed</option>
                           {resources.map(r => (
@@ -2087,11 +2087,11 @@ export default function AdminDashboard() {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Duration (min)</label>
+                        <label className="block text-[10px] font-bold text-white/40 uppercase tracking-widest mb-2">Duration (min)</label>
                         <select
                           value={appointmentDateInput.duration}
                           onChange={e => setAppointmentDateInput(prev => ({ ...prev, duration: parseInt(e.target.value) }))}
-                          className="w-full bg-black/5 border border-black/10 rounded-xl px-4 py-3 text-gray-900 text-[11px] focus:outline-none focus:border-blue-500 transition-colors"
+                          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-[11px] focus:outline-none focus:border-blue-500 transition-colors"
                         >
                           {[15, 30, 45, 60, 90, 120].map(m => (
                             <option key={m} value={m} className="bg-black">{m} mins</option>
@@ -2104,7 +2104,7 @@ export default function AdminDashboard() {
                   <button
                     onClick={handleConfirmAppointment}
                     disabled={!appointmentDateInput.date || !appointmentDateInput.time || !appointmentDateInput.doctorId || !appointmentDateInput.resourceId}
-                    className="w-full py-4 bg-purple-500 hover:bg-purple-400 text-gray-900 font-bold uppercase tracking-widest text-[10px] rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(168,85,247,0.3)]"
+                    className="w-full py-4 bg-purple-500 hover:bg-purple-400 text-white font-bold uppercase tracking-widest text-[10px] rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(168,85,247,0.3)]"
                   >
                     Confirm Booking
                   </button>
@@ -2113,13 +2113,13 @@ export default function AdminDashboard() {
             )}
           </AnimatePresence>
 
-          <div className="max-w-7xl mx-auto px-6 py-6 md:px-10 md:py-10">
+          <div className="max-w-7xl mx-auto">
 
             {/* Header with Branch Selector */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
               <div>
-                <Link to="/" className="text-gray-400 hover:text-gray-900 flex items-center gap-2 mb-3 transition-colors text-xs font-bold uppercase tracking-widest">
-                  <ArrowLeft className="w-3.5 h-3.5" strokeWidth={1.5} /> Back to Website
+                <Link to="/" className="text-white/30 hover:text-white flex items-center gap-2 mb-3 transition-colors text-xs font-bold uppercase tracking-widest">
+                  <ArrowLeft className="w-3.5 h-3.5" /> Back to Website
                 </Link>
                 <div className="flex items-center gap-4 relative">
                   <h1 className="text-3xl font-display font-bold">HQ Dashboard</h1>
@@ -2129,11 +2129,11 @@ export default function AdminDashboard() {
                     <div className="relative">
                       <button
                         onClick={() => setIsBranchDropdownOpen(!isBranchDropdownOpen)}
-                        className="flex items-center gap-2 bg-black/5 hover:bg-black/5 border border-black/10 px-4 py-2 rounded-xl text-sm font-bold transition-all text-gray-900/80 group"
+                        className="flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 px-4 py-2 rounded-xl text-sm font-bold transition-all text-white/80 group"
                       >
-                        <MapPin className="w-4 h-4 text-gray-500 group-hover:text-[#C5A059]" strokeWidth={1.5} />
+                        <MapPin className="w-4 h-4 text-white/40 group-hover:text-[#C5A059]" />
                         {selectedBranch}
-                        <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${isBranchDropdownOpen ? "rotate-180" : ""}`} />
+                        <ChevronDown className={`w-4 h-4 text-white/40 transition-transform ${isBranchDropdownOpen ? "rotate-180" : ""}`} />
                       </button>
 
                       <AnimatePresence>
@@ -2142,7 +2142,7 @@ export default function AdminDashboard() {
                             initial={{ opacity: 0, y: 10, scale: 0.95 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                            className="absolute top-full left-0 mt-2 w-56 bg-white border border-black/10 rounded-2xl p-2 z-[2000] shadow-2xl"
+                            className="absolute top-full left-0 mt-2 w-56 bg-[#0f0f0f] border border-white/10 rounded-2xl p-2 z-[2000] shadow-2xl"
                           >
                             {BRANCHES.map(branch => (
                               <button
@@ -2150,7 +2150,7 @@ export default function AdminDashboard() {
                                 onClick={() => { setSelectedBranch(branch); setIsBranchDropdownOpen(false); }}
                                 className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${selectedBranch === branch
                                   ? "bg-[#C5A059]/10 text-[#C5A059] font-bold"
-                                  : "text-white/60 hover:text-white hover:bg-black/5"
+                                  : "text-white/60 hover:text-white hover:bg-white/5"
                                   }`}
                               >
                                 {branch}
@@ -2162,15 +2162,15 @@ export default function AdminDashboard() {
                     </div>
                   )}
                 </div>
-                <p className="text-gray-400 text-sm mt-2 font-medium">Enterprise Performance Overview</p>
+                <p className="text-white/30 text-sm mt-2 font-medium">Enterprise Performance Overview</p>
               </div>
               <div className="flex items-center gap-4">
                 <div className="relative">
                   <button
                     onClick={() => setIsNotificationOpen(!isNotificationOpen)}
-                    className="p-3 bg-black/5 hover:bg-black/5 rounded-2xl text-gray-900 transition-all relative group"
+                    className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl text-white transition-all relative group"
                   >
-                    <MessageSquare className="w-5 h-5 text-gray-900/60 group-hover:text-[#C5A059]" strokeWidth={1.5} />
+                    <MessageSquare className="w-5 h-5 text-white/60 group-hover:text-[#C5A059]" />
                     {notifications.filter(n => !n.read).length > 0 && (
                       <span className="absolute top-2 right-2 w-2 h-2 bg-[#C5A059] rounded-full border-2 border-[#0a0a0a]" />
                     )}
@@ -2188,27 +2188,27 @@ export default function AdminDashboard() {
 
                 <button
                   onClick={() => setIsWaitlistOpen(true)}
-                  className="flex items-center gap-3 px-6 py-3 bg-black/5 hover:bg-black/5 border border-black/10 rounded-2xl text-gray-900 transition-all group"
+                  className="flex items-center gap-3 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-white transition-all group"
                 >
-                  <Users className="w-5 h-5 text-gray-500 group-hover:text-[#C5A059]" strokeWidth={1.5} />
+                  <Users className="w-5 h-5 text-white/40 group-hover:text-[#C5A059]" />
                   <span className="text-[11px] font-bold uppercase tracking-widest">Waitlist</span>
                   <span className="bg-[#C5A059]/20 text-[#C5A059] px-2 py-0.5 rounded-lg text-[10px] font-black">2</span>
                 </button>
 
                 <button
                   onClick={() => setMultiBranchMode(!multiBranchMode)}
-                  className="flex items-center gap-3 px-6 py-3 bg-black/5 hover:bg-black/5 border border-black/10 rounded-2xl text-gray-900 transition-all group"
+                  className="flex items-center gap-3 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-white transition-all group"
                 >
-                  <Building className="w-5 h-5 text-gray-500 group-hover:text-[#C5A059]" strokeWidth={1.5} />
+                  <Building className="w-5 h-5 text-white/40 group-hover:text-[#C5A059]" />
                   <span className="text-[11px] font-bold uppercase tracking-widest">{multiBranchMode ? "Multi-Clinic: ON" : "HQ Dashboard"}</span>
                 </button>
 
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-2 px-4 py-3 bg-black/5 hover:bg-red-500/20 rounded-2xl text-gray-900 transition-all group"
+                  className="flex items-center gap-2 px-4 py-3 bg-white/5 hover:bg-red-500/20 rounded-2xl text-white transition-all group"
                 >
-                  <LogOut className="w-5 h-5 text-gray-400 group-hover:text-red-500" strokeWidth={1.5} />
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-hover:text-red-500">Sign Out</span>
+                  <LogOut className="w-5 h-5 text-white/30 group-hover:text-red-500" />
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-white/30 group-hover:text-red-500">Sign Out</span>
                 </button>
               </div>
             </div>
@@ -2219,17 +2219,17 @@ export default function AdminDashboard() {
                   key={tab}
                   onClick={() => setActiveTab(tab as any)}
                   className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 border ${activeTab === tab
-                    ? "bg-white text-gray-900 border-black/5 shadow-[0_10px_30px_rgba(0,0,0,0.03)]"
-                    : "bg-black/5 text-gray-500 border-transparent hover:bg-black/10 hover:text-gray-900"
+                    ? "bg-white text-black border-white shadow-[0_8px_20px_-8px_rgba(0,0,0,0.5)]"
+                    : "bg-white/5 text-white/40 border-white/10 hover:bg-white/10 hover:text-white"
                     }`}
                 >
-                  {tab === "leads" ? <List className="w-3.5 h-3.5" strokeWidth={1.5} /> :
-                    tab === "analytics" ? <BarChart2 className="w-3.5 h-3.5" strokeWidth={1.5} /> :
-                      tab === "staff" ? <UserCheck className="w-3.5 h-3.5" strokeWidth={1.5} /> :
-                        tab === "inbox" ? <MessageSquare className="w-3.5 h-3.5" strokeWidth={1.5} /> :
-                          tab === "team" ? <Users className="w-3.5 h-3.5" strokeWidth={1.5} /> :
-                            tab === "treatments" ? <Palette className="w-3.5 h-3.5" strokeWidth={1.5} /> :
-                              <Settings className="w-3.5 h-3.5" strokeWidth={1.5} />}
+                  {tab === "leads" ? <List className="w-3.5 h-3.5" /> :
+                    tab === "analytics" ? <BarChart2 className="w-3.5 h-3.5" /> :
+                      tab === "staff" ? <UserCheck className="w-3.5 h-3.5" /> :
+                        tab === "inbox" ? <MessageSquare className="w-3.5 h-3.5" /> :
+                          tab === "team" ? <Users className="w-3.5 h-3.5" /> :
+                            tab === "treatments" ? <Palette className="w-3.5 h-3.5" /> :
+                              <Settings className="w-3.5 h-3.5" />}
                   {tab === "leads" ? "All Leads" :
                     tab === "analytics" ? "Analytics" :
                       tab === "staff" ? "Staff Performance" :
@@ -2243,10 +2243,10 @@ export default function AdminDashboard() {
             </div>
 
             {!isAdmin && activeTab !== "leads" && !["inbox", "team"].includes(activeTab) && (
-              <div className="flex flex-col items-center justify-center p-20 bg-white/[0.02] border border-black/5 rounded-[40px] mb-8">
-                <ShieldCheck className="w-12 h-12 text-gray-400 mb-4" strokeWidth={1.5} />
-                <h3 className="text-xl font-display font-medium text-gray-900/60">Access Restricted</h3>
-                <p className="text-gray-400 text-sm mt-2">Administrative privileges required for this section.</p>
+              <div className="flex flex-col items-center justify-center p-20 bg-white/[0.02] border border-white/5 rounded-[40px] mb-8">
+                <ShieldCheck className="w-12 h-12 text-white/20 mb-4" />
+                <h3 className="text-xl font-display font-medium text-white/60">Access Restricted</h3>
+                <p className="text-white/30 text-sm mt-2">Administrative privileges required for this section.</p>
               </div>
             )}
 
@@ -2256,11 +2256,11 @@ export default function AdminDashboard() {
                 animate={{ opacity: 1, y: 0 }}
                 className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8"
               >
-                <div className="lg:col-span-2 bg-white border border-black/5 rounded-[32px] p-6 shadow-xl relative overflow-hidden">
+                <div className="lg:col-span-2 bg-[#0a0a0a] border border-white/5 rounded-[32px] p-6 shadow-xl relative overflow-hidden">
                   <div className="flex justify-between items-start mb-6">
                     <div>
-                      <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 flex items-center gap-2 mb-1">
-                        <TrendingUp className="w-4 h-4 text-[#C5A059]" strokeWidth={1.5} /> {multiBranchMode ? selectedBranch : "Clinic"} Revenue
+                      <h3 className="text-xs font-bold uppercase tracking-widest text-white/40 flex items-center gap-2 mb-1">
+                        <TrendingUp className="w-4 h-4 text-[#C5A059]" /> {multiBranchMode ? selectedBranch : "Clinic"} Revenue
                       </h3>
                       <p className="text-3xl font-display font-bold">£{dynamicRevenueData.reduce((sum, w) => sum + w.Implants + w.Invisalign + w.Veneers, 0).toLocaleString()}</p>
                       <p className="text-xs text-[#C5A059] font-bold tracking-widest mt-1">Secured Revenue for period</p>
@@ -2270,19 +2270,19 @@ export default function AdminDashboard() {
                       <select
                         value={analyticsMonth}
                         onChange={(e) => setAnalyticsMonth(parseInt(e.target.value))}
-                        className="bg-black/5 border border-black/10 rounded-xl px-3 py-1.5 text-[10px] font-bold text-gray-900 uppercase tracking-widest focus:outline-none focus:border-[#C5A059] transition-colors cursor-pointer"
+                        className="bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-[10px] font-bold text-white uppercase tracking-widest focus:outline-none focus:border-[#C5A059] transition-colors cursor-pointer"
                       >
                         {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].map((m, i) => (
-                          <option key={m} value={i} className="bg-white">{m}</option>
+                          <option key={m} value={i} className="bg-[#0f0f0f]">{m}</option>
                         ))}
                       </select>
                       <select
                         value={analyticsYear}
                         onChange={(e) => setAnalyticsYear(parseInt(e.target.value))}
-                        className="bg-black/5 border border-black/10 rounded-xl px-3 py-1.5 text-[10px] font-bold text-gray-900 uppercase tracking-widest focus:outline-none focus:border-[#C5A059] transition-colors cursor-pointer"
+                        className="bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-[10px] font-bold text-white uppercase tracking-widest focus:outline-none focus:border-[#C5A059] transition-colors cursor-pointer"
                       >
                         {[2024, 2025, 2026].map(y => (
-                          <option key={y} value={y} className="bg-white">{y}</option>
+                          <option key={y} value={y} className="bg-[#0f0f0f]">{y}</option>
                         ))}
                       </select>
                     </div>
@@ -2306,8 +2306,8 @@ export default function AdminDashboard() {
                   </div>
                 </div>
 
-                <div className="bg-white border border-black/5 rounded-[32px] p-6 shadow-xl flex flex-col items-center justify-center">
-                  <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-6 w-full text-left">Treatment Distribution</h3>
+                <div className="bg-[#0a0a0a] border border-white/5 rounded-[32px] p-6 shadow-xl flex flex-col items-center justify-center">
+                  <h3 className="text-xs font-bold uppercase tracking-widest text-white/40 mb-6 w-full text-left">Treatment Distribution</h3>
                   <div className="h-48 w-full">
                     <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
@@ -2345,9 +2345,9 @@ export default function AdminDashboard() {
               {todaysLeads.length > 0 && (
                 <div className="mb-10">
                   <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-gray-500 flex items-center gap-2">
-                      <Calendar className="w-3.5 h-3.5 text-purple-400" strokeWidth={1.5} /> Today's Schedule
-                      <span className="bg-transparent text-purple-400 px-2 py-0.5 rounded-lg text-[9px] font-black">{todaysLeads.length}</span>
+                    <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-white/40 flex items-center gap-2">
+                      <Calendar className="w-3.5 h-3.5 text-purple-400" /> Today's Schedule
+                      <span className="bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded-lg text-[9px] font-black">{todaysLeads.length}</span>
                     </h2>
                   </div>
                   <div className="flex gap-4 overflow-x-auto pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
@@ -2356,18 +2356,18 @@ export default function AdminDashboard() {
                         key={lead.id}
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className="min-w-[280px] bg-white/[0.03] border border-black/10 p-5 rounded-3xl backdrop-blur-md relative overflow-hidden group hover:border-purple-500/30 transition-all"
+                        className="min-w-[280px] bg-white/[0.03] border border-white/10 p-5 rounded-3xl backdrop-blur-md relative overflow-hidden group hover:border-purple-500/30 transition-all"
                       >
-                        <div className="absolute top-0 right-0 w-24 h-24 bg-transparent blur-2xl rounded-full -mr-12 -mt-12 group-hover:bg-transparent transition-colors"></div>
+                        <div className="absolute top-0 right-0 w-24 h-24 bg-purple-500/5 blur-2xl rounded-full -mr-12 -mt-12 group-hover:bg-purple-500/10 transition-colors"></div>
 
                         <div className="flex justify-between items-start mb-4 relative z-10">
                           <div>
-                            <h4 className="font-bold text-gray-900 text-base mb-1">{lead.name}</h4>
+                            <h4 className="font-bold text-white text-base mb-1">{lead.name}</h4>
                             <div className="flex items-center gap-2">
-                              <span className="text-[10px] font-bold text-purple-400 uppercase tracking-widest bg-transparent px-2 py-0.5 rounded-md">
+                              <span className="text-[10px] font-bold text-purple-400 uppercase tracking-widest bg-purple-500/10 px-2 py-0.5 rounded-md">
                                 {new Date(lead.appointment_date!).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
                               </span>
-                              <span className="text-[10px] text-gray-500 font-medium">{lead.service}</span>
+                              <span className="text-[10px] text-white/40 font-medium">{lead.service}</span>
                             </div>
                           </div>
                         </div>
@@ -2375,15 +2375,15 @@ export default function AdminDashboard() {
                         <div className="flex gap-2 relative z-10">
                           <button
                             onClick={() => updateStatus(lead.id, "Visited")}
-                            className="flex-1 py-2.5 bg-white text-gray-900 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-black/5 border border-black/10 transition-colors"
+                            className="flex-1 py-2.5 bg-white text-black rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-200 transition-colors"
                           >
                             Check In
                           </button>
                           <button
                             onClick={() => setSelectedLead(lead)}
-                            className="p-2.5 bg-black/5 hover:bg-black/5 rounded-xl text-gray-900/60 transition-colors"
+                            className="p-2.5 bg-white/5 hover:bg-white/10 rounded-xl text-white/60 transition-colors"
                           >
-                            <UserCheck className="w-4 h-4" strokeWidth={1.5} />
+                            <UserCheck className="w-4 h-4" />
                           </button>
                         </div>
                       </motion.div>
@@ -2393,16 +2393,16 @@ export default function AdminDashboard() {
               )}
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="md:col-span-2 bg-gradient-to-r from-green-500/10 to-transparent border border-black/10 rounded-3xl p-6 md:p-8 flex flex-col justify-center relative overflow-hidden group">
+                <div className="md:col-span-2 bg-gradient-to-r from-green-500/10 to-transparent border border-white/10 rounded-3xl p-6 md:p-8 flex flex-col justify-center relative overflow-hidden group">
                   <div className="absolute -right-20 -top-20 w-64 h-64 bg-[#87A96B]/10 blur-[80px] rounded-full pointer-events-none group-hover:bg-[#87A96B]/20 transition-colors duration-700" />
                   <div className="relative z-10 flex flex-col md:flex-row gap-8 justify-between">
                     <div className="flex flex-col flex-1">
-                      <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 mb-2 flex items-center gap-2">
-                        <Check className="w-3.5 h-3.5 text-[#87A96B]" strokeWidth={1.5} /> This Month's Secured Revenue
+                      <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/50 mb-2 flex items-center gap-2">
+                        <Check className="w-3.5 h-3.5 text-[#87A96B]" /> This Month's Secured Revenue
                       </h3>
                       <div className="flex flex-col w-full">
                         <div className="flex items-end gap-4 mb-3">
-                          <p className="text-4xl md:text-6xl font-display font-bold text-gray-900 tracking-tighter">
+                          <p className="text-4xl md:text-6xl font-display font-bold text-white tracking-tighter">
                             £{monthlySecuredRevenue.toLocaleString()}
                           </p>
                           <div className="flex flex-col text-[10px] font-bold uppercase tracking-widest text-[#C5A059] mb-1.5 md:mb-2">
@@ -2414,7 +2414,7 @@ export default function AdminDashboard() {
                         </div>
 
                         {/* Tailwind Progress Bar */}
-                        <div className="w-full bg-black/5 rounded-full h-2.5 overflow-hidden">
+                        <div className="w-full bg-white/10 rounded-full h-2.5 overflow-hidden">
                           <motion.div
                             initial={{ width: 0 }}
                             animate={{ width: `${Math.min((monthlySecuredRevenue / 50000) * 100, 100)}%` }}
@@ -2426,27 +2426,27 @@ export default function AdminDashboard() {
                     </div>
 
                     {/* Secondary metric for Pipeline (Unpaid) */}
-                    <div className="flex flex-col border-l border-black/10 pl-8 justify-center min-w-[200px]">
-                      <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 mb-2 flex items-center gap-2">
-                        <TrendingUp className="w-3.5 h-3.5 text-[#C5A059]" strokeWidth={1.5} /> This Month's Pipeline
+                    <div className="flex flex-col border-l border-white/10 pl-8 justify-center min-w-[200px]">
+                      <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 mb-2 flex items-center gap-2">
+                        <TrendingUp className="w-3.5 h-3.5 text-[#C5A059]" /> This Month's Pipeline
                       </h3>
-                      <p className="text-2xl font-display font-bold text-gray-900/80 tracking-tighter mb-1">
+                      <p className="text-2xl font-display font-bold text-white/80 tracking-tighter mb-1">
                         £{monthlyPipelineRemaining.toLocaleString()}
                       </p>
-                      <p className="text-[10px] text-gray-500 leading-tight">Potential value awaiting closure this month.</p>
+                      <p className="text-[10px] text-white/40 leading-tight">Potential value awaiting closure this month.</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="card-light p-6 md:p-8 flex flex-col justify-center">
+                <div className="card-premium p-6 md:p-8 flex flex-col justify-center">
                   <h3 className="text-label mb-3 text-center">
                     Quick Action
                   </h3>
                   <button
                     onClick={() => setActiveTab("analytics")}
-                    className="w-full py-4 px-6 bg-black/5 hover:bg-black/5 border border-black/5 rounded-2xl flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-gray-900 transition-all shadow-sm group"
+                    className="w-full py-4 px-6 bg-white/5 hover:bg-white/10 border border-white/5 rounded-2xl flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-white transition-all shadow-sm group"
                   >
-                    <TrendingUp className="w-4 h-4 text-[#C5A059] group-hover:scale-110 transition-transform" strokeWidth={1.5} /> Deep Analytics
+                    <TrendingUp className="w-4 h-4 text-[#C5A059] group-hover:scale-110 transition-transform" /> Deep Analytics
                   </button>
                 </div>
               </div>
@@ -2456,7 +2456,7 @@ export default function AdminDashboard() {
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
                 {[
                   { label: "Confirmed Leads", value: confirmedLeads, icon: Users, color: "text-[#C5A059]", bg: "bg-[#C5A059]/10" },
-                  { label: "Ghost Patients", value: ghostPatients, icon: MoreHorizontal, color: "text-gray-500", bg: "bg-black/5", subValue: ghostLoss > 0 ? `-£${ghostLoss.toLocaleString()}` : "" },
+                  { label: "Ghost Patients", value: ghostPatients, icon: MoreHorizontal, color: "text-white/40", bg: "bg-white/5", subValue: ghostLoss > 0 ? `-£${ghostLoss.toLocaleString()}` : "" },
                   { label: "Awaiting Response", value: newLeads, icon: TrendingUp, color: "text-[#87A96B]", bg: "bg-[#87A96B]/10" },
                   { label: "Est. Pipeline Value", value: `£${pipelineValue.toLocaleString()}`, icon: TrendingUp, color: "text-[#C5A059]", bg: "bg-[#C5A059]/10" },
                 ].map((stat, i) => (
@@ -2465,7 +2465,7 @@ export default function AdminDashboard() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.1 }}
-                    className="card-light p-7 relative"
+                    className="card-premium p-7 relative"
                   >
                     <div className="flex justify-between items-start mb-5">
                       <div className={`p-3 ${stat.bg} rounded-2xl`}>
@@ -2484,15 +2484,15 @@ export default function AdminDashboard() {
               {/* Lead Source — Donut Chart + Insight */}
               <div className="grid lg:grid-cols-3 gap-6 mb-10">
                 {/* Donut Chart Card */}
-                <div className="card-light p-8">
+                <div className="card-premium p-8">
                   <h3 className="text-label mb-8 flex items-center gap-2">
-                    <Globe className="w-4 h-4" strokeWidth={1.5} /> Leads by Source
+                    <Globe className="w-4 h-4" /> Leads by Source
                   </h3>
                   <DonutChart segments={sourceSegments} total={totalLeads} totalValue={pipelineValue + allTimeRevenue} />
                 </div>
 
                 {/* Insight Card */}
-                <div className="lg:col-span-2 card-light p-8 flex flex-col justify-between overflow-hidden relative">
+                <div className="lg:col-span-2 card-premium p-8 flex flex-col justify-between overflow-hidden relative">
                   <div className="absolute top-0 right-0 w-64 h-64 bg-[#C5A059]/5 blur-3xl -mr-32 -mt-32 rounded-full" />
                   <div>
                     <p className="text-label mb-3">Marketing Intelligence</p>
@@ -2503,7 +2503,7 @@ export default function AdminDashboard() {
                         "No leads yet"
                       )}
                     </h3>
-                    <p className={`text-sm leading-relaxed max-w-sm ${topSource?.label === "Direct Traffic" && topSource.count === totalLeads && totalLeads > 0 ? "text-red-400 font-medium" : "text-gray-500"}`}>
+                    <p className={`text-sm leading-relaxed max-w-sm ${topSource?.label === "Direct Traffic" && topSource.count === totalLeads && totalLeads > 0 ? "text-red-400 font-medium" : "text-white/50"}`}>
                       {totalLeads > 0
                         ? (topSource?.label === "Direct Traffic" && topSource.count === totalLeads ? "Warning: 100% Reliance on Direct Traffic. You are missing £15,000+ potential revenue from SEO/Ads." : topSourceTip[topSource?.label || ""] ?? "Keep growing your marketing channels.")
                         : "Lead source insights will appear once you receive your first consultation requests."}
@@ -2513,9 +2513,9 @@ export default function AdminDashboard() {
                   {/* Mini stats row */}
                   <div className="grid grid-cols-3 gap-4 mt-8">
                     {sourceSegments.map(seg => (
-                      <div key={seg.label} className="bg-black/5 rounded-2xl p-4 text-center">
-                        <div className="text-2xl font-bold text-gray-900">{seg.count}</div>
-                        <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-1 leading-tight">{seg.label}</div>
+                      <div key={seg.label} className="bg-white/5 rounded-2xl p-4 text-center">
+                        <div className="text-2xl font-bold text-white">{seg.count}</div>
+                        <div className="text-[10px] text-white/30 font-bold uppercase tracking-wider mt-1 leading-tight">{seg.label}</div>
                       </div>
                     ))}
                   </div>
@@ -2536,32 +2536,32 @@ export default function AdminDashboard() {
                 <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3 w-full md:w-auto">
                   {/* Search Bar */}
                   <div className="relative flex-1 md:w-64">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
                     <input
                       type="text"
                       placeholder="Search name, treatment..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full bg-black/5 border border-black/10 rounded-2xl py-2.5 pl-11 pr-4 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all"
+                      className="w-full bg-white/5 border border-white/10 rounded-2xl py-2.5 pl-11 pr-4 text-sm text-white placeholder:text-white/20 focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all"
                     />
                   </div>
 
                   {/* Date Picker */}
                   <div className="relative flex items-center gap-2">
                     <div className="relative">
-                      <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                      <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 pointer-events-none" />
                       <input
                         type="date"
                         value={selectedDate}
                         onChange={(e) => setSelectedDate(e.target.value)}
-                        className="bg-black/5 border border-black/10 rounded-2xl py-2.5 pl-11 pr-10 text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all appearance-none cursor-pointer [color-scheme:dark]"
+                        className="bg-white/5 border border-white/10 rounded-2xl py-2.5 pl-11 pr-10 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all appearance-none cursor-pointer [color-scheme:dark]"
                       />
                       {selectedDate && (
                         <button
                           onClick={() => setSelectedDate("")}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-black/5 rounded-full transition-colors"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-white/10 rounded-full transition-colors"
                         >
-                          <X className="w-3.5 h-3.5 text-gray-500" />
+                          <X className="w-3.5 h-3.5 text-white/40" />
                         </button>
                       )}
                     </div>
@@ -2571,9 +2571,9 @@ export default function AdminDashboard() {
 
               {/* Kanban Board */}
               <div className="flex justify-between items-center mb-6 mt-12">
-                <h2 className="text-xl font-sans font-bold tracking-[-0.02em] text-gray-900 flex items-center gap-3">
+                <h2 className="text-xl font-sans font-bold tracking-[-0.02em] text-white flex items-center gap-3">
                   Board
-                  <span className="bg-white/[0.05] border border-black/10 px-2.5 py-1 rounded-lg text-[11px] font-semibold text-gray-500">{totalLeads}</span>
+                  <span className="bg-white/[0.05] border border-white/10 px-2.5 py-1 rounded-lg text-[11px] font-semibold text-white/50">{totalLeads}</span>
                 </h2>
               </div>
 
@@ -2643,8 +2643,8 @@ export default function AdminDashboard() {
                 )}
               </div>
 
-              <div ref={observerTarget} className="h-10 w-full flex items-center justify-center text-gray-500 text-[10px] uppercase font-bold tracking-widest mt-4">
-                {isFetchingMore ? <Loader2 className="w-4 h-4 animate-spin text-gray-900/60" strokeWidth={1.5} /> : hasMore ? "" : "Last Patient Reached"}
+              <div ref={observerTarget} className="h-10 w-full flex items-center justify-center text-white/40 text-[10px] uppercase font-bold tracking-widest mt-4">
+                {isFetchingMore ? <Loader2 className="w-4 h-4 animate-spin text-white/60" /> : hasMore ? "" : "Last Patient Reached"}
               </div>
             </>)}
 
@@ -2657,51 +2657,51 @@ export default function AdminDashboard() {
               >
                 {/* Clinic Profile Section */}
                 <div className="lg:col-span-5 space-y-6">
-                  <div className="bg-white border border-black/10 rounded-3xl p-8">
+                  <div className="bg-[#0f0f0f] border border-white/10 rounded-3xl p-8">
                     <div className="flex items-center gap-4 mb-8">
                       <div className="p-3 bg-[#C5A059]/10 rounded-2xl">
-                        <Building className="w-6 h-6 text-[#C5A059]" strokeWidth={1.5} />
+                        <Building className="w-6 h-6 text-[#C5A059]" />
                       </div>
                       <div>
-                        <h2 className="text-xl font-display font-bold text-gray-900">Clinic Profile</h2>
-                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-0.5">Core SaaS Identity</p>
+                        <h2 className="text-xl font-display font-bold text-white">Clinic Profile</h2>
+                        <p className="text-[10px] text-white/30 font-bold uppercase tracking-widest mt-0.5">Core SaaS Identity</p>
                       </div>
                     </div>
 
                     <div className="space-y-5">
                       <div className="space-y-2">
-                        <label className="text-[10px] font-bold uppercase tracking-widest text-gray-500 ml-1">Practice Name</label>
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Practice Name</label>
                         <input
                           type="text"
                           value={clinic?.name || ""}
                           onChange={(e) => setClinic({ ...clinic, name: e.target.value })}
-                          className="w-full bg-black/5 border border-black/10 rounded-2xl py-4 px-6 text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all font-medium"
+                          className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all font-medium"
                           placeholder="e.g. London Smile Dental"
                         />
                       </div>
 
                       <div className="space-y-2">
-                        <label className="text-[10px] font-bold uppercase tracking-widest text-gray-500 ml-1">Clinic Slug (URL Key)</label>
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Clinic Slug (URL Key)</label>
                         <input
                           type="text"
                           value={clinic?.slug || ""}
                           readOnly
-                          className="w-full bg-black/5 border border-black/10 rounded-2xl py-4 px-6 text-sm text-gray-400 cursor-not-allowed font-medium"
+                          className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white/30 cursor-not-allowed font-medium"
                         />
                       </div>
 
                       <div className="space-y-2">
-                        <label className="text-[10px] font-bold uppercase tracking-widest text-gray-500 ml-1">Practice Logo URL</label>
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Practice Logo URL</label>
                         <div className="flex gap-4">
                           <input
                             type="text"
                             value={clinic?.logo_url || ""}
                             onChange={(e) => setClinic({ ...clinic, logo_url: e.target.value })}
-                            className="flex-1 bg-black/5 border border-black/10 rounded-2xl py-4 px-6 text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all font-medium"
+                            className="flex-1 bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all font-medium"
                             placeholder="https://..."
                           />
                           {clinic?.logo_url && (
-                            <div className="w-14 h-14 bg-black/5 border border-black/10 rounded-xl flex items-center justify-center p-2">
+                            <div className="w-14 h-14 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center p-2">
                               <img src={clinic.logo_url} alt="Logo Preview" className="max-h-full max-w-full object-contain" />
                             </div>
                           )}
@@ -2709,19 +2709,19 @@ export default function AdminDashboard() {
                       </div>
 
                       <div className="space-y-2">
-                        <label className="text-[10px] font-bold uppercase tracking-widest text-gray-500 ml-1">Primary Brand Color</label>
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Primary Brand Color</label>
                         <div className="flex gap-4">
                           <input
                             type="color"
                             value={clinic?.brand_color || "#1a1a2e"}
                             onChange={(e) => setClinic({ ...clinic, brand_color: e.target.value })}
-                            className="w-14 h-14 bg-black/5 border border-black/10 rounded-xl cursor-pointer p-1"
+                            className="w-14 h-14 bg-white/5 border border-white/10 rounded-xl cursor-pointer p-1"
                           />
                           <input
                             type="text"
                             value={clinic?.brand_color || ""}
                             onChange={(e) => setClinic({ ...clinic, brand_color: e.target.value })}
-                            className="flex-1 bg-black/5 border border-black/10 rounded-2xl py-4 px-6 text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all font-medium"
+                            className="flex-1 bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all font-medium"
                             placeholder="#000000"
                           />
                         </div>
@@ -2729,37 +2729,37 @@ export default function AdminDashboard() {
 
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <label className="text-[10px] font-bold uppercase tracking-widest text-gray-500 ml-1">Contact Email</label>
+                          <label className="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Contact Email</label>
                           <input
                             type="text"
                             value={clinic?.email || ""}
                             onChange={(e) => setClinic({ ...clinic, email: e.target.value })}
-                            className="w-full bg-black/5 border border-black/10 rounded-2xl py-4 px-6 text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all font-medium"
+                            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all font-medium"
                           />
                         </div>
                         <div className="space-y-2">
-                          <label className="text-[10px] font-bold uppercase tracking-widest text-gray-500 ml-1">Phone Number</label>
+                          <label className="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Phone Number</label>
                           <input
                             type="text"
                             value={clinic?.phone || ""}
                             onChange={(e) => setClinic({ ...clinic, phone: e.target.value })}
-                            className="w-full bg-black/5 border border-black/10 rounded-2xl py-4 px-6 text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all font-medium"
+                            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all font-medium"
                           />
                         </div>
                       </div>
 
                       {/* Financing Settings */}
-                      <div className="pt-6 border-t border-black/5 space-y-4">
+                      <div className="pt-6 border-t border-white/5 space-y-4">
                         <div className="flex items-center justify-between">
                           <div>
-                            <h4 className="text-sm font-bold text-gray-900">Financing Offers</h4>
-                            <p className="text-[10px] text-gray-500 uppercase tracking-widest mt-0.5">Show 0% APR on Website</p>
+                            <h4 className="text-sm font-bold text-white">Financing Offers</h4>
+                            <p className="text-[10px] text-white/40 uppercase tracking-widest mt-0.5">Show 0% APR on Website</p>
                           </div>
                           <div className="flex items-center gap-3">
-                            <span className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">{clinic?.has_financing ? 'ENABLED' : 'DISABLED'}</span>
+                            <span className="text-[9px] font-bold text-white/30 uppercase tracking-tighter">{clinic?.has_financing ? 'ENABLED' : 'DISABLED'}</span>
                             <button
                               onClick={() => setClinic({ ...clinic, has_financing: !clinic.has_financing })}
-                              className={`w-12 h-6 rounded-full transition-all relative ${clinic?.has_financing ? 'bg-[#C5A059]' : 'bg-black/5'}`}
+                              className={`w-12 h-6 rounded-full transition-all relative ${clinic?.has_financing ? 'bg-[#C5A059]' : 'bg-white/10'}`}
                             >
                               <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${clinic?.has_financing ? 'left-7' : 'left-1'}`} />
                             </button>
@@ -2769,7 +2769,7 @@ export default function AdminDashboard() {
                         {clinic?.has_financing && (
                           <div className="space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
                             <div className="flex justify-between items-center">
-                              <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Max Interest-Free Months</label>
+                              <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Max Interest-Free Months</label>
                               <span className="text-sm font-display font-bold text-[#C5A059]">
                                 {clinic?.max_financing_months || 24} Months
                               </span>
@@ -2781,9 +2781,9 @@ export default function AdminDashboard() {
                               step="6"
                               value={clinic?.max_financing_months || 24}
                               onChange={(e) => setClinic({ ...clinic, max_financing_months: parseInt(e.target.value) })}
-                              className="w-full accent-[#C5A059] h-1 bg-black/5 rounded-lg appearance-none cursor-pointer"
+                              className="w-full accent-[#C5A059] h-1 bg-white/10 rounded-lg appearance-none cursor-pointer"
                             />
-                            <div className="flex justify-between text-[8px] font-bold text-gray-400 uppercase tracking-widest">
+                            <div className="flex justify-between text-[8px] font-bold text-white/20 uppercase tracking-widest">
                               <span>6m</span>
                               <span>60m</span>
                             </div>
@@ -2799,9 +2799,9 @@ export default function AdminDashboard() {
                             setIsSaving(false);
                           }}
                           disabled={isSaving}
-                          className="w-full py-4 bg-white text-gray-900 font-bold uppercase tracking-widest text-[10px] rounded-2xl hover:bg-black/5 border border-black/10 transition-all flex items-center justify-center gap-2"
+                          className="w-full py-4 bg-white text-black font-bold uppercase tracking-widest text-[10px] rounded-2xl hover:bg-gray-200 transition-all flex items-center justify-center gap-2"
                         >
-                          {isSaving ? <RefreshCw className="w-4 h-4 animate-spin" strokeWidth={1.5} /> : <Save className="w-4 h-4" strokeWidth={1.5} />}
+                          {isSaving ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                           Save Profile Changes
                         </button>
                       </div>
@@ -2815,36 +2815,36 @@ export default function AdminDashboard() {
                     </div>
                   )}
 
-                  <div className="lg:col-span-5 bg-gradient-to-br from-[#C5A059]/5 to-white/0 border border-black/10 rounded-3xl p-8 relative overflow-hidden group">
+                  <div className="lg:col-span-5 bg-gradient-to-br from-[#C5A059]/5 to-white/0 border border-white/10 rounded-3xl p-8 relative overflow-hidden group">
                     <Zap className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 text-blue-500/5 -rotate-12 transition-transform group-hover:scale-110" />
-                    <h3 className="text-sm font-bold text-gray-900 mb-2 relative z-10">Pro SaaS Mode</h3>
-                    <p className="text-xs text-gray-500 leading-relaxed max-w-[200px] relative z-10">Your branding is automatically synchronized across all Patient Presentation links generated by this clinic.</p>
+                    <h3 className="text-sm font-bold text-white mb-2 relative z-10">Pro SaaS Mode</h3>
+                    <p className="text-xs text-white/50 leading-relaxed max-w-[200px] relative z-10">Your branding is automatically synchronized across all Patient Presentation links generated by this clinic.</p>
                   </div>
                 </div>
 
                 {/* Treatment Editor Section */}
                 <div className="lg:col-span-7">
-                  <div className="bg-white border border-black/10 rounded-3xl p-8 h-full">
+                  <div className="bg-[#0f0f0f] border border-white/10 rounded-3xl p-8 h-full">
                     <div className="flex justify-between items-start mb-3">
                       <div className="flex items-center gap-4">
                         <div className="p-3 bg-[#C5A059]/10 rounded-2xl">
-                          <Sparkles className="w-6 h-6 text-[#C5A059]" strokeWidth={1.5} />
+                          <Sparkles className="w-6 h-6 text-[#C5A059]" />
                         </div>
                         <div>
-                          <h2 className="text-xl font-display font-bold text-gray-900">Treatments & Assets</h2>
-                          <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-0.5">Dynamic Pricing & Marketing</p>
+                          <h2 className="text-xl font-display font-bold text-white">Treatments & Assets</h2>
+                          <p className="text-[10px] text-white/30 font-bold uppercase tracking-widest mt-0.5">Dynamic Pricing & Marketing</p>
                         </div>
                       </div>
                     </div>
 
                     <div className="space-y-4">
                       {treatments.map((t, idx) => (
-                        <div key={t.id} className="p-6 bg-white/[0.03] border border-black/10 rounded-3xl hover:bg-white/[0.05] transition-all group">
+                        <div key={t.id} className="p-6 bg-white/[0.03] border border-white/10 rounded-3xl hover:bg-white/[0.05] transition-all group">
                           <div className="flex gap-6">
-                            <div className="w-32 h-32 rounded-2xl overflow-hidden border border-black/10 bg-black flex-shrink-0 relative group">
+                            <div className="w-32 h-32 rounded-2xl overflow-hidden border border-white/10 bg-black flex-shrink-0 relative group">
                               <img src={t.image_url} alt={t.treatment_name} className="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-500" />
                               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer">
-                                <Camera className="w-6 h-6 text-gray-900" strokeWidth={1.5} />
+                                <Camera className="w-6 h-6 text-white" />
                               </div>
                             </div>
 
@@ -2858,9 +2858,9 @@ export default function AdminDashboard() {
                                     newT[idx].service_name = e.target.value;
                                     setTreatments(newT);
                                   }}
-                                  className="bg-transparent border-none p-0 text-lg font-display font-bold text-gray-900 focus:outline-none focus:ring-0 w-full"
+                                  className="bg-transparent border-none p-0 text-lg font-display font-bold text-white focus:outline-none focus:ring-0 w-full"
                                 />
-                                <div className="flex items-center gap-2 bg-black/5 border border-black/10 rounded-xl px-3 py-1.5 focus-within:ring-2 focus-within:ring-[#C5A059]/50 transition-all">
+                                <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 focus-within:ring-2 focus-within:ring-[#C5A059]/50 transition-all">
                                   <span className="text-[#C5A059] font-bold text-xs uppercase">£</span>
                                   <input
                                     type="number"
@@ -2870,7 +2870,7 @@ export default function AdminDashboard() {
                                       newT[idx].price = Number(e.target.value);
                                       setTreatments(newT);
                                     }}
-                                    className="bg-transparent border-none p-0 text-lg font-display font-bold text-gray-900 focus:outline-none focus:ring-0 w-20 text-right"
+                                    className="bg-transparent border-none p-0 text-lg font-display font-bold text-white focus:outline-none focus:ring-0 w-20 text-right"
                                   />
                                 </div>
                               </div>
@@ -2884,7 +2884,7 @@ export default function AdminDashboard() {
                                   newT[idx].benefit_text = e.target.value;
                                   setTreatments(newT);
                                 }}
-                                className="w-full bg-black/5 border border-black/10 rounded-xl py-2 px-4 text-xs text-gray-500 focus:outline-none focus:ring-1 focus:ring-white/20 transition-all"
+                                className="w-full bg-white/5 border border-white/10 rounded-xl py-2 px-4 text-xs text-white/50 focus:outline-none focus:ring-1 focus:ring-white/20 transition-all"
                               />
 
                               <div className="flex justify-end pt-2">
@@ -2896,7 +2896,7 @@ export default function AdminDashboard() {
                                   }}
                                   className="px-4 py-2 bg-[#C5A059]/10 hover:bg-[#C5A059]/20 text-[#C5A059] rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all flex items-center gap-2"
                                 >
-                                  <Check className="w-3.5 h-3.5" strokeWidth={1.5} /> Sync Data
+                                  <Check className="w-3.5 h-3.5" /> Sync Data
                                 </button>
                               </div>
                             </div>
@@ -2904,8 +2904,8 @@ export default function AdminDashboard() {
                         </div>
                       ))}
 
-                      <button className="w-full py-6 border-2 border-dashed border-black/5 rounded-3xl hover:border-black/10 hover:bg-white/[0.02] transition-all flex flex-col items-center justify-center gap-2 text-gray-400 group">
-                        <Plus className="w-6 h-6 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
+                      <button className="w-full py-6 border-2 border-dashed border-white/5 rounded-3xl hover:border-white/20 hover:bg-white/[0.02] transition-all flex flex-col items-center justify-center gap-2 text-white/20 group">
+                        <Plus className="w-6 h-6 group-hover:scale-110 transition-transform" />
                         <span className="text-[10px] font-bold uppercase tracking-[0.3em]">Add Regional Treatment offering</span>
                       </button>
                     </div>
@@ -2922,30 +2922,30 @@ export default function AdminDashboard() {
                 className="grid lg:grid-cols-12 gap-6 h-[720px]"
               >
                 {/* Conversations List */}
-                <div className="lg:col-span-4 bg-white/[0.03] backdrop-blur-xl border border-black/10 rounded-[40px] overflow-hidden flex flex-col">
-                  <div className="p-8 border-b border-black/10">
-                    <h3 className="text-xl font-display font-bold text-gray-900 mb-2 uppercase tracking-tight">Messages</h3>
-                    <p className="text-gray-400 text-[10px] font-bold uppercase tracking-[0.2em]">Unified Channel Feed</p>
+                <div className="lg:col-span-4 bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[40px] overflow-hidden flex flex-col">
+                  <div className="p-8 border-b border-white/10">
+                    <h3 className="text-xl font-display font-bold text-white mb-2 uppercase tracking-tight">Messages</h3>
+                    <p className="text-white/30 text-[10px] font-bold uppercase tracking-[0.2em]">Unified Channel Feed</p>
                   </div>
                   <div className="flex-1 overflow-y-auto">
                     {mockChats.map((chat) => (
                       <button
                         key={chat.id}
                         onClick={() => setSelectedChat(chat.id)}
-                        className={`w-full p-6 flex gap-4 text-left border-b border-black/5 transition-all hover:bg-white/[0.05] ${selectedChat === chat.id ? 'bg-white/[0.08]' : ''}`}
+                        className={`w-full p-6 flex gap-4 text-left border-b border-white/5 transition-all hover:bg-white/[0.05] ${selectedChat === chat.id ? 'bg-white/[0.08]' : ''}`}
                       >
-                        <div className="w-12 h-12 rounded-2xl bg-black/5 flex items-center justify-center font-bold text-primary relative shrink-0">
+                        <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center font-bold text-primary relative shrink-0">
                           {chat.avatar}
-                          {chat.source === "Instagram" && <Instagram className="w-4 h-4 absolute -bottom-1 -right-1 text-pink-500 fill-pink-500 bg-black rounded-full p-0.5" strokeWidth={1.5} />}
-                          {chat.source === "Kakao" && <MessageCircle className="w-4 h-4 absolute -bottom-1 -right-1 text-yellow-500 fill-yellow-500 bg-black rounded-full p-0.5" strokeWidth={1.5} />}
-                          {chat.source === "Website" && <Globe className="w-4 h-4 absolute -bottom-1 -right-1 text-[#C5A059] fill-blue-400 bg-black rounded-full p-0.5" strokeWidth={1.5} />}
+                          {chat.source === "Instagram" && <Instagram className="w-4 h-4 absolute -bottom-1 -right-1 text-pink-500 fill-pink-500 bg-black rounded-full p-0.5" />}
+                          {chat.source === "Kakao" && <MessageCircle className="w-4 h-4 absolute -bottom-1 -right-1 text-yellow-500 fill-yellow-500 bg-black rounded-full p-0.5" />}
+                          {chat.source === "Website" && <Globe className="w-4 h-4 absolute -bottom-1 -right-1 text-[#C5A059] fill-blue-400 bg-black rounded-full p-0.5" />}
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex justify-between items-center mb-1">
-                            <span className="text-sm font-bold text-gray-900 uppercase tracking-tight">{chat.recipient}</span>
-                            <span className="text-[10px] text-gray-400 font-bold">{chat.time}</span>
+                            <span className="text-sm font-bold text-white uppercase tracking-tight">{chat.recipient}</span>
+                            <span className="text-[10px] text-white/20 font-bold">{chat.time}</span>
                           </div>
-                          <p className={`text-xs truncate ${chat.unread ? 'text-primary font-bold' : 'text-gray-500 font-medium'}`}>{chat.lastMsg}</p>
+                          <p className={`text-xs truncate ${chat.unread ? 'text-primary font-bold' : 'text-white/40 font-medium'}`}>{chat.lastMsg}</p>
                         </div>
                       </button>
                     ))}
@@ -2953,41 +2953,41 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Chat Window */}
-                <div className="lg:col-span-8 bg-white/[0.03] backdrop-blur-xl border border-black/10 rounded-[40px] overflow-hidden flex flex-col">
+                <div className="lg:col-span-8 bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[40px] overflow-hidden flex flex-col">
                   {selectedChat !== null ? (
                     <>
-                      <div className="p-8 border-b border-black/10 flex justify-between items-center">
+                      <div className="p-8 border-b border-white/10 flex justify-between items-center">
                         <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-2xl bg-black/5 flex items-center justify-center font-bold text-primary">
+                          <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center font-bold text-primary">
                             {mockChats[selectedChat!].avatar}
                           </div>
                           <div>
-                            <h4 className="text-lg font-display font-bold text-gray-900 uppercase tracking-tight">{mockChats[selectedChat!].recipient}</h4>
+                            <h4 className="text-lg font-display font-bold text-white uppercase tracking-tight">{mockChats[selectedChat!].recipient}</h4>
                             <div className="flex items-center gap-2">
                               <span className="w-2 h-2 rounded-full bg-[#87A96B] animate-pulse" />
-                              <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Active on {mockChats[selectedChat!].source}</span>
+                              <span className="text-[10px] text-white/30 font-bold uppercase tracking-widest">Active on {mockChats[selectedChat!].source}</span>
                             </div>
                           </div>
                         </div>
                         <div className="flex gap-2">
-                          <button className="p-3 bg-black/5 rounded-xl hover:bg-black/5 transition-colors"><MoreHorizontal className="w-5 h-5 text-gray-500" strokeWidth={1.5} /></button>
+                          <button className="p-3 bg-white/5 rounded-xl hover:bg-white/10 transition-colors"><MoreHorizontal className="w-5 h-5 text-white/40" /></button>
                         </div>
                       </div>
 
                       <div className="flex-1 overflow-y-auto p-8 space-y-6">
                         {mockChats[selectedChat!].messages.map((m, i) => (
                           <div key={i} className={`flex ${m.sender === 'staff' ? 'justify-end' : 'justify-start'}`}>
-                            <div className={`max-w-[70%] p-5 rounded-3xl text-sm font-medium leading-relaxed ${m.sender === 'staff' ? 'bg-primary text-black rounded-tr-none' : 'bg-black/5 text-white/80 rounded-tl-none border border-black/10'}`}>
+                            <div className={`max-w-[70%] p-5 rounded-3xl text-sm font-medium leading-relaxed ${m.sender === 'staff' ? 'bg-primary text-black rounded-tr-none' : 'bg-white/5 text-white/80 rounded-tl-none border border-white/10'}`}>
                               {m.text}
                             </div>
                           </div>
                         ))}
                       </div>
 
-                      <div className="p-8 border-t border-black/10 space-y-4">
+                      <div className="p-8 border-t border-white/10 space-y-4">
                         <div className="flex gap-2">
                           {["Price Enquiry", "Schedule Visit", "Preparation Help"].map(template => (
-                            <button key={template} className="text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-primary hover:bg-primary/10 border border-black/10 px-4 py-2 rounded-full transition-all">
+                            <button key={template} className="text-[10px] font-bold uppercase tracking-widest text-white/30 hover:text-primary hover:bg-primary/10 border border-white/10 px-4 py-2 rounded-full transition-all">
                               {template}
                             </button>
                           ))}
@@ -2998,18 +2998,18 @@ export default function AdminDashboard() {
                             value={replyText}
                             onChange={(e) => setReplyText(e.target.value)}
                             placeholder="Type your message here..."
-                            className="w-full bg-black/5 border border-black/10 rounded-2xl py-4 pl-6 pr-16 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all placeholder:text-gray-300"
+                            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-6 pr-16 text-sm text-white focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all placeholder:text-white/10"
                           />
                           <button className="absolute right-2 top-2 p-2 bg-primary text-black rounded-xl hover:brightness-110 active:scale-90 transition-all">
-                            <Send className="w-5 h-5" strokeWidth={1.5} />
+                            <Send className="w-5 h-5" />
                           </button>
                         </div>
                       </div>
                     </>
                   ) : (
                     <div className="flex-1 flex flex-col items-center justify-center text-center p-12 opacity-30">
-                      <MessageSquare className="w-16 h-16 mb-6" strokeWidth={1.5} />
-                      <p className="text-xl font-display font-bold uppercase tracking-tight text-gray-900 mb-2">Select a Conversation</p>
+                      <MessageSquare className="w-16 h-16 mb-6" />
+                      <p className="text-xl font-display font-bold uppercase tracking-tight text-white mb-2">Select a Conversation</p>
                       <p className="text-sm font-medium">All your patient communication in one unified source.</p>
                     </div>
                   )}
@@ -3024,17 +3024,17 @@ export default function AdminDashboard() {
               return (
                 <div className="space-y-8">
                   {/* Staff ROI Hero Chart */}
-                  <div className="bg-white border border-black/5 rounded-[40px] p-10 shadow-2xl relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 w-96 h-96 bg-transparent blur-[100px] rounded-full -mr-20 -mt-20 group-hover:bg-transparent transition-colors duration-700" />
+                  <div className="bg-[#0a0a0a] border border-white/5 rounded-[40px] p-10 shadow-2xl relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/5 blur-[100px] rounded-full -mr-20 -mt-20 group-hover:bg-blue-500/10 transition-colors duration-700" />
 
                     <div className="flex justify-between items-start mb-10 relative z-10">
                       <div>
-                        <h2 className="text-2xl font-display font-bold text-gray-900 mb-2 uppercase tracking-tight">Staff ROI Performance</h2>
-                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em]">Revenue & Conversion Efficiency by Team Member</p>
+                        <h2 className="text-2xl font-display font-bold text-white mb-2 uppercase tracking-tight">Staff ROI Performance</h2>
+                        <p className="text-[10px] text-white/30 font-bold uppercase tracking-[0.2em]">Revenue & Conversion Efficiency by Team Member</p>
                       </div>
-                      <div className="flex items-center gap-3 px-5 py-2.5 bg-black/5 border border-black/10 rounded-2xl">
-                        <TrendingUp className="w-4 h-4 text-green-400" strokeWidth={1.5} />
-                        <span className="text-[11px] font-bold text-gray-900/80 uppercase tracking-widest">Live ROI Feed</span>
+                      <div className="flex items-center gap-3 px-5 py-2.5 bg-white/5 border border-white/10 rounded-2xl">
+                        <TrendingUp className="w-4 h-4 text-green-400" />
+                        <span className="text-[11px] font-bold text-white/80 uppercase tracking-widest">Live ROI Feed</span>
                       </div>
                     </div>
 
@@ -3081,23 +3081,23 @@ export default function AdminDashboard() {
                     </div>
                   </div>
 
-                  <div className="bg-white border border-black/5 rounded-[40px] overflow-hidden shadow-2xl">
-                    <div className="p-10 border-b border-black/5 flex justify-between items-center">
+                  <div className="bg-[#0a0a0a] border border-white/5 rounded-[40px] overflow-hidden shadow-2xl">
+                    <div className="p-10 border-b border-white/5 flex justify-between items-center">
                       <div>
-                        <h2 className="text-xl font-display font-bold text-gray-900 uppercase tracking-tight">Performance Breakdown</h2>
-                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">Granular efficiency metrics</p>
+                        <h2 className="text-xl font-display font-bold text-white uppercase tracking-tight">Performance Breakdown</h2>
+                        <p className="text-[10px] text-white/30 font-bold uppercase tracking-widest mt-1">Granular efficiency metrics</p>
                       </div>
-                      <div className="p-3 bg-black/5 border border-black/10 rounded-2xl">
-                        <UserCheck className="w-5 h-5 text-gray-500" strokeWidth={1.5} />
+                      <div className="p-3 bg-white/5 border border-white/10 rounded-2xl">
+                        <UserCheck className="w-5 h-5 text-white/40" />
                       </div>
                     </div>
 
                     <div className="overflow-x-auto">
                       <table className="w-full text-left">
                         <thead>
-                          <tr className="border-b border-black/5 bg-white/[0.01]">
+                          <tr className="border-b border-white/5 bg-white/[0.01]">
                             {["Staff Member", "Leads Assigned", "Conversion Rate", "Revenue Contribution", "Efficiency"].map(h => (
-                              <th key={h} className="px-8 py-5 text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em]">{h}</th>
+                              <th key={h} className="px-8 py-5 text-[9px] font-bold text-white/20 uppercase tracking-[0.2em]">{h}</th>
                             ))}
                           </tr>
                         </thead>
@@ -3105,15 +3105,15 @@ export default function AdminDashboard() {
                           {stats.map(s => (
                             <tr key={s.name} className="hover:bg-white/[0.02] transition-colors border-b border-white/[0.03] last:border-0 group">
                               <td className="px-8 py-6">
-                                <span className="font-bold text-sm text-gray-900/90 group-hover:text-gray-900 transition-colors uppercase tracking-tight">{s.name}</span>
+                                <span className="font-bold text-sm text-white/90 group-hover:text-white transition-colors uppercase tracking-tight">{s.name}</span>
                               </td>
                               <td className="px-8 py-6">
-                                <span className="text-xs font-bold text-gray-500">{s.leads}</span>
+                                <span className="text-xs font-bold text-white/40">{s.leads}</span>
                               </td>
                               <td className="px-8 py-6">
                                 <div className="flex items-center gap-2">
                                   <span className={`text-sm font-bold ${s.conversion >= 60 ? "text-[#87A96B]" : s.conversion >= 30 ? "text-yellow-400" : "text-red-400"}`}>{s.conversion}%</span>
-                                  <div className="w-16 h-1 bg-black/5 rounded-full overflow-hidden">
+                                  <div className="w-16 h-1 bg-white/5 rounded-full overflow-hidden">
                                     <div className={`h-full ${s.conversion >= 60 ? "bg-green-400" : s.conversion >= 30 ? "bg-yellow-400" : "bg-red-400"}`} style={{ width: `${s.conversion}%` }} />
                                   </div>
                                 </div>
@@ -3123,14 +3123,14 @@ export default function AdminDashboard() {
                               </td>
                               <td className="px-8 py-6">
                                 <div className="flex items-center gap-3">
-                                  <div className="flex-1 w-24 bg-black/5 rounded-full h-1.5 overflow-hidden">
+                                  <div className="flex-1 w-24 bg-white/5 rounded-full h-1.5 overflow-hidden">
                                     <motion.div
                                       initial={{ width: 0 }}
                                       animate={{ width: `${s.conversion}%` }}
                                       className={`h-full rounded-full ${s.conversion >= 60 ? "bg-[#C5A059] shadow-[0_0_10px_rgba(0,255,204,0.3)]" : "bg-[#C5A059]"}`}
                                     />
                                   </div>
-                                  <span className="text-[10px] font-black text-gray-400 uppercase">{s.conversion >= 60 ? "EXCELLENT" : "STABLE"}</span>
+                                  <span className="text-[10px] font-black text-white/20 uppercase">{s.conversion >= 60 ? "EXCELLENT" : "STABLE"}</span>
                                 </div>
                               </td>
                             </tr>
@@ -3150,18 +3150,18 @@ export default function AdminDashboard() {
                 className="space-y-8"
               >
                 {/* Team Management Hero */}
-                <div className="card-light p-10 relative overflow-hidden group">
+                <div className="card-premium p-10 relative overflow-hidden group">
                   <div className="absolute top-0 right-0 w-96 h-96 bg-[#C5A059]/5 blur-[100px] rounded-full -mr-20 -mt-20" />
                   <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-6">
                     <div>
-                      <h2 className="text-3xl font-display font-bold text-gray-900 mb-2 uppercase tracking-tight">Team Management</h2>
-                      <p className="text-sm text-gray-500 max-w-md">Manage your clinic specialists, staff permissions, and active invitations in one unified center.</p>
+                      <h2 className="text-3xl font-display font-bold text-white mb-2 uppercase tracking-tight">Team Management</h2>
+                      <p className="text-sm text-white/50 max-w-md">Manage your clinic specialists, staff permissions, and active invitations in one unified center.</p>
                     </div>
                     <button
                       onClick={() => setIsInviteModalOpen(true)}
-                      className="px-8 py-4 bg-gray-900 text-white font-black uppercase tracking-widest text-xs rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-[0_10px_30px_rgba(0,0,0,0.06)] flex items-center gap-3"
+                      className="px-8 py-4 bg-white text-black font-black uppercase tracking-widest text-xs rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-xl flex items-center gap-3"
                     >
-                      <UserPlus className="w-4 h-4" strokeWidth={1.5} />
+                      <UserPlus className="w-4 h-4" />
                       Invite New Specialist
                     </button>
                   </div>
@@ -3170,17 +3170,17 @@ export default function AdminDashboard() {
                 <div className="grid lg:grid-cols-12 gap-8">
                   {/* Active Team Members */}
                   <div className="lg:col-span-8 space-y-6">
-                    <div className="bg-white border border-black/10 rounded-[32px] overflow-hidden">
-                      <div className="p-8 border-b border-black/5 flex justify-between items-center">
-                        <h3 className="text-sm font-bold uppercase tracking-widest text-gray-500 flex items-center gap-2">
-                          <Users className="w-4 h-4" strokeWidth={1.5} /> Active Specialists ({teamMembers.length})
+                    <div className="bg-[#0f0f0f] border border-white/10 rounded-[32px] overflow-hidden">
+                      <div className="p-8 border-b border-white/5 flex justify-between items-center">
+                        <h3 className="text-sm font-bold uppercase tracking-widest text-white/40 flex items-center gap-2">
+                          <Users className="w-4 h-4" /> Active Specialists ({teamMembers.length})
                         </h3>
                       </div>
                       <div className="divide-y divide-white/[0.03]">
                         {teamMembers.map((member) => (
                           <div key={member.id} className="p-6 flex items-center justify-between hover:bg-white/[0.02] transition-colors group">
                             <div className="flex items-center gap-4">
-                              <div className="w-12 h-12 rounded-2xl bg-black/5 border border-black/10 flex items-center justify-center font-bold text-gray-900 uppercase tracking-tighter overflow-hidden">
+                              <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center font-bold text-white uppercase tracking-tighter overflow-hidden">
                                 {member.avatar_url ? (
                                   <img src={member.avatar_url} alt={member.full_name || ""} className="w-full h-full object-cover" />
                                 ) : (
@@ -3189,7 +3189,7 @@ export default function AdminDashboard() {
                               </div>
                               <div>
                                 <div className="flex items-center gap-2">
-                                  <h4 className="font-bold text-gray-900 uppercase tracking-tight">{member.full_name || 'System User'}</h4>
+                                  <h4 className="font-bold text-white uppercase tracking-tight">{member.full_name || 'System User'}</h4>
                                   {member.is_public && (
                                     <span className="flex h-2 w-2 relative">
                                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#87A96B] opacity-75"></span>
@@ -3197,12 +3197,12 @@ export default function AdminDashboard() {
                                     </span>
                                   )}
                                 </div>
-                                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{member.email}</p>
+                                <p className="text-[10px] text-white/30 font-bold uppercase tracking-widest">{member.email}</p>
                               </div>
                             </div>
                             <div className="flex items-center gap-4">
                               <div className="flex flex-col items-end mr-4">
-                                <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-1">Website Visibility</span>
+                                <span className="text-[9px] font-bold text-white/20 uppercase tracking-widest mb-1">Website Visibility</span>
                                 <button
                                   onClick={async () => {
                                     const nextPublic = !member.is_public;
@@ -3211,20 +3211,20 @@ export default function AdminDashboard() {
                                       setTeamMembers(prev => prev.map(m => m.id === member.id ? { ...m, is_public: nextPublic } : m));
                                     }
                                   }}
-                                  className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all ${member.is_public ? 'bg-[#87A96B]/10 border-[#87A96B]/30 text-[#87A96B]' : 'bg-black/5 border-black/10 text-gray-500 opacity-50'}`}
+                                  className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all ${member.is_public ? 'bg-[#87A96B]/10 border-[#87A96B]/30 text-[#87A96B]' : 'bg-white/5 border-white/10 text-white/40 opacity-50'}`}
                                 >
-                                  {member.is_public ? <Globe className="w-3 h-3 text-[#87A96B]" strokeWidth={1.5} /> : <Shield className="w-3 h-3" strokeWidth={1.5} />}
+                                  {member.is_public ? <Globe className="w-3 h-3 text-[#87A96B]" /> : <Shield className="w-3 h-3" />}
                                   <span className="text-[9px] font-black uppercase tracking-tighter">{member.is_public ? 'Publicly Visible' : 'Hidden'}</span>
                                 </button>
                               </div>
-                              <span className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${member.role === 'admin' ? 'bg-[#C5A059]/10 text-[#C5A059] border border-[#C5A059]/20' : 'bg-black/5 text-gray-500 border border-black/10'}`}>
+                              <span className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${member.role === 'admin' ? 'bg-[#C5A059]/10 text-[#C5A059] border border-[#C5A059]/20' : 'bg-white/5 text-white/40 border border-white/10'}`}>
                                 {member.role || 'staff'}
                               </span>
                               <button
                                 onClick={() => setEditingProfile(member)}
-                                className="p-2.5 bg-black/5 hover:bg-black/5 rounded-xl text-gray-400 hover:text-gray-900 transition-all"
+                                className="p-2.5 bg-white/5 hover:bg-white/10 rounded-xl text-white/20 hover:text-white transition-all"
                               >
-                                <Settings className="w-4 h-4" strokeWidth={1.5} />
+                                <Settings className="w-4 h-4" />
                               </button>
                             </div>
                           </div>
@@ -3235,25 +3235,25 @@ export default function AdminDashboard() {
 
                   {/* Pending Invitations */}
                   <div className="lg:col-span-4 space-y-6">
-                    <div className="bg-white border border-black/10 rounded-[32px] overflow-hidden">
-                      <div className="p-8 border-b border-black/5">
-                        <h3 className="text-sm font-bold uppercase tracking-widest text-gray-500 flex items-center gap-2">
-                          <Clock className="w-4 h-4" strokeWidth={1.5} /> Pending ({invitations.length})
+                    <div className="bg-[#0f0f0f] border border-white/10 rounded-[32px] overflow-hidden">
+                      <div className="p-8 border-b border-white/5">
+                        <h3 className="text-sm font-bold uppercase tracking-widest text-white/40 flex items-center gap-2">
+                          <Clock className="w-4 h-4" /> Pending ({invitations.length})
                         </h3>
                       </div>
                       <div className="p-2">
                         {invitations.length === 0 ? (
                           <div className="p-10 text-center opacity-20">
-                            <Send className="w-8 h-8 mx-auto mb-4" strokeWidth={1.5} />
+                            <Send className="w-8 h-8 mx-auto mb-4" />
                             <p className="text-xs font-bold uppercase tracking-widest">No pending invites</p>
                           </div>
                         ) : (
                           invitations.map((invite) => (
-                            <div key={invite.id} className="p-6 bg-white/[0.02] border border-black/5 rounded-2xl mb-2 last:mb-0">
+                            <div key={invite.id} className="p-6 bg-white/[0.02] border border-white/5 rounded-2xl mb-2 last:mb-0">
                               <div className="flex justify-between items-start mb-4">
                                 <div className="space-y-1">
-                                  <p className="text-xs font-bold text-gray-900 truncate max-w-[150px]">{invite.email}</p>
-                                  <p className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Role: {invite.role}</p>
+                                  <p className="text-xs font-bold text-white truncate max-w-[150px]">{invite.email}</p>
+                                  <p className="text-[9px] text-white/30 font-bold uppercase tracking-widest">Role: {invite.role}</p>
                                 </div>
                                 <span className="text-[9px] font-black text-[#C5A059] bg-[#C5A059]/10 px-2 py-0.5 rounded-md uppercase tracking-tighter">Pending</span>
                               </div>
@@ -3264,16 +3264,16 @@ export default function AdminDashboard() {
                                     navigator.clipboard.writeText(link);
                                     alert("Invite link copied to clipboard!");
                                   }}
-                                  className="flex-1 py-3 bg-white/[0.03] hover:bg-black/5 border border-black/10 rounded-xl text-[9px] font-bold uppercase tracking-widest text-gray-900/60 transition-all flex items-center justify-center gap-2"
+                                  className="flex-1 py-3 bg-white/[0.03] hover:bg-white/10 border border-white/10 rounded-xl text-[9px] font-bold uppercase tracking-widest text-white/60 transition-all flex items-center justify-center gap-2"
                                 >
-                                  <Copy className="w-3 h-3" strokeWidth={1.5} /> Copy Link
+                                  <Copy className="w-3 h-3" /> Copy Link
                                 </button>
                                 <button
                                   onClick={() => handleRevokeInvite(invite.id)}
                                   className="px-4 py-3 bg-red-500/5 hover:bg-red-500/20 border border-red-500/10 hover:border-red-500/30 rounded-xl text-red-500/50 hover:text-red-500 transition-all flex items-center justify-center"
                                   title="Revoke Invitation"
                                 >
-                                  <Trash2 className="w-3 h-3" strokeWidth={1.5} />
+                                  <Trash2 className="w-3 h-3" />
                                 </button>
                               </div>
                             </div>
@@ -3282,10 +3282,10 @@ export default function AdminDashboard() {
                       </div>
                     </div>
 
-                    <div className="card-light p-8 text-center">
-                      <Shield className="w-8 h-8 text-[#C5A059] mx-auto mb-4 opacity-40" strokeWidth={1.5} />
-                      <h4 className="text-xs font-bold text-gray-900 uppercase tracking-widest mb-2">Secure Collaboration</h4>
-                      <p className="text-[10px] text-gray-400 leading-relaxed">Invitations are secured via unique tokens and expire automatically after use.</p>
+                    <div className="card-premium p-8 text-center">
+                      <Shield className="w-8 h-8 text-[#C5A059] mx-auto mb-4 opacity-40" />
+                      <h4 className="text-xs font-bold text-white uppercase tracking-widest mb-2">Secure Collaboration</h4>
+                      <p className="text-[10px] text-white/30 leading-relaxed">Invitations are secured via unique tokens and expire automatically after use.</p>
                     </div>
                   </div>
                 </div>
@@ -3319,38 +3319,38 @@ export default function AdminDashboard() {
                     initial={{ scale: 0.9, opacity: 0, y: 20 }}
                     animate={{ scale: 1, opacity: 1, y: 0 }}
                     exit={{ scale: 0.9, opacity: 0, y: 10 }}
-                    className="bg-white border border-black/10 p-10 rounded-[40px] max-w-md w-full relative shadow-[0_0_50px_rgba(59,130,246,0.1)]"
+                    className="bg-[#0f0f0f] border border-white/10 p-10 rounded-[40px] max-w-md w-full relative shadow-[0_0_50px_rgba(59,130,246,0.1)]"
                   >
                     <button
                       onClick={() => setIsInviteModalOpen(false)}
-                      className="absolute top-8 right-8 p-2 bg-black/5 hover:bg-black/5 rounded-full transition-colors"
+                      className="absolute top-8 right-8 p-2 bg-white/5 hover:bg-white/10 rounded-full transition-colors"
                     >
-                      <X className="w-5 h-5 text-gray-500" />
+                      <X className="w-5 h-5 text-white/40" />
                     </button>
 
                     <div className="w-20 h-20 bg-[#C5A059]/10 rounded-3xl flex items-center justify-center mb-8">
-                      <UserPlus className="w-10 h-10 text-[#C5A059]" strokeWidth={1.5} />
+                      <UserPlus className="w-10 h-10 text-[#C5A059]" />
                     </div>
 
-                    <h2 className="text-2xl font-display font-bold text-gray-900 mb-2 uppercase tracking-tight">Invite Specialist</h2>
-                    <p className="text-sm text-gray-500 leading-relaxed mb-8">Empower your team. Sent an invitation to a new specialist or administrator.</p>
+                    <h2 className="text-2xl font-display font-bold text-white mb-2 uppercase tracking-tight">Invite Specialist</h2>
+                    <p className="text-sm text-white/40 leading-relaxed mb-8">Empower your team. Sent an invitation to a new specialist or administrator.</p>
 
                     <div className="space-y-4 mb-8">
                       <div>
-                        <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-2 ml-1">Email Address</label>
+                        <label className="block text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] mb-2 ml-1">Email Address</label>
                         <input
                           type="email"
                           placeholder="specialist@clinic.com"
                           value={inviteEmail}
-                          className="w-full bg-black/5 border border-black/10 rounded-2xl py-4 px-6 text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all"
+                          className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all"
                           onChange={(e) => setInviteEmail(e.target.value)}
                         />
                       </div>
                       <div>
-                        <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-2 ml-1">System Role</label>
+                        <label className="block text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] mb-2 ml-1">System Role</label>
                         <select
                           value={inviteRole}
-                          className="w-full bg-black/5 border border-black/10 rounded-2xl py-4 px-6 text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all appearance-none cursor-pointer"
+                          className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all appearance-none cursor-pointer"
                           onChange={(e) => setInviteRole(e.target.value as any)}
                         >
                           <option value="staff" className="bg-black">Standard Staff</option>
@@ -3361,7 +3361,7 @@ export default function AdminDashboard() {
 
                     <button
                       onClick={() => handleInviteStaff(inviteEmail, inviteRole)}
-                      className="w-full py-5 bg-gray-900 text-white font-black uppercase tracking-widest text-[10px] rounded-2xl hover:bg-[#C5A059] hover:text-white transition-all shadow-[0_10px_30px_rgba(0,0,0,0.06)] active:scale-95"
+                      className="w-full py-5 bg-white text-black font-black uppercase tracking-widest text-[10px] rounded-2xl hover:bg-[#C5A059] hover:text-white transition-all shadow-lg active:scale-95"
                     >
                       Send Enterprise Invitation
                     </button>
@@ -3383,51 +3383,51 @@ export default function AdminDashboard() {
                     initial={{ scale: 0.9, opacity: 0, y: 20 }}
                     animate={{ scale: 1, opacity: 1, y: 0 }}
                     exit={{ scale: 0.9, opacity: 0, y: 10 }}
-                    className="bg-white border border-black/5 p-10 rounded-[40px] max-w-2xl w-full relative shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8)] max-h-[90vh] overflow-y-auto"
+                    className="bg-[#0f0f0f] border border-white/5 p-10 rounded-[40px] max-w-2xl w-full relative shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8)] max-h-[90vh] overflow-y-auto"
                   >
                     <button
                       onClick={() => setEditingProfile(null)}
-                      className="absolute top-8 right-8 p-2 bg-black/5 hover:bg-black/5 rounded-full transition-colors"
+                      className="absolute top-8 right-8 p-2 bg-white/5 hover:bg-white/10 rounded-full transition-colors"
                     >
-                      <X className="w-5 h-5 text-gray-500" />
+                      <X className="w-5 h-5 text-white/40" />
                     </button>
 
                     <div className="w-20 h-20 bg-[#C5A059]/10 rounded-3xl flex items-center justify-center mb-8">
-                      <Globe className="w-10 h-10 text-[#C5A059]" strokeWidth={1.5} />
+                      <Globe className="w-10 h-10 text-[#C5A059]" />
                     </div>
 
-                    <h2 className="text-2xl font-display font-bold text-gray-900 mb-2 uppercase tracking-tight">Public Profile</h2>
-                    <p className="text-sm text-gray-500 leading-relaxed mb-8">Edit the public-facing details for {editingProfile.full_name}.</p>
+                    <h2 className="text-2xl font-display font-bold text-white mb-2 uppercase tracking-tight">Public Profile</h2>
+                    <p className="text-sm text-white/40 leading-relaxed mb-8">Edit the public-facing details for {editingProfile.full_name}.</p>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                       <div className="space-y-4">
                         <div>
-                          <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-2 ml-1">Title / Role</label>
+                          <label className="block text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] mb-2 ml-1">Title / Role</label>
                           <input
                             type="text"
                             placeholder="e.g. Lead Surgeon"
                             value={editingProfile.title || ""}
-                            className="w-full bg-black/5 border border-black/10 rounded-2xl py-4 px-6 text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all"
+                            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all"
                             onChange={(e) => setEditingProfile({ ...editingProfile, title: e.target.value })}
                           />
                         </div>
                         <div>
-                          <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-2 ml-1">Specialty</label>
+                          <label className="block text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] mb-2 ml-1">Specialty</label>
                           <input
                             type="text"
                             placeholder="e.g. Implantology"
                             value={editingProfile.specialty || ""}
-                            className="w-full bg-black/5 border border-black/10 rounded-2xl py-4 px-6 text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all"
+                            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all"
                             onChange={(e) => setEditingProfile({ ...editingProfile, specialty: e.target.value })}
                           />
                         </div>
                         <div>
-                          <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-2 ml-1">Avatar URL</label>
+                          <label className="block text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] mb-2 ml-1">Avatar URL</label>
                           <input
                             type="text"
                             placeholder="https://..."
                             value={editingProfile.avatar_url || ""}
-                            className="w-full bg-black/5 border border-black/10 rounded-2xl py-4 px-6 text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all"
+                            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all"
                             onChange={(e) => setEditingProfile({ ...editingProfile, avatar_url: e.target.value })}
                           />
                         </div>
@@ -3435,21 +3435,21 @@ export default function AdminDashboard() {
 
                       <div className="space-y-4">
                         <div>
-                          <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-2 ml-1">Public Bio</label>
+                          <label className="block text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] mb-2 ml-1">Public Bio</label>
                           <textarea
                             placeholder="Enter a brief professional bio..."
                             value={editingProfile.bio || ""}
-                            className="w-full h-[100px] bg-black/5 border border-black/10 rounded-2xl py-4 px-6 text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all resize-none"
+                            className="w-full h-[100px] bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all resize-none"
                             onChange={(e) => setEditingProfile({ ...editingProfile, bio: e.target.value })}
                           />
                         </div>
                         <div>
-                          <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-2 ml-1">Education</label>
+                          <label className="block text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] mb-2 ml-1">Education</label>
                           <input
                             type="text"
                             placeholder="e.g. BDS, King's College London"
                             value={editingProfile.education || ""}
-                            className="w-full bg-black/5 border border-black/10 rounded-2xl py-4 px-6 text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all"
+                            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all"
                             onChange={(e) => setEditingProfile({ ...editingProfile, education: e.target.value })}
                           />
                         </div>
@@ -3479,9 +3479,9 @@ export default function AdminDashboard() {
                         }
                         setIsUpdatingProfile(false);
                       }}
-                      className="w-full py-5 bg-white text-gray-900 font-black uppercase tracking-widest text-[10px] rounded-2xl hover:bg-[#C5A059] hover:text-white transition-all shadow-[0_10px_30px_rgba(0,0,0,0.03)] border border-black/5 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
+                      className="w-full py-5 bg-white text-black font-black uppercase tracking-widest text-[10px] rounded-2xl hover:bg-[#C5A059] hover:text-white transition-all shadow-lg active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
                     >
-                      {isUpdatingProfile ? <Loader2 className="w-4 h-4 animate-spin" strokeWidth={1.5} /> : <Save className="w-4 h-4" strokeWidth={1.5} />}
+                      {isUpdatingProfile ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                       {isUpdatingProfile ? "Syncing..." : "Update Public Credentials"}
                     </button>
                   </motion.div>

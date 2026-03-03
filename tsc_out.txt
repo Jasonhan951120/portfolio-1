@@ -1,0 +1,50 @@
+skills/ui-ux-pro-max/cli/src/commands/init.ts(3,19): error TS2307: Cannot find module 'chalk' or its corresponding type declarations.
+skills/ui-ux-pro-max/cli/src/commands/init.ts(4,17): error TS2307: Cannot find module 'ora' or its corresponding type declarations.
+skills/ui-ux-pro-max/cli/src/commands/init.ts(5,21): error TS2307: Cannot find module 'prompts' or its corresponding type declarations.
+skills/ui-ux-pro-max/cli/src/commands/update.ts(1,19): error TS2307: Cannot find module 'chalk' or its corresponding type declarations.
+skills/ui-ux-pro-max/cli/src/commands/update.ts(2,17): error TS2307: Cannot find module 'ora' or its corresponding type declarations.
+skills/ui-ux-pro-max/cli/src/commands/versions.ts(1,19): error TS2307: Cannot find module 'chalk' or its corresponding type declarations.
+skills/ui-ux-pro-max/cli/src/commands/versions.ts(2,17): error TS2307: Cannot find module 'ora' or its corresponding type declarations.
+skills/ui-ux-pro-max/cli/src/index.ts(3,25): error TS2307: Cannot find module 'commander' or its corresponding type declarations.
+skills/ui-ux-pro-max/cli/src/utils/logger.ts(1,19): error TS2307: Cannot find module 'chalk' or its corresponding type declarations.
+src/components/AdminDashboard.bak.tsx(3301,19): error TS2322: Type '{ clinicId: string; onUpdate: () => void; }' is not assignable to type 'IntrinsicAttributes & TreatmentSettingsProps'.
+  Property 'onUpdate' does not exist on type 'IntrinsicAttributes & TreatmentSettingsProps'.
+src/components/AdminDashboard.clinical-premium.bak.tsx(3302,19): error TS2322: Type '{ clinicId: string; onUpdate: () => void; }' is not assignable to type 'IntrinsicAttributes & TreatmentSettingsProps'.
+  Property 'onUpdate' does not exist on type 'IntrinsicAttributes & TreatmentSettingsProps'.
+src/components/AdminDashboard.tsx(163,56): error TS2322: Type '{ className: string; strokeWidth: number; }' is not assignable to type 'DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>'.
+  Property 'strokeWidth' does not exist on type 'DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>'.
+src/components/AdminDashboard.tsx(1800,76): error TS2322: Type '{ className: string; strokeWidth: number; }' is not assignable to type 'DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>'.
+  Property 'strokeWidth' does not exist on type 'DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>'.
+src/components/AdminDashboard.tsx(1833,92): error TS2322: Type '{ className: string; strokeWidth: number; }' is not assignable to type 'DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>'.
+  Property 'strokeWidth' does not exist on type 'DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>'.
+src/components/AdminDashboard.tsx(2240,108): error TS2322: Type '{ className: string; strokeWidth: number; }' is not assignable to type 'DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>'.
+  Property 'strokeWidth' does not exist on type 'DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>'.
+src/components/AdminDashboard.tsx(2333,115): error TS2322: Type '{ className: string; strokeWidth: number; }' is not assignable to type 'DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>'.
+  Property 'strokeWidth' does not exist on type 'DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>'.
+src/components/AdminDashboard.tsx(2334,117): error TS2322: Type '{ className: string; strokeWidth: number; }' is not assignable to type 'DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>'.
+  Property 'strokeWidth' does not exist on type 'DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>'.
+src/components/AdminDashboard.tsx(2335,116): error TS2322: Type '{ className: string; strokeWidth: number; }' is not assignable to type 'DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>'.
+  Property 'strokeWidth' does not exist on type 'DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>'.
+src/components/AdminDashboard.tsx(2530,91): error TS2322: Type '{ className: string; strokeWidth: number; }' is not assignable to type 'DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>'.
+  Property 'strokeWidth' does not exist on type 'DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>'.
+src/components/AdminDashboard.tsx(2967,97): error TS2322: Type '{ className: string; strokeWidth: number; }' is not assignable to type 'DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>'.
+  Property 'strokeWidth' does not exist on type 'DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>'.
+src/components/AdminDashboard.tsx(3302,19): error TS2322: Type '{ clinicId: string; onUpdate: () => void; }' is not assignable to type 'IntrinsicAttributes & TreatmentSettingsProps'.
+  Property 'onUpdate' does not exist on type 'IntrinsicAttributes & TreatmentSettingsProps'.
+supabase/functions/accept-invite/index.ts(1,30): error TS2307: Cannot find module 'jsr:@supabase/supabase-js@2' or its corresponding type declarations.
+supabase/functions/accept-invite/index.ts(3,21): error TS2304: Cannot find name 'Deno'.
+supabase/functions/accept-invite/index.ts(4,28): error TS2304: Cannot find name 'Deno'.
+supabase/functions/accept-invite/index.ts(6,1): error TS2304: Cannot find name 'Deno'.
+supabase/functions/retarget-webhook/index.ts(8,1): error TS2304: Cannot find name 'Deno'.
+supabase/functions/send-notification/index.ts(3,24): error TS2304: Cannot find name 'Deno'.
+supabase/functions/send-notification/index.ts(4,21): error TS2304: Cannot find name 'Deno'.
+supabase/functions/send-notification/index.ts(7,1): error TS2304: Cannot find name 'Deno'.
+supabase/functions/send-pt-link/index.ts(3,24): error TS2304: Cannot find name 'Deno'.
+supabase/functions/send-pt-link/index.ts(6,1): error TS2304: Cannot find name 'Deno'.
+supabase/functions/send-staff-invite/index.ts(5,1): error TS2304: Cannot find name 'Deno'.
+supabase/functions/send-staff-invite/index.ts(16,28): error TS2304: Cannot find name 'Deno'.
+supabase/functions/stripe-webhook/index.ts(2,30): error TS2307: Cannot find module 'https://esm.sh/@supabase/supabase-js@2.39.0' or its corresponding type declarations.
+supabase/functions/stripe-webhook/index.ts(4,31): error TS2304: Cannot find name 'Deno'.
+supabase/functions/stripe-webhook/index.ts(5,22): error TS2304: Cannot find name 'Deno'.
+supabase/functions/stripe-webhook/index.ts(6,35): error TS2304: Cannot find name 'Deno'.
+supabase/functions/stripe-webhook/index.ts(8,1): error TS2304: Cannot find name 'Deno'.

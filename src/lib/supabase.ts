@@ -22,6 +22,12 @@ export type Profile = {
     role: "admin" | "staff" | "owner";
     updated_at: string | null;
     is_admin: boolean;
+    title?: string | null;
+    specialty?: string | null;
+    bio?: string | null;
+    education?: string | null;
+    avatar_url?: string | null;
+    is_public?: boolean;
 };
 
 

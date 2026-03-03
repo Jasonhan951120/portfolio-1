@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { CheckCircle2, Loader2, Sparkles, ChevronDown, ArrowRight, ArrowLeft } from "lucide-react";
-
+import { CheckCircle2, Loader2, Sparkles, ChevronDown, ArrowRight, ArrowLeft, ShieldCheck, Star } from "lucide-react";
 import { supabase } from "../lib/supabase";
 
 const SERVICES = [
@@ -13,19 +12,17 @@ const SERVICES = [
   "Composite Bonding",
   "Dental Crown",
   "Emergency Appointment",
-  "Other",
 ];
 
 const QUESTIONS = [
-  { id: "name", question: "What should we call you?", subtext: "Enter your full name", type: "text", placeholder: "e.g. James Smith" },
-  { id: "contact", question: "How can we reach you?", subtext: "Email and Phone are required for confirmation", type: "contact" },
-  { id: "service", question: "Which treatment interests you?", subtext: "Select your primary concern", type: "select", options: SERVICES },
-  { id: "time", question: "When would you like to visit?", subtext: "We'll do our best to match your preference", type: "appointment" },
-  { id: "notes", question: "Any specific concerns?", subtext: "Tell us anything else we should know (Optional)", type: "textarea", placeholder: "I'm interested in..." },
+  { id: "service", question: "어떤 고민이 있으신가요?", subtext: "가장 관심 있는 진료 분야를 선택해 주세요.", type: "select", options: SERVICES },
+  { id: "name", question: "성함이 어떻게 되시나요?", subtext: "정확한 상담을 위해 성함을 입력해 주세요.", type: "text", placeholder: "예: 김한란" },
+  { id: "contact", question: "연락처를 남겨주시겠어요?", subtext: "예약 확정 및 안내를 위해 필요합니다.", type: "contact" },
+  { id: "notes", question: "더 궁금하신 점이 있나요?", subtext: "상담 시 참고할 내용을 적어주세요 (선택 사항)", type: "textarea", placeholder: "예: 앞니가 벌어져서 고민이에요..." },
 ];
 
 export default function LeadForm({ clinic }: { clinic: any }) {
-  const clinicName = clinic?.name || "London Smile";
+  const clinicName = clinic?.name || "Hanlan OC";
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -34,17 +31,25 @@ export default function LeadForm({ clinic }: { clinic: any }) {
     notes: "",
   });
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [step, setStep] = useState(0); // 0 to 4
+  const [step, setStep] = useState(0);
   const [patientId, setPatientId] = useState<string | null>(null);
-  const [appointmentId, setAppointmentId] = useState<string | null>(null);
+
+  // Postel's Law: Simple phone auto-formatting
+  const handlePhoneChange = (val: string) => {
+    const cleaned = val.replace(/\D/g, '');
+    let formatted = cleaned;
+    if (cleaned.length > 3 && cleaned.length <= 7) {
+      formatted = `${cleaned.slice(0, 3)}-${cleaned.slice(3)}`;
+    } else if (cleaned.length > 7) {
+      formatted = `${cleaned.slice(0, 3)}-${cleaned.slice(3, 7)}-${cleaned.slice(7, 11)}`;
+    }
+    setFormData({ ...formData, phone: formatted });
+  };
 
   const nextStep = async () => {
-    // Save draft periodically
-    if (step === 0 && formData.name) {
-      saveStepData();
-    }
     if (step < QUESTIONS.length - 1) {
       setStep(s => s + 1);
+      if (step === 1 && formData.name) saveStepData();
     } else {
       handleSubmit();
     }
@@ -55,7 +60,7 @@ export default function LeadForm({ clinic }: { clinic: any }) {
   const saveStepData = async () => {
     if (!formData.name) return;
     if (!patientId) {
-      const { data, error } = await supabase.from('consultation_requests').insert({
+      const { data } = await supabase.from('consultation_requests').insert({
         name: formData.name,
         phone: formData.phone,
         email: formData.email,
@@ -64,11 +69,7 @@ export default function LeadForm({ clinic }: { clinic: any }) {
         notes: formData.notes,
         clinic_id: clinic?.id
       }).select().single();
-
-      if (data) {
-        setPatientId(data.id);
-        setAppointmentId(data.id);
-      }
+      if (data) setPatientId(data.id);
     } else {
       await supabase.from('consultation_requests').update({
         name: formData.name,
@@ -82,32 +83,17 @@ export default function LeadForm({ clinic }: { clinic: any }) {
 
   const handleSubmit = async () => {
     setStatus("loading");
-    if (appointmentId) {
-      const { error } = await supabase.from('consultation_requests').update({
-        status: 'New',
-        notes: `Selected treatment: ${formData.service}\n${formData.notes || ''}`
-      }).eq('id', appointmentId);
+    const { error } = await supabase.from('consultation_requests').update({
+      status: 'New',
+      notes: formData.notes
+    }).eq('id', patientId || '');
 
-      if (error) {
-        setStatus("error");
-        return;
-      }
+    if (error) {
+      setStatus("error");
+      return;
     }
 
     setStatus("success");
-
-    // [INTEGRATION] hanlan-oc-dashboard tracking placeholder
-    // This will send lead event to the main tracking system
-    console.log(`[TRACKING] Firing lead event for clinic: ${clinic?.id || 'default'}`);
-    /* 
-    window.hanlanOC?.track('lead_submission', {
-      clinic_id: clinic?.id,
-      service: formData.service,
-      timestamp: new Date().toISOString()
-    });
-    */
-
-    // Fire-and-forget: send admin alert
     fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-notification`, {
       method: "POST",
       headers: { "Content-Type": "application/json", "apikey": import.meta.env.VITE_SUPABASE_ANON_KEY },
@@ -115,100 +101,108 @@ export default function LeadForm({ clinic }: { clinic: any }) {
     }).catch(console.warn);
   };
 
+  const isStepValid = () => {
+    if (step === 0) return !!formData.service;
+    if (step === 1) return formData.name.length >= 2;
+    if (step === 2) return formData.phone.length >= 10;
+    return true;
+  };
+
   return (
-    <section id="lead-form" className="min-h-screen bg-white flex flex-col justify-center py-20 overflow-hidden">
-      <div className="container mx-auto px-6 max-w-4xl">
+    <section id="lead-form" className="min-h-screen bg-[#121212] text-white flex flex-col justify-center py-20 overflow-hidden font-sans">
+      <div className="container mx-auto px-6 max-w-2xl relative">
+        {/* Progress Bar - Minimalist */}
+        <div className="absolute top-0 left-6 right-6 h-1 bg-white/5 rounded-full overflow-hidden">
+          <motion.div
+            className="h-full bg-[#2AF598]"
+            initial={{ width: 0 }}
+            animate={{ width: `${((step + 1) / QUESTIONS.length) * 100}%` }}
+          />
+        </div>
+
         <AnimatePresence mode="wait">
           {status === "success" ? (
             <motion.div
               key="success"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
               className="text-center"
             >
-              <div className="w-24 h-24 bg-black/5 rounded-full flex items-center justify-center mx-auto mb-8">
-                <CheckCircle2 className="w-12 h-12 text-black" />
+              <div className="w-20 h-20 bg-[#2AF598]/10 rounded-[24px] flex items-center justify-center mx-auto mb-8">
+                <CheckCircle2 className="w-10 h-10 text-[#2AF598]" />
               </div>
-              <h2 className="text-5xl font-display font-bold text-black uppercase tracking-tighter mb-4">You're All Set.</h2>
-              <p className="text-xl text-black/40 font-medium max-w-md mx-auto mb-12">
-                Our treatment coordinator at {clinicName} will reach out within 24 hours to confirm your priority consultation.
+              <h2 className="text-3xl font-bold text-white mb-4 tracking-tight">상담 예약이 접수되었습니다.</h2>
+              <p className="text-[#A0A0A0] font-medium max-w-sm mx-auto mb-10 leading-relaxed">
+                {clinicName}의 전문 상담 실장이 24시간 이내에 안내 전화를 드릴 예정입니다. 잠시만 기다려 주세요.
               </p>
               <button
                 onClick={() => { setStatus("idle"); setStep(0); setFormData({ name: "", email: "", phone: "", service: "General Inquiry", notes: "" }); }}
-                className="text-sm font-bold uppercase tracking-widest text-black/20 hover:text-black transition-colors"
+                className="text-xs font-bold uppercase tracking-widest text-white/30 hover:text-[#2AF598] transition-colors"
               >
-                Send another request
+                닫기
               </button>
             </motion.div>
           ) : (
             <motion.div
               key={step}
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -40 }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="w-full"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
             >
-              {/* Question Index */}
-              <div className="flex items-center gap-3 mb-12">
-                <span className="text-xs font-bold text-black/20 uppercase tracking-[0.3em]">Question {step + 1} / {QUESTIONS.length}</span>
-                <div className="h-px flex-1 bg-black/5" />
-              </div>
-
-              {/* Question Header */}
-              <div className="mb-12">
-                <h3 className="text-4xl md:text-6xl font-display font-bold text-black uppercase tracking-tighter leading-none mb-4">
+              <div className="mb-10">
+                <div className="flex items-center gap-2 mb-6">
+                  <Star className="w-4 h-4 text-[#2AF598] fill-[#2AF598]" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#2AF598]">Clinical Premium Step {step + 1}</span>
+                </div>
+                <h3 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight leading-tight">
                   {QUESTIONS[step].question}
                 </h3>
-                <p className="text-lg text-black/40 font-medium italic">
+                <p className="text-sm text-[#A0A0A0] font-medium">
                   {QUESTIONS[step].subtext}
                 </p>
               </div>
 
-              {/* Inputs */}
-              <div className="mb-16">
+              <div className="mb-12">
                 {QUESTIONS[step].type === "text" && (
-                  <input
-                    type="text"
-                    autoFocus
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    onKeyDown={(e) => e.key === "Enter" && formData.name && nextStep()}
-                    className="w-full bg-transparent border-b-2 border-black/10 py-6 text-2xl md:text-4xl font-medium focus:outline-none focus:border-black transition-colors placeholder:text-black/5"
-                    placeholder={QUESTIONS[step].placeholder}
-                  />
-                )}
-
-                {QUESTIONS[step].type === "contact" && (
-                  <div className="space-y-8">
+                  <div className="relative group">
                     <input
-                      type="tel"
+                      type="text"
                       autoFocus
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full bg-transparent border-b-2 border-black/10 py-6 text-2xl md:text-3xl font-medium focus:outline-none focus:border-black transition-colors placeholder:text-black/5"
-                      placeholder="Phone Number (+44 20...)"
-                    />
-                    <input
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      onKeyDown={(e) => e.key === "Enter" && formData.phone && formData.email && nextStep()}
-                      className="w-full bg-transparent border-b-2 border-black/10 py-6 text-2xl md:text-3xl font-medium focus:outline-none focus:border-black transition-colors placeholder:text-black/5"
-                      placeholder="Email Address (james@example.com)"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      onKeyDown={(e) => e.key === "Enter" && isStepValid() && nextStep()}
+                      className="w-full bg-[#1E1E1E] border-[1.5px] border-white/5 rounded-[12px] px-6 py-5 text-xl font-bold text-white focus:outline-none focus:border-[#2AF598]/30 transition-all placeholder:text-white/5"
+                      placeholder={QUESTIONS[step].placeholder}
                     />
                   </div>
                 )}
 
+                {QUESTIONS[step].type === "contact" && (
+                  <div className="space-y-4">
+                    <input
+                      type="tel"
+                      autoFocus
+                      value={formData.phone}
+                      onChange={(e) => handlePhoneChange(e.target.value)}
+                      className="w-full bg-[#1E1E1E] border-[1.5px] border-white/5 rounded-[12px] px-6 py-5 text-xl font-bold text-white focus:outline-none focus:border-[#2AF598]/30 transition-all placeholder:text-white/10"
+                      placeholder="휴대폰 번호 (예: 010-1234-5678)"
+                    />
+                    <div className="flex items-center gap-2 text-[10px] text-[#A0A0A0] font-medium px-2">
+                      <ShieldCheck className="w-3 h-3 text-[#2AF598]" /> 정보는 보안 서버에 안전하게 보관됩니다. (Postel's Law 적용)
+                    </div>
+                  </div>
+                )}
+
                 {QUESTIONS[step].type === "select" && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {QUESTIONS[step].options?.map((opt) => (
                       <button
                         key={opt}
-                        onClick={() => { setFormData({ ...formData, service: opt }); nextStep(); }}
-                        className={`p-6 rounded-2xl text-left text-lg font-bold transition-all border ${formData.service === opt
-                          ? "bg-accent text-black border-accent"
-                          : "bg-white border-black/10 text-black/40 hover:border-black hover:text-black"
+                        onClick={() => { setFormData({ ...formData, service: opt }); setTimeout(nextStep, 200); }}
+                        className={`p-5 rounded-[12px] text-left text-sm font-bold transition-all border-[1.5px] ${formData.service === opt
+                          ? "bg-[#2AF598]/10 text-[#2AF598] border-[#2AF598]/30"
+                          : "bg-[#1E1E1E] border-white/5 text-white/40 hover:border-white/10 hover:text-white"
                           }`}
                       >
                         {opt}
@@ -217,63 +211,37 @@ export default function LeadForm({ clinic }: { clinic: any }) {
                   </div>
                 )}
 
-                {QUESTIONS[step].type === "appointment" && (
-                  <div className="space-y-8">
-                    <div className="grid grid-cols-4 gap-4">
-                      {['MON', 'TUE', 'WED', 'THU'].map((d, i) => (
-                        <div key={d} className={`p-6 text-center rounded-2xl border transition-all ${i === 1 ? 'bg-accent text-black border-accent' : 'bg-white border-black/10 text-black/40 hover:border-black hover:text-black'}`}>
-                          <span className="text-[10px] block mb-2 font-bold tracking-widest">{d}</span>
-                          <span className="text-2xl font-bold">{12 + i}</span>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="grid grid-cols-3 gap-4">
-                      {['09:00', '14:00', '17:00'].map((t, i) => (
-                        <div key={t} className={`p-4 text-center rounded-xl border text-sm font-bold transition-all ${i === 1 ? 'bg-accent text-black border-accent' : 'bg-white border-black/10 text-black/40 hover:border-black hover:text-black'}`}>
-                          {t}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
                 {QUESTIONS[step].type === "textarea" && (
                   <textarea
                     autoFocus
-                    rows={1}
+                    rows={4}
                     value={formData.notes}
                     onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                    className="w-full bg-transparent border-b-2 border-black/10 py-6 text-xl md:text-2xl font-medium focus:outline-none focus:border-black transition-colors placeholder:text-black/5 resize-none"
+                    className="w-full bg-[#1E1E1E] border-[1.5px] border-white/5 rounded-[12px] px-6 py-5 text-lg font-bold text-white focus:outline-none focus:border-[#2AF598]/30 transition-all placeholder:text-white/5 resize-none"
                     placeholder={QUESTIONS[step].placeholder}
                   />
                 )}
               </div>
 
-              {/* Footer Actions */}
-              <div className="flex items-center gap-6">
-                <button
-                  onClick={nextStep}
-                  disabled={
-                    (step === 0 && !formData.name) ||
-                    (step === 1 && (!formData.phone || !formData.email)) ||
-                    status === "loading"
-                  }
-                  className="px-10 py-6 bg-black text-white rounded-full font-bold uppercase tracking-widest text-xs flex items-center gap-3 hover:scale-105 active:scale-95 transition-all disabled:opacity-20 shadow-2xl"
-                >
-                  {status === "loading" ? <Loader2 className="w-4 h-4 animate-spin" /> : step === QUESTIONS.length - 1 ? "Complete Booking" : "Next Step"}
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-
-                {step > 0 && (
-                  <button onClick={prevStep} className="p-6 text-black/20 hover:text-black transition-colors rounded-full hover:bg-black/5">
+              <div className="flex items-center justify-between gap-4">
+                {step > 0 ? (
+                  <button onClick={prevStep} className="p-4 text-white/20 hover:text-white transition-colors rounded-xl bg-white/5">
                     <ArrowLeft className="w-5 h-5" />
                   </button>
-                )}
+                ) : <div />}
 
-                <div className="flex-1" />
-                <span className="hidden md:block text-[10px] font-bold text-black/20 uppercase tracking-widest">
-                  Press <span className="text-black/40">Enter ↵</span> to continue
-                </span>
+                <motion.button
+                  animate={isStepValid() ? {
+                    boxShadow: ["0 0 0px rgba(42,245,152,0)", "0 0 20px rgba(42,245,152,0.2)", "0 0 0px rgba(42,245,152,0)"]
+                  } : {}}
+                  transition={{ repeat: Infinity, duration: 2 }}
+                  onClick={nextStep}
+                  disabled={!isStepValid() || status === "loading"}
+                  className="w-[168px] h-[44px] bg-[#2AF598] text-[#121212] rounded-[12px] font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all disabled:opacity-20 shadow-[0_10px_20px_rgba(42,245,152,0.1)]"
+                >
+                  {status === "loading" ? <Loader2 className="w-4 h-4 animate-spin" /> : step === QUESTIONS.length - 1 ? "상담 신청하기" : "다음 단계로"}
+                  <ArrowRight className="w-4 h-4" />
+                </motion.button>
               </div>
             </motion.div>
           )}
