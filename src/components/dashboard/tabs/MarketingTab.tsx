@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { Instagram, Globe } from 'lucide-react';
 import DailyInsight from '../../DailyInsight';
 import TrafficSourceChart from '../../TrafficSourceChart';
+import { LiveTrafficPanel } from '../shared/LiveTrafficPanel';
 import MarketingOnboarding from '../../MarketingOnboarding';
 import { type Profile } from '../../../lib/supabase';
 
@@ -35,6 +36,9 @@ export function MarketingTab({
                                 topPlatform: marketingMetrics?.topPlatform || "Meta"
                             }}
                         />
+
+                        {/* Live Traffic Source Panel — Real-time via Supabase Realtime */}
+                        <LiveTrafficPanel clinicId={profile?.clinic_id ?? undefined} />
 
                         <div className="bg-white border border-[rgba(0,0,0,0.04)] rounded-[40px] p-8 shadow-[0_1px_2px_rgba(0,0,0,0.02),_0_8px_24px_-4px_rgba(0,0,0,0.04)]">
                             <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-6">Connected Platforms</h4>
@@ -94,10 +98,14 @@ export function MarketingTab({
                     </div>
                 </div>
             ) : (
-                <MarketingOnboarding
-                    clinicId={profile?.clinic_id || ""}
-                    onComplete={() => loadDashboardData()}
-                />
+                <div className="space-y-8">
+                    <MarketingOnboarding
+                        clinicId={profile?.clinic_id || ""}
+                        onComplete={() => loadDashboardData()}
+                    />
+                    {/* Show live traffic even before ad platforms are connected */}
+                    <LiveTrafficPanel clinicId={profile?.clinic_id ?? undefined} />
+                </div>
             )}
         </div>
     );

@@ -3,16 +3,48 @@ import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 
 /**
- * Anonymous Visit Tracker — /visit/:clinicId
+ * Real-Time Traffic Tracking Engine — /visit/:clinicId
  *
- * UK GDPR Compliant: Zero PII stored.
- * - Session hash = SHA-256(date only) — no IP, no UA stored.
- * - Collects only: utm_source, utm_medium, utm_campaign, utm_term, referrer.
- * - Immediately redirects to the main landing page after logging.
+ * UK GDPR Compliant:
+ * - SHA-256 session hash from date + screen dimensions + language (ZERO PII)
+ * - No IP addresses, no User-Agent strings, no cookies stored
+ * - 24-hour dedup: same session+clinic only counts once per day
+ *
+ * Flow:
+ * 1. Categorize traffic source from UTM params or Referer header
+ * 2. Generate anonymous session hash
+ * 3. Check for duplicate visit in last 24 hours (anti-spam)
+ * 4. If unique: INSERT into traffic_events + atomically UPSERT traffic_stats
+ * 5. Redirect to homepage, preserving UTM params for form capture
  */
-async function hashSession(): Promise<string> {
-    const raw = new Date().toISOString().split("T")[0]; // just the date
-    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(raw));
+
+type TrafficSource = "Google" | "Social" | "Google (Organic)" | "Direct";
+
+function categorizeSource(utmSource: string | null, referrer: string): TrafficSource {
+    const utm = (utmSource || "").toLowerCase().trim();
+
+    if (utm === "google" || utm === "google_ads" || utm === "google-ads") return "Google";
+    if (utm === "instagram" || utm === "facebook" || utm === "meta") return "Social";
+
+    if (!utm && referrer) {
+        const ref = referrer.toLowerCase();
+        if (ref.includes("google.com") || ref.includes("google.co.uk")) return "Google (Organic)";
+    }
+
+    return "Direct";
+}
+
+async function generateSessionHash(): Promise<string> {
+    // GDPR-safe: combines date + screen resolution + browser language
+    // This creates enough entropy to identify a "session" without any PII
+    const components = [
+        new Date().toISOString().split("T")[0], // date only (no time)
+        screen.width.toString(),
+        screen.height.toString(),
+        navigator.language,
+    ].join("|");
+
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(components));
     return Array.from(new Uint8Array(buf))
         .map((b) => b.toString(16).padStart(2, "0"))
         .join("");
@@ -27,20 +59,43 @@ export default function VisitTrackingPage() {
         async function track() {
             if (!clinicId) return;
 
-            const session_hash = await hashSession();
+            const utmSource = searchParams.get("utm_source");
+            const referrer = document.referrer || "";
+            const source = categorizeSource(utmSource, referrer);
+            const session_hash = await generateSessionHash();
 
-            // Log anonymously — fire and forget
-            await supabase.from("anonymous_visits").insert({
-                clinic_id: clinicId,
-                session_hash,
-                utm_source: searchParams.get("utm_source") || null,
-                utm_medium: searchParams.get("utm_medium") || null,
-                utm_campaign: searchParams.get("utm_campaign") || null,
-                utm_term: searchParams.get("utm_term") || null,
-                referrer: document.referrer || null,
-            });
+            // ── Dedup Check: has this session already been counted today? ──────────
+            const since24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+            const { data: existingVisit } = await supabase
+                .from("traffic_events")
+                .select("id")
+                .eq("clinic_id", clinicId)
+                .eq("session_hash", session_hash)
+                .gte("created_at", since24h)
+                .limit(1)
+                .maybeSingle();
 
-            // Redirect to homepage, preserving UTM for form capture
+            if (!existingVisit) {
+                // ── Unique visit: log event ────────────────────────────────────────
+                await supabase.from("traffic_events").insert({
+                    clinic_id: clinicId,
+                    session_hash,
+                    source,
+                    utm_source: utmSource || null,
+                    utm_medium: searchParams.get("utm_medium") || null,
+                    utm_campaign: searchParams.get("utm_campaign") || null,
+                    referrer: referrer || null,
+                });
+
+                // ── Atomically increment traffic_stats counter ─────────────────────
+                // ON CONFLICT (clinic_id, source) → increment count
+                await supabase.rpc("upsert_traffic_stat", {
+                    p_clinic_id: clinicId,
+                    p_source: source,
+                });
+            }
+
+            // ── Redirect to homepage, preserving UTM params ────────────────────
             const redirectUrl = new URL("/", window.location.origin);
             searchParams.forEach((val, key) => redirectUrl.searchParams.set(key, val));
             navigate(redirectUrl.pathname + redirectUrl.search, { replace: true });
@@ -49,6 +104,6 @@ export default function VisitTrackingPage() {
         track();
     }, [clinicId]);
 
-    // Invisible — user sees a brief blank screen then redirect
+    // Invisible redirect page
     return null;
 }
