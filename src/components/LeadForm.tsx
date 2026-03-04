@@ -34,6 +34,29 @@ export default function LeadForm({ clinic }: { clinic: any }) {
   const [step, setStep] = useState(0);
   const [patientId, setPatientId] = useState<string | null>(null);
 
+  // ── Marketing Attribution Tracking ───────────────────────────────────────
+  const [attribution, setAttribution] = useState({
+    utm_source: "",
+    utm_medium: "",
+    utm_campaign: "",
+    utm_term: "",
+    referrer: "",
+  });
+
+  useEffect(() => {
+    // Capture UTM params from URL (e.g. ?utm_source=google&utm_medium=cpc)
+    const params = new URLSearchParams(window.location.search);
+    const ref = document.referrer;
+
+    setAttribution({
+      utm_source: params.get("utm_source") || "",
+      utm_medium: params.get("utm_medium") || "",
+      utm_campaign: params.get("utm_campaign") || "",
+      utm_term: params.get("utm_term") || "",
+      referrer: ref,
+    });
+  }, []);
+
   // Postel's Law: Simple phone auto-formatting
   const handlePhoneChange = (val: string) => {
     const cleaned = val.replace(/\D/g, '');
@@ -67,7 +90,13 @@ export default function LeadForm({ clinic }: { clinic: any }) {
         service: formData.service,
         status: 'New',
         notes: formData.notes,
-        clinic_id: clinic?.id
+        clinic_id: clinic?.id,
+        // Marketing Attribution
+        utm_source: attribution.utm_source || null,
+        utm_medium: attribution.utm_medium || null,
+        utm_campaign: attribution.utm_campaign || null,
+        utm_term: attribution.utm_term || null,
+        referrer: attribution.referrer || null,
       }).select().single();
       if (data) setPatientId(data.id);
     } else {
@@ -85,7 +114,13 @@ export default function LeadForm({ clinic }: { clinic: any }) {
     setStatus("loading");
     const { error } = await supabase.from('consultation_requests').update({
       status: 'New',
-      notes: formData.notes
+      notes: formData.notes,
+      // Ensure attribution is always persisted (safety net for direct submits)
+      utm_source: attribution.utm_source || null,
+      utm_medium: attribution.utm_medium || null,
+      utm_campaign: attribution.utm_campaign || null,
+      utm_term: attribution.utm_term || null,
+      referrer: attribution.referrer || null,
     }).eq('id', patientId || '');
 
     if (error) {
@@ -114,7 +149,7 @@ export default function LeadForm({ clinic }: { clinic: any }) {
         {/* Progress Bar - Minimalist */}
         <div className="absolute top-0 left-6 right-6 h-1 bg-white/5 rounded-full overflow-hidden">
           <motion.div
-            className="h-full bg-[#2AF598]"
+            className="h-full bg-accent"
             initial={{ width: 0 }}
             animate={{ width: `${((step + 1) / QUESTIONS.length) * 100}%` }}
           />
@@ -152,8 +187,8 @@ export default function LeadForm({ clinic }: { clinic: any }) {
             >
               <div className="mb-10">
                 <div className="flex items-center gap-2 mb-6">
-                  <Star className="w-4 h-4 text-[#2AF598] fill-[#2AF598]" />
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#2AF598]">Clinical Premium Step {step + 1}</span>
+                  <Star className="w-4 h-4 text-accent fill-accent" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-accent">Clinical Luxury Step {step + 1}</span>
                 </div>
                 <h3 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight leading-tight">
                   {QUESTIONS[step].question}
@@ -232,14 +267,14 @@ export default function LeadForm({ clinic }: { clinic: any }) {
 
                 <motion.button
                   animate={isStepValid() ? {
-                    boxShadow: ["0 0 0px rgba(42,245,152,0)", "0 0 20px rgba(42,245,152,0.2)", "0 0 0px rgba(42,245,152,0)"]
+                    boxShadow: ["0 0 0px rgba(91,164,207,0)", "0 0 20px rgba(91,164,207,0.2)", "0 0 0px rgba(91,164,207,0)"]
                   } : {}}
                   transition={{ repeat: Infinity, duration: 2 }}
                   onClick={nextStep}
                   disabled={!isStepValid() || status === "loading"}
-                  className="w-[168px] h-[44px] bg-[#2AF598] text-[#121212] rounded-[12px] font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all disabled:opacity-20 shadow-[0_10px_20px_rgba(42,245,152,0.1)]"
+                  className="w-[180px] h-[48px] bg-harmony-gradient text-white rounded-[12px] font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all disabled:opacity-20 shadow-[0_10px_25px_rgba(91,164,207,0.2)]"
                 >
-                  {status === "loading" ? <Loader2 className="w-4 h-4 animate-spin" /> : step === QUESTIONS.length - 1 ? "상담 신청하기" : "다음 단계로"}
+                  {status === "loading" ? <Loader2 className="w-4 h-4 animate-spin" /> : step === QUESTIONS.length - 1 ? "Book Consultation" : "Next Step"}
                   <ArrowRight className="w-4 h-4" />
                 </motion.button>
               </div>

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { motion, Reorder, AnimatePresence } from 'framer-motion';
+import { motion, Reorder, AnimatePresence } from 'motion/react';
 import {
     GripVertical, Plus, Trash2, Check,
     Palette, Save, AlertCircle, Sparkles,
-    ArrowRight
+    ArrowRight, RefreshCw
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
@@ -17,6 +17,7 @@ interface Treatment {
 
 interface TreatmentSettingsProps {
     clinicId: string;
+    onUpdate?: () => void;
 }
 
 const CURATED_COLORS = [
@@ -32,7 +33,7 @@ const CURATED_COLORS = [
     '#F472B6', // Pink
 ];
 
-export const TreatmentSettings: React.FC<TreatmentSettingsProps> = ({ clinicId }) => {
+export const TreatmentSettings: React.FC<TreatmentSettingsProps> = ({ clinicId, onUpdate }) => {
     const [treatments, setTreatments] = useState<Treatment[]>([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -78,11 +79,11 @@ export const TreatmentSettings: React.FC<TreatmentSettingsProps> = ({ clinicId }
             setError('Failed to add treatment');
         } else if (data) {
             setTreatments([...treatments, data]);
+            onUpdate?.();
         }
     };
 
     const handleUpdateTreatment = async (id: string, updates: Partial<Treatment>) => {
-        // Optimistic Update
         setTreatments(prev => prev.map(t => t.id === id ? { ...t, ...updates } : t));
 
         const { error } = await supabase
@@ -94,11 +95,12 @@ export const TreatmentSettings: React.FC<TreatmentSettingsProps> = ({ clinicId }
             console.error('Error updating treatment:', error);
             setError('Failed to update treatment');
             fetchTreatments(); // Rollback
+        } else {
+            onUpdate?.();
         }
     };
 
     const handleDeleteTreatment = async (id: string) => {
-        // Optimistic Update
         const itemToDelete = treatments.find(t => t.id === id);
         setTreatments(prev => prev.filter(t => t.id !== id));
 
@@ -111,13 +113,14 @@ export const TreatmentSettings: React.FC<TreatmentSettingsProps> = ({ clinicId }
             console.error('Error deleting treatment:', error);
             setError('Failed to delete treatment');
             if (itemToDelete) setTreatments(prev => [...prev, itemToDelete].sort((a, b) => a.order_index - b.order_index));
+        } else {
+            onUpdate?.();
         }
     };
 
     const handleReorder = async (newOrder: Treatment[]) => {
         setTreatments(newOrder);
 
-        // Update indices in DB
         const updates = newOrder.map((t, idx) => ({
             id: t.id,
             clinic_id: clinicId,
@@ -131,35 +134,37 @@ export const TreatmentSettings: React.FC<TreatmentSettingsProps> = ({ clinicId }
 
         if (error) {
             console.error('Error reordering treatments:', error);
+        } else {
+            onUpdate?.();
         }
     };
 
-    if (loading) return <div className="p-10 text-white/20 uppercase font-black tracking-widest text-xs animate-pulse">Initializing UI Engine...</div>;
+    if (loading) return <div className="p-10 metric-label text-[10px] text-gray-400 animate-pulse">Initializing Treatment Engine...</div>;
 
     return (
-        <div className="space-y-8 max-w-4xl">
+        <div className="space-y-10 max-w-4xl">
             <div className="flex justify-between items-end">
                 <div>
-                    <h2 className="text-3xl font-display font-bold text-white uppercase tracking-tight mb-2 flex items-center gap-3">
-                        Treatment Logic <Sparkles className="w-6 h-6 text-blue-400" />
+                    <h2 className="text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-3">
+                        Treatment Logic
                     </h2>
-                    <p className="text-white/40 text-sm font-medium">Define your clinical offerings, custom color coding, and visual sorting logic.</p>
+                    <p className="text-gray-500 text-[13px] mt-1">Define clinical offerings, color coding, and visual priority.</p>
                 </div>
                 <button
                     onClick={handleAddTreatment}
-                    className="px-6 py-3 bg-white text-black font-black uppercase tracking-widest text-[10px] rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-xl flex items-center gap-2"
+                    className="btn-primary-crisp px-6 py-3 text-xs"
                 >
                     <Plus className="w-4 h-4" /> Add Treatment
                 </button>
             </div>
 
             {error && (
-                <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-center gap-3 text-red-400 text-xs font-bold uppercase tracking-wide">
+                <div className="p-4 bg-red-50 border border-red-100 rounded-2xl flex items-center gap-3 text-red-600 text-[11px] font-bold uppercase tracking-wide">
                     <AlertCircle className="w-4 h-4" /> {error}
                 </div>
             )}
 
-            <Reorder.Group axis="y" values={treatments} onReorder={handleReorder} className="space-y-3">
+            <Reorder.Group axis="y" values={treatments} onReorder={handleReorder} className="space-y-4">
                 <AnimatePresence mode="popLayout">
                     {treatments.map((treatment) => (
                         <Reorder.Item
@@ -168,35 +173,35 @@ export const TreatmentSettings: React.FC<TreatmentSettingsProps> = ({ clinicId }
                             initial={{ height: 0, opacity: 0, y: 10 }}
                             animate={{ height: "auto", opacity: 1, y: 0 }}
                             exit={{ x: 100, opacity: 0 }}
-                            whileDrag={{ scale: 1.02, boxShadow: "0 20px 40px rgba(0,0,0,0.4)" }}
+                            whileDrag={{ scale: 1.02, boxShadow: "0 20px 50px rgba(0,0,0,0.08)" }}
                             transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                            className="bg-[#1E1E1E] border border-white/[0.03] rounded-3xl p-5 group flex items-center gap-6 cursor-default"
+                            className="bg-white border border-gray-100 rounded-[28px] p-6 group flex items-center gap-6 shadow-sm hover:shadow-md transition-shadow"
                         >
-                            <div className="cursor-grab active:cursor-grabbing p-2 text-white/10 hover:text-white/30 transition-colors">
+                            <div className="cursor-grab active:cursor-grabbing p-2 text-gray-300 hover:text-gray-500 transition-colors">
                                 <GripVertical className="w-5 h-5" />
                             </div>
 
-                            <div className="flex-1 flex items-center gap-4">
+                            <div className="flex-1 flex items-center gap-6">
                                 <div
-                                    className="w-4 h-12 rounded-full shadow-[0_0_15px_rgba(0,0,0,0.2)]"
+                                    className="w-1.5 h-10 rounded-full"
                                     style={{ backgroundColor: treatment.color }}
                                 />
                                 <input
                                     type="text"
                                     value={treatment.service_name}
                                     onChange={(e) => handleUpdateTreatment(treatment.id, { service_name: e.target.value })}
-                                    className="bg-transparent border-none text-white font-bold text-lg focus:ring-0 w-full placeholder:text-white/10"
-                                    placeholder="Treatment Name"
+                                    className="bg-transparent border-none text-gray-900 font-bold text-lg focus:ring-0 w-full placeholder:text-gray-200"
+                                    placeholder="Procedure Name"
                                 />
                             </div>
 
-                            <div className="flex items-center gap-2">
-                                <div className="flex bg-black/40 p-1.5 rounded-2xl border border-white/5">
+                            <div className="flex items-center gap-4">
+                                <div className="flex bg-gray-50 p-1.5 rounded-2xl border border-gray-100">
                                     {CURATED_COLORS.map(color => (
                                         <button
                                             key={color}
                                             onClick={() => handleUpdateTreatment(treatment.id, { color })}
-                                            className={`w-6 h-6 rounded-full transition-all hover:scale-125 mx-1 border-2 ${treatment.color === color ? 'border-white scale-110 shadow-[0_0_10px_rgba(255,255,255,0.3)]' : 'border-transparent opacity-60 hover:opacity-100'
+                                            className={`w-6 h-6 rounded-full transition-all hover:scale-125 mx-1 border-2 ${treatment.color === color ? 'border-white scale-110 shadow-sm' : 'border-transparent opacity-60 hover:opacity-100'
                                                 }`}
                                             style={{ backgroundColor: color }}
                                         />
@@ -205,7 +210,7 @@ export const TreatmentSettings: React.FC<TreatmentSettingsProps> = ({ clinicId }
 
                                 <button
                                     onClick={() => handleDeleteTreatment(treatment.id)}
-                                    className="p-3 text-white/10 hover:text-red-400 hover:bg-red-400/10 rounded-2xl transition-all"
+                                    className="p-3 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-2xl transition-all"
                                 >
                                     <Trash2 className="w-4 h-4" />
                                 </button>
@@ -216,9 +221,9 @@ export const TreatmentSettings: React.FC<TreatmentSettingsProps> = ({ clinicId }
             </Reorder.Group>
 
             {treatments.length === 0 && !loading && (
-                <div className="py-20 text-center border-2 border-dashed border-white/5 rounded-[40px]">
-                    <Palette className="w-12 h-12 text-white/5 mx-auto mb-4" />
-                    <p className="text-white/20 font-bold uppercase tracking-[0.2em] text-xs">No treatments defined</p>
+                <div className="py-24 text-center border border-dashed border-gray-200 rounded-[32px] bg-gray-50/50">
+                    <Palette className="w-10 h-10 text-gray-200 mx-auto mb-4" />
+                    <p className="metric-label text-[10px] text-gray-400">No clinical treatments defined</p>
                 </div>
             )}
         </div>

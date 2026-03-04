@@ -77,13 +77,13 @@ export default function Hero({ clinic }: { clinic: any }) {
                   if (element) {
                     element.scrollIntoView({ behavior: "smooth" });
                   } else {
-                    navigate("/", { state: { scrollTo: "lead-form" } });
+                    window.location.href = "/#lead-form";
                   }
                 }}
-                className="btn-primary w-full sm:w-auto text-lg group flex items-center gap-3 !px-12 !py-6"
+                className="w-full sm:w-auto bg-harmony-gradient text-white text-lg group flex items-center justify-center sm:justify-start gap-3 px-8 py-4 rounded-full font-bold transition-luxury hover:scale-101 hover:shadow-[0_8px_30px_rgba(91,164,207,0.3)]"
               >
                 Book Your Consultation
-                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-black group-hover:bg-black group-hover:text-white transition-colors">
+                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-accent-blue group-hover:bg-accent-mint group-hover:text-white transition-colors">
                   <ArrowUpRight className="w-5 h-5" />
                 </div>
               </button>
@@ -92,7 +92,7 @@ export default function Hero({ clinic }: { clinic: any }) {
                 <span className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-1">Direct Clinical Line</span>
                 <a
                   href={`tel:${clinicPhone}`}
-                  className="text-white font-bold text-xl hover:text-accent transition-colors flex items-center gap-2"
+                  className="text-white font-bold text-xl hover:text-accent-mint transition-colors flex items-center gap-2"
                 >
                   {clinicPhone}
                 </a>
@@ -102,7 +102,6 @@ export default function Hero({ clinic }: { clinic: any }) {
           </motion.div>
         </div>
       </div>
-
     </section>
   );
 }

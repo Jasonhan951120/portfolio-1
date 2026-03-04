@@ -24,6 +24,7 @@ import ResultsPage from "./pages/ResultsPage";
 import TestimonialsPage from "./pages/TestimonialsPage";
 import TreatmentDetailPage from "./pages/TreatmentDetailPage";
 import ClientPTPage from "./pages/ClientPTPage";
+import VisitTrackingPage from "./pages/VisitTrackingPage";
 import MobileStickyCTA from "./components/MobileStickyCTA";
 import WhatsAppWidget from "./components/WhatsAppWidget";
 import ScrollToTop from "./components/ScrollToTop";
@@ -200,9 +201,11 @@ export default function App() {
           <Route path="/testimonials" element={<TestimonialsPage clinic={clinic} />} />
           <Route path="/treatment/:slug" element={<TreatmentDetailPage clinic={clinic} />} />
           <Route path="/pt/:id" element={<ClientPTPage />} />
+          <Route path="/visit/:clinicId" element={<VisitTrackingPage />} />
           <Route path="/pricing" element={<PricingPage />} />
           <Route path="/dashboard" element={<ProtectedRoute><SubscriptionGuard><AdminDashboard /></SubscriptionGuard></ProtectedRoute>} />
           <Route path="/admin" element={<ProtectedRoute><SubscriptionGuard><AdminDashboard /></SubscriptionGuard></ProtectedRoute>} />
+          <Route path="/admin/dashboard" element={<ProtectedRoute><SubscriptionGuard><AdminDashboard /></SubscriptionGuard></ProtectedRoute>} />
           <Route path="/admin/onboarding" element={<ProtectedRoute><SubscriptionGuard><AdminOnboarding /></SubscriptionGuard></ProtectedRoute>} />
           <Route path="/login" element={<AdminLogin />} />
         </Routes>

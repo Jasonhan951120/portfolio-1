@@ -70,17 +70,17 @@ export const ActivityLog: React.FC<{ clinicId: string }> = ({ clinicId }) => {
         }
 
         return (
-            <div className="flex items-center gap-4 py-4 border-b border-white/5 last:border-0 group">
-                <div className="text-[10px] font-bold text-white/20 uppercase tracking-widest min-w-[100px]">
+            <div className="flex items-center gap-6 py-4 border-b border-gray-100 last:border-0 group">
+                <div className="metric-label text-[9px] text-gray-400 min-w-[90px]">
                     {time}
                 </div>
-                <div className="flex-1 text-sm text-white/60">
-                    <span className="font-bold text-white/80">{log.user_name}</span>
-                    <span className="mx-2 text-white/20">|</span>
-                    <span>{actionText}</span>
+                <div className="flex-1 text-[13px] text-gray-600">
+                    <span className="font-bold text-gray-900">{log.user_name}</span>
+                    <span className="mx-3 text-gray-200">/</span>
+                    <span className="leading-relaxed">{actionText}</span>
                 </div>
                 <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Shield className="w-3.5 h-3.5 text-white/10" />
+                    <Shield className="w-3.5 h-3.5 text-gray-200" />
                 </div>
             </div>
         );
@@ -88,32 +88,32 @@ export const ActivityLog: React.FC<{ clinicId: string }> = ({ clinicId }) => {
 
     if (loading && logs.length === 0) {
         return (
-            <div className="flex items-center justify-center p-12">
-                <History className="w-6 h-6 text-white/10 animate-spin" />
+            <div className="flex items-center justify-center p-20">
+                <History className="w-5 h-5 text-gray-200 animate-spin" />
             </div>
         );
     }
 
     return (
-        <div className="bg-[#0f0f0f] border border-white/10 rounded-[32px] overflow-hidden">
-            <div className="p-8 border-b border-white/10 flex justify-between items-center bg-white/[0.01]">
+        <div className="bg-white border border-gray-100 rounded-[32px] overflow-hidden shadow-sm">
+            <div className="p-8 border-b border-gray-50 flex justify-between items-center bg-gray-50/30">
                 <div>
-                    <h3 className="text-xl font-display font-bold text-white uppercase tracking-tight">System Audit Trail</h3>
-                    <p className="text-[10px] text-white/30 font-bold uppercase tracking-[0.2em] mt-1">GDPR / HIPAA Compliance Log</p>
+                    <h3 className="text-xl font-bold text-gray-900 tracking-tight">System Audit Trail</h3>
+                    <p className="metric-label text-[9px] text-gray-400 mt-1 uppercase tracking-widest">Regulatory Compliance Log</p>
                 </div>
                 <button
                     onClick={fetchLogs}
-                    className="p-2 hover:bg-white/5 rounded-xl transition-colors"
+                    className="p-2.5 hover:bg-white rounded-xl border border-transparent hover:border-gray-100 transition-all shadow-sm"
                 >
-                    <History className="w-4 h-4 text-white/40" />
+                    <History className="w-4 h-4 text-gray-400" />
                 </button>
             </div>
 
             <div className="p-8 max-h-[500px] overflow-y-auto custom-scrollbar">
                 {logs.length === 0 ? (
-                    <div className="text-center py-12">
-                        <Shield className="w-12 h-12 text-white/5 mx-auto mb-4" />
-                        <p className="text-sm text-white/20 font-medium">No activity logs recorded yet.</p>
+                    <div className="text-center py-16">
+                        <Shield className="w-10 h-10 text-gray-100 mx-auto mb-4" />
+                        <p className="metric-label text-[10px] text-gray-400">No activity recorded for this period.</p>
                     </div>
                 ) : (
                     <div className="flex flex-col">
@@ -126,12 +126,12 @@ export const ActivityLog: React.FC<{ clinicId: string }> = ({ clinicId }) => {
                 )}
             </div>
 
-            <div className="px-8 py-4 bg-white/[0.02] border-t border-white/5 flex items-center justify-between">
-                <span className="text-[9px] font-bold text-white/20 uppercase tracking-widest flex items-center gap-1.5">
-                    <Shield className="w-3 h-3" /> Encrypted & Immutable
+            <div className="px-8 py-5 bg-gray-50/50 border-t border-gray-50 flex items-center justify-between">
+                <span className="metric-label text-[8px] text-gray-400 uppercase tracking-widest flex items-center gap-2">
+                    <Shield className="w-3 h-3 text-gray-300" /> Immutable Ledger
                 </span>
-                <span className="text-[9px] font-bold text-white/20 uppercase tracking-widest">
-                    Showing last 50 events
+                <span className="metric-label text-[8px] text-gray-400 uppercase tracking-widest">
+                    Last 50 Events
                 </span>
             </div>
         </div>
