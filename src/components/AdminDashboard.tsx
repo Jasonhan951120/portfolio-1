@@ -8,12 +8,14 @@ import {
   MessageSquare, Send, Sparkles, Layout,
   ArrowRight, ShieldCheck, Zap, Settings, Building, Save, Plus, Trash2, Camera, Palette, CreditCard,
   Mail, UserPlus, Loader2, Clock, Copy, Shield,
-  Link2, AlertTriangle, MapPin, ChevronDown, Instagram, MessageCircle
+  Link2, AlertTriangle, MapPin, ChevronDown, Instagram, MessageCircle, Link as LinkIcon
 } from 'lucide-react';
 import { Link, useNavigate } from "react-router-dom";
 import { supabase, type ConsultationRequest, type Profile, type Invitation } from "../lib/supabase";
 import { useAuth } from "../contexts/AuthContext";
 import { generateDailyBriefing } from "../lib/ai-assistant-service";
+import { TREATMENT_VALUES } from "../lib/constants";
+import { AutoTaggingModal } from "./dashboard/shared/AutoTaggingModal";
 import { AnimatePresence } from "motion/react";
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent, useDroppable } from '@dnd-kit/core';
 import { SortableContext, arrayMove, sortableKeyboardCoordinates, useSortable } from '@dnd-kit/sortable';
@@ -70,17 +72,6 @@ function timeAgo(dateStr: string): string {
   return new Date(dateStr).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
 }
 
-const TREATMENT_VALUES: Record<string, number> = {
-  "Dental Implants": 3000,
-  "Invisalign / Aligners": 2500,
-  "Veneers": 1200,
-  "Composite Bonding": 800,
-  "Teeth Whitening": 500,
-  "Dental Crown": 900,
-  "Emergency Appointment": 300,
-  "General Inquiry": 1500,
-  "Other": 1000,
-};
 
 const STATUS_COLORS: Record<string, string> = {
   "New Lead": "text-[#C5A059] border-[#C5A059]/40 bg-[#C5A059]/10",
@@ -724,6 +715,17 @@ export default function AdminDashboard() {
   const [editingProfile, setEditingProfile] = useState<Profile | null>(null);
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
 
+  // Marketing Sync State
+  const [adConnections, setAdConnections] = useState<any[]>([]);
+  const [adMetrics, setAdMetrics] = useState({ spend: 0, clicks: 0, impressions: 0 });
+  const [isAutoTagMenuOpen, setIsAutoTagMenuOpen] = useState(false);
+  const [selectedPlatform, setSelectedPlatform] = useState<'meta' | 'google' | null>(null);
+
+  // 🔴 LIVE Traffic State — powered by Supabase Realtime
+  const [trafficStats, setTrafficStats] = useState({
+    "Direct": 0, "Google": 0, "Social": 0, "Google (Organic)": 0,
+  });
+
   // Today's Appointments Memo
   const todaysLeads = useMemo(() => {
     const today = new Date().toISOString().split('T')[0];
@@ -761,12 +763,78 @@ export default function AdminDashboard() {
         .lt('created_at', fifteenMinsAgo);
       if (count !== null) setDraftDropoffs(count);
     };
+
+    const fetchAdData = async () => {
+      if (!profile?.clinic_id) return;
+
+      // Fetch connections
+      const { data: conns } = await supabase
+        .from('clinic_ad_connections')
+        .select('*')
+        .eq('status', 'connected');
+      if (conns) setAdConnections(conns);
+
+      // Fetch aggregated metrics for this month
+      const startOfMonth = new Date(analyticsYear, analyticsMonth, 1).toISOString().split('T')[0];
+      const endOfMonth = new Date(analyticsYear, analyticsMonth + 1, 0).toISOString().split('T')[0];
+
+      const { data: metrics } = await supabase
+        .from('clinic_ad_metrics')
+        .select('spend_gbp, clicks, impressions')
+        .gte('date', startOfMonth)
+        .lte('date', endOfMonth);
+
+      if (metrics) {
+        const aggregated = metrics.reduce((acc, row) => ({
+          spend: acc.spend + Number(row.spend_gbp || 0),
+          clicks: acc.clicks + Number(row.clicks || 0),
+          impressions: acc.impressions + Number(row.impressions || 0)
+        }), { spend: 0, clicks: 0, impressions: 0 });
+        setAdMetrics(aggregated);
+      }
+    };
+
     if (session) {
       fetchDrafts();
+      fetchAdData();
       const interval = setInterval(fetchDrafts, 60000); // Check every minute
       return () => clearInterval(interval);
     }
-  }, [session]);
+  }, [session, profile, analyticsMonth, analyticsYear]);
+
+  // 🔴 REALTIME: Subscribe to traffic_stats table for live dashboard updates
+  useEffect(() => {
+    if (!profile?.clinic_id) return;
+
+    // Initial fetch
+    const fetchTrafficStats = async () => {
+      const { data } = await supabase
+        .from("traffic_stats")
+        .select("source, count")
+        .eq("clinic_id", profile.clinic_id);
+      if (data) {
+        const stats = { "Direct": 0, "Google": 0, "Social": 0, "Google (Organic)": 0 };
+        data.forEach((row: any) => {
+          if (row.source in stats) stats[row.source as keyof typeof stats] = row.count;
+        });
+        setTrafficStats(stats);
+      }
+    };
+
+    fetchTrafficStats();
+
+    // Realtime channel
+    const channel = supabase
+      .channel("traffic_stats_realtime")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "traffic_stats", filter: `clinic_id=eq.${profile.clinic_id}` },
+        () => { fetchTrafficStats(); } // Refetch on any change
+      )
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [profile?.clinic_id]);
 
   // ── Dynamic Analytics Logic (Hooks at top!) ──
   const dynamicRevenueData = useMemo(() => {
@@ -2335,6 +2403,75 @@ export default function AdminDashboard() {
                     <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-[#C5A059]" />Veneers</div>
                   </div>
                 </div>
+
+                {/* Fully Automated API Ad Sync Panel */}
+                <div className="lg:col-span-3 bg-white border border-black/5 rounded-[32px] p-8 shadow-xl relative overflow-hidden mt-4">
+                  <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                    <div>
+                      <h3 className="text-xl font-display font-bold text-gray-900 flex items-center gap-3">
+                        <Globe className="w-6 h-6 text-[#C5A059]" strokeWidth={1.5} /> Marketing Intelligence
+                      </h3>
+                      <p className="text-sm text-gray-500 font-medium mt-1">Real-time hourly sync via Supabase Cron.</p>
+                    </div>
+                    <Link
+                      to="/admin/campaign-setup"
+                      className="bg-[#C5A059] text-white px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest shadow-[0_4px_14px_rgba(197,160,89,0.3)] hover:shadow-[0_6px_20px_rgba(197,160,89,0.4)] hover:-translate-y-0.5 transition-all flex items-center gap-2"
+                    >
+                      <LinkIcon className="w-4 h-4" /> Get Tracking Links
+                    </Link>
+                  </div>
+
+                  <div className="grid md:grid-cols-4 gap-6 mb-8">
+                    <div className="bg-black/5 rounded-2xl p-6 relative overflow-hidden group hover:bg-black/10 transition-colors">
+                      <p className="text-[10px] uppercase font-bold tracking-widest text-gray-500 mb-2 relative z-10">Total Ad Spend</p>
+                      <p className="text-2xl font-black text-gray-900 tracking-[-0.05em] relative z-10">£{adMetrics.spend.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                    </div>
+                    <div className="bg-[#C5A059]/10 rounded-2xl p-6 border border-[#C5A059]/20">
+                      <p className="text-[10px] uppercase font-bold tracking-widest text-[#C5A059] mb-2 drop-shadow-sm">Total Clicks</p>
+                      <p className="text-3xl font-black text-[#C5A059] tracking-[-0.05em] drop-shadow-md">{adMetrics.clicks.toLocaleString()}</p>
+                    </div>
+                    <div className="bg-black/5 rounded-2xl p-6 hover:bg-black/10 transition-colors">
+                      <p className="text-[10px] uppercase font-bold tracking-widest text-gray-500 mb-2">Impressions</p>
+                      <p className="text-2xl font-black text-gray-900 tracking-[-0.05em]">{adMetrics.impressions.toLocaleString()}</p>
+                    </div>
+                    <div className="bg-black/5 rounded-2xl p-6 hover:bg-black/10 transition-colors">
+                      <p className="text-[10px] uppercase font-bold tracking-widest text-gray-500 mb-2">Cost per Click</p>
+                      <p className="text-2xl font-black text-gray-900 tracking-[-0.05em]">
+                        £{adMetrics.clicks > 0 ? (adMetrics.spend / adMetrics.clicks).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "0.00"}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4">Connected Properties</h4>
+                    {adConnections.length === 0 ? (
+                      <div className="text-sm text-gray-400 font-medium italic">No ad accounts connected. Navigate to Clinic Settings to connect Google/Meta Ads.</div>
+                    ) : (
+                      adConnections.map(conn => (
+                        <div key={conn.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                          <div className="flex items-center gap-3">
+                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${conn.platform === 'meta' ? 'bg-blue-50 text-blue-600' : 'bg-red-50 text-red-600'}`}>
+                              {conn.platform === 'meta' ? <Instagram className="w-4 h-4" /> : <Globe className="w-4 h-4" />}
+                            </div>
+                            <span className="text-sm font-bold text-gray-900 uppercase tracking-tight capitalize">{conn.platform} Ads</span>
+                          </div>
+                          <div className="flex items-center gap-5">
+                            <button
+                              onClick={() => {
+                                setSelectedPlatform(conn.platform as 'meta' | 'google');
+                                setIsAutoTagMenuOpen(true);
+                              }}
+                              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#87A96B]/10 hover:bg-[#87A96B]/20 transition-colors shadow-sm group border border-[#87A96B]/20"
+                            >
+                              <Zap className="w-4 h-4 text-[#87A96B] group-hover:scale-110 transition-transform" strokeWidth={1.5} />
+                              <span className="text-[10px] font-black uppercase tracking-widest text-[#87A96B]">Enable Auto-tracking</span>
+                            </button>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
               </motion.div>
             )}
 
@@ -2481,14 +2618,48 @@ export default function AdminDashboard() {
                 ))}
               </div>
 
-              {/* Lead Source — Donut Chart + Insight */}
+              {/* Lead Source — Live Traffic Donut + Insight */}
+              {/* 🔴 REALTIME: Powered by Supabase postgres_changes channel */}
               <div className="grid lg:grid-cols-3 gap-6 mb-10">
-                {/* Donut Chart Card */}
+                {/* Live Traffic Card */}
                 <div className="card-light p-8">
-                  <h3 className="text-label mb-8 flex items-center gap-2">
-                    <Globe className="w-4 h-4" strokeWidth={1.5} /> Leads by Source
+                  <h3 className="text-label mb-6 flex items-center gap-2">
+                    <Globe className="w-4 h-4" strokeWidth={1.5} /> Traffic by Source
+                    <span className="ml-auto w-2 h-2 rounded-full bg-[#87A96B] animate-pulse" title="Realtime" />
                   </h3>
-                  <DonutChart segments={sourceSegments} total={totalLeads} totalValue={pipelineValue + allTimeRevenue} />
+                  {/* Live counters */}
+                  <div className="space-y-3">
+                    {([
+                      { label: "Direct Traffic", key: "Direct", color: "bg-gray-400" },
+                      { label: "Google / Search", key: "Google", color: "bg-blue-500" },
+                      { label: "Google (Organic)", key: "Google (Organic)", color: "bg-green-500" },
+                      { label: "Referrer / Social", key: "Social", color: "bg-purple-500" },
+                    ] as const).map(({ label, key, color }) => {
+                      const count = trafficStats[key] || 0;
+                      const total = Object.values(trafficStats).reduce((a, b) => a + b, 0);
+                      const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+                      return (
+                        <div key={key}>
+                          <div className="flex justify-between items-center mb-1">
+                            <div className="flex items-center gap-2">
+                              <span className={`w-2 h-2 rounded-full ${color}`} />
+                              <span className="text-xs font-bold text-gray-600">{label}</span>
+                            </div>
+                            <span className="text-xs font-black text-gray-900">{count} <span className="text-gray-400 font-medium">({pct}%)</span></span>
+                          </div>
+                          <div className="w-full h-1.5 bg-black/5 rounded-full overflow-hidden">
+                            <div className={`h-full ${color} rounded-full transition-all duration-700`} style={{ width: `${pct}%` }} />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="mt-6 pt-4 border-t border-black/5 flex justify-between items-center">
+                    <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Total Visits</span>
+                    <span className="text-2xl font-black text-gray-900">
+                      {Object.values(trafficStats).reduce((a, b) => a + b, 0).toLocaleString()}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Insight Card */}
@@ -2510,9 +2681,13 @@ export default function AdminDashboard() {
                     </p>
                   </div>
 
-                  {/* Mini stats row */}
+                  {/* Mini stats row — live from trafficStats */}
                   <div className="grid grid-cols-3 gap-4 mt-8">
-                    {sourceSegments.map(seg => (
+                    {[
+                      { label: "Direct Traffic", count: trafficStats["Direct"] },
+                      { label: "Google / Search", count: (trafficStats["Google"] || 0) + (trafficStats["Google (Organic)"] || 0) },
+                      { label: "Referrer / Social", count: trafficStats["Social"] },
+                    ].map(seg => (
                       <div key={seg.label} className="bg-black/5 rounded-2xl p-4 text-center">
                         <div className="text-2xl font-bold text-gray-900">{seg.count}</div>
                         <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-1 leading-tight">{seg.label}</div>
@@ -2647,6 +2822,12 @@ export default function AdminDashboard() {
                 {isFetchingMore ? <Loader2 className="w-4 h-4 animate-spin text-gray-900/60" strokeWidth={1.5} /> : hasMore ? "" : "Last Patient Reached"}
               </div>
             </>)}
+
+            <AutoTaggingModal
+              isOpen={isAutoTagMenuOpen}
+              platform={selectedPlatform}
+              onClose={() => setIsAutoTagMenuOpen(false)}
+            />
 
             {/* ── Clinic Settings Tab ───────────────────────────────── */}
             {activeTab === "settings" && (

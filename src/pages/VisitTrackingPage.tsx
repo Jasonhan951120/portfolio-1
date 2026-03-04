@@ -64,36 +64,38 @@ export default function VisitTrackingPage() {
             const source = categorizeSource(utmSource, referrer);
             const session_hash = await generateSessionHash();
 
-            // ── Dedup Check: has this session already been counted today? ──────────
-            const since24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-            const { data: existingVisit } = await supabase
-                .from("traffic_events")
-                .select("id")
-                .eq("clinic_id", clinicId)
-                .eq("session_hash", session_hash)
-                .gte("created_at", since24h)
-                .limit(1)
-                .maybeSingle();
+            // TODO: RE-ENABLE AFTER TESTING (Anti-abuse logic) ─────────────────
+            // Lines below were commented out for Developer Testing Mode.
+            // To restore: uncomment lines 68–96 and wrap the insert/rpc in the if (!existingVisit) block.
+            //
+            // const since24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+            // const { data: existingVisit } = await supabase
+            //     .from("traffic_events")
+            //     .select("id")
+            //     .eq("clinic_id", clinicId)
+            //     .eq("session_hash", session_hash)
+            //     .gte("created_at", since24h)
+            //     .limit(1)
+            //     .maybeSingle();
+            // ─────────────────────────────────────────────────────────────────────
 
-            if (!existingVisit) {
-                // ── Unique visit: log event ────────────────────────────────────────
-                await supabase.from("traffic_events").insert({
-                    clinic_id: clinicId,
-                    session_hash,
-                    source,
-                    utm_source: utmSource || null,
-                    utm_medium: searchParams.get("utm_medium") || null,
-                    utm_campaign: searchParams.get("utm_campaign") || null,
-                    referrer: referrer || null,
-                });
+            // ── TESTING MODE: Write unconditionally on EVERY visit / refresh ──────
+            await supabase.from("traffic_events").insert({
+                clinic_id: clinicId,
+                session_hash,
+                source,
+                utm_source: utmSource || null,
+                utm_medium: searchParams.get("utm_medium") || null,
+                utm_campaign: searchParams.get("utm_campaign") || null,
+                referrer: referrer || null,
+            });
 
-                // ── Atomically increment traffic_stats counter ─────────────────────
-                // ON CONFLICT (clinic_id, source) → increment count
-                await supabase.rpc("upsert_traffic_stat", {
-                    p_clinic_id: clinicId,
-                    p_source: source,
-                });
-            }
+            // ── Atomically increment traffic_stats counter ────────────────────────
+            await supabase.rpc("upsert_traffic_stat", {
+                p_clinic_id: clinicId,
+                p_source: source,
+            });
+            // ── END TESTING MODE ─────────────────────────────────────────────────
 
             // ── Redirect to homepage, preserving UTM params ────────────────────
             const redirectUrl = new URL("/", window.location.origin);

@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { Instagram, Globe } from 'lucide-react';
+import { Instagram, Globe, Zap } from 'lucide-react';
 import DailyInsight from '../../DailyInsight';
 import TrafficSourceChart from '../../TrafficSourceChart';
 import { LiveTrafficPanel } from '../shared/LiveTrafficPanel';
+import { AutoTaggingModal } from '../shared/AutoTaggingModal';
 import MarketingOnboarding from '../../MarketingOnboarding';
 import { type Profile } from '../../../lib/supabase';
 
@@ -22,6 +23,17 @@ export function MarketingTab({
     profile,
     loadDashboardData
 }: MarketingTabProps) {
+    const [isAutoTagMenuOpen, setIsAutoTagMenuOpen] = useState(false);
+    const [selectedPlatform, setSelectedPlatform] = useState<'meta' | 'google' | null>(null);
+
+    const handleEnableAutoTracking = (platform: 'meta' | 'google') => {
+        // Here we would call the edge function `enable-auto-tracking`.
+        // Because of OAuth scopes, we know it returns a fallback modal prompt,
+        // so we open the modal elegantly.
+        setSelectedPlatform(platform);
+        setIsAutoTagMenuOpen(true);
+    };
+
     return (
         <div className="space-y-8">
             {marketingConnections.length > 0 ? (
@@ -52,6 +64,15 @@ export function MarketingTab({
                                             <span className="text-sm font-bold text-gray-900 uppercase tracking-tight capitalize">{conn.platform} Ads</span>
                                         </div>
                                         <div className="flex items-center gap-2">
+                                            <div className="flex flex-col items-end mr-4">
+                                                <button
+                                                    onClick={() => handleEnableAutoTracking(conn.platform as 'meta' | 'google')}
+                                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#87A96B]/5 hover:bg-[#87A96B]/10 text-[#87A96B] transition-colors border border-[#87A96B]/20"
+                                                >
+                                                    <Zap className="w-3 h-3 fill-current" />
+                                                    <span className="text-[10px] font-bold uppercase tracking-widest">Enable Auto-tracking</span>
+                                                </button>
+                                            </div>
                                             <div className="w-1.5 h-1.5 rounded-full bg-[#87A96B]" />
                                             <span className="text-[10px] font-black text-[#87A96B] uppercase tracking-tighter">Active</span>
                                         </div>
@@ -107,6 +128,12 @@ export function MarketingTab({
                     <LiveTrafficPanel clinicId={profile?.clinic_id ?? undefined} />
                 </div>
             )}
+
+            <AutoTaggingModal
+                isOpen={isAutoTagMenuOpen}
+                platform={selectedPlatform}
+                onClose={() => setIsAutoTagMenuOpen(false)}
+            />
         </div>
     );
 }

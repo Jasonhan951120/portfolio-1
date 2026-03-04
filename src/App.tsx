@@ -8,6 +8,8 @@ import LeadForm from "./components/LeadForm";
 import AdminDashboard from "./components/AdminDashboard";
 import AdminLogin from "./components/AdminLogin";
 import AdminOnboarding from "./components/AdminOnboarding";
+import CampaignSetupPage from "./pages/CampaignSetupPage";
+import ApiIntegrationPage from "./pages/ApiIntegrationPage";
 import PricingPage from "./pages/PricingPage";
 import { SubscriptionGuard } from "./components/SubscriptionGuard";
 import Gallery from "./components/Gallery";
@@ -206,6 +208,8 @@ export default function App() {
           <Route path="/dashboard" element={<ProtectedRoute><SubscriptionGuard><AdminDashboard /></SubscriptionGuard></ProtectedRoute>} />
           <Route path="/admin" element={<ProtectedRoute><SubscriptionGuard><AdminDashboard /></SubscriptionGuard></ProtectedRoute>} />
           <Route path="/admin/dashboard" element={<ProtectedRoute><SubscriptionGuard><AdminDashboard /></SubscriptionGuard></ProtectedRoute>} />
+          <Route path="/admin/campaign-setup" element={<ProtectedRoute><SubscriptionGuard><CampaignSetupPage /></SubscriptionGuard></ProtectedRoute>} />
+          <Route path="/admin/integrations" element={<ProtectedRoute><SubscriptionGuard><ApiIntegrationPage /></SubscriptionGuard></ProtectedRoute>} />
           <Route path="/admin/onboarding" element={<ProtectedRoute><SubscriptionGuard><AdminOnboarding /></SubscriptionGuard></ProtectedRoute>} />
           <Route path="/login" element={<AdminLogin />} />
         </Routes>
