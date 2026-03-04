@@ -1,0 +1,4 @@
+C:\Users\Donggyun\.gemini\antigravity\scratch\portfolio-1\src\components\AdminDashboard.bak.tsx - 03/02/2026 23:04:21 - 185713
+C:\Users\Donggyun\.gemini\antigravity\scratch\portfolio-1\src\components\AdminDashboard.broken.bak.tsx - 03/04/2026 16:45:45 - 163486
+C:\Users\Donggyun\.gemini\antigravity\scratch\portfolio-1\src\components\AdminDashboard.clinical-premium.bak.tsx - 03/03/2026 01:23:40 - 185346
+C:\Users\Donggyun\.gemini\antigravity\scratch\portfolio-1\src\components\AdminDashboard.tsx - 03/04/2026 16:45:45 - 163486

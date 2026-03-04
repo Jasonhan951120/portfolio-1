@@ -1,0 +1,8 @@
+89c29fe04fce4c64035bf28a579fdbb5b321ef2a - Tue Mar 3 14:18:24 2026 +0000 : chore: save state before Codename.com style UI redesign (rollback point)
+f7f79dd4cfa911ce4ce88ab9adf1158349982105 - Mon Mar 2 14:55:05 2026 +0000 : pre-ui-overhaul-backup: Saved state before Matte Dark Mode redesign
+2a2fcbdbbc0e752e25801030943c10a8e694f726 - Fri Feb 27 16:51:59 2026 +0000 : Save state before Apple-minimalist dopamine update
+8a8dbf17fbf78d77e2803d200e94d138cf2421b2 - Tue Feb 3 18:46:25 2026 +0000 : Fix Vercel build: add explicit vite configuration
+9f56857b3b74ad499574032d70763c038d243d48 - Tue Feb 3 18:33:53 2026 +0000 : Fix Vercel routing configuration
+7464fdc8f029a7e71a30156dfbc644e8413975ee - Tue Feb 3 17:51:37 2026 +0000 : Fix Vercel deployment: update vite config for proper build
+6bfd0f61a05449a2c50269e6f080458cd9ac1098 - Tue Feb 3 14:09:18 2026 +0000 : Add Vercel configuration for proper deployment
+7f962e44b65d78d5e8617a14a6a6a9f19b144bc6 - Tue Feb 3 13:45:12 2026 +0000 : Initial commit: BrightSmile Dental Portfolio with Supabase integration
