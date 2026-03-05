@@ -1,23 +1,9 @@
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
 
-console.log("supabase.ts: Initializing with URL:", supabaseUrl ? "Present" : "MISSING");
-
-if (!supabaseUrl || !supabaseAnonKey) {
-    console.error("supabase.ts: ERROR - Missing Supabase environment variables!");
-}
-
-let supabaseInstance;
-try {
-    supabaseInstance = createClient(supabaseUrl || "", supabaseAnonKey || "");
-    console.log("supabase.ts: createClient call finished");
-} catch (err) {
-    console.error("supabase.ts: CRITICAL ERROR during createClient:", err);
-}
-
-export const supabase = supabaseInstance!;
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export type Clinic = {
     id: string;
