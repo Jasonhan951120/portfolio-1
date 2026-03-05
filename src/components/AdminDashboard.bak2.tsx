@@ -2414,10 +2414,10 @@ export default function AdminDashboard() {
                       <p className="text-sm text-gray-500 font-medium mt-1">Real-time hourly sync via Supabase Cron.</p>
                     </div>
                     <Link
-                      to="/admin/integrations"
+                      to="/admin/campaign-setup"
                       className="bg-[#C5A059] text-white px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest shadow-[0_4px_14px_rgba(197,160,89,0.3)] hover:shadow-[0_6px_20px_rgba(197,160,89,0.4)] hover:-translate-y-0.5 transition-all flex items-center gap-2"
                     >
-                      <Zap className="w-4 h-4" /> Manage Integrations
+                      <LinkIcon className="w-4 h-4" /> Get Tracking Links
                     </Link>
                   </div>
 

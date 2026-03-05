@@ -51,7 +51,7 @@ function BrowserFrame({ children, url = "ads.google.com" }: { children: React.Re
 // ─── Mockup: Step 1 Instagram (Dashboard on PC) ───────────────────────────────
 function MockupPCDashboard() {
     return (
-        <BrowserFrame url="app.hanlan.oc/admin/campaign-setup">
+        <BrowserFrame url="app.hanlanoc.com/admin/campaign-setup">
             <div className="space-y-2">
                 <div className="flex items-center gap-2 mb-3">
                     <div className="w-5 h-5 rounded bg-[#C5A059]/20" />
@@ -104,7 +104,7 @@ function MockupQRScan() {
                             <Globe className="w-3.5 h-3.5 text-white" />
                         </div>
                         <div>
-                            <p className="text-white text-[9px] font-bold">Open hanlan.oc</p>
+                            <p className="text-white text-[9px] font-bold">Open hanlanoc.com</p>
                             <p className="text-gray-400 text-[8px]">Tap the link to copy</p>
                         </div>
                     </div>
@@ -121,14 +121,14 @@ function MockupSafariCopy() {
             <div className="px-3 py-3">
                 <div className="bg-[#F2F2F7] rounded-xl px-3 py-2 flex items-center gap-2 mb-3">
                     <div className="w-3 h-3 rounded-full bg-[#28C840] flex-shrink-0" />
-                    <p className="text-[8px] text-gray-600 truncate font-medium">hanlan.oc/visit/30bea…</p>
+                    <p className="text-[8px] text-gray-600 truncate font-medium">hanlanoc.com/visit/30bea…</p>
                 </div>
                 <div className="bg-[#F9FAFB] rounded-xl p-3 border border-black/5 mb-3">
                     <p className="text-[8px] text-gray-500 font-medium text-center">Redirecting...</p>
                 </div>
                 <div className="bg-[#1C1C1E] rounded-xl overflow-hidden border border-white/10 shadow-xl">
                     <div className="px-4 py-2.5 border-b border-white/10">
-                        <p className="text-white text-[9px] font-semibold text-center">hanlan.oc/visit/...</p>
+                        <p className="text-white text-[9px] font-semibold text-center">hanlanoc.com/visit/...</p>
                     </div>
                     {["Copy", "Share", "Add Bookmark"].map((item, i) => (
                         <div key={item} className={`px-4 py-2.5 flex items-center justify-between ${i === 0 ? "bg-[#87A96B]/20" : ""} ${i < 2 ? "border-b border-white/5" : ""}`}>
@@ -164,7 +164,7 @@ function MockupIGEditProfile() {
                 {/* Website field — KEY with pulsing ring */}
                 <div className="relative border-b-2 border-[#87A96B] py-2 mt-1">
                     <p className="text-[7px] font-black uppercase tracking-widest text-[#87A96B]">Website / Links</p>
-                    <p className="text-[9px] text-gray-900 mt-0.5 font-medium truncate">hanlan.oc/visit/30bea…</p>
+                    <p className="text-[9px] text-gray-900 mt-0.5 font-medium truncate">hanlanoc.com/visit/30bea…</p>
                     <div className="absolute -inset-1.5 rounded-xl pointer-events-none">
                         <div className="absolute inset-0 rounded-xl border-2 border-red-500 animate-pulse" />
                         <div className="absolute -top-2.5 -right-2.5">
@@ -209,7 +209,7 @@ function MockupIGLinkSaved() {
                 ))}
                 <div className="border-b-2 border-[#87A96B] py-2 mt-1 bg-[#87A96B]/5 -mx-1 px-1 rounded-lg">
                     <p className="text-[7px] font-black uppercase tracking-widest text-[#87A96B]">Website / Links ✓</p>
-                    <p className="text-[9px] text-[#87A96B] mt-0.5 font-bold truncate">hanlan.oc/visit/30bea…</p>
+                    <p className="text-[9px] text-[#87A96B] mt-0.5 font-bold truncate">hanlanoc.com/visit/30bea…</p>
                 </div>
                 <div className="mt-3 flex items-center gap-1.5 justify-center bg-[#87A96B]/10 rounded-xl p-2">
                     <CheckCircle2 className="w-3.5 h-3.5 text-[#87A96B]" />
@@ -308,7 +308,7 @@ function MockupFinalURL() {
                 <div className="relative">
                     <p className="text-[8px] font-black uppercase tracking-widest text-[#C5A059] mb-1">Final URL ★</p>
                     <div className="h-9 bg-white rounded-xl border-2 border-[#C5A059]/60 px-3 flex items-center shadow-[0_0_0_3px_rgba(197,160,89,0.15)]">
-                        <p className="text-[8px] text-gray-700 font-mono truncate">hanlan.oc/visit/30beae42?utm_source=google</p>
+                        <p className="text-[8px] text-gray-700 font-mono truncate">hanlanoc.com/visit/30beae42?utm_source=google</p>
                     </div>
                     <div className="absolute -inset-1.5 rounded-2xl pointer-events-none border-2 border-red-500 animate-pulse" />
                     <div className="absolute -top-3 -right-3">
@@ -396,7 +396,7 @@ export default function CampaignSetupPage() {
 
     const handleCopy = (platform: string, utmSource: string) => {
         if (!clinicId) return;
-        navigator.clipboard.writeText(`https://hanlan.oc/visit/${clinicId}?utm_source=${utmSource}`).then(() => {
+        navigator.clipboard.writeText(`https://hanlanoc.com/visit/${clinicId}?utm_source=${utmSource}`).then(() => {
             setCopiedPlatform(platform);
             setTimeout(() => setCopiedPlatform(null), 2000);
         });
@@ -414,7 +414,7 @@ export default function CampaignSetupPage() {
         }
     ];
 
-    const instagramUrl = clinicId ? `https://hanlan.oc/visit/${clinicId}?utm_source=instagram` : "";
+    const instagramUrl = clinicId ? `https://hanlanoc.com/visit/${clinicId}?utm_source=instagram` : "";
 
     if (!clinicId) return (
         <div className="min-h-screen bg-[#F9FAFB] flex items-center justify-center">
@@ -445,7 +445,7 @@ export default function CampaignSetupPage() {
                 <div className="space-y-5 mb-16">
                     {platforms.map((p, i) => {
                         const isCopied = copiedPlatform === p.id;
-                        const url = `https://hanlan.oc/visit/${clinicId}?utm_source=${p.utm}`;
+                        const url = `https://hanlanoc.com/visit/${clinicId}?utm_source=${p.utm}`;
                         return (
                             <motion.div key={p.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07 }}
                                 className="bg-white p-8 rounded-[28px] border border-black/5 shadow-[0_2px_20px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all">
