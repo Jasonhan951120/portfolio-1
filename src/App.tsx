@@ -191,7 +191,8 @@ export default function App() {
       <Router>
         <ScrollToTop />
         <Routes>
-          <Route path="/" element={<LandingPage clinic={clinic} />} />
+          <Route path="/" element={<ProtectedRoute><SubscriptionGuard><AdminDashboard /></SubscriptionGuard></ProtectedRoute>} />
+          <Route path="/landing" element={<LandingPage clinic={clinic} />} />
           <Route path="/services" element={<ServicesPage clinic={clinic} />} />
           <Route path="/contact" element={<ContactPage clinic={clinic} />} />
           <Route path="/specialists" element={<SpecialistsPage clinic={clinic} />} />
