@@ -11,7 +11,7 @@ type Category = "All" | "Invisalign" | "Veneers" | "Whitening" | "Implants" | "B
 interface Case {
     id: number;
     category: Exclude<Category, "All">;
-    patient: string;
+    client: string;
     age: string;
     occupation: string;
     problem: string;
@@ -31,7 +31,7 @@ const CASES: Case[] = [
     {
         id: 1,
         category: "Invisalign",
-        patient: "Sarah M.",
+        client: "Sarah M.",
         age: "28",
         occupation: "Marketing Director",
         problem: "Crowded front teeth made me cover my mouth every time I smiled at work.",
@@ -49,7 +49,7 @@ const CASES: Case[] = [
     {
         id: 2,
         category: "Invisalign",
-        patient: "Priya S.",
+        client: "Priya S.",
         age: "31",
         occupation: "Software Engineer",
         problem: "An overbite that made closing my lips feel unnatural and uncomfortable.",
@@ -67,7 +67,7 @@ const CASES: Case[] = [
     {
         id: 3,
         category: "Veneers",
-        patient: "James K.",
+        client: "James K.",
         age: "35",
         occupation: "Architect",
         problem: "Years of coffee staining and chipped edges left my teeth looking worn.",
@@ -85,7 +85,7 @@ const CASES: Case[] = [
     {
         id: 4,
         category: "Veneers",
-        patient: "Anya P.",
+        client: "Anya P.",
         age: "42",
         occupation: "TV Presenter",
         problem: "Noticeably uneven teeth that made me very self-conscious on camera.",
@@ -103,7 +103,7 @@ const CASES: Case[] = [
     {
         id: 5,
         category: "Whitening",
-        patient: "Emily R.",
+        client: "Emily R.",
         age: "24",
         occupation: "Nurse",
         problem: "Stubborn tea staining that no over-the-counter product could fix.",
@@ -121,7 +121,7 @@ const CASES: Case[] = [
     {
         id: 6,
         category: "Whitening",
-        patient: "Marcus L.",
+        client: "Marcus L.",
         age: "44",
         occupation: "Solicitor",
         problem: "Decades of red wine had left a stubborn grey-yellow tinge to my smile.",
@@ -139,7 +139,7 @@ const CASES: Case[] = [
     {
         id: 7,
         category: "Implants",
-        patient: "David T.",
+        client: "David T.",
         age: "52",
         occupation: "Finance Manager",
         problem: "Lost two molars in an accident — eating had become genuinely painful.",
@@ -157,7 +157,7 @@ const CASES: Case[] = [
     {
         id: 8,
         category: "Implants",
-        patient: "Helen W.",
+        client: "Helen W.",
         age: "60",
         occupation: "Retired Teacher",
         problem: "Full upper denture that slipped constantly — I dreaded speaking in public.",
@@ -175,7 +175,7 @@ const CASES: Case[] = [
     {
         id: 9,
         category: "Bonding",
-        patient: "Liam C.",
+        client: "Liam C.",
         age: "22",
         occupation: "University Student",
         problem: "Chipped front tooth from a football injury. I hated smiling in photos.",
@@ -199,19 +199,19 @@ type StatDef = { target: number; suffix: string; label: string; decimals?: numbe
 const CATEGORY_STATS: Record<Category, StatDef[]> = {
     All: [
         { target: 1400, suffix: "+", label: "Cases Completed" },
-        { target: 4.9, suffix: " / 5", label: "Patient Rating", decimals: 1 },
+        { target: 4.9, suffix: " / 5", label: "Client Rating", decimals: 1 },
         { target: 98, suffix: "%", label: "Would Recommend" },
         { target: 2, suffix: " week wait", label: "Avg Wait Time" },
     ],
     Invisalign: [
         { target: 480, suffix: "+", label: "Invisalign Cases" },
-        { target: 4.9, suffix: " / 5", label: "Patient Rating", decimals: 1 },
+        { target: 4.9, suffix: " / 5", label: "Client Rating", decimals: 1 },
         { target: 8, suffix: " months avg", label: "Treatment Duration" },
         { target: 96, suffix: "%", label: "Complete on Schedule" },
     ],
     Veneers: [
         { target: 320, suffix: "+", label: "Veneer Cases" },
-        { target: 5.0, suffix: " / 5", label: "Patient Rating", decimals: 1 },
+        { target: 5.0, suffix: " / 5", label: "Client Rating", decimals: 1 },
         { target: 3, suffix: " week avg", label: "Treatment Time" },
         { target: 99, suffix: "%", label: "Satisfaction Rate" },
     ],
@@ -223,13 +223,13 @@ const CATEGORY_STATS: Record<Category, StatDef[]> = {
     ],
     Implants: [
         { target: 210, suffix: "+", label: "Implants Placed" },
-        { target: 4.8, suffix: " / 5", label: "Patient Rating", decimals: 1 },
+        { target: 4.8, suffix: " / 5", label: "Client Rating", decimals: 1 },
         { target: 5, suffix: " months avg", label: "Full Treatment Time" },
         { target: 98, suffix: "%", label: "10-Year Success Rate" },
     ],
     Bonding: [
         { target: 390, suffix: "+", label: "Bonding Cases" },
-        { target: 4.9, suffix: " / 5", label: "Patient Rating", decimals: 1 },
+        { target: 4.9, suffix: " / 5", label: "Client Rating", decimals: 1 },
         { target: 90, suffix: " mins avg", label: "Per Session" },
         { target: 100, suffix: "%", label: "Pain-Free Cases" },
     ],
@@ -343,10 +343,10 @@ function StoryCard({ c, onCTA }: { c: Case; onCTA: () => void }) {
         <div className="flex flex-col h-full">
             <div className="flex items-center gap-3 mb-6">
                 <div className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center text-sm font-black shrink-0">
-                    {c.patient[0]}
+                    {c.client[0]}
                 </div>
                 <div className="min-w-0">
-                    <p className="font-black text-black text-sm">{c.patient}</p>
+                    <p className="font-black text-black text-sm">{c.client}</p>
                     <p className="text-[11px] text-muted font-medium">{c.age} yrs · {c.occupation}</p>
                 </div>
                 <div className="ml-auto flex gap-0.5 shrink-0">
@@ -418,7 +418,7 @@ export default function ResultsPage({ clinic }: { clinic: any }) {
                     <div>
                         <div className="inline-flex items-center gap-3 mb-4">
                             <Sparkles className="w-4 h-4 text-accent" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-muted">Patient Transformations</span>
+                            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-muted">Client Transformations</span>
                         </div>
                         <h1 className="text-5xl md:text-7xl font-display font-bold tracking-tighter uppercase leading-none text-black">
                             Real Results.<br />
@@ -426,7 +426,7 @@ export default function ResultsPage({ clinic }: { clinic: any }) {
                         </h1>
                     </div>
                     <p className="text-muted font-medium max-w-xs leading-relaxed text-sm">
-                        Every smile here belongs to a real patient who chose to take that first step. Yours could be next.
+                        Every smile here belongs to a real client who chose to take that first step. Yours could be next.
                     </p>
                 </div>
 
@@ -489,7 +489,7 @@ export default function ResultsPage({ clinic }: { clinic: any }) {
                                             onClick={() => setActiveIndex(i)}
                                             className={`relative flex-1 aspect-[3/2] rounded-xl overflow-hidden border-2 transition-all ${i === activeIndex ? "border-black" : "border-transparent opacity-40 hover:opacity-70"}`}
                                         >
-                                            <img src={c.afterImg} alt={c.patient} className="w-full h-full object-cover" />
+                                            <img src={c.afterImg} alt={c.client} className="w-full h-full object-cover" />
                                         </button>
                                     ))}
                                 </div>

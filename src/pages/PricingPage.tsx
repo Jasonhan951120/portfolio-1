@@ -58,7 +58,7 @@ export default function PricingPage() {
                         animate={{ opacity: 1, y: 0 }}
                         className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#1E1E1E] border-[1.5px] border-white/10 text-[#2AF598] text-[9px] font-black uppercase tracking-[0.2em] mb-8"
                     >
-                        <ShieldCheck className="w-3.5 h-3.5" /> Recovered value by saving just one high-intent patient
+                        <ShieldCheck className="w-3.5 h-3.5" /> Recovered value by saving just one high-intent client
                     </motion.div>
 
                     <motion.h1
@@ -66,8 +66,8 @@ export default function PricingPage() {
                         animate={{ opacity: 1, y: 0 }}
                         className="text-4xl md:text-7xl font-bold tracking-tight mb-8 leading-[1.1] text-white"
                     >
-                        Recovering 1 Implant Patient = <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#2AF598] to-[#00D2FF]">£2,500 ROI Generated.</span>
+                        Recovering 1 Implant Client = <br />
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#2AF598] to-[#00D2FF]">£3,500 REVENUE Generated.</span>
                     </motion.h1>
 
                     <motion.p
@@ -76,9 +76,51 @@ export default function PricingPage() {
                         transition={{ delay: 0.1 }}
                         className="text-lg md:text-xl text-[#A0A0A0] max-w-2xl mx-auto font-medium leading-relaxed"
                     >
-                        {profile?.full_name?.split(' ')[1] || "Clinical Director"}, your clinical engine for high-value patient recovery is ready. This is the most certain investment for your clinic's growth.
+                        {profile?.full_name?.split(' ')[1] || "Clinical Director"}, your conversion engine for high-value client recovery is ready. This is the most certain investment for your clinic's growth.
                     </motion.p>
                 </div>
+
+                {/* ROI Calculator Section */}
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    className="w-full max-w-4xl mb-24 p-12 rounded-[40px] bg-[#1E1E1E] border-[1.5px] border-white/10 relative overflow-hidden"
+                >
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-[#2AF598]/5 blur-3xl rounded-full -mr-32 -mt-32"></div>
+                    <div className="relative z-10">
+                        <h2 className="text-2xl font-bold mb-10 text-center flex items-center justify-center gap-3">
+                            <TrendingUp className="w-6 h-6 text-[#2AF598]" /> Interactive ROI Calculator
+                        </h2>
+
+                        <div className="grid md:grid-cols-2 gap-16 items-center">
+                            <div className="space-y-12">
+                                <div>
+                                    <div className="flex justify-between mb-4">
+                                        <label className="text-xs font-bold uppercase tracking-widest text-[#A0A0A0]">Lost high-value leads / month</label>
+                                        <span className="text-[#2AF598] font-bold text-lg">2</span>
+                                    </div>
+                                    <input type="range" min="1" max="10" defaultValue="2" className="w-full accent-[#2AF598] h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer" />
+                                </div>
+                                <div>
+                                    <div className="flex justify-between mb-4">
+                                        <label className="text-xs font-bold uppercase tracking-widest text-[#A0A0A0]">Avg. Treatment Value (Implant/Invisalign)</label>
+                                        <span className="text-[#2AF598] font-bold text-lg">£3,500</span>
+                                    </div>
+                                    <input type="range" min="1000" max="10000" step="500" defaultValue="3500" className="w-full accent-[#2AF598] h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer" />
+                                </div>
+                            </div>
+
+                            <div className="p-8 bg-[#121212]/50 border border-white/5 rounded-3xl text-center">
+                                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#A0A0A0] mb-4">Potential Monthly Revenue Recovered</p>
+                                <div className="text-6xl font-bold text-white mb-6">£7,000</div>
+                                <div className="h-px bg-white/10 w-12 mx-auto mb-6"></div>
+                                <p className="text-xs text-[#2AF598] font-medium leading-relaxed italic">
+                                    "Hanlan OC pays for itself 10x by recovering just ONE lost client."
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </motion.div>
 
                 {/* 2. Main Value & Social Proof Card */}
                 <div className="w-full grid lg:grid-cols-12 gap-8 items-start relative mb-24">
@@ -148,7 +190,7 @@ export default function PricingPage() {
                                     ))}
                                 </div>
                                 <div className="mt-12 pt-8 border-t border-white/5 text-[10px] text-white/30 font-medium leading-relaxed uppercase tracking-widest">
-                                    All Features included <br /> HIPAA & GDPR COMPLIANT
+                                    All Features included <br /> UK GDPR & ICO COMPLIANT
                                 </div>
                             </div>
 
@@ -158,10 +200,11 @@ export default function PricingPage() {
                                 </div>
                                 <div className="mb-12">
                                     <div className="flex items-center justify-center gap-1">
-                                        <span className="text-7xl font-bold tracking-tight text-white">£299</span>
+                                        <span className="text-7xl font-bold tracking-tight text-white">£649</span>
                                         <span className="text-white/40 text-xl font-bold tracking-widest uppercase mb-1">/mo</span>
                                     </div>
-                                    <p className="text-[11px] text-[#2AF598] mt-4 font-black uppercase tracking-[0.2em] italic">"An investment that protects the value of every single patient"</p>
+                                    <p className="text-[10px] text-white/40 mt-2 font-bold uppercase tracking-widest">(excl. VAT)</p>
+                                    <p className="text-[10px] text-[#2AF598] mt-6 font-black uppercase tracking-[0.2em] italic">"An investment that protects the value of every single client"</p>
                                 </div>
 
                                 {/* Thumb Zone & Pulsing CTA */}
@@ -202,7 +245,7 @@ export default function PricingPage() {
                     className="flex flex-wrap justify-center items-center gap-10 md:gap-20 grayscale"
                 >
                     <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em]">
-                        <Shield className="w-4 h-4" /> HIPAA Certified
+                        <Shield className="w-4 h-4" /> ICO Registered
                     </div>
                     <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em]">
                         <Check className="w-4 h-4" /> GDC Standard

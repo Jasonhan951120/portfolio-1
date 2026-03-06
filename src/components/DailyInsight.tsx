@@ -18,10 +18,10 @@ export default function DailyInsight({ metrics }: DailyInsightProps) {
             animate={{ opacity: 1, y: 0 }}
             className="bg-white rounded-[32px] p-8 border border-gray-100 shadow-sm relative overflow-hidden group"
         >
-            <div className="absolute top-0 right-0 w-32 h-32 bg-[#C5A059]/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-[#C5A059]/10 transition-colors duration-500" />
+            <div className="absolute top-0 right-0 w-32 h-32 bg-[#87A96B]/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-[#87A96B]/10 transition-colors duration-500" />
 
             <div className="flex items-center gap-3 mb-8">
-                <div className="w-10 h-10 rounded-xl bg-[#C5A059]/10 flex items-center justify-center text-[#C5A059]">
+                <div className="w-10 h-10 rounded-xl bg-[#87A96B]/10 flex items-center justify-center text-[#87A96B]">
                     <Sparkles className="w-5 h-5" />
                 </div>
                 <div>
@@ -32,7 +32,7 @@ export default function DailyInsight({ metrics }: DailyInsightProps) {
 
             <div className="space-y-6">
                 <p className="text-gray-600 text-[15px] leading-relaxed font-medium">
-                    Your <span className="text-[#C5A059] font-bold">{metrics.topPlatform} Ads</span> are performing exceptionally well.
+                    Your <span className="text-[#87A96B] font-bold">{metrics.topPlatform} Ads</span> are performing exceptionally well.
                     With a spend of <span className="text-gray-900 font-bold">£{metrics.spend}</span> yesterday, you generated
                     <span className="text-gray-900 font-bold"> {metrics.leads} high-intent leads</span>.
                     The estimated ROI stands at <span className="text-[#87A96B] font-bold">{metrics.roi}x</span>.
@@ -51,7 +51,7 @@ export default function DailyInsight({ metrics }: DailyInsightProps) {
                             <Zap className="w-3.5 h-3.5 text-gray-400" />
                             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Recommendation</span>
                         </div>
-                        <div className="text-[11px] font-bold text-[#C5A059] uppercase tracking-wider">Maintain Budget</div>
+                        <div className="text-[11px] font-bold text-[#87A96B] uppercase tracking-wider">Maintain Budget</div>
                     </div>
                 </div>
             </div>

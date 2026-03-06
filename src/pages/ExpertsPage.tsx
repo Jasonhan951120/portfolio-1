@@ -6,14 +6,14 @@ const experts = [
     {
         role: "Lead Dental Hygienist",
         name: "Emma Thompson",
-        bio: "With a clinical focus on periodontal health and guided biofilm therapy, Emma has transformed the oral hygiene routines of over 5,000 patients. She specializes in painless deep cleaning using the latest Airflow technology.",
+        bio: "With a clinical focus on periodontal health and guided biofilm therapy, Emma has transformed the oral hygiene routines of over 5,000 clients. She specializes in painless deep cleaning using the latest Airflow technology.",
         expertise: ["Guided Biofilm Therapy", "Airflow Technology", "Periodontal Maintenance"],
         education: "BSc Dental Hygiene, University of Portsmouth"
     },
     {
-        role: "Senior Patient Coordinator",
+        role: "Senior Client Coordinator",
         name: "Michael Chen",
-        bio: "Michael bridges the gap between clinical excellence and patient experience. He manages complex treatment timelines and financial coordination, ensuring that every patient's journey from their first scan to their final reveal is stress-free.",
+        bio: "Michael bridges the gap between clinical excellence and client experience. He manages complex treatment timelines and financial coordination, ensuring that every client's journey from their first scan to their final reveal is stress-free.",
         expertise: ["Treatment Planning", "Financial Coordination", "Digital Workflow"],
         education: "Healthcare Management, LSE"
     },
@@ -38,7 +38,7 @@ const protocols = [
         icon: <ShieldCheck className="w-5 h-5" />
     },
     {
-        title: "Patient Advocacy",
+        title: "Client Advocacy",
         desc: "You are never alone. Our coordinators are available 24/7 to answer post-surgery questions and manage care.",
         icon: <Heart className="w-5 h-5" />
     }

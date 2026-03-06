@@ -1,5 +1,6 @@
 import React from 'react';
-import { Facebook, Instagram, Twitter, MapPin, Phone, Mail } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Facebook, Instagram, Twitter, MapPin, Phone, Mail, ShieldCheck, Lock } from 'lucide-react';
 
 const Footer: React.FC = () => {
     return (
@@ -101,10 +102,32 @@ const Footer: React.FC = () => {
 
                 </div>
 
+                {/* Zero-Clinical Data Trust Badge */}
+                <div className="mt-16 mb-8 p-8 bg-slate-900/50 border border-white/5 rounded-[32px] backdrop-blur-sm">
+                    <div className="flex flex-col md:flex-row items-center gap-8">
+                        <div className="w-16 h-16 rounded-2xl bg-[#87A96B]/10 flex items-center justify-center shrink-0 border border-[#87A96B]/20 shadow-lg shadow-[#87A96B]/5">
+                            <ShieldCheck className="w-8 h-8 text-[#87A96B]" />
+                        </div>
+                        <div className="text-center md:text-left">
+                            <h4 className="text-sm font-bold text-white uppercase tracking-widest mb-2 flex items-center justify-center md:justify-start gap-2">
+                                <Lock className="w-3.5 h-3.5 text-[#87A96B]" /> Zero-Clinical Data Architecture
+                            </h4>
+                            <p className="text-slate-400 text-xs leading-relaxed max-w-3xl">
+                                Complete separation of systems. Your clinical records remain secured in your existing EMR (System of Record).
+                                Hanlan OC safely processes only marketing conversion data (System of Engagement), dramatically reducing your ICO compliance risks.
+                            </p>
+                        </div>
+                        <div className="md:ml-auto flex gap-4 grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-500">
+                            <div className="px-3 py-1 border border-white/10 rounded-md text-[9px] font-bold text-white/60 tracking-widest uppercase">UK GDPR</div>
+                            <div className="px-3 py-1 border border-white/10 rounded-md text-[9px] font-bold text-white/60 tracking-widest uppercase">ICO Aligned</div>
+                        </div>
+                    </div>
+                </div>
+
                 <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-slate-500">
                     <p>&copy; {new Date().getFullYear()} SmileCraft Dentistry. All rights reserved.</p>
                     <div className="flex gap-8 mt-4 md:mt-0">
-                        <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+                        <Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
                         <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
                         <a href="#" className="hover:text-white transition-colors">Sitemap</a>
                     </div>

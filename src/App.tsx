@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation, Link } from "react-router-dom";
 import Hero from "./components/Hero";
 import Navbar from "./components/Navbar";
 import Reviews from "./components/Reviews";
@@ -30,8 +30,7 @@ import VisitTrackingPage from "./pages/VisitTrackingPage";
 import MobileStickyCTA from "./components/MobileStickyCTA";
 import WhatsAppWidget from "./components/WhatsAppWidget";
 import ScrollToTop from "./components/ScrollToTop";
-
-
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import { motion, useScroll, useSpring } from "motion/react";
 import { ChevronDown, Phone } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -155,7 +154,7 @@ function LandingPage({ clinic }: { clinic: any }) {
               © 2026 {clinic?.name || "London Smile Excellence"}. All rights reserved.
             </p>
             <div className="flex gap-10 text-muted text-xs font-bold uppercase tracking-widest">
-              <a href="#" className="hover:text-black transition-colors">Privacy Policy</a>
+              <Link to="/privacy" className="hover:text-black transition-colors">Privacy Policy</Link>
               <a href="#" className="hover:text-black transition-colors">Terms of Service</a>
             </div>
           </div>
@@ -213,6 +212,7 @@ export default function App() {
           <Route path="/admin/integrations" element={<ProtectedRoute><SubscriptionGuard><ApiIntegrationPage /></SubscriptionGuard></ProtectedRoute>} />
           <Route path="/admin/onboarding" element={<ProtectedRoute><SubscriptionGuard><AdminOnboarding /></SubscriptionGuard></ProtectedRoute>} />
           <Route path="/login" element={<AdminLogin />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
         </Routes>
       </Router>
     </AuthProvider>

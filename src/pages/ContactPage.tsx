@@ -11,7 +11,7 @@ const CLINIC_IMAGES = [
 
 const TRUST_SIGNALS = [
     { icon: ShieldCheck, text: "GDC Registered Specialists" },
-    { icon: CheckCircle2, text: "4.9/5 Patient Satisfaction" },
+    { icon: CheckCircle2, text: "4.9/5 Client Satisfaction" },
     { icon: Zap, text: "Emergency Appointments Available" },
 ];
 

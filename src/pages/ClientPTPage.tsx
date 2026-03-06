@@ -1,409 +1,237 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import {
-    Star, Play, CreditCard, ChevronRight, Check,
-    ArrowLeft, MessageCircle, Sparkles, ShieldCheck, X, RefreshCw
+    ChevronRight, ArrowRight, ShieldCheck,
+    Calendar, CheckCircle2, Star, CreditCard,
+    Lock, ArrowLeft, Play, Sparkles
 } from "lucide-react";
-import { supabase, type ConsultationRequest } from "../lib/supabase";
+import { supabase } from "../lib/supabase";
 
-export default function ClientPTPage() {
+const ClientPTPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
-    const [lead, setLead] = useState<ConsultationRequest | null>(null);
-    const [clinic, setClinic] = useState<any>(null);
-    const [treatments, setTreatments] = useState<any[]>([]);
+    const [lead, setLead] = useState<any>(null);
     const [loading, setLoading] = useState(true);
-    const [showReviews, setShowReviews] = useState(false);
-    const [showDepositModal, setShowDepositModal] = useState(false);
-    const [paymentStatus, setPaymentStatus] = useState<'idle' | 'processing' | 'success'>('idle');
-    const [cardData, setCardData] = useState({ number: '', expiry: '', cvc: '' });
+    const [sliderPosition, setSliderPosition] = useState(50);
 
-    useEffect(() => {
-        async function fetchData() {
-            if (!id) return;
-
-            // 1. Fetch Lead
-            const { data: leadData, error: leadError } = await supabase
-                .from('consultation_requests')
-                .select('*')
-                .eq('id', id)
-                .single();
-
-            if (!leadError && leadData) {
-                setLead(leadData);
-
-                // 2. Fetch Clinic & Treatments if clinic_id exists
-                if (leadData.clinic_id) {
-                    const [clinicRes, treatmentsRes] = await Promise.all([
-                        supabase.from('clinics').select('*').eq('id', leadData.clinic_id).single(),
-                        supabase.from('clinic_treatments').select('*').eq('clinic_id', leadData.clinic_id)
-                    ]);
-
-                    if (clinicRes.data) setClinic(clinicRes.data);
-                    if (treatmentsRes.data) setTreatments(treatmentsRes.data);
-                }
+    const treatmentDetails: Record<string, any> = {
+        "Dental Implants": {
+            title: "Precision Implantology",
+            investment: "£3,500",
+            monthly: "£145.83",
+            term: "24 Months",
+            features: ["Custom Abutment", "Premium Titanium Post", "Hand-crafted Porcelain Crown", "Lifetime Guarantee"],
+            beforeAfter: {
+                before: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=1200",
+                after: "https://images.unsplash.com/photo-1606811841660-1b51e9ed27ff?auto=format&fit=crop&q=80&w=1200"
             }
-            setLoading(false);
+        },
+        "Invisalign / Aligners": {
+            title: "SmartSmile Simulation",
+            investment: "£3,000",
+            monthly: "£125.00",
+            term: "24 Months",
+            features: ["Full 3D Simulation", "Set of Clear Aligners", "Retainers Included", "Post-treatment Whitening"],
+            beforeAfter: {
+                before: "https://images.unsplash.com/photo-1598256989800-fe5f95da9787?auto=format&fit=crop&q=80&w=1200",
+                after: "https://images.unsplash.com/photo-1516012828019-06ad1742de8a?auto=format&fit=crop&q=80&w=1200"
+            }
         }
-        fetchData();
-    }, [id]);
-
-    if (loading) {
-        return (
-            <div className="min-h-screen bg-[#050505] flex items-center justify-center">
-                <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                    className="w-12 h-12 border-4 border-cyan-400/20 border-t-cyan-400 rounded-full"
-                />
-            </div>
-        );
-    }
-
-    if (!lead) {
-        return (
-            <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center p-6 text-center">
-                <h1 className="text-4xl font-display font-bold text-white mb-4 uppercase">Plan Not Found</h1>
-                <p className="text-white/40 mb-8 max-w-md">The treatment plan you're looking for might have expired or the link is invalid.</p>
-                <Link to="/" className="px-8 py-4 bg-white/5 border border-white/10 rounded-2xl text-white font-bold uppercase tracking-widest text-xs hover:bg-white/10 transition-all">
-                    Return to Homepage
-                </Link>
-            </div>
-        );
-    }
-
-    // Dynamic asset selection
-    const treatmentInfo = treatments.find(t => t.service_name === lead.service);
-
-    const asset = {
-        image: treatmentInfo?.image_url || "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=1200",
-        title: treatmentInfo?.title || `${lead.name.toUpperCase()}'S SMILE PLAN`,
-        benefit: treatmentInfo?.benefit_text || "World-class treatment using clinical precision and the latest dental innovations.",
-        script: "We've prepared a treatment plan optimized for your specific clinical needs. We're committed to delivering a safe, beautiful result powered by years of expert skill.",
-        price: treatmentInfo?.price || 1000
     };
 
+    useEffect(() => {
+        const fetchLead = async () => {
+            if (!id) return;
+            const { data, error } = await supabase
+                .from("consultation_requests")
+                .select("*")
+                .eq("id", id)
+                .single();
+            if (data) setLead(data);
+            setLoading(false);
+        };
+        fetchLead();
+    }, [id]);
+
+    const activeTreatment = treatmentDetails[lead?.service] || treatmentDetails["Dental Implants"];
+
+    if (loading) return (
+        <div className="min-h-screen bg-white flex items-center justify-center">
+            <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1 }}>
+                <Sparkles className="w-8 h-8 text-[#87A96B]" />
+            </motion.div>
+        </div>
+    );
+
     return (
-        <div className="min-h-screen bg-[#050505] text-white selection:bg-cyan-400/30 flex flex-col items-center justify-start overflow-y-auto">
-            {/* Navigation Header */}
-            <nav className="fixed top-0 inset-x-0 z-50 p-8 flex justify-between items-center backdrop-blur-md bg-black/20">
-                <Link to="/" className="text-2xl font-display font-bold tracking-tighter uppercase">
-                    {clinic?.name ? (
-                        <>
-                            {clinic.name.split(' ')[0]}
-                            <span className="text-white/40">{clinic.name.split(' ').slice(1).join(' ')}</span>
-                        </>
-                    ) : (
-                        <>LONDON<span className="text-white/40">SMILE</span></>
-                    )}
-                </Link>
-                <div className="flex items-center gap-6">
-                    <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-white/5 rounded-full border border-white/10">
-                        <ShieldCheck className="w-4 h-4 text-cyan-400" />
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Secure Patient Portal</span>
+        <div className="min-h-screen bg-[#FDFDFD] text-gray-900 font-sans selection:bg-[#87A96B]/20">
+            {/* Minimal Header */}
+            <header className="px-8 py-6 flex justify-between items-center border-b border-gray-100 bg-white sticky top-0 z-[100]">
+                <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-gray-900 rounded-xl flex items-center justify-center shadow-lg shadow-gray-200">
+                        <span className="text-white font-bold text-lg">H</span>
                     </div>
-                    <button className="p-3 bg-white text-black rounded-full hover:scale-105 transition-all">
-                        <MessageCircle className="w-5 h-5" />
-                    </button>
+                    <span className="font-bold tracking-tight uppercase text-sm">Hanlan OC</span>
                 </div>
-            </nav>
+                <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-widest text-[#87A96B]">
+                    <ShieldCheck className="w-4 h-4" /> Secure Proposal Terminal - UK Compliance Active
+                </div>
+            </header>
 
-            <main className="max-w-7xl mx-auto px-6 pt-40 pb-24 my-auto">
-                <div className="grid lg:grid-cols-2 gap-20 items-center">
-                    {/* Visual Presentation */}
-                    <motion.div
-                        initial={{ x: -100, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                        className="relative rounded-[60px] overflow-hidden border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.6)] aspect-square bg-white/5"
-                    >
-                        <img src={asset?.image} alt={asset?.title} className="w-full h-full object-cover" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent opacity-80" />
-                        <div className="absolute bottom-16 left-16">
-                            <h2 className="text-4xl md:text-5xl font-display font-bold text-white mb-4 tracking-tighter uppercase leading-none">{asset?.title}</h2>
-                            <div className="flex items-center gap-3 text-cyan-400 font-bold tracking-[0.3em] text-xs">
-                                <Sparkles className="w-4 h-4 animate-pulse" /> YOUR PROJECTED RESULT
-                            </div>
-                        </div>
-                    </motion.div>
-
-                    {/* Content & Action */}
-                    <div className="space-y-12">
+            <main className="max-w-[1400px] mx-auto min-h-[calc(100vh-88px)] flex flex-col lg:flex-row">
+                {/* Left Side: Transformation Visual (The Hero) */}
+                <div className="flex-1 p-8 lg:p-16 flex flex-col justify-center border-b lg:border-b-0 lg:border-r border-gray-100 bg-white">
+                    <div className="max-w-xl mx-auto w-full">
                         <motion.div
-                            initial={{ y: 40, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ delay: 0.2, duration: 0.8 }}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            className="mb-12"
                         >
-                            <div className="inline-flex items-center gap-3 px-6 py-2.5 bg-cyan-400/10 border border-cyan-400/20 rounded-full text-cyan-400 text-[10px] font-bold uppercase tracking-[0.3em] mb-10">
-                                <Star className="w-3.5 h-3.5 fill-cyan-400" /> Welcome, {lead.name}
-                            </div>
-                            <h3 className="text-5xl md:text-7xl font-display font-bold text-white mb-10 tracking-tighter leading-tight uppercase">
-                                Designed for <br />
-                                <span className="text-white/30">Your Smile.</span>
-                            </h3>
-                            <p className="text-2xl text-white/50 leading-relaxed font-medium mb-12 max-w-xl italic">
-                                {asset.benefit}
-                            </p>
-
-                            {/* Installment Calculator */}
-                            <motion.div
-                                whileHover={{ scale: 1.02 }}
-                                className="p-10 rounded-[40px] bg-white/[0.03] border border-white/10 backdrop-blur-[100px] mb-12 relative overflow-hidden shadow-2xl"
-                            >
-                                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent" />
-                                <div className="flex flex-col gap-10">
-                                    <div className="flex justify-between items-start">
-                                        <div>
-                                            <p className="text-[10px] text-white/30 font-bold uppercase tracking-[0.3em] mb-3">Investment Summary</p>
-                                            <p className="text-5xl font-display font-bold text-white tracking-tighter">£{asset.price.toLocaleString()}</p>
-                                        </div>
-                                        <div className="text-right">
-                                            <p className="text-[10px] text-white/30 font-bold uppercase tracking-[0.3em] mb-3">Finance Options</p>
-                                            <p className="text-2xl font-display font-bold text-purple-400">0% APR Over 24m</p>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex justify-between items-center bg-white/[0.05] p-6 rounded-3xl border border-white/10">
-                                        <div className="flex items-center gap-5">
-                                            <div className="w-14 h-14 rounded-2xl bg-cyan-400/20 flex items-center justify-center border border-cyan-400/30">
-                                                <CreditCard className="w-7 h-7 text-cyan-400" />
-                                            </div>
-                                            <div>
-                                                <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/30 mb-1">Monthly Cost</p>
-                                                <p className="text-3xl font-bold text-white tracking-tighter italic">£{Math.round(asset.price / 24).toLocaleString()}</p>
-                                            </div>
-                                        </div>
-                                        <span className="px-4 py-2 bg-white/10 text-[9px] font-bold uppercase tracking-[0.3em] rounded-full border border-white/20 text-white/60">Apply In-App</span>
-                                    </div>
-                                </div>
-                            </motion.div>
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#87A96B] mb-2 block tracking-widest">Your Tailored Transformation</span>
+                            <h1 className="text-4xl md:text-5xl font-display font-bold text-gray-950 leading-tight">
+                                Visualising Your <br />New Smile
+                            </h1>
                         </motion.div>
 
-                        {/* Next Steps Guide */}
-                        <motion.div
-                            initial={{ y: 20, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ delay: 0.4 }}
-                            className="grid gap-6"
-                        >
-                            <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/30 px-2">Next Steps</h4>
-                            <div className="grid md:grid-cols-2 gap-4">
-                                {[
-                                    { icon: ChevronRight, title: "Review Details", desc: "Take your time to review the 3D outcomes." },
-                                    { icon: Check, title: "Secure Date", desc: "Your provisional slot is held for 24 hours." }
-                                ].map((step, i) => (
-                                    <div key={i} className="p-6 bg-white/[0.02] border border-white/5 rounded-3xl flex gap-4 items-start">
-                                        <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0">
-                                            <step.icon className="w-4 h-4 text-white/60" />
-                                        </div>
-                                        <div>
-                                            <p className="text-xs font-bold uppercase tracking-widest text-white mb-1">{step.title}</p>
-                                            <p className="text-[10px] text-white/40 leading-relaxed">{step.desc}</p>
-                                        </div>
+                        {/* Interactive Before/After Slider */}
+                        <div className="relative aspect-[4/3] rounded-[48px] overflow-hidden shadow-2xl shadow-gray-200 group border border-gray-100">
+                            <img src={activeTreatment.beforeAfter.after} alt="After" className="absolute inset-0 w-full h-full object-cover" />
+                            <div
+                                className="absolute inset-0 w-full h-full object-cover overflow-hidden"
+                                style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
+                            >
+                                <img src={activeTreatment.beforeAfter.before} alt="Before" className="absolute inset-0 w-full h-full object-cover" />
+                            </div>
+
+                            {/* Comparison Line */}
+                            <div
+                                className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize group z-20"
+                                style={{ left: `${sliderPosition}%` }}
+                            >
+                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-xl flex items-center justify-center">
+                                    <div className="flex gap-1.5 items-center">
+                                        <div className="w-1 h-3 rounded-full bg-gray-200" />
+                                        <div className="w-1 h-3 rounded-full bg-gray-200" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Label Overlays */}
+                            <div className="absolute top-6 left-6 px-4 py-2 bg-black/50 backdrop-blur-md rounded-full text-white text-[10px] font-bold uppercase tracking-widest">Initial State</div>
+                            <div className="absolute top-6 right-6 px-4 py-2 bg-[#87A96B]/80 backdrop-blur-md rounded-full text-white text-[10px] font-bold uppercase tracking-widest">Predicted Result</div>
+
+                            {/* Range Hidden Input for Interactivity */}
+                            <input
+                                type="range"
+                                min="0" max="100"
+                                value={sliderPosition}
+                                onChange={(e) => setSliderPosition(parseInt(e.target.value))}
+                                className="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-30"
+                            />
+                        </div>
+
+                        <div className="mt-8 flex items-center gap-6 justify-center">
+                            <div className="flex -space-x-2">
+                                {[...Array(3)].map((_, i) => (
+                                    <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-gray-100 flex items-center justify-center text-[10px] font-bold shadow-sm">
+                                        {["JS", "OD", "TW"][i]}
                                     </div>
                                 ))}
                             </div>
-                        </motion.div>
-
-                        {/* Action Buttons */}
-                        <motion.div
-                            initial={{ y: 20, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ delay: 0.6 }}
-                            className="flex gap-6 pt-6"
-                        >
-                            <motion.button
-                                animate={{
-                                    boxShadow: [
-                                        "0 0 20px rgba(34,211,238,0.2)",
-                                        "0 0 50px rgba(34,211,238,0.5)",
-                                        "0 0 20px rgba(34,211,238,0.2)"
-                                    ]
-                                }}
-                                transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                className="flex-1 py-7 bg-white text-black font-bold uppercase tracking-[0.3em] text-[11px] rounded-3xl flex items-center justify-center gap-3 transition-all"
-                                onClick={() => setShowDepositModal(true)}
-                            >
-                                Confirm & Secure Slot
-                            </motion.button>
-                            <motion.button
-                                whileHover={{ backgroundColor: "rgba(255,255,255,0.1)" }}
-                                className="px-10 py-7 bg-white/5 border border-white/10 text-white font-bold uppercase tracking-[0.3em] text-[10px] rounded-3xl transition-all flex items-center gap-3"
-                                onClick={() => setShowReviews(true)}
-                            >
-                                Case Studies
-                            </motion.button>
-                        </motion.div>
+                            <p className="text-[11px] text-gray-500 font-medium italic">
+                                "This simulation accurately reflects the desired outcome."
+                            </p>
+                        </div>
                     </div>
                 </div>
-            </main>
 
-            {/* Social Proof Modal */}
-            <AnimatePresence>
-                {showReviews && (
+                {/* Right Side: Investment Plan (The Closer) */}
+                <div className="w-full lg:w-[550px] bg-[#FDFDFD] p-8 lg:p-16 flex flex-col justify-center">
                     <motion.div
-                        layoutId="social-proof-modal"
-                        className="fixed inset-0 z-[2000] bg-[#050505]/95 backdrop-blur-3xl flex flex-col items-center justify-center p-8"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
                     >
-                        <button
-                            onClick={() => setShowReviews(false)}
-                            className="absolute top-8 right-8 p-4 bg-white/5 shadow-xl rounded-full transition-colors"
-                        >
-                            <ChevronRight className="w-8 h-8 text-white rotate-180" />
-                        </button>
-                        <h2 className="text-4xl font-display font-bold text-white mb-10 uppercase tracking-widest text-center">
-                            Success Stories.
-                        </h2>
-                        <div className="grid md:grid-cols-3 gap-6 max-w-6xl w-full">
-                            {[1, 2, 3].map((i) => (
-                                <div key={i} className="bg-white/5 border border-white/10 rounded-[40px] p-10 backdrop-blur-xl">
-                                    <div className="flex gap-1 mb-6 text-cyan-400">
-                                        {[...Array(5)].map((_, j) => <Star key={j} className="w-5 h-5 fill-cyan-400" />)}
+                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#87A96B]/10 rounded-full text-[#87A96B] text-[10px] font-black uppercase tracking-widest mb-6">
+                            Exclusive Proposal
+                        </div>
+                        <h2 className="text-3xl font-display font-bold text-gray-950 mb-8 uppercase tracking-tight">Investment Plan</h2>
+
+                        <div className="space-y-4 mb-12">
+                            {activeTreatment.features.map((feature: string, i: number) => (
+                                <div key={i} className="flex items-center gap-4 py-3 border-b border-gray-100 last:border-0 text-[13px] font-medium text-gray-700">
+                                    <div className="w-6 h-6 rounded-full bg-[#87A96B]/10 flex items-center justify-center shrink-0">
+                                        <CheckCircle2 className="w-3.5 h-3.5 text-[#87A96B]" />
                                     </div>
-                                    <p className="text-white/80 text-lg leading-relaxed mb-8 italic">"Absolutely life changing. The 3D simulation was exactly what I got. Best investment I ever made."</p>
-                                    <p className="text-[10px] uppercase font-bold text-white/40 tracking-[0.3em]">- Verified Patient</p>
+                                    {feature}
                                 </div>
                             ))}
                         </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-            {/* Acceptance & Secure Deposit Modal */}
-            <AnimatePresence>
-                {showDepositModal && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[1000] bg-black/90 backdrop-blur-xl flex items-center justify-center p-6"
-                    >
-                        <motion.div
-                            initial={{ scale: 0.9, opacity: 0, y: 30 }}
-                            animate={{ scale: 1, opacity: 1, y: 0 }}
-                            exit={{ scale: 0.9, opacity: 0, y: 30 }}
-                            className="bg-[#0f0f0f] border border-white/10 p-10 rounded-[40px] max-w-lg w-full relative overflow-hidden shadow-2xl"
-                        >
-                            <button
-                                onClick={() => {
-                                    setShowDepositModal(false);
-                                    setPaymentStatus('idle');
-                                }}
-                                className="absolute top-8 right-8 p-3 bg-white/5 hover:bg-white/10 rounded-full transition-colors z-10"
-                            >
-                                <X className="w-5 h-5 text-white/40" />
-                            </button>
 
-                            {paymentStatus === 'success' ? (
-                                <div className="text-center py-10">
-                                    <div className="w-24 h-24 bg-cyan-400/20 rounded-full flex items-center justify-center mx-auto mb-8 border border-cyan-400/30">
-                                        <Check className="w-12 h-12 text-cyan-400" />
-                                    </div>
-                                    <h2 className="text-3xl font-display font-bold text-white mb-4 uppercase tracking-tight">Your Smile is Secured.</h2>
-                                    <p className="text-white/60 mb-10 text-sm leading-relaxed">
-                                        Your deposit has been successfully processed. Our concierge team will reach out shortly to finalize your transformation date.
-                                    </p>
-                                    <button
-                                        onClick={() => setShowDepositModal(false)}
-                                        className="w-full py-5 bg-white text-black font-bold uppercase tracking-widest text-xs rounded-2xl hover:bg-gray-200 transition-all"
-                                    >
-                                        Close Portal
-                                    </button>
+                        {/* Financing Focus Card */}
+                        <div className="bg-white border border-gray-200 rounded-[40px] p-10 shadow-sm mb-12 relative overflow-hidden group hover:border-[#87A96B]/30 transition-all duration-500">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-[#87A96B]/5 rounded-full -mr-16 -mt-16 blur-2xl" />
+
+                            <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Monthly Investment from</p>
+                            <div className="flex items-baseline gap-2 mb-6">
+                                <span className="text-6xl font-display font-bold text-gray-950">{activeTreatment.monthly}</span>
+                                <span className="text-gray-400 font-bold text-sm uppercase tracking-widest">/mo</span>
+                            </div>
+
+                            <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-[#87A96B] bg-[#87A96B]/5 px-5 py-4 rounded-2xl border border-[#87A96B]/10">
+                                <span className="flex items-center gap-2 rotate-0">0% Interest Options Available <Sparkles className="w-3 h-3" /></span>
+                                <Star className="w-3.5 h-3.5 fill-[#87A96B] text-[#87A96B]" />
+                            </div>
+
+                            <div className="mt-8 pt-8 border-t border-gray-100 flex justify-between items-center">
+                                <span className="text-[11px] text-gray-500 font-bold uppercase tracking-widest">Total Investment</span>
+                                <div className="text-right">
+                                    <span className="text-sm font-bold text-gray-300 line-through block">£4,250</span>
+                                    <span className="text-xl font-bold text-gray-950">{activeTreatment.investment}</span>
                                 </div>
-                            ) : (
-                                <>
-                                    <div className="mb-10 text-center">
-                                        <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-white/10">
-                                            <Sparkles className="w-8 h-8 text-cyan-400" />
-                                        </div>
-                                        <h2 className="text-3xl font-display font-bold text-white mb-2 uppercase tracking-tight">Secure Treatment</h2>
-                                        <p className="text-white/30 text-[10px] font-bold uppercase tracking-[0.2em]">Priority Commitment Deposit</p>
-                                    </div>
+                            </div>
+                        </div>
 
-                                    <div className="space-y-6">
-                                        <div className="p-6 bg-white/[0.03] border border-white/10 rounded-3xl">
-                                            <div className="flex justify-between items-center mb-1">
-                                                <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">Treatment</span>
-                                                <span className="text-xs font-bold text-white uppercase">{lead.service}</span>
-                                            </div>
-                                            <div className="flex justify-between items-center">
-                                                <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">Provisional Deposit</span>
-                                                <span className="text-xl font-display font-bold text-cyan-400">£150.00</span>
-                                            </div>
-                                        </div>
+                        {/* CTA Section */}
+                        <div className="space-y-4">
+                            <motion.button
+                                whileHover={{ scale: 1.02, boxShadow: "0 30px 60px -15px rgba(0,0,0,0.15)" }}
+                                whileTap={{ scale: 0.98 }}
+                                className="w-full py-6 bg-gray-900 group rounded-[24px] text-white font-black uppercase tracking-[0.2em] text-xs flex items-center justify-center gap-4 relative overflow-hidden shadow-2xl transition-all"
+                            >
+                                <span className="relative z-10">Confirm & Pay via Stripe</span>
+                                <ArrowRight className="w-4 h-4 relative z-10 transition-transform group-hover:translate-x-1" />
+                                <div className="absolute inset-0 bg-gradient-to-r from-[#87A96B] to-[#769b59] opacity-0 group-hover:opacity-100 transition-opacity" />
+                            </motion.button>
 
-                                        <div className="space-y-4">
-                                            <div className="relative">
-                                                <div className="absolute left-5 top-1/2 -translate-y-1/2">
-                                                    <CreditCard className="w-4 h-4 text-white/20" />
-                                                </div>
-                                                <input
-                                                    type="text"
-                                                    placeholder="CARD NUMBER"
-                                                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-5 pl-14 pr-6 text-xs font-bold tracking-[0.2em] text-white placeholder:text-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 transition-all"
-                                                    value={cardData.number}
-                                                    onChange={(e) => setCardData({ ...cardData, number: e.target.value.replace(/\D/g, '').substring(0, 16) })}
-                                                />
-                                            </div>
-                                            <div className="grid grid-cols-2 gap-4">
-                                                <input
-                                                    type="text"
-                                                    placeholder="MM / YY"
-                                                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-5 px-6 text-xs font-bold tracking-[0.2em] text-white placeholder:text-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 transition-all text-center"
-                                                    value={cardData.expiry}
-                                                    onChange={(e) => setCardData({ ...cardData, expiry: e.target.value.substring(0, 5) })}
-                                                />
-                                                <input
-                                                    type="text"
-                                                    placeholder="CVC"
-                                                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-5 px-6 text-xs font-bold tracking-[0.2em] text-white placeholder:text-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 transition-all text-center"
-                                                    value={cardData.cvc}
-                                                    onChange={(e) => setCardData({ ...cardData, cvc: e.target.value.replace(/\D/g, '').substring(0, 3) })}
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <button
-                                            onClick={async () => {
-                                                setPaymentStatus('processing');
-                                                await new Promise(resolve => setTimeout(resolve, 2000));
-                                                if (lead?.id) {
-                                                    const { error } = await supabase
-                                                        .from('consultation_requests')
-                                                        .update({ status: 'Treatment Started' })
-                                                        .eq('id', lead.id);
-
-                                                    if (error) {
-                                                        console.error("Failed to update status on payment:", error);
-                                                        // In a real app, you might want to show an error toast here
-                                                        // but we'll still show success for the demo flow if the card goes through
-                                                    }
-                                                }
-                                                setPaymentStatus('success');
-                                            }}
-                                            disabled={paymentStatus === 'processing' || !cardData.number}
-                                            className="w-full py-6 bg-cyan-400 text-black font-extrabold uppercase tracking-[0.3em] text-[11px] rounded-2xl hover:bg-cyan-300 transition-all shadow-[0_0_30px_rgba(34,211,238,0.3)] flex items-center justify-center gap-3 active:scale-95 disabled:opacity-50"
-                                        >
-                                            {paymentStatus === 'processing' ? (
-                                                <>
-                                                    <RefreshCw className="w-4 h-4 animate-spin" /> SECURING SLOT...
-                                                </>
-                                            ) : (
-                                                "SECURE MY TRANSFORMATION"
-                                            )}
-                                        </button>
-
-                                        <p className="text-[9px] text-white/20 text-center font-bold uppercase tracking-widest flex items-center justify-center gap-2">
-                                            <Check className="w-3 h-3" /> SECURE STRIPE ENCRYPTION
-                                        </p>
-                                    </div>
-                                </>
-                            )}
-                        </motion.div>
+                            <div className="flex items-center justify-center gap-6 text-[9px] font-black uppercase tracking-[0.2em] text-gray-400 pt-4">
+                                <div className="flex items-center gap-1.5"><Lock className="w-3.5 h-3.5" /> Encrypted</div>
+                                <div className="flex items-center gap-1.5"><CreditCard className="w-3.5 h-3.5" /> Stripe Verified</div>
+                                <div className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5" /> UK GDPR</div>
+                            </div>
+                        </div>
                     </motion.div>
-                )}
-            </AnimatePresence>
+                </div>
+            </main>
+
+            {/* Sticky Footer for Trust */}
+            <footer className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[90%] md:w-auto px-8 py-5 bg-white/70 backdrop-blur-2xl border border-gray-200 rounded-full shadow-2xl z-50 flex items-center gap-8 justify-center">
+                <div className="hidden md:flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center border border-blue-100">
+                        <Star className="w-4 h-4 text-blue-400 fill-blue-400" />
+                    </div>
+                    <span className="text-[10px] font-bold text-gray-600 uppercase tracking-widest">Harley Street Standard</span>
+                </div>
+                <div className="h-4 w-px bg-gray-200 hidden md:block" />
+                <p className="text-[10px] text-gray-500 font-medium tracking-wide">
+                    This bespoke proposal is valid for the next 48 hours to secure your priority surgical slot.
+                </p>
+                <div className="h-4 w-px bg-gray-200 hidden md:block" />
+                <button className="text-[10px] font-black text-gray-900 uppercase tracking-widest hover:text-[#87A96B] transition-colors">
+                    Download PDF
+                </button>
+            </footer>
         </div>
     );
-}
+};
+
+export default ClientPTPage;

@@ -83,7 +83,7 @@ export default function WhatWeDoPage({ clinic }: { clinic: any }) {
                                 </div>
                             </div>
                             <p className="text-xl text-muted leading-relaxed font-medium">
-                                "Our mission is simple: To provide the most scientific dentistry on the planet, delivered with a heart. Every patient who leaves our chair should feel not only healthier but truly happier."
+                                "Our mission is simple: To provide the most scientific dentistry on the planet, delivered with a heart. Every client who leaves our chair should feel not only healthier but truly happier."
                             </p>
                             <div className="flex items-center gap-4">
                                 <div className="w-12 h-12 rounded-full bg-accent flex items-center justify-center">

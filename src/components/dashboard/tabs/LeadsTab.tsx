@@ -93,7 +93,7 @@ export function LeadsTab({
                                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                                 <input
                                     type="text"
-                                    placeholder="Query patient name or treatment..."
+                                    placeholder="Query client name or treatment..."
                                     className="w-full pl-11 pr-4 py-4 bg-white border border-gray-100 rounded-2xl text-xs font-medium focus:ring-2 focus:ring-black/5 transition-all outline-none shadow-sm"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -153,7 +153,7 @@ export function LeadsTab({
                     {/* Quick Insights Activity */}
                     <div className="card-light p-8">
                         <div className="flex items-center gap-3 mb-6">
-                            <TrendingUp className="w-4 h-4 text-[#C5A059]" />
+                            <TrendingUp className="w-4 h-4 text-[#87A96B]" />
                             <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Today's Focus</h4>
                         </div>
                         <div className="space-y-4">
@@ -190,7 +190,7 @@ export function LeadsTab({
                         <div className="bg-white p-5 rounded-3xl border border-black/5 shadow-2xl">
                             <div className="flex justify-between items-start mb-2">
                                 <h4 className="font-bold text-gray-900">{activeLead.name}</h4>
-                                <span className="text-[10px] font-black text-[#C5A059] uppercase tracking-tighter">
+                                <span className="text-[10px] font-black text-[#87A96B] uppercase tracking-tighter">
                                     £{(DONUT_SEGMENTS.find(s => activeLead.service.includes(s.label))?.count || 1000).toLocaleString()}
                                 </span>
                             </div>

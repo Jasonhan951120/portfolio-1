@@ -156,7 +156,7 @@ const MarketingOnboarding: React.FC<MarketingOnboardingProps> = ({ clinicId, onC
                             transition={{ delay: 0.3 }}
                             className="mt-8 pt-8 border-t border-gray-100"
                         >
-                            <p className="text-sm font-semibold text-[#C5A059] uppercase tracking-widest mb-4 flex items-center justify-center gap-2">
+                            <p className="text-sm font-semibold text-[#87A96B] uppercase tracking-widest mb-4 flex items-center justify-center gap-2">
                                 <TrendingUp size={16} /> Live Data Stream active
                             </p>
                             <div className="h-16 flex items-end justify-center gap-1">
@@ -166,7 +166,7 @@ const MarketingOnboarding: React.FC<MarketingOnboardingProps> = ({ clinicId, onC
                                         initial={{ height: 0 }}
                                         animate={{ height: `${h}%` }}
                                         transition={{ delay: 0.5 + i * 0.05, type: "spring" }}
-                                        className="w-2 bg-[#C5A059]/20 rounded-full hover:bg-[#C5A059]/40 transition-colors"
+                                        className="w-2 bg-[#87A96B]/20 rounded-full hover:bg-[#87A96B]/40 transition-colors"
                                     />
                                 ))}
                             </div>

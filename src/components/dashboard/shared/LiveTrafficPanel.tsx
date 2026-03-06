@@ -7,7 +7,7 @@ import { Wifi, Loader2 } from 'lucide-react';
 // Clinical Luxury palette: Sage Green + Soft Gold + supporting tones
 const SOURCE_COLORS: Record<string, string> = {
     "Google": "#4285F4", // Google Blue
-    "Social": "#C5A059", // Soft Gold
+    "Social": "#87A96B", // Soft Gold
     "Google (Organic)": "#87A96B", // Sage Green
     "Direct": "#B0B8C4", // Cool Grey
 };
@@ -82,7 +82,7 @@ export function LiveTrafficPanel({ clinicId }: LiveTrafficPanelProps) {
                     <div className="text-3xl mb-3">📡</div>
                     <p className="text-sm font-medium text-gray-500">No visits tracked yet</p>
                     <p className="text-xs text-gray-400 mt-1 max-w-[180px]">
-                        Send traffic to <code className="bg-gray-100 px-1 rounded text-[#C5A059]">/visit/[clinicId]</code> to start tracking
+                        Send traffic to <code className="bg-gray-100 px-1 rounded text-[#87A96B]">/visit/[clinicId]</code> to start tracking
                     </p>
                 </div>
             ) : (

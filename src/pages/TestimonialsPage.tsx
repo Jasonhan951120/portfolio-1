@@ -388,7 +388,7 @@ export default function TestimonialsPage({ clinic }: { clinic: any }) {
                     <div>
                         <div className="inline-flex items-center gap-2 mb-5">
                             <MessageCircleHeart className="w-4 h-4 text-primary" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-muted">Patient Stories</span>
+                            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-muted">Client Stories</span>
                         </div>
                         <h1 className="text-5xl md:text-7xl font-display font-bold tracking-tighter uppercase leading-none text-black">
                             Words that<br />
@@ -396,7 +396,7 @@ export default function TestimonialsPage({ clinic }: { clinic: any }) {
                         </h1>
                     </div>
                     <p className="text-muted font-medium max-w-xs leading-relaxed text-sm">
-                        These aren't marketing copy. They're unedited words from real patients — the moments that reminded us why we chose this work.
+                        These aren't marketing copy. They're unedited words from real clients — the moments that reminded us why we chose this work.
                     </p>
                 </div>
 
@@ -461,7 +461,7 @@ export default function TestimonialsPage({ clinic }: { clinic: any }) {
                         <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40">Your story starts here</span>
                     </div>
                     <h2 className="text-4xl md:text-6xl font-display font-bold text-white uppercase tracking-tight leading-tight mb-4">
-                        Every one of these<br />patients was <span className="text-primary">nervous.</span>
+                        Every one of these<br />clients was <span className="text-primary">nervous.</span>
                     </h2>
                     <p className="text-white/40 text-sm max-w-md mx-auto mb-10 leading-relaxed">
                         The first step is always the hardest. A free, no-obligation consultation costs you nothing — except the moment you choose to take it.

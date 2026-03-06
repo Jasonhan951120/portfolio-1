@@ -157,7 +157,7 @@ export default function SpecialistsPage({ clinic }: { clinic: any }) {
                     <Heart className="w-12 h-12 text-accent mx-auto mb-8 animate-pulse" />
                     <h2 className="text-4xl md:text-6xl font-display font-bold text-white mb-10 leading-tight">
                         Trusted by Doctors. <br />
-                        <span className="text-accent underline decoration-white/10 underline-offset-8 uppercase">Loved by Patients.</span>
+                        <span className="text-accent underline decoration-white/10 underline-offset-8 uppercase">Loved by Clients.</span>
                     </h2>
                     <div className="flex justify-center">
                         <button className="btn-yellow">

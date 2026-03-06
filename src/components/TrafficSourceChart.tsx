@@ -29,7 +29,7 @@ const TrafficSourceChart: React.FC<TrafficSourceChartProps> = ({ data }) => {
                     <p className="text-sm text-gray-500">Cross-platform ad efficiency & landing performance</p>
                 </div>
                 <div className="text-right">
-                    <span className="text-xs font-bold uppercase tracking-widest text-[#C5A059] block mb-1">Avg Landing Rate</span>
+                    <span className="text-xs font-bold uppercase tracking-widest text-[#87A96B] block mb-1">Avg Landing Rate</span>
                     <span className="text-3xl font-display font-light text-gray-900">{landingRate}%</span>
                 </div>
             </div>

@@ -40,7 +40,7 @@ export type ConsultationRequest = {
     phone: string;
     service: string;
     notes: string | null;
-    status: "New Lead" | "Booked" | "Visited" | "Treated" | "Abandoned" | "Archived" | "New" | "Contacted" | "Consultation Booked" | "Treatment Started";
+    status: "New Lead" | "Qualified" | "Proposal Sent" | "Closed Won" | "Abandoned" | "Future Pipeline" | "Archived";
     created_at: string;
     first_contact_at?: string;
     review_requested_at?: string;
@@ -75,7 +75,7 @@ export type Treatment = {
     created_at: string;
 };
 
-export type Patient = {
+export type Lead = {
     id: string;
     clinic_id: string;
     name: string;

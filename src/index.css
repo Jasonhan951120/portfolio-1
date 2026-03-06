@@ -7,13 +7,14 @@
   --color-surface: #FFFFFF;
   /* Dual-Theme Architecture */
   --accent-gold: #C5A059;
-  /* Clinical Gold for Admin Dashboard */
+  /* Clinical Sage Green for Admin Dashboard */
+  --accent-green: #87A96B;
   --accent-blue: #5BA4CF;
   /* Pastel Medical Blue for Landing Page */
   --accent-mint: #A8D5BA;
   /* Soft Mint Green for Harmony Gradient */
 
-  --accent-dashboard: var(--accent-gold);
+  --accent-dashboard: var(--accent-green);
   --accent-website: var(--accent-blue);
 
   /* Active Default Accent - Initially set to Website Theme */
@@ -30,18 +31,18 @@
 
 @layer base {
   html {
-    background-color: #FFFFFF;
+    background-color: #F9FAFB;
   }
 
   body {
-    @apply bg-white text-gray-900 font-sans antialiased;
+    @apply bg-[#F9FAFB] text-[#121418] font-sans antialiased;
   }
 
   h1,
   h2,
   h3,
   h4 {
-    @apply font-sans font-semibold tracking-tight leading-tight text-gray-900;
+    @apply font-sans font-semibold tracking-tight leading-tight text-[#121418];
   }
 }
 

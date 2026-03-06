@@ -1,4 +1,4 @@
-export interface Treatment {
+export interface ServicePackage {
     slug: string;
     title: string;
     heroImage: string;
@@ -19,130 +19,130 @@ export interface Treatment {
     };
 }
 
-export const TREATMENTS: Record<string, Treatment> = {
+export const TREATMENTS: Record<string, ServicePackage> = {
     "composite-bonding": {
         slug: "composite-bonding",
-        title: "Composite Bonding",
+        title: "Smile Enhancement",
         heroImage: "https://res.cloudinary.com/dvmxeaefb/image/upload/v1771965553/hf_20260224_194822_dbee3087-65d3-4e06-8769-5ae9acd1a02d_knmad9.jpg",
-        description: "Enhance your smile in just one visit with minimally invasive cosmetic bonding.",
-        fullDescription: "Composite bonding is a popular cosmetic dental procedure that involves applying a tooth-colored resin material to your teeth to improve their appearance. It's an excellent, cost-effective way to repair chips, gaps, or uneven edges in a single visit.",
-        price: "From £150 per tooth",
-        duration: "1 hour per session",
+        description: "Transform your confidence in a single session with our premium aesthetic bonding.",
+        fullDescription: "Our aesthetic enhancement package uses elite-grade materials to seamlessly perfect your smile's alignment and symmetry. This non-invasive session is our most popular choice for rapid, high-impact visual results.",
+        price: "Packages from £150",
+        duration: "Quick 60-minute session",
         process: [
-            { step: "01", title: "Shade Matching", description: "Choice of resin shade that perfectly matches your natural teeth." },
-            { step: "02", title: "Preparation", description: "The tooth surface is slightly roughened and a conditioning liquid is applied." },
-            { step: "03", title: "Application", description: "The resin is applied, shaped, and smoothed to the desired look." },
-            { step: "04", title: "Curing & Polishing", description: "A special light is used to harden the resin, followed by professional polishing." }
+            { step: "01", title: "Aesthetic Duo-Selection", description: "Collaborate with our lead specialist to choose the perfect visual tone for your face." },
+            { step: "02", title: "Surface Preparation", description: "Ensuring the canvas is perfectly primed for maximum adhesion and longevity." },
+            { step: "03", title: "Artistic Sculpting", description: "Our specialists hand-sculpt the material to your precise desired blueprint." },
+            { step: "04", title: "Diamond Polishing", description: "Final high-gloss finish for a look that reflects light just like natural premium enamel." }
         ],
-        benefits: ["One-visit transformation", "Minimally invasive", "Natural-looking results", "Repair chips & gaps"],
+        benefits: ["Immediate visual return", "Preservation focused", "Bespoke hand-crafted finish", "Zero recovery time"],
         specialist: {
             name: "Dr. Elena Rossi",
-            role: "Cosmetic Dentist",
+            role: "Aesthetic Director",
             image: "https://images.unsplash.com/photo-1559839734-2b71f1e59816?q=80&w=400&h=400&auto=format&fit=crop"
         }
     },
     "dental-crowns": {
         slug: "dental-crowns",
-        title: "Dental Crowns",
+        title: "Structural Rejuvenation",
         heroImage: "https://res.cloudinary.com/dvmxeaefb/image/upload/v1771965518/hf_20260224_200006_2409d25b-6837-41b8-a6df-76610032d5ae_azzouf.jpg",
-        description: "Restore strength and appearance to damaged teeth with custom-made crowns.",
-        fullDescription: "A dental crown is a custom-made cap that covers a damaged or weakened tooth, restoring its shape, size, strength, and appearance. At London Smile, we use premium ceramic materials that mimic the light-reflecting properties of natural enamel.",
-        price: "From £850 per crown",
-        duration: "2 appointments",
+        description: "Premium structural support for a resilient, lasting, and high-status smile.",
+        fullDescription: "This advanced rejuvenation suite utilizes aerospace-grade ceramic to provide ultimate durability while maintaining a pure, natural aesthetic. Ideal for those seeking a total foundation upgrade.",
+        price: "Investment from £850",
+        duration: "Bespoke 2-phase process",
         process: [
-            { step: "01", title: "Digital Impression", description: "We use 3D intraoral scanners to capture a precise model of your teeth." },
-            { step: "02", title: "Preparation", description: "The tooth is carefully shaped to accommodate the crown securely." },
-            { step: "03", title: "Temporary Crown", description: "A temporary crown is fitted while your custom permanent one is crafted." },
-            { step: "04", title: "Final Fit", description: "Your custom ceramic crown is bonded permanently for a perfect match." }
+            { step: "01", title: "Precision Mapping", description: "3D intraoral scanning captures a perfect digital twin for your custom design." },
+            { step: "02", title: "Foundation Styling", description: "Carefully prepping the base to ensure a secure, lifelong integration." },
+            { step: "03", title: "Phase 1: Temporary Fit", description: "A high-quality bridge solution while your master ceramic is forged." },
+            { step: "04", title: "Phase 2: Master Fitting", description: "Permanent integration of your custom ceramic for a flawless, enduring smile." }
         ],
-        benefits: ["Structural restoration", "Enamel-like aesthetics", "Long-lasting durability", "Protects weakened teeth"],
+        benefits: ["Maximum structural integrity", "Bespoke ceramic artistry", "Life-long investment", "Elite status aesthetics"],
         specialist: {
             name: "Dr. Marcus Thorne",
-            role: "Prosthodontist Specialist",
+            role: "Structural Lead",
             image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=400&h=400&auto=format&fit=crop"
         }
     },
     "gum-contouring": {
         slug: "gum-contouring",
-        title: "Gum Contouring",
+        title: "Aesthetic Alignment",
         heroImage: "https://res.cloudinary.com/dvmxeaefb/image/upload/v1771965515/hf_20260224_194846_7d5d1758-c976-4d65-90ba-0576f56488d9_1_eqsuqz.png",
-        description: "Reshape and refine your gum line for a more balanced and pleasing smile.",
-        fullDescription: "Gum contouring (or gum reshaping) is a cosmetic procedure used to refine and level an uneven gum line. It's perfect for patients with a 'gummy smile' or those who want their teeth to appear longer and more symmetrical.",
-        price: "From £300",
-        duration: "45-90 minutes",
+        description: "Symmetry is the key to beauty. Refine your frame for a balanced, high-impact smile.",
+        fullDescription: "Our frame refinement package uses gentle laser precision to sculpt your gum line, revealing the true length and beauty of your teeth. It's the ultimate 'finishing touch' for a professional look.",
+        price: "Refinement from £300",
+        duration: "Quick-align session",
         process: [
-            { step: "01", title: "Aesthetic Planning", description: "We map out the ideal gum line that complements your facial features." },
-            { step: "02", title: "Local Anaesthesia", description: "Ensuring your complete comfort with precise numbing." },
-            { step: "03", title: "Laser Contouring", description: "Using advanced lasers to carefully remove excess gum tissue with minimal bleeding." },
-            { step: "04", title: "Immediate Recovery", description: "The laser promotes instant healing, with very little downtime required." }
+            { step: "01", title: "Proportion Analysis", description: "Golden-ratio mapping to find your face's most harmonious alignment." },
+            { step: "02", title: "Comfort Protocol", description: "Ensuring an effortless experience with our premium relaxation suite." },
+            { step: "03", title: "Laser Refinement", description: "Rapid sculpting with advanced light-tech for a bloodless, clean finish." },
+            { step: "04", title: "Visual Reveal", description: "Immediate symmetry check and home-care plan for lasting results." }
         ],
-        benefits: ["Balanced gum-to-tooth ratio", "Painless laser technology", "Instant results", "Boosts smile confidence"],
+        benefits: ["Golden-ratio symmetry", "Effortless laser tech", "Instant facial balance", "Zero downtime refresh"],
         specialist: {
             name: "Dr. Sarah Jenkins",
-            role: "Periodontist",
+            role: "Alignment Specialist",
             image: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?q=80&w=400&h=400&auto=format&fit=crop"
         }
     },
     "sedation-dentistry": {
         slug: "sedation-dentistry",
-        title: "Sedation Dentistry",
+        title: "The Comfort Suite",
         heroImage: "https://res.cloudinary.com/dvmxeaefb/image/upload/v1771965515/hf_20260224_200121_a1138bff-2f8f-4cfe-8812-97ba600000a3_1_xvip2y.png",
-        description: "Relax throughout your treatment with safe and comfortable sedation options.",
-        fullDescription: "Sedation dentistry allows patients with dental anxiety to undergo necessary treatments in a state of total relaxation. Whether it's IV sedation or oral conscious sedation, we prioritize your peace of mind and comfort.",
-        price: "From £250 (Add-on)",
-        duration: "Dependent on treatment",
+        description: "Experience your transformation in a state of pure, effortless relaxation.",
+        fullDescription: "Our signature Comfort Suite is designed for those who value a stress-free journey. Drift into a calm state and wake up to your new smile, with zero memory of the technical work.",
+        price: "Peace of mind from £250",
+        duration: "Session extension",
         process: [
-            { step: "01", title: "Health Screening", description: "A thorough review of your medical history to ensure safety." },
-            { step: "02", title: "Sedation Level", description: "Choosing between mild relaxation or deeper twilight sleep (IV)." },
-            { step: "03", title: "Expert Monitoring", description: "Continuous monitoring of vital signs throughout your entire session." },
-            { step: "04", title: "Comfortable Wake-up", description: "Gentle recovery in our dedicated quiet room after the procedure." }
+            { step: "01", title: "Wellness Profile", description: "Brief consultation to tailor the relaxation level to your comfort zone." },
+            { step: "02", title: "Relaxation Induction", description: "Gentle transition into a serene, twilight sleep state." },
+            { step: "03", title: "Concierge Supervision", description: "Dedicated monitoring throughout your session for absolute safety." },
+            { step: "04", title: "The Refresh Zone", description: "Gentle re-awakening in our private recovery lounge with refreshments." }
         ],
-        benefits: ["Anxiety-free treatments", "Reduced gag reflex", "Painless experience", "Time passes quickly"],
+        benefits: ["Zero treatment anxiety", "Time compression effect", "Concierge-level care", "Effortless appointments"],
         specialist: {
             name: "Dr. James Wilson",
-            role: "Sedation Specialist",
+            role: "Experience Director",
             image: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?q=80&w=400&h=400&auto=format&fit=crop"
         }
     },
     "preventive-care": {
         slug: "preventive-care",
-        title: "Preventive Dental Care",
+        title: "Maintenance Suite",
         heroImage: "https://res.cloudinary.com/dvmxeaefb/image/upload/v1771965514/hf_20260224_194907_1b8f2485-20d1-44df-9100-699164d7dd9d_nf1esk.jpg",
-        description: "Comprehensive check-ups and hygiene treatments to keep your smile healthy.",
-        fullDescription: "Prevention is the foundation of modern dentistry. Our comprehensive care plans include advanced diagnostics, professional oral hygiene, and personalized advice to ensure your teeth last a lifetime.",
-        price: "From £120",
-        duration: "45 minutes",
+        description: "Comprehensive maintenance plans to ensure your aesthetic investment lasts a lifetime.",
+        fullDescription: "Our maintenance protocols combine advanced digital diagnostics with elite hygiene technology to preserve the foundation of your smile and prevent long-term depreciation.",
+        price: "Maintenance from £120",
+        duration: "45-minute wellness check",
         process: [
-            { step: "01", title: "Diagnostic Review", description: "Digital X-rays and AI-powered screening for early detection." },
-            { step: "02", title: "Gum Health Check", description: "Precise measurement of periodontal health to prevent gum disease." },
-            { step: "03", title: "Expert Hygiene", description: "Professional 'Scale & Polish' using gentle Airflow technology." },
-            { step: "04", title: "Prevention Plan", description: "A tailored long-term strategy for your home care routine." }
+            { step: "01", title: "Digital Performance Review", description: "AI-powered screening to detect early micro-shifts in your smile's integrity." },
+            { step: "02", title: "Structural Health Check", description: "Precision measurement of your smile's supporting frame." },
+            { step: "03", title: "Elite Hygiene Session", description: "Professional airflow technology for a gentle, high-gloss refresh." },
+            { step: "04", title: "Longevity Strategy", description: "A tailored preservation blueprint for your daily lifestyle." }
         ],
-        benefits: ["Prevention over cure", "Fresh breath", "Stain removal", "Early problem detection"],
+        benefits: ["Preserves high-value work", "Elite hygiene refresh", "Stain-free maintenance", "Long-term visual security"],
         specialist: {
             name: "Dr. Elena Rossi",
-            role: "General & Cosmetic Dentist",
+            role: "Preservation Director",
             image: "https://images.unsplash.com/photo-1559839734-2b71f1e59816?q=80&w=400&h=400&auto=format&fit=crop"
         }
     },
     "childrens-dentistry": {
         slug: "childrens-dentistry",
-        title: "Children’s Dentistry",
+        title: "Early Smile Blueprint",
         heroImage: "https://res.cloudinary.com/dvmxeaefb/image/upload/v1771965514/hf_20260224_200042_5152638d-c2b7-4464-9970-36c186bebc2d_awwpxx.jpg",
-        description: "Gentle, friendly dental care tailored specifically for children in a calm environment.",
-        fullDescription: "We believe children should enjoy visiting the dentist. Our specialized pediatric care focuses on education, preventative treatments, and creating positive associations with oral health from an early age.",
-        price: "From £60",
-        duration: "30 minutes",
+        description: "Building the foundation for a life of confidence with gentle, positive early experiences.",
+        fullDescription: "Our junior blueprint sessions are designed to create positive associations with care. We focus on education and early alignment screening to ensure a perfect smile from the very beginning.",
+        price: "First session from £60",
+        duration: "Playful 30-minute session",
         process: [
-            { step: "01", title: "Playful Introduction", description: "Getting the child comfortable with our 'cool' technology and gadgets." },
-            { step: "02", title: "Gentle Examination", description: "A stress-free check of dental development and bite alignment." },
-            { step: "03", title: "Educational Fun", description: "Showing kids how to brush like pros with interactive tools." },
-            { step: "04", title: "Positive Reward", description: "A sticker and a smile to celebrate a successful visit!" }
+            { step: "01", title: "Tech Discovery", description: "Introducing young clients to our cinematic gadgets in a fun, zero-stress way." },
+            { step: "02", title: "Growth Assessment", description: "A gentle mapping of development and early alignment potentials." },
+            { step: "03", title: "Confidence Coaching", description: "Interactive sessions showing junior clients how to master their home care." },
+            { step: "04", title: "The Success Badge", description: "Celebrating a milestone visit with rewards and a cinematic photo-op!" }
         ],
-        benefits: ["Fear-free atmosphere", "Expert pediatric guidance", "Early orthodontic screening", "Preventative sealant coatings"],
+        benefits: ["Fear-free foundation", "Early growth tracking", "Positive habit creation", "Bespoke junior care"],
         specialist: {
             name: "Dr. Emily Chen",
-            role: "Pediatric Specialist",
+            role: "Junior Care Director",
             image: "https://images.unsplash.com/photo-1527613426441-4da17471b66d?q=80&w=400&h=400&auto=format&fit=crop"
         }
     }

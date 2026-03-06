@@ -13,10 +13,10 @@ const portfolioData = {
         signature: "S. Mitchell, DDS",
         bestCase: {
             title: "Artistic Smile Reconstruction",
-            story: "This patient presented with severe enamel erosion and uneven gum lines. My approach was a combination of laser gum contouring and 10 master-crafted porcelain veneers to create a symmetrical, light-reflective smile that looks completely biological.",
+            story: "This client presented with severe enamel erosion and uneven gum lines. My approach was a combination of laser gum contouring and 10 master-crafted porcelain veneers to create a symmetrical, light-reflective smile that looks completely biological.",
             stats: { primary: "Porcelain Veneers", complexity: "High Symmetery", visits: "3 Appointments" },
             caseDetails: [
-                { label: "Patient Concern", value: "Aged appearance and yellowed enamel." },
+                { label: "Client Concern", value: "Aged appearance and yellowed enamel." },
                 { label: "Clinical Method", value: "Minimal-prep lithium disilicate veneers." },
                 { label: "Final Outcome", value: "10-year guarantee on structural integrity." }
             ],
@@ -38,7 +38,7 @@ const portfolioData = {
             story: "For this multi-unit replacement, we used stackable surgical guides. This allowed us to place three implants with extreme precision in a single session, significantly reducing healing time and ensuring perfect prosthetic alignment.",
             stats: { primary: "Guided Bio-Implant", complexity: "Surgical Precision", visits: "2 Appointments" },
             caseDetails: [
-                { label: "Patient Concern", value: "Missing teeth and bone resorption." },
+                { label: "Client Concern", value: "Missing teeth and bone resorption." },
                 { label: "Clinical Method", value: "CBCT-guided flapless surgery." },
                 { label: "Final Outcome", value: "Lifetime warranty on implant stability." }
             ],
@@ -60,7 +60,7 @@ const portfolioData = {
             story: "Instead of aggressive drilling, we opted for hand-sculpted composite bonding. By meticulously layering different shades of resin, we closed gaps and lengthened teeth to create a youthful, vibrant smile in just one afternoon session.",
             stats: { primary: "Aesthetic Bonding", complexity: "Artistic Layering", visits: "1 Afternoon" },
             caseDetails: [
-                { label: "Patient Concern", value: "Gaps between teeth and short appearance." },
+                { label: "Client Concern", value: "Gaps between teeth and short appearance." },
                 { label: "Clinical Method", value: "Biomimetic stratification bonding." },
                 { label: "Final Outcome", value: "Instant confidence boost with zero pain." }
             ],
@@ -186,7 +186,7 @@ export default function PortfolioPage({ clinic }: { clinic: any }) {
                             </blockquote>
                             <div className="pt-8 border-t border-black/5 flex items-center gap-6">
                                 <div>
-                                    <p className="text-2xl font-display font-bold text-black uppercase">Verified Patient</p>
+                                    <p className="text-2xl font-display font-bold text-black uppercase">Verified Client</p>
                                     <p className="text-[10px] font-black text-muted uppercase tracking-widest mt-1 italic">London Smile Elite Member</p>
                                 </div>
                                 <div className="w-[1px] h-12 bg-black/10" />

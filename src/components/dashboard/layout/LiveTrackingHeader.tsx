@@ -34,8 +34,8 @@ export function LiveTrackingHeader({ metrics }: LiveTrackingHeaderProps) {
             label: "Revenue Potential",
             value: `£${metrics.dailyRevenue.toLocaleString()}`,
             icon: TrendingUp,
-            color: "text-[#C5A059]",
-            bg: "bg-[#C5A059]/10",
+            color: "text-[#87A96B]",
+            bg: "bg-[#87A96B]/10",
             sub: "Today's stream"
         },
         {
@@ -107,7 +107,7 @@ export function LiveTrackingHeader({ metrics }: LiveTrackingHeaderProps) {
                     </div>
 
                     <div className="hidden xl:flex items-center gap-3 px-6 py-4 bg-gray-900 rounded-2xl shadow-xl shadow-black/5">
-                        <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-[#C5A059]">
+                        <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-[#87A96B]">
                             <Sparkles className="w-4 h-4" />
                         </div>
                         <div>

@@ -1,13 +1,13 @@
-export const KANBAN_COLUMNS = ["New Lead", "Contacted", "Booked", "Visited", "Treated", "Abandoned", "Waitlisted"];
+export const KANBAN_COLUMNS = ["New Lead", "Qualified", "Proposal Sent", "Closed Won", "Abandoned", "Future Pipeline"];
 
-export const TREATMENT_VALUES: Record<string, number> = {
-    "Dental Implants": 3000,
-    "Invisalign / Aligners": 2500,
-    "Veneers": 1200,
-    "Composite Bonding": 800,
-    "Teeth Whitening": 500,
-    "Dental Crown": 900,
-    "Emergency Appointment": 300,
+export const SERVICE_CONVERSION_VALUES: Record<string, number> = {
+    "Dental Implants": 3500,
+    "Invisalign / Aligners": 3000,
+    "Veneers": 1500,
+    "Composite Bonding": 1000,
+    "Teeth Whitening": 600,
+    "Dental Crown": 1200,
+    "Emergency Appointment": 500,
     "General Inquiry": 1500,
     "Other": 1000,
 };
@@ -21,8 +21,9 @@ export const DONUT_SEGMENTS = [
 
 export const STATUS_COLORS: Record<string, string> = {
     "New Lead": "text-[#C5A059] border-[#C5A059]/40 bg-[#C5A059]/10",
-    "Booked": "text-purple-400 border-purple-400/40 bg-transparent",
-    "Visited": "text-yellow-400 border-yellow-400/40 bg-yellow-400/10",
-    "Treated": "text-[#87A96B] border-[#87A96B]/40 bg-[#87A96B]/10",
+    "Qualified": "text-purple-400 border-purple-400/40 bg-transparent",
+    "Proposal Sent": "text-yellow-400 border-yellow-400/40 bg-yellow-400/10",
+    "Closed Won": "text-[#87A96B] border-[#87A96B]/40 bg-[#87A96B]/10",
     "Abandoned": "text-gray-400 border-black/10 bg-black/5",
+    "Future Pipeline": "text-blue-400 border-blue-400/40 bg-blue-400/10",
 };

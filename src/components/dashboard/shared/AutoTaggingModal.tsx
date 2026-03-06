@@ -78,7 +78,7 @@ export function AutoTaggingModal({ isOpen, platform, onClose }: AutoTaggingModal
                                         href={isMeta ? "https://business.facebook.com/settings" : "https://ads.google.com/aw/settings/"}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-1.5 mt-2 text-xs font-bold uppercase tracking-widest text-[#C5A059] hover:text-[#B38D46] transition-colors"
+                                        className="inline-flex items-center gap-1.5 mt-2 text-xs font-bold uppercase tracking-widest text-[#87A96B] hover:text-[#B38D46] transition-colors"
                                     >
                                         Open {isMeta ? "Meta Business" : "Google Ads"}
                                         <ExternalLink className="w-3 h-3" />

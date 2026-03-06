@@ -3,7 +3,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { MessageSquare, Clock, ArrowRight } from 'lucide-react';
 import { ConsultationRequest } from '../lib/supabase';
-import { STATUS_COLORS, TREATMENT_VALUES } from '../lib/constants';
+import { STATUS_COLORS, SERVICE_CONVERSION_VALUES } from '../lib/constants';
 
 interface KanbanCardProps {
     lead: ConsultationRequest;
@@ -27,7 +27,7 @@ export function KanbanCard({ lead, onClick }: KanbanCardProps) {
         zIndex: isDragging ? 100 : 1,
     };
 
-    const value = TREATMENT_VALUES[lead.service] || 1000;
+    const value = SERVICE_CONVERSION_VALUES[lead.service] || 1000;
 
     return (
         <div
@@ -36,10 +36,10 @@ export function KanbanCard({ lead, onClick }: KanbanCardProps) {
             {...attributes}
             {...listeners}
             onClick={onClick}
-            className="group bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-[#C5A059]/30 transition-all cursor-grab active:cursor-grabbing relative overflow-hidden"
+            className="group bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-[#87A96B]/30 transition-all cursor-grab active:cursor-grabbing relative overflow-hidden"
         >
             <div className="flex justify-between items-start mb-3">
-                <h4 className="font-bold text-gray-900 text-sm tracking-tight group-hover:text-[#C5A059] transition-colors">{lead.name}</h4>
+                <h4 className="font-bold text-gray-900 text-sm tracking-tight group-hover:text-[#87A96B] transition-colors">{lead.name}</h4>
                 <div className={`px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-tighter border ${STATUS_COLORS[lead.status] || 'bg-gray-50 text-gray-400'}`}>
                     {lead.status}
                 </div>
@@ -66,7 +66,7 @@ export function KanbanCard({ lead, onClick }: KanbanCardProps) {
 
             {/* Hover visual cue */}
             <div className="absolute bottom-0 right-0 p-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <ArrowRight className="w-3 h-3 text-[#C5A059]" />
+                <ArrowRight className="w-3 h-3 text-[#87A96B]" />
             </div>
         </div>
     );

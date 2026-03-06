@@ -486,12 +486,12 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
               {lead.service}
             </span>
             {lead.appointment_date && !isNaN(new Date(lead.appointment_date).getTime()) && (
-              <span className="text-[10px] font-medium text-[#C5A059] bg-[#C5A059]/10 px-2 py-0.5 rounded-md border border-[#C5A059]/10">
+              <span className="text-[10px] font-medium text-[#87A96B] bg-[#87A96B]/10 px-2 py-0.5 rounded-md border border-[#87A96B]/10">
                 {new Date(lead.appointment_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
               </span>
             )}
             {lead.status === "Visited" && (
-              <span className="text-[10px] font-medium text-black bg-[#C5A059] px-2 py-0.5 rounded-md">
+              <span className="text-[10px] font-medium text-black bg-[#87A96B] px-2 py-0.5 rounded-md">
                 Consulted
               </span>
             )}
@@ -520,10 +520,10 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
               <button
                 onClick={handleSendEmail}
                 disabled={isSendingEmail}
-                className="p-1.5 text-[#C5A059] hover:text-[#C5A059]/80 bg-[#C5A059]/10 hover:bg-[#C5A059]/20 rounded-lg transition-all border border-[#C5A059]/20 disabled:opacity-50"
+                className="p-1.5 text-[#87A96B] hover:text-[#87A96B]/80 bg-[#87A96B]/10 hover:bg-[#87A96B]/20 rounded-lg transition-all border border-[#87A96B]/20 disabled:opacity-50"
                 title="Send PT Link via Email"
               >
-                {isSendingEmail ? <RefreshCw className="w-3.5 h-3.5 animate-spin text-[#C5A059]" /> : <Send className="w-3.5 h-3.5" />}
+                {isSendingEmail ? <RefreshCw className="w-3.5 h-3.5 animate-spin text-[#87A96B]" /> : <Send className="w-3.5 h-3.5" />}
               </button>
             </div>
           </div>
@@ -620,7 +620,7 @@ function KanbanColumn({
         {/* Postel's Law: Graceful Empty State */}
         {columnLeads.length === 0 && (
           <div className="h-32 rounded-[16px] flex flex-col items-center justify-center opacity-40 mt-2 border border-dashed border-[#A0A0A0]/20 bg-white/[0.01]">
-            <Sparkles className="w-4 h-4 text-[#C5A059] mb-2 opacity-50" />
+            <Sparkles className="w-4 h-4 text-[#87A96B] mb-2 opacity-50" />
             <span className="text-[11px] font-medium text-[#A0A0A0]">Drop here</span>
           </div>
         )}

@@ -14,7 +14,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { supabase, type ConsultationRequest, type Profile, type Invitation } from "../lib/supabase";
 import { useAuth } from "../contexts/AuthContext";
 import { generateDailyBriefing } from "../lib/ai-assistant-service";
-import { TREATMENT_VALUES } from "../lib/constants";
+import { SERVICE_CONVERSION_VALUES } from "../lib/constants";
 import { AutoTaggingModal } from "./dashboard/shared/AutoTaggingModal";
 import { AnimatePresence } from "motion/react";
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent, useDroppable } from '@dnd-kit/core';
@@ -75,9 +75,9 @@ function timeAgo(dateStr: string): string {
 
 const STATUS_COLORS: Record<string, string> = {
   "New Lead": "text-[#87A96B] border-[#87A96B]/40 bg-[#87A96B]/10",
-  "Booked": "text-purple-400 border-purple-400/40 bg-transparent",
-  "Visited": "text-yellow-400 border-yellow-400/40 bg-yellow-400/10",
-  "Treated": "text-[#87A96B] border-[#87A96B]/40 bg-[#87A96B]/10",
+  "Scheduled": "text-purple-400 border-purple-400/40 bg-transparent",
+  "Consultation Done": "text-yellow-400 border-yellow-400/40 bg-yellow-400/10",
+  "Sale Closed": "text-[#87A96B] border-[#87A96B]/40 bg-[#87A96B]/10",
   "Abandoned": "text-gray-400 border-black/10 bg-black/5",
 };
 
@@ -278,7 +278,7 @@ function WaitlistPanel({ isOpen, onClose, waitlist, onInvite }: { isOpen: boolea
                       </div>
                       <div className="flex flex-col items-end gap-1">
                         <span className="text-[10px] font-bold text-[#87A96B]/70 bg-[#87A96B]/10 px-2 py-0.5 rounded border border-[#87A96B]/20">
-                          £{(TREATMENT_VALUES[w.service] || 1000).toLocaleString()}
+                          £{(SERVICE_CONVERSION_VALUES[w.service] || 1000).toLocaleString()}
                         </span>
                         <div className="flex items-center gap-2 mt-1">
                           <span className="text-[8px] font-bold text-[#87A96B]/60 uppercase">{timeAgo(w.created_at)}</span>
@@ -419,7 +419,9 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
     }, 400);
   };
 
-  const isOverdue = (lead.status === "New Lead" || lead.status === "New") && (Date.now() - new Date(lead.created_at).getTime()) > 86400000;
+  const isVIP = lead.name.toLowerCase().includes("vip");
+  const timeLimit = isVIP ? 15 * 60 * 1000 : 86400000;
+  const isOverdue = (lead.status === "New Lead" || lead.status === "Waitlisted") && (Date.now() - new Date(lead.created_at).getTime()) > timeLimit;
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -432,23 +434,23 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
       <motion.div
         layout
         initial={{ opacity: 1, scale: 1 }}
-        whileHover={{ scale: 1.01 }}
+        whileHover={{ scale: 1.02 }}
         animate={isExiting ? { opacity: 0, scale: 0.8, x: 50, filter: "blur(4px)" } : {
-          scale: isDragging ? 1.04 : 1,
+          scale: isDragging ? 1.02 : 1,
           rotate: isDragging ? 2 : 0,
           boxShadow: isDragging
             ? "0 30px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1)"
             : isOverdue
-              ? "0 10px 30px rgba(226,114,91,0.15), inset 0 0 0 1px rgba(0,0,0,0.05)" /* Terracotta shadow */
-              : "0 10px 30px -10px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(0,0,0,0.05)", /* Soft Matte Shadow */
+              ? "0 0 15px rgba(230,57,70,0.6)"
+              : "0 10px 30px -10px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(0,0,0,0.05)",
           opacity: isDragging ? 0.95 : 1,
           backgroundColor: isDragging ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,1)",
           y: isDragging ? -10 : 0
         }}
-        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        transition={{ type: "spring", stiffness: 80, damping: 20 }}
         className={`rounded-2xl p-4 relative group focus:outline-none transition-all
           ${isDragging ? 'border-black/10 cursor-grabbing bg-white/95' :
-            isOverdue ? 'border-[#E2725B]/40 hover:border-[#E2725B]/70 cursor-grab animate-[pulse_3s_ease-in-out_infinite] bg-white' :
+            isOverdue ? 'border-[#E63946] hover:border-[#E63946]/80 cursor-grab animate-pulse bg-white' :
               'border-black/5 hover:border-black/10 cursor-grab hover:bg-white/[0.02] bg-white'
           }`}
       >
@@ -481,7 +483,7 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
                 {new Date(lead.appointment_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
               </span>
             )}
-            {lead.status === "Visited" && (
+            {lead.status === "Consultation Done" && (
               <span className="text-[10px] font-medium text-black bg-[#87A96B] px-2 py-0.5 rounded-md">
                 Consulted
               </span>
@@ -489,7 +491,7 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
           </div>
           <div className="mt-3 pt-3 border-t border-white/[0.04] flex justify-between items-center pointer-events-auto opacity-0 group-hover:opacity-100 transition-opacity">
             <div className="flex gap-2 w-full justify-end">
-              {lead.status === "New" && (
+              {lead.status === "New Lead" && (
                 <button
                   onClick={handleWaitlistClick}
                   className="px-3 py-1.5 text-gray-500 hover:text-gray-900 bg-black/5 hover:bg-black/5 rounded-xl transition-all border border-black/5 text-[10px] font-medium flex items-center gap-1.5 self-center mr-1"
@@ -581,7 +583,7 @@ function KanbanColumn({
         </div>
         {/* Pipeline Value Header (Apple-Style Numbers, Tight Tracking) */}
         <span className="text-metric text-2xl mb-1">
-          £{columnLeads.reduce((sum, l) => sum + (TREATMENT_VALUES[l.service] ?? 1000), 0).toLocaleString()}
+          £{columnLeads.reduce((sum, l) => sum + (SERVICE_CONVERSION_VALUES[l.service] ?? 1000), 0).toLocaleString()}
         </span>
         <div className="h-[1px] w-full bg-gradient-to-r from-white/10 to-transparent mt-3"></div>
       </div>
@@ -731,7 +733,7 @@ export default function AdminDashboard() {
     const today = new Date().toISOString().split('T')[0];
     return leads.filter(lead => {
       if (!lead.appointment_date) return false;
-      return lead.appointment_date.startsWith(today) && (lead.status === "Booked" || lead.status === "Consultation Booked");
+      return lead.appointment_date.startsWith(today) && (lead.status === "Scheduled");
     }).sort((a, b) => new Date(a.appointment_date!).getTime() - new Date(b.appointment_date!).getTime());
   }, [leads]);
 
@@ -846,7 +848,7 @@ export default function AdminDashboard() {
     ];
 
     leads.forEach(lead => {
-      if (lead.status !== "Treatment Started" && lead.status !== "Treated") return;
+      if (lead.status !== "Sale Closed") return;
 
       const d = new Date(lead.treated_at || lead.appointment_date || lead.created_at);
       if (d.getMonth() !== analyticsMonth || d.getFullYear() !== analyticsYear) return;
@@ -861,7 +863,7 @@ export default function AdminDashboard() {
       const actualTreatments = performedTreatments.filter(pt => pt.lead_id === lead.id);
       const value = actualTreatments.length > 0
         ? actualTreatments.reduce((sum, pt) => sum + pt.amount, 0)
-        : (TREATMENT_VALUES[lead.service] || 1000);
+        : (SERVICE_CONVERSION_VALUES[lead.service] || 1000);
 
       if (lead.service.includes("Implant")) data[weekIndex].Implants += value;
       else if (lead.service.includes("Invisalign")) data[weekIndex].Invisalign += value;
@@ -886,7 +888,7 @@ export default function AdminDashboard() {
 
     // 2. Count from leads without explicit logging (legacy or pending)
     leads.forEach(lead => {
-      if (lead.status !== "Treatment Started" && lead.status !== "Treated") return;
+      if (lead.status !== "Sale Closed") return;
       const hasRecord = performedTreatments.some(pt => pt.lead_id === lead.id);
       if (hasRecord) return;
 
@@ -1039,10 +1041,10 @@ export default function AdminDashboard() {
     return dynamicStaffList.map(staff => {
       const staffLeads = leads.filter(l => l.assigned_to === staff);
       const totalLeads = staffLeads.length;
-      const convertedLeads = staffLeads.filter(l => l.status === "Treatment Started" || l.status === "Treated").length;
+      const convertedLeads = staffLeads.filter(l => l.status === "Sale Closed").length;
       const totalRevenue = staffLeads
-        .filter(l => l.status === "Treatment Started" || l.status === "Treated")
-        .reduce((sum, l) => sum + (TREATMENT_VALUES[l.service] || 1000), 0);
+        .filter(l => l.status === "Sale Closed")
+        .reduce((sum, l) => sum + (SERVICE_CONVERSION_VALUES[l.service] || 1000), 0);
 
       const conversionRate = totalLeads > 0 ? (convertedLeads / totalLeads) * 100 : 0;
 
@@ -1243,12 +1245,12 @@ export default function AdminDashboard() {
     }
 
     // Track treatment start
-    if (newStatus === "Treated") {
+    if (newStatus === "Sale Closed") {
       updateData.treated_at = new Date().toISOString();
     }
 
     // Track first contact time
-    if ((lead?.status === "New" || lead?.status === "New Lead") && newStatus !== "New Lead" && !lead?.first_contact_at) {
+    if ((lead?.status === "New Lead") && newStatus !== "New Lead" && !lead?.first_contact_at) {
       updateData.first_contact_at = new Date().toISOString();
     }
 
@@ -1276,7 +1278,7 @@ export default function AdminDashboard() {
     }
 
     // Auto-trigger review SMS when status → "Visited"
-    if (newStatus === "Visited" && lead && !lead.review_requested_at && lead.email) {
+    if (newStatus === "Consultation Done" && lead && !lead.review_requested_at && lead.email) {
       supabase.functions.invoke('send_review_sms', {
         body: {
           lead_id: id,
@@ -1368,7 +1370,7 @@ export default function AdminDashboard() {
       // Trigger Review Prompt if moving to Treatment Started (handled AFTER date selection if needed)
 
       // Trigger Appointment Date Modal if moving to Booked
-      if (newStatus === "Booked") {
+      if (newStatus === "Scheduled") {
         setSchedulingLead({ id: leadId, name: lead.name, targetStatus: newStatus as ConsultationRequest["status"] });
 
         // Use existing date if available, otherwise tomorrow
@@ -1386,7 +1388,7 @@ export default function AdminDashboard() {
       }
 
       // Trigger Treatment Log Modal if moving to Treated
-      if (newStatus === "Treated") {
+      if (newStatus === "Sale Closed") {
         setTreatmentModal({
           isOpen: true,
           leadId: leadId,
@@ -1395,7 +1397,7 @@ export default function AdminDashboard() {
         });
         setTreatmentForm({
           treatmentName: lead.service,
-          amount: TREATMENT_VALUES[lead.service] || 1000,
+          amount: SERVICE_CONVERSION_VALUES[lead.service] || 1000,
           notes: "",
           doctorId: lead.doctor_id || ""
         });
@@ -1452,7 +1454,7 @@ export default function AdminDashboard() {
         duration_minutes: appointmentDateInput.duration
       };
 
-      if (targetStatus === "Treated") {
+      if (targetStatus === "Sale Closed") {
         updateData.treated_at = appointmentISO;
       }
 
@@ -1480,7 +1482,7 @@ export default function AdminDashboard() {
       if (aptError) throw aptError;
 
       // Success
-      if (targetStatus === "Treated") {
+      if (targetStatus === "Sale Closed") {
         setReviewPrompt({ isOpen: true, leadId: schedulingLead.id, leadName: schedulingLead.name });
       }
 
@@ -1656,23 +1658,23 @@ export default function AdminDashboard() {
   const totalLeads = leads.length;
   const thisMonthNew = thisMonthLeads.length;
 
-  const newLeads = leads.filter(l => l.status === "New" || l.status === "New Lead").length;
-  const newLeadsValue = leads.filter(l => l.status === "New" || l.status === "New Lead").reduce((sum, l) => sum + (TREATMENT_VALUES[l.service] ?? 1000), 0);
+  const newLeads = leads.filter(l => l.status === "New Lead").length;
+  const newLeadsValue = leads.filter(l => l.status === "New Lead").reduce((sum, l) => sum + (SERVICE_CONVERSION_VALUES[l.service] ?? 1000), 0);
   const ghostPatients = leads.filter(l => l.status === "Abandoned").length;
-  const ghostLoss = leads.filter(l => l.status === "Abandoned").reduce((sum, l) => sum + (TREATMENT_VALUES[l.service] ?? 1000), 0);
+  const ghostLoss = leads.filter(l => l.status === "Abandoned").reduce((sum, l) => sum + (SERVICE_CONVERSION_VALUES[l.service] ?? 1000), 0);
   const confirmedLeads = totalLeads - ghostPatients;
 
-  const allTimeRevenue = leads.filter(l => l.status === "Treatment Started" || l.status === "Treated").reduce((sum, l) => sum + (TREATMENT_VALUES[l.service] ?? 1000), 0);
+  const allTimeRevenue = leads.filter(l => l.status === "Sale Closed").reduce((sum, l) => sum + (SERVICE_CONVERSION_VALUES[l.service] ?? 1000), 0);
   const monthlySecuredRevenue = dynamicRevenueData.reduce((sum, w) => sum + w.Implants + w.Invisalign + w.Veneers, 0);
 
   const monthlyPipelineRemaining = thisMonthLeads.reduce((sum, l) => {
-    if (l.status === "Abandoned" || l.status === "Treatment Started" || l.status === "Treated") return sum;
-    return sum + (TREATMENT_VALUES[l.service] ?? 1000);
+    if (l.status === "Abandoned" || l.status === "Sale Closed") return sum;
+    return sum + (SERVICE_CONVERSION_VALUES[l.service] ?? 1000);
   }, 0);
 
   const pipelineValue = leads.reduce((sum, l) => {
-    if (l.status === "Abandoned" || l.status === "Treatment Started" || l.status === "Treated") return sum;
-    return sum + (TREATMENT_VALUES[l.service] ?? 1000);
+    if (l.status === "Abandoned" || l.status === "Sale Closed") return sum;
+    return sum + (SERVICE_CONVERSION_VALUES[l.service] ?? 1000);
   }, 0);
 
   // ── Source segments for donut ──
@@ -1748,7 +1750,7 @@ export default function AdminDashboard() {
                 onClick={async () => {
                   const invalidLeads = leads.filter(l => !KANBAN_COLUMNS.includes(l.status));
                   for (const l of invalidLeads) {
-                    await supabase.from("consultation_requests").update({ status: 'New' }).eq('id', l.id);
+                    await supabase.from("consultation_requests").update({ status: 'New Lead' }).eq('id', l.id);
                   }
                   fetchLeads();
                   alert("Database repair complete! All corrupted leads reset to 'New'.");
@@ -1873,7 +1875,7 @@ export default function AdminDashboard() {
 
                   <div className="bg-white/[0.02] border border-black/5 rounded-2xl p-6 mb-6">
                     <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-4 flex items-center gap-2">
-                      <FileText className="w-3.5 h-3.5" strokeWidth={1.5} /> {selectedLead.status === "Visited" || selectedLead.status === "Treatment Started" ? "Clinical Notes & Chart" : "Initial Inquiry & Notes"}
+                      <FileText className="w-3.5 h-3.5" strokeWidth={1.5} /> {selectedLead.status === "Consultation Done" || selectedLead.status === "Sale Closed" ? "Detailed Consultation Records" : "Initial Inquiry & Notes"}
                     </h3>
                     <div className="text-sm text-gray-900/90 leading-relaxed font-medium min-h-[100px] max-h-[250px] overflow-y-auto whitespace-pre-wrap bg-black/5 p-4 rounded-xl border border-black/5">
                       {selectedLead.notes || <span className="text-gray-500 italic">No detailed inquiry notes provided.</span>}
@@ -1923,7 +1925,7 @@ export default function AdminDashboard() {
                       disabled={!dictationText.trim()}
                       className="px-6 py-3 rounded-xl bg-white text-gray-900 hover:bg-black/5 border border-black/10 text-xs font-bold uppercase tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                     >
-                      <FileText className="w-4 h-4" strokeWidth={1.5} /> {selectedLead.status === "Visited" || selectedLead.status === "Treatment Started" ? "Save to Chart" : "Save Notes"}
+                      <FileText className="w-4 h-4" strokeWidth={1.5} /> {selectedLead.status === "Consultation Done" || selectedLead.status === "Sale Closed" ? "Update Consultation Record" : "Save Notes"}
                     </button>
                   </div>
                 </motion.div>
@@ -2003,8 +2005,8 @@ export default function AdminDashboard() {
                       <UserCheck className="w-7 h-7 text-[#87A96B]" strokeWidth={1.5} />
                     </div>
                     <div>
-                      <h2 className="text-2xl font-display font-bold text-gray-900 uppercase tracking-tight">Log Treatment</h2>
-                      <p className="text-[10px] text-gray-500 font-bold uppercase tracking-[0.2em] mt-1">Finalizing Patient Case: <span className="text-gray-900">{treatmentModal.leadName}</span></p>
+                      <h2 className="text-2xl font-display font-bold text-gray-900 uppercase tracking-tight">Record Sales Conversion</h2>
+                      <p className="text-[10px] text-gray-500 font-bold uppercase tracking-[0.2em] mt-1">Finalizing Lead Case: <span className="text-gray-900">{treatmentModal.leadName}</span></p>
                     </div>
                   </div>
 
@@ -2019,13 +2021,13 @@ export default function AdminDashboard() {
                             setTreatmentForm(prev => ({
                               ...prev,
                               treatmentName: val,
-                              amount: TREATMENT_VALUES[val] || 1000
+                              amount: SERVICE_CONVERSION_VALUES[val] || 1000
                             }));
                           }}
                           className="w-full bg-black/5 border border-black/10 rounded-2xl px-5 py-4 text-gray-900 text-sm focus:outline-none focus:border-green-500 transition-all font-medium appearance-none"
                         >
                           <option value="" className="bg-black">Select Treatment</option>
-                          {Object.keys(TREATMENT_VALUES).map(t => (
+                          {Object.keys(SERVICE_CONVERSION_VALUES).map(t => (
                             <option key={t} value={t} className="bg-black">{t}</option>
                           ))}
                         </select>
@@ -2056,13 +2058,14 @@ export default function AdminDashboard() {
                     </div>
 
                     <div className="space-y-2">
-                      <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Clinical Outcome Notes</label>
+                      <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Consultation Outcome Notes</label>
                       <textarea
                         value={treatmentForm.notes}
                         onChange={e => setTreatmentForm(prev => ({ ...prev, notes: e.target.value }))}
-                        placeholder="Briefly describe the procedure results..."
+                        placeholder="Briefly describe the proposal agreement..."
                         className="w-full h-32 bg-black/5 border border-black/10 rounded-[24px] p-5 text-sm text-gray-900 focus:outline-none focus:border-green-500 transition-all resize-none font-medium placeholder:text-gray-300"
                       />
+                      <p className="text-[10px] text-amber-600/60 mt-1 ml-1 font-medium">⚠️ Compliance Notice: This revenue entry is solely for marketing ROI tracking. Do not enter specific medical procedures, ADA codes, or clinical notes here.</p>
                     </div>
                   </div>
 
@@ -2414,10 +2417,10 @@ export default function AdminDashboard() {
                       <p className="text-sm text-gray-500 font-medium mt-1">Real-time hourly sync via Supabase Cron.</p>
                     </div>
                     <Link
-                      to="/admin/campaign-setup"
+                      to="/admin/integrations"
                       className="bg-[#87A96B] text-white px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest shadow-[0_4px_14px_rgba(197,160,89,0.3)] hover:shadow-[0_6px_20px_rgba(197,160,89,0.4)] hover:-translate-y-0.5 transition-all flex items-center gap-2"
                     >
-                      <LinkIcon className="w-4 h-4" /> Get Tracking Links
+                      <Zap className="w-4 h-4" /> Manage Integrations
                     </Link>
                   </div>
 
@@ -2511,10 +2514,10 @@ export default function AdminDashboard() {
 
                         <div className="flex gap-2 relative z-10">
                           <button
-                            onClick={() => updateStatus(lead.id, "Visited")}
+                            onClick={() => updateStatus(lead.id, "Consultation Done")}
                             className="flex-1 py-2.5 bg-white text-gray-900 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-black/5 border border-black/10 transition-colors"
                           >
-                            Check In
+                            Start Consultation
                           </button>
                           <button
                             onClick={() => setSelectedLead(lead)}
@@ -3674,7 +3677,7 @@ export default function AdminDashboard() {
               isOpen={isWaitlistOpen}
               onClose={() => setIsWaitlistOpen(false)}
               waitlist={leads.filter(l => l.status === "Waitlisted" as any)}
-              onInvite={(id) => updateStatus(id, "Contacted")}
+              onInvite={(id) => updateStatus(id, "Scheduled")}
             />
           </div>
         </>

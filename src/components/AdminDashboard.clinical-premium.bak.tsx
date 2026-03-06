@@ -83,7 +83,7 @@ const TREATMENT_VALUES: Record<string, number> = {
 };
 
 const STATUS_COLORS: Record<string, string> = {
-  "New Lead": "text-[#C5A059] border-[#C5A059]/40 bg-[#C5A059]/10",
+  "New Lead": "text-[#87A96B] border-[#87A96B]/40 bg-[#87A96B]/10",
   "Booked": "text-purple-400 border-purple-400/40 bg-purple-400/10",
   "Visited": "text-yellow-400 border-yellow-400/40 bg-yellow-400/10",
   "Treated": "text-[#87A96B] border-[#87A96B]/40 bg-[#87A96B]/10",
@@ -162,7 +162,7 @@ function DonutChart({ segments, total, totalValue }: { segments: DonutSegment[];
           </div>
           <div className="w-8 h-px bg-white/20 my-0.5" />
           <div className="flex flex-col items-center">
-            <span className="text-[15px] font-bold text-[#C5A059] leading-none">£{(totalValue / 1000).toFixed(1)}k</span>
+            <span className="text-[15px] font-bold text-[#87A96B] leading-none">£{(totalValue / 1000).toFixed(1)}k</span>
             <span className="text-[9px] text-white/40 uppercase tracking-widest font-bold">Value</span>
           </div>
         </div>
@@ -221,7 +221,7 @@ function NotificationDropdown({ notifications, onClose, onDismiss }: { notificat
                 <X className="w-3.5 h-3.5" />
               </button>
               <p className="text-[11px] text-white/80 leading-relaxed mb-2 pr-6">{n.message}</p>
-              <span className="text-[8px] font-bold text-[#C5A059] uppercase tracking-tighter">{n.time}</span>
+              <span className="text-[8px] font-bold text-[#87A96B] uppercase tracking-tighter">{n.time}</span>
             </div>
           ))
         )}
@@ -253,11 +253,11 @@ function WaitlistPanel({ isOpen, onClose, waitlist, onInvite }: { isOpen: boolea
           </div>
 
           <div className="space-y-6 mb-24">
-            <div className="p-6 bg-[#C5A059]/5 border border-[#C5A059]/20 rounded-3xl group cursor-pointer hover:bg-[#C5A059]/10 transition-all">
-              <p className="text-[10px] font-bold text-[#C5A059] uppercase tracking-[0.2em] mb-3 leading-none">Intelligence Pack</p>
-              <h3 className="text-lg font-bold text-white mb-2 underline decoration-[#C5A059]/30 underline-offset-4">1-Click Gap Filler</h3>
+            <div className="p-6 bg-[#87A96B]/5 border border-[#87A96B]/20 rounded-3xl group cursor-pointer hover:bg-[#87A96B]/10 transition-all">
+              <p className="text-[10px] font-bold text-[#87A96B] uppercase tracking-[0.2em] mb-3 leading-none">Intelligence Pack</p>
+              <h3 className="text-lg font-bold text-white mb-2 underline decoration-[#87A96B]/30 underline-offset-4">1-Click Gap Filler</h3>
               <p className="text-xs text-white/50 leading-relaxed mb-6">We found a 2:00 PM slot tomorrow. Notify all matching waitlist patients?</p>
-              <button className="w-full py-4 bg-[#C5A059] text-black font-black uppercase tracking-widest text-[11px] rounded-2xl hover:scale-[1.02] transition-transform active:scale-95 shadow-[0_0_30px_rgba(0,255,204,0.3)]">
+              <button className="w-full py-4 bg-[#87A96B] text-black font-black uppercase tracking-widest text-[11px] rounded-2xl hover:scale-[1.02] transition-transform active:scale-95 shadow-[0_0_30px_rgba(0,255,204,0.3)]">
                 Broadcast Availability
               </button>
             </div>
@@ -286,11 +286,11 @@ function WaitlistPanel({ isOpen, onClose, waitlist, onInvite }: { isOpen: boolea
                         <p className="text-[10px] text-white/30 font-medium truncate max-w-[120px]">{w.service}</p>
                       </div>
                       <div className="flex flex-col items-end gap-1">
-                        <span className="text-[10px] font-bold text-[#C5A059]/70 bg-[#C5A059]/10 px-2 py-0.5 rounded border border-[#C5A059]/20">
+                        <span className="text-[10px] font-bold text-[#87A96B]/70 bg-[#87A96B]/10 px-2 py-0.5 rounded border border-[#87A96B]/20">
                           £{(TREATMENT_VALUES[w.service] || 1000).toLocaleString()}
                         </span>
                         <div className="flex items-center gap-2 mt-1">
-                          <span className="text-[8px] font-bold text-[#C5A059]/60 uppercase">{timeAgo(w.created_at)}</span>
+                          <span className="text-[8px] font-bold text-[#87A96B]/60 uppercase">{timeAgo(w.created_at)}</span>
                           <button
                             onClick={() => onInvite(w.id)}
                             className="text-[9px] font-bold text-white opacity-0 group-hover:opacity-100 transition-opacity uppercase tracking-tighter underline ml-1"
@@ -486,12 +486,12 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
               {lead.service}
             </span>
             {lead.appointment_date && !isNaN(new Date(lead.appointment_date).getTime()) && (
-              <span className="text-[10px] font-medium text-[#C5A059] bg-[#C5A059]/10 px-2 py-0.5 rounded-md border border-[#C5A059]/10">
+              <span className="text-[10px] font-medium text-[#87A96B] bg-[#87A96B]/10 px-2 py-0.5 rounded-md border border-[#87A96B]/10">
                 {new Date(lead.appointment_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
               </span>
             )}
             {lead.status === "Visited" && (
-              <span className="text-[10px] font-medium text-black bg-[#C5A059] px-2 py-0.5 rounded-md">
+              <span className="text-[10px] font-medium text-black bg-[#87A96B] px-2 py-0.5 rounded-md">
                 Consulted
               </span>
             )}
@@ -520,10 +520,10 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
               <button
                 onClick={handleSendEmail}
                 disabled={isSendingEmail}
-                className="p-1.5 text-[#C5A059] hover:text-[#C5A059]/80 bg-[#C5A059]/10 hover:bg-[#C5A059]/20 rounded-lg transition-all border border-[#C5A059]/20 disabled:opacity-50"
+                className="p-1.5 text-[#87A96B] hover:text-[#87A96B]/80 bg-[#87A96B]/10 hover:bg-[#87A96B]/20 rounded-lg transition-all border border-[#87A96B]/20 disabled:opacity-50"
                 title="Send PT Link via Email"
               >
-                {isSendingEmail ? <RefreshCw className="w-3.5 h-3.5 animate-spin text-[#C5A059]" /> : <Send className="w-3.5 h-3.5" />}
+                {isSendingEmail ? <RefreshCw className="w-3.5 h-3.5 animate-spin text-[#87A96B]" /> : <Send className="w-3.5 h-3.5" />}
               </button>
             </div>
           </div>
@@ -620,7 +620,7 @@ function KanbanColumn({
         {/* Postel's Law: Graceful Empty State */}
         {columnLeads.length === 0 && (
           <div className="h-32 rounded-[16px] flex flex-col items-center justify-center opacity-40 mt-2 border border-dashed border-[#A0A0A0]/20 bg-white/[0.01]">
-            <Sparkles className="w-4 h-4 text-[#C5A059] mb-2 opacity-50" />
+            <Sparkles className="w-4 h-4 text-[#87A96B] mb-2 opacity-50" />
             <span className="text-[11px] font-medium text-[#A0A0A0]">Drop here</span>
           </div>
         )}
@@ -1614,7 +1614,7 @@ export default function AdminDashboard() {
 
   const sourceSegments: DonutSegment[] = [
     { label: "Direct Traffic", count: directCount, color: "bg-white/40", hex: "rgba(255,255,255,0.5)" },
-    { label: "Google / Search", count: googleCount, color: "bg-[#C5A059]", hex: "#60a5fa" },
+    { label: "Google / Search", count: googleCount, color: "bg-[#87A96B]", hex: "#60a5fa" },
     { label: "Referrer / Social", count: socialCount, color: "bg-purple-400", hex: "#c084fc" },
   ];
 
@@ -1625,7 +1625,7 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f0f12] text-white p-6 md:p-10 font-sans selection:bg-[#C5A059]/30 selection:text-white">
+    <div className="min-h-screen bg-[#0f0f12] text-white p-6 md:p-10 font-sans selection:bg-[#87A96B]/30 selection:text-white">
       {session === null ? (
         <div className="flex items-center justify-center h-[calc(100vh-80px)]">
           <RefreshCw className="w-6 h-6 text-white/20 animate-spin" />
@@ -1639,16 +1639,16 @@ export default function AdminDashboard() {
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-6 mx-auto max-w-7xl bg-[#C5A059]/10 border border-[#C5A059]/20 rounded-2xl p-5 flex items-center justify-between shadow-[0_20px_40px_-15px_rgba(0,0,0,0.4)]"
+              className="mb-6 mx-auto max-w-7xl bg-[#87A96B]/10 border border-[#87A96B]/20 rounded-2xl p-5 flex items-center justify-between shadow-[0_20px_40px_-15px_rgba(0,0,0,0.4)]"
             >
               <div className="flex items-center gap-4">
                 <span className="flex h-4 w-4 relative">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E2725B]/60 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-4 w-4 bg-[#E2725B]"></span>
                 </span>
-                <p className="text-[#C5A059] text-sm font-medium">
-                  <span className="font-bold uppercase tracking-widest text-xs mr-3 text-[#C5A059] bg-[#C5A059]/20 px-2 py-1 rounded-md">VIP Drop-off Alert</span>
-                  15분 이상 <code className="bg-[#C5A059]/10 px-1 py-0.5 rounded text-[#C5A059]/80">draft</code> 상태인 대기 예약 {draftDropoffs}건 발견 (하이엔드 리타겟팅 발동 대기중)
+                <p className="text-[#87A96B] text-sm font-medium">
+                  <span className="font-bold uppercase tracking-widest text-xs mr-3 text-[#87A96B] bg-[#87A96B]/20 px-2 py-1 rounded-md">VIP Drop-off Alert</span>
+                  15분 이상 <code className="bg-[#87A96B]/10 px-1 py-0.5 rounded text-[#87A96B]/80">draft</code> 상태인 대기 예약 {draftDropoffs}건 발견 (하이엔드 리타겟팅 발동 대기중)
                 </p>
               </div>
               <button
@@ -1656,7 +1656,7 @@ export default function AdminDashboard() {
                   // Trigger edge function or open action tab manually
                   alert(`Retargeting webhook fired for ${draftDropoffs} abandoned drafts. SMS & Email sequence initiated!`);
                 }}
-                className="px-5 py-2.5 bg-[#C5A059]/20 hover:bg-[#C5A059]/30 text-[#C5A059] font-bold uppercase tracking-widest text-xs rounded-xl transition-all border border-[#C5A059]/30 hover:shadow-[0_8px_20px_-8px_rgba(0,0,0,0.4)] hover:scale-105 active:scale-95 duration-200">
+                className="px-5 py-2.5 bg-[#87A96B]/20 hover:bg-[#87A96B]/30 text-[#87A96B] font-bold uppercase tracking-widest text-xs rounded-xl transition-all border border-[#87A96B]/30 hover:shadow-[0_8px_20px_-8px_rgba(0,0,0,0.4)] hover:scale-105 active:scale-95 duration-200">
                 즉시 구출 (Save Leads)
               </button>
             </motion.div>
@@ -1696,15 +1696,15 @@ export default function AdminDashboard() {
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-8 mx-auto max-w-7xl bg-[#C5A059]/10 border border-[#C5A059]/20 rounded-2xl p-5 flex flex-col md:flex-row items-start md:items-center justify-between shadow-[0_20px_40px_-15px_rgba(0,0,0,0.4)] gap-4"
+              className="mb-8 mx-auto max-w-7xl bg-[#87A96B]/10 border border-[#87A96B]/20 rounded-2xl p-5 flex flex-col md:flex-row items-start md:items-center justify-between shadow-[0_20px_40px_-15px_rgba(0,0,0,0.4)] gap-4"
             >
               <div className="flex items-center gap-4">
                 <span className="flex h-4 w-4 relative shrink-0">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E2725B]/60 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-4 w-4 bg-[#E2725B]"></span>
                 </span>
-                <p className="text-[#C5A059] text-sm font-medium">
-                  <span className="font-bold uppercase tracking-widest text-xs mr-3 text-[#C5A059] bg-[#C5A059]/20 px-2 py-1 rounded-md">🚨 ACTION REQUIRED</span>
+                <p className="text-[#87A96B] text-sm font-medium">
+                  <span className="font-bold uppercase tracking-widest text-xs mr-3 text-[#87A96B] bg-[#87A96B]/20 px-2 py-1 rounded-md">🚨 ACTION REQUIRED</span>
                   High-value lead is waiting. Call now to secure <strong className="text-white">£{newLeadsValue.toLocaleString()}</strong> revenue.
                 </p>
               </div>
@@ -1817,14 +1817,14 @@ export default function AdminDashboard() {
                       value={dictationText}
                       onChange={(e) => setDictationText(e.target.value)}
                       placeholder="Type notes or click the microphone to dictate..."
-                      className="w-full h-32 bg-white/5 border border-white/10 rounded-2xl p-5 text-sm text-white placeholder:text-white/20 focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all resize-none"
+                      className="w-full h-32 bg-white/5 border border-white/10 rounded-2xl p-5 text-sm text-white placeholder:text-white/20 focus:outline-none focus:ring-1 focus:ring-[#87A96B]/40 transition-all resize-none"
                     />
 
                     <button
                       onClick={handleMicClick}
                       className={`absolute bottom-4 right-4 p-4 rounded-xl shadow-lg transition-all ${isRecording
                         ? 'bg-red-500/20 text-red-500 hover:bg-red-500/30 border border-red-500/50 animate-pulse'
-                        : 'bg-blue-500 text-white hover:bg-blue-600 border border-[#C5A059]/50'
+                        : 'bg-blue-500 text-white hover:bg-blue-600 border border-[#87A96B]/50'
                         }`}
                     >
                       <div className="flex items-center gap-2 font-bold uppercase tracking-widest text-[10px]">
@@ -1892,7 +1892,7 @@ export default function AdminDashboard() {
 
                   <div className="bg-white/5 border border-white/5 p-4 rounded-xl text-left mb-8">
                     <span className="text-[10px] font-bold text-white/30 uppercase tracking-widest block mb-2">Generated Link (Copied to Clipboard)</span>
-                    <code className="text-[10px] text-[#C5A059] break-all select-all">{depositModal.payUrl}</code>
+                    <code className="text-[10px] text-[#87A96B] break-all select-all">{depositModal.payUrl}</code>
                   </div>
 
                   <button
@@ -2131,7 +2131,7 @@ export default function AdminDashboard() {
                         onClick={() => setIsBranchDropdownOpen(!isBranchDropdownOpen)}
                         className="flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 px-4 py-2 rounded-xl text-sm font-bold transition-all text-white/80 group"
                       >
-                        <MapPin className="w-4 h-4 text-white/40 group-hover:text-[#C5A059]" />
+                        <MapPin className="w-4 h-4 text-white/40 group-hover:text-[#87A96B]" />
                         {selectedBranch}
                         <ChevronDown className={`w-4 h-4 text-white/40 transition-transform ${isBranchDropdownOpen ? "rotate-180" : ""}`} />
                       </button>
@@ -2149,7 +2149,7 @@ export default function AdminDashboard() {
                                 key={branch}
                                 onClick={() => { setSelectedBranch(branch); setIsBranchDropdownOpen(false); }}
                                 className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${selectedBranch === branch
-                                  ? "bg-[#C5A059]/10 text-[#C5A059] font-bold"
+                                  ? "bg-[#87A96B]/10 text-[#87A96B] font-bold"
                                   : "text-white/60 hover:text-white hover:bg-white/5"
                                   }`}
                               >
@@ -2170,9 +2170,9 @@ export default function AdminDashboard() {
                     onClick={() => setIsNotificationOpen(!isNotificationOpen)}
                     className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl text-white transition-all relative group"
                   >
-                    <MessageSquare className="w-5 h-5 text-white/60 group-hover:text-[#C5A059]" />
+                    <MessageSquare className="w-5 h-5 text-white/60 group-hover:text-[#87A96B]" />
                     {notifications.filter(n => !n.read).length > 0 && (
-                      <span className="absolute top-2 right-2 w-2 h-2 bg-[#C5A059] rounded-full border-2 border-[#0a0a0a]" />
+                      <span className="absolute top-2 right-2 w-2 h-2 bg-[#87A96B] rounded-full border-2 border-[#0a0a0a]" />
                     )}
                   </button>
                   <AnimatePresence>
@@ -2190,16 +2190,16 @@ export default function AdminDashboard() {
                   onClick={() => setIsWaitlistOpen(true)}
                   className="flex items-center gap-3 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-white transition-all group"
                 >
-                  <Users className="w-5 h-5 text-white/40 group-hover:text-[#C5A059]" />
+                  <Users className="w-5 h-5 text-white/40 group-hover:text-[#87A96B]" />
                   <span className="text-[11px] font-bold uppercase tracking-widest">Waitlist</span>
-                  <span className="bg-[#C5A059]/20 text-[#C5A059] px-2 py-0.5 rounded-lg text-[10px] font-black">2</span>
+                  <span className="bg-[#87A96B]/20 text-[#87A96B] px-2 py-0.5 rounded-lg text-[10px] font-black">2</span>
                 </button>
 
                 <button
                   onClick={() => setMultiBranchMode(!multiBranchMode)}
                   className="flex items-center gap-3 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-white transition-all group"
                 >
-                  <Building className="w-5 h-5 text-white/40 group-hover:text-[#C5A059]" />
+                  <Building className="w-5 h-5 text-white/40 group-hover:text-[#87A96B]" />
                   <span className="text-[11px] font-bold uppercase tracking-widest">{multiBranchMode ? "Multi-Clinic: ON" : "HQ Dashboard"}</span>
                 </button>
 
@@ -2260,17 +2260,17 @@ export default function AdminDashboard() {
                   <div className="flex justify-between items-start mb-6">
                     <div>
                       <h3 className="text-xs font-bold uppercase tracking-widest text-white/40 flex items-center gap-2 mb-1">
-                        <TrendingUp className="w-4 h-4 text-[#C5A059]" /> {multiBranchMode ? selectedBranch : "Clinic"} Revenue
+                        <TrendingUp className="w-4 h-4 text-[#87A96B]" /> {multiBranchMode ? selectedBranch : "Clinic"} Revenue
                       </h3>
                       <p className="text-3xl font-display font-bold">£{dynamicRevenueData.reduce((sum, w) => sum + w.Implants + w.Invisalign + w.Veneers, 0).toLocaleString()}</p>
-                      <p className="text-xs text-[#C5A059] font-bold tracking-widest mt-1">Secured Revenue for period</p>
+                      <p className="text-xs text-[#87A96B] font-bold tracking-widest mt-1">Secured Revenue for period</p>
                     </div>
 
                     <div className="flex items-center gap-2">
                       <select
                         value={analyticsMonth}
                         onChange={(e) => setAnalyticsMonth(parseInt(e.target.value))}
-                        className="bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-[10px] font-bold text-white uppercase tracking-widest focus:outline-none focus:border-[#C5A059] transition-colors cursor-pointer"
+                        className="bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-[10px] font-bold text-white uppercase tracking-widest focus:outline-none focus:border-[#87A96B] transition-colors cursor-pointer"
                       >
                         {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].map((m, i) => (
                           <option key={m} value={i} className="bg-[#0f0f0f]">{m}</option>
@@ -2279,7 +2279,7 @@ export default function AdminDashboard() {
                       <select
                         value={analyticsYear}
                         onChange={(e) => setAnalyticsYear(parseInt(e.target.value))}
-                        className="bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-[10px] font-bold text-white uppercase tracking-widest focus:outline-none focus:border-[#C5A059] transition-colors cursor-pointer"
+                        className="bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-[10px] font-bold text-white uppercase tracking-widest focus:outline-none focus:border-[#87A96B] transition-colors cursor-pointer"
                       >
                         {[2024, 2025, 2026].map(y => (
                           <option key={y} value={y} className="bg-[#0f0f0f]">{y}</option>
@@ -2300,7 +2300,7 @@ export default function AdminDashboard() {
                         />
                         <Bar dataKey="Implants" stackId="a" fill="#3b82f6" radius={[0, 0, 4, 4]} />
                         <Bar dataKey="Invisalign" stackId="a" fill="#c084fc" />
-                        <Bar dataKey="Veneers" stackId="a" fill="#C5A059" radius={[4, 4, 0, 0]} />
+                        <Bar dataKey="Veneers" stackId="a" fill="#87A96B" radius={[4, 4, 0, 0]} />
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
@@ -2332,7 +2332,7 @@ export default function AdminDashboard() {
                   <div className="flex gap-4 mt-4 text-[10px] font-bold uppercase tracking-widest">
                     <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-blue-500" />Implants</div>
                     <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-purple-400" />Invisalign</div>
-                    <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-[#C5A059]" />Veneers</div>
+                    <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-[#87A96B]" />Veneers</div>
                   </div>
                 </div>
               </motion.div>
@@ -2405,9 +2405,9 @@ export default function AdminDashboard() {
                           <p className="text-4xl md:text-6xl font-display font-bold text-white tracking-tighter">
                             £{monthlySecuredRevenue.toLocaleString()}
                           </p>
-                          <div className="flex flex-col text-[10px] font-bold uppercase tracking-widest text-[#C5A059] mb-1.5 md:mb-2">
+                          <div className="flex flex-col text-[10px] font-bold uppercase tracking-widest text-[#87A96B] mb-1.5 md:mb-2">
                             <span>Target: £50,000</span>
-                            <span className={monthlySecuredRevenue >= 50000 ? "text-[#87A96B]" : "text-[#C5A059]"}>
+                            <span className={monthlySecuredRevenue >= 50000 ? "text-[#87A96B]" : "text-[#87A96B]"}>
                               {monthlySecuredRevenue >= 50000 ? "Goal Met" : "In Progress"}
                             </span>
                           </div>
@@ -2428,7 +2428,7 @@ export default function AdminDashboard() {
                     {/* Secondary metric for Pipeline (Unpaid) */}
                     <div className="flex flex-col border-l border-white/10 pl-8 justify-center min-w-[200px]">
                       <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 mb-2 flex items-center gap-2">
-                        <TrendingUp className="w-3.5 h-3.5 text-[#C5A059]" /> This Month's Pipeline
+                        <TrendingUp className="w-3.5 h-3.5 text-[#87A96B]" /> This Month's Pipeline
                       </h3>
                       <p className="text-2xl font-display font-bold text-white/80 tracking-tighter mb-1">
                         £{monthlyPipelineRemaining.toLocaleString()}
@@ -2446,7 +2446,7 @@ export default function AdminDashboard() {
                     onClick={() => setActiveTab("analytics")}
                     className="w-full py-4 px-6 bg-white/5 hover:bg-white/10 border border-white/5 rounded-2xl flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-white transition-all shadow-sm group"
                   >
-                    <TrendingUp className="w-4 h-4 text-[#C5A059] group-hover:scale-110 transition-transform" /> Deep Analytics
+                    <TrendingUp className="w-4 h-4 text-[#87A96B] group-hover:scale-110 transition-transform" /> Deep Analytics
                   </button>
                 </div>
               </div>
@@ -2455,10 +2455,10 @@ export default function AdminDashboard() {
               {/* KPI Cards */}
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
                 {[
-                  { label: "Confirmed Leads", value: confirmedLeads, icon: Users, color: "text-[#C5A059]", bg: "bg-[#C5A059]/10" },
+                  { label: "Confirmed Leads", value: confirmedLeads, icon: Users, color: "text-[#87A96B]", bg: "bg-[#87A96B]/10" },
                   { label: "Ghost Patients", value: ghostPatients, icon: MoreHorizontal, color: "text-white/40", bg: "bg-white/5", subValue: ghostLoss > 0 ? `-£${ghostLoss.toLocaleString()}` : "" },
                   { label: "Awaiting Response", value: newLeads, icon: TrendingUp, color: "text-[#87A96B]", bg: "bg-[#87A96B]/10" },
-                  { label: "Est. Pipeline Value", value: `£${pipelineValue.toLocaleString()}`, icon: TrendingUp, color: "text-[#C5A059]", bg: "bg-[#C5A059]/10" },
+                  { label: "Est. Pipeline Value", value: `£${pipelineValue.toLocaleString()}`, icon: TrendingUp, color: "text-[#87A96B]", bg: "bg-[#87A96B]/10" },
                 ].map((stat, i) => (
                   <motion.div
                     key={stat.label}
@@ -2493,12 +2493,12 @@ export default function AdminDashboard() {
 
                 {/* Insight Card */}
                 <div className="lg:col-span-2 card-premium p-8 flex flex-col justify-between overflow-hidden relative">
-                  <div className="absolute top-0 right-0 w-64 h-64 bg-[#C5A059]/5 blur-3xl -mr-32 -mt-32 rounded-full" />
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-[#87A96B]/5 blur-3xl -mr-32 -mt-32 rounded-full" />
                   <div>
                     <p className="text-label mb-3">Marketing Intelligence</p>
                     <h3 className="text-metric text-2xl mb-4 relative z-10">
                       {totalLeads > 0 ? (
-                        <>Top Source: <span className="text-[#C5A059]">{topSource.label}</span></>
+                        <>Top Source: <span className="text-[#87A96B]">{topSource.label}</span></>
                       ) : (
                         "No leads yet"
                       )}
@@ -2542,7 +2542,7 @@ export default function AdminDashboard() {
                       placeholder="Search name, treatment..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full bg-white/5 border border-white/10 rounded-2xl py-2.5 pl-11 pr-4 text-sm text-white placeholder:text-white/20 focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all"
+                      className="w-full bg-white/5 border border-white/10 rounded-2xl py-2.5 pl-11 pr-4 text-sm text-white placeholder:text-white/20 focus:outline-none focus:ring-1 focus:ring-[#87A96B]/40 transition-all"
                     />
                   </div>
 
@@ -2554,7 +2554,7 @@ export default function AdminDashboard() {
                         type="date"
                         value={selectedDate}
                         onChange={(e) => setSelectedDate(e.target.value)}
-                        className="bg-white/5 border border-white/10 rounded-2xl py-2.5 pl-11 pr-10 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all appearance-none cursor-pointer [color-scheme:dark]"
+                        className="bg-white/5 border border-white/10 rounded-2xl py-2.5 pl-11 pr-10 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#87A96B]/40 transition-all appearance-none cursor-pointer [color-scheme:dark]"
                       />
                       {selectedDate && (
                         <button
@@ -2659,8 +2659,8 @@ export default function AdminDashboard() {
                 <div className="lg:col-span-5 space-y-6">
                   <div className="bg-[#0f0f0f] border border-white/10 rounded-3xl p-8">
                     <div className="flex items-center gap-4 mb-8">
-                      <div className="p-3 bg-[#C5A059]/10 rounded-2xl">
-                        <Building className="w-6 h-6 text-[#C5A059]" />
+                      <div className="p-3 bg-[#87A96B]/10 rounded-2xl">
+                        <Building className="w-6 h-6 text-[#87A96B]" />
                       </div>
                       <div>
                         <h2 className="text-xl font-display font-bold text-white">Clinic Profile</h2>
@@ -2675,7 +2675,7 @@ export default function AdminDashboard() {
                           type="text"
                           value={clinic?.name || ""}
                           onChange={(e) => setClinic({ ...clinic, name: e.target.value })}
-                          className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all font-medium"
+                          className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#87A96B]/40 transition-all font-medium"
                           placeholder="e.g. London Smile Dental"
                         />
                       </div>
@@ -2697,7 +2697,7 @@ export default function AdminDashboard() {
                             type="text"
                             value={clinic?.logo_url || ""}
                             onChange={(e) => setClinic({ ...clinic, logo_url: e.target.value })}
-                            className="flex-1 bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all font-medium"
+                            className="flex-1 bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#87A96B]/40 transition-all font-medium"
                             placeholder="https://..."
                           />
                           {clinic?.logo_url && (
@@ -2721,7 +2721,7 @@ export default function AdminDashboard() {
                             type="text"
                             value={clinic?.brand_color || ""}
                             onChange={(e) => setClinic({ ...clinic, brand_color: e.target.value })}
-                            className="flex-1 bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all font-medium"
+                            className="flex-1 bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#87A96B]/40 transition-all font-medium"
                             placeholder="#000000"
                           />
                         </div>
@@ -2734,7 +2734,7 @@ export default function AdminDashboard() {
                             type="text"
                             value={clinic?.email || ""}
                             onChange={(e) => setClinic({ ...clinic, email: e.target.value })}
-                            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all font-medium"
+                            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#87A96B]/40 transition-all font-medium"
                           />
                         </div>
                         <div className="space-y-2">
@@ -2743,7 +2743,7 @@ export default function AdminDashboard() {
                             type="text"
                             value={clinic?.phone || ""}
                             onChange={(e) => setClinic({ ...clinic, phone: e.target.value })}
-                            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all font-medium"
+                            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#87A96B]/40 transition-all font-medium"
                           />
                         </div>
                       </div>
@@ -2759,7 +2759,7 @@ export default function AdminDashboard() {
                             <span className="text-[9px] font-bold text-white/30 uppercase tracking-tighter">{clinic?.has_financing ? 'ENABLED' : 'DISABLED'}</span>
                             <button
                               onClick={() => setClinic({ ...clinic, has_financing: !clinic.has_financing })}
-                              className={`w-12 h-6 rounded-full transition-all relative ${clinic?.has_financing ? 'bg-[#C5A059]' : 'bg-white/10'}`}
+                              className={`w-12 h-6 rounded-full transition-all relative ${clinic?.has_financing ? 'bg-[#87A96B]' : 'bg-white/10'}`}
                             >
                               <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${clinic?.has_financing ? 'left-7' : 'left-1'}`} />
                             </button>
@@ -2770,7 +2770,7 @@ export default function AdminDashboard() {
                           <div className="space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
                             <div className="flex justify-between items-center">
                               <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Max Interest-Free Months</label>
-                              <span className="text-sm font-display font-bold text-[#C5A059]">
+                              <span className="text-sm font-display font-bold text-[#87A96B]">
                                 {clinic?.max_financing_months || 24} Months
                               </span>
                             </div>
@@ -2781,7 +2781,7 @@ export default function AdminDashboard() {
                               step="6"
                               value={clinic?.max_financing_months || 24}
                               onChange={(e) => setClinic({ ...clinic, max_financing_months: parseInt(e.target.value) })}
-                              className="w-full accent-[#C5A059] h-1 bg-white/10 rounded-lg appearance-none cursor-pointer"
+                              className="w-full accent-[#87A96B] h-1 bg-white/10 rounded-lg appearance-none cursor-pointer"
                             />
                             <div className="flex justify-between text-[8px] font-bold text-white/20 uppercase tracking-widest">
                               <span>6m</span>
@@ -2815,7 +2815,7 @@ export default function AdminDashboard() {
                     </div>
                   )}
 
-                  <div className="lg:col-span-5 bg-gradient-to-br from-[#C5A059]/5 to-white/0 border border-white/10 rounded-3xl p-8 relative overflow-hidden group">
+                  <div className="lg:col-span-5 bg-gradient-to-br from-[#87A96B]/5 to-white/0 border border-white/10 rounded-3xl p-8 relative overflow-hidden group">
                     <Zap className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 text-blue-500/5 -rotate-12 transition-transform group-hover:scale-110" />
                     <h3 className="text-sm font-bold text-white mb-2 relative z-10">Pro SaaS Mode</h3>
                     <p className="text-xs text-white/50 leading-relaxed max-w-[200px] relative z-10">Your branding is automatically synchronized across all Patient Presentation links generated by this clinic.</p>
@@ -2827,8 +2827,8 @@ export default function AdminDashboard() {
                   <div className="bg-[#0f0f0f] border border-white/10 rounded-3xl p-8 h-full">
                     <div className="flex justify-between items-start mb-3">
                       <div className="flex items-center gap-4">
-                        <div className="p-3 bg-[#C5A059]/10 rounded-2xl">
-                          <Sparkles className="w-6 h-6 text-[#C5A059]" />
+                        <div className="p-3 bg-[#87A96B]/10 rounded-2xl">
+                          <Sparkles className="w-6 h-6 text-[#87A96B]" />
                         </div>
                         <div>
                           <h2 className="text-xl font-display font-bold text-white">Treatments & Assets</h2>
@@ -2860,8 +2860,8 @@ export default function AdminDashboard() {
                                   }}
                                   className="bg-transparent border-none p-0 text-lg font-display font-bold text-white focus:outline-none focus:ring-0 w-full"
                                 />
-                                <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 focus-within:ring-2 focus-within:ring-[#C5A059]/50 transition-all">
-                                  <span className="text-[#C5A059] font-bold text-xs uppercase">£</span>
+                                <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 focus-within:ring-2 focus-within:ring-[#87A96B]/50 transition-all">
+                                  <span className="text-[#87A96B] font-bold text-xs uppercase">£</span>
                                   <input
                                     type="number"
                                     value={t.price}
@@ -2894,7 +2894,7 @@ export default function AdminDashboard() {
                                     await supabase.from('clinic_treatments').update(t).eq('id', t.id);
                                     setIsSaving(false);
                                   }}
-                                  className="px-4 py-2 bg-[#C5A059]/10 hover:bg-[#C5A059]/20 text-[#C5A059] rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all flex items-center gap-2"
+                                  className="px-4 py-2 bg-[#87A96B]/10 hover:bg-[#87A96B]/20 text-[#87A96B] rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all flex items-center gap-2"
                                 >
                                   <Check className="w-3.5 h-3.5" /> Sync Data
                                 </button>
@@ -2938,7 +2938,7 @@ export default function AdminDashboard() {
                           {chat.avatar}
                           {chat.source === "Instagram" && <Instagram className="w-4 h-4 absolute -bottom-1 -right-1 text-pink-500 fill-pink-500 bg-black rounded-full p-0.5" />}
                           {chat.source === "Kakao" && <MessageCircle className="w-4 h-4 absolute -bottom-1 -right-1 text-yellow-500 fill-yellow-500 bg-black rounded-full p-0.5" />}
-                          {chat.source === "Website" && <Globe className="w-4 h-4 absolute -bottom-1 -right-1 text-[#C5A059] fill-blue-400 bg-black rounded-full p-0.5" />}
+                          {chat.source === "Website" && <Globe className="w-4 h-4 absolute -bottom-1 -right-1 text-[#87A96B] fill-blue-400 bg-black rounded-full p-0.5" />}
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex justify-between items-center mb-1">
@@ -3119,7 +3119,7 @@ export default function AdminDashboard() {
                                 </div>
                               </td>
                               <td className="px-8 py-6">
-                                <span className="text-sm font-bold text-[#C5A059]">£{s.revenue.toLocaleString()}</span>
+                                <span className="text-sm font-bold text-[#87A96B]">£{s.revenue.toLocaleString()}</span>
                               </td>
                               <td className="px-8 py-6">
                                 <div className="flex items-center gap-3">
@@ -3127,7 +3127,7 @@ export default function AdminDashboard() {
                                     <motion.div
                                       initial={{ width: 0 }}
                                       animate={{ width: `${s.conversion}%` }}
-                                      className={`h-full rounded-full ${s.conversion >= 60 ? "bg-[#C5A059] shadow-[0_0_10px_rgba(0,255,204,0.3)]" : "bg-[#C5A059]"}`}
+                                      className={`h-full rounded-full ${s.conversion >= 60 ? "bg-[#87A96B] shadow-[0_0_10px_rgba(0,255,204,0.3)]" : "bg-[#87A96B]"}`}
                                     />
                                   </div>
                                   <span className="text-[10px] font-black text-white/20 uppercase">{s.conversion >= 60 ? "EXCELLENT" : "STABLE"}</span>
@@ -3151,7 +3151,7 @@ export default function AdminDashboard() {
               >
                 {/* Team Management Hero */}
                 <div className="card-premium p-10 relative overflow-hidden group">
-                  <div className="absolute top-0 right-0 w-96 h-96 bg-[#C5A059]/5 blur-[100px] rounded-full -mr-20 -mt-20" />
+                  <div className="absolute top-0 right-0 w-96 h-96 bg-[#87A96B]/5 blur-[100px] rounded-full -mr-20 -mt-20" />
                   <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-6">
                     <div>
                       <h2 className="text-3xl font-display font-bold text-white mb-2 uppercase tracking-tight">Team Management</h2>
@@ -3217,7 +3217,7 @@ export default function AdminDashboard() {
                                   <span className="text-[9px] font-black uppercase tracking-tighter">{member.is_public ? 'Publicly Visible' : 'Hidden'}</span>
                                 </button>
                               </div>
-                              <span className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${member.role === 'admin' ? 'bg-[#C5A059]/10 text-[#C5A059] border border-[#C5A059]/20' : 'bg-white/5 text-white/40 border border-white/10'}`}>
+                              <span className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${member.role === 'admin' ? 'bg-[#87A96B]/10 text-[#87A96B] border border-[#87A96B]/20' : 'bg-white/5 text-white/40 border border-white/10'}`}>
                                 {member.role || 'staff'}
                               </span>
                               <button
@@ -3255,7 +3255,7 @@ export default function AdminDashboard() {
                                   <p className="text-xs font-bold text-white truncate max-w-[150px]">{invite.email}</p>
                                   <p className="text-[9px] text-white/30 font-bold uppercase tracking-widest">Role: {invite.role}</p>
                                 </div>
-                                <span className="text-[9px] font-black text-[#C5A059] bg-[#C5A059]/10 px-2 py-0.5 rounded-md uppercase tracking-tighter">Pending</span>
+                                <span className="text-[9px] font-black text-[#87A96B] bg-[#87A96B]/10 px-2 py-0.5 rounded-md uppercase tracking-tighter">Pending</span>
                               </div>
                               <div className="flex gap-2">
                                 <button
@@ -3283,7 +3283,7 @@ export default function AdminDashboard() {
                     </div>
 
                     <div className="card-premium p-8 text-center">
-                      <Shield className="w-8 h-8 text-[#C5A059] mx-auto mb-4 opacity-40" />
+                      <Shield className="w-8 h-8 text-[#87A96B] mx-auto mb-4 opacity-40" />
                       <h4 className="text-xs font-bold text-white uppercase tracking-widest mb-2">Secure Collaboration</h4>
                       <p className="text-[10px] text-white/30 leading-relaxed">Invitations are secured via unique tokens and expire automatically after use.</p>
                     </div>
@@ -3328,8 +3328,8 @@ export default function AdminDashboard() {
                       <X className="w-5 h-5 text-white/40" />
                     </button>
 
-                    <div className="w-20 h-20 bg-[#C5A059]/10 rounded-3xl flex items-center justify-center mb-8">
-                      <UserPlus className="w-10 h-10 text-[#C5A059]" />
+                    <div className="w-20 h-20 bg-[#87A96B]/10 rounded-3xl flex items-center justify-center mb-8">
+                      <UserPlus className="w-10 h-10 text-[#87A96B]" />
                     </div>
 
                     <h2 className="text-2xl font-display font-bold text-white mb-2 uppercase tracking-tight">Invite Specialist</h2>
@@ -3342,7 +3342,7 @@ export default function AdminDashboard() {
                           type="email"
                           placeholder="specialist@clinic.com"
                           value={inviteEmail}
-                          className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all"
+                          className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#87A96B]/40 transition-all"
                           onChange={(e) => setInviteEmail(e.target.value)}
                         />
                       </div>
@@ -3350,7 +3350,7 @@ export default function AdminDashboard() {
                         <label className="block text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] mb-2 ml-1">System Role</label>
                         <select
                           value={inviteRole}
-                          className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all appearance-none cursor-pointer"
+                          className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#87A96B]/40 transition-all appearance-none cursor-pointer"
                           onChange={(e) => setInviteRole(e.target.value as any)}
                         >
                           <option value="staff" className="bg-black">Standard Staff</option>
@@ -3361,7 +3361,7 @@ export default function AdminDashboard() {
 
                     <button
                       onClick={() => handleInviteStaff(inviteEmail, inviteRole)}
-                      className="w-full py-5 bg-white text-black font-black uppercase tracking-widest text-[10px] rounded-2xl hover:bg-[#C5A059] hover:text-white transition-all shadow-lg active:scale-95"
+                      className="w-full py-5 bg-white text-black font-black uppercase tracking-widest text-[10px] rounded-2xl hover:bg-[#87A96B] hover:text-white transition-all shadow-lg active:scale-95"
                     >
                       Send Enterprise Invitation
                     </button>
@@ -3392,8 +3392,8 @@ export default function AdminDashboard() {
                       <X className="w-5 h-5 text-white/40" />
                     </button>
 
-                    <div className="w-20 h-20 bg-[#C5A059]/10 rounded-3xl flex items-center justify-center mb-8">
-                      <Globe className="w-10 h-10 text-[#C5A059]" />
+                    <div className="w-20 h-20 bg-[#87A96B]/10 rounded-3xl flex items-center justify-center mb-8">
+                      <Globe className="w-10 h-10 text-[#87A96B]" />
                     </div>
 
                     <h2 className="text-2xl font-display font-bold text-white mb-2 uppercase tracking-tight">Public Profile</h2>
@@ -3407,7 +3407,7 @@ export default function AdminDashboard() {
                             type="text"
                             placeholder="e.g. Lead Surgeon"
                             value={editingProfile.title || ""}
-                            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all"
+                            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#87A96B]/40 transition-all"
                             onChange={(e) => setEditingProfile({ ...editingProfile, title: e.target.value })}
                           />
                         </div>
@@ -3417,7 +3417,7 @@ export default function AdminDashboard() {
                             type="text"
                             placeholder="e.g. Implantology"
                             value={editingProfile.specialty || ""}
-                            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all"
+                            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#87A96B]/40 transition-all"
                             onChange={(e) => setEditingProfile({ ...editingProfile, specialty: e.target.value })}
                           />
                         </div>
@@ -3427,7 +3427,7 @@ export default function AdminDashboard() {
                             type="text"
                             placeholder="https://..."
                             value={editingProfile.avatar_url || ""}
-                            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all"
+                            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#87A96B]/40 transition-all"
                             onChange={(e) => setEditingProfile({ ...editingProfile, avatar_url: e.target.value })}
                           />
                         </div>
@@ -3439,7 +3439,7 @@ export default function AdminDashboard() {
                           <textarea
                             placeholder="Enter a brief professional bio..."
                             value={editingProfile.bio || ""}
-                            className="w-full h-[100px] bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all resize-none"
+                            className="w-full h-[100px] bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#87A96B]/40 transition-all resize-none"
                             onChange={(e) => setEditingProfile({ ...editingProfile, bio: e.target.value })}
                           />
                         </div>
@@ -3449,7 +3449,7 @@ export default function AdminDashboard() {
                             type="text"
                             placeholder="e.g. BDS, King's College London"
                             value={editingProfile.education || ""}
-                            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#C5A059]/40 transition-all"
+                            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#87A96B]/40 transition-all"
                             onChange={(e) => setEditingProfile({ ...editingProfile, education: e.target.value })}
                           />
                         </div>
@@ -3479,7 +3479,7 @@ export default function AdminDashboard() {
                         }
                         setIsUpdatingProfile(false);
                       }}
-                      className="w-full py-5 bg-white text-black font-black uppercase tracking-widest text-[10px] rounded-2xl hover:bg-[#C5A059] hover:text-white transition-all shadow-lg active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
+                      className="w-full py-5 bg-white text-black font-black uppercase tracking-widest text-[10px] rounded-2xl hover:bg-[#87A96B] hover:text-white transition-all shadow-lg active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
                     >
                       {isUpdatingProfile ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                       {isUpdatingProfile ? "Syncing..." : "Update Public Credentials"}
