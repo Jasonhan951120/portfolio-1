@@ -3,7 +3,7 @@ import { motion, Reorder, AnimatePresence } from 'motion/react';
 import {
     GripVertical, Plus, Trash2, Check,
     Palette, Save, AlertCircle, Sparkles,
-    ArrowRight, RefreshCw
+    ArrowRight, RefreshCw, Camera, Loader2
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
@@ -13,6 +13,7 @@ interface Treatment {
     service_name: string;
     color: string;
     order_index: number;
+    image_url?: string;
 }
 
 interface TreatmentSettingsProps {
@@ -38,6 +39,7 @@ export const TreatmentSettings: React.FC<TreatmentSettingsProps> = ({ clinicId, 
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [isUploading, setIsUploading] = useState<Record<string, boolean>>({});
 
     useEffect(() => {
         fetchTreatments();
@@ -132,6 +134,54 @@ export const TreatmentSettings: React.FC<TreatmentSettingsProps> = ({ clinicId, 
         }
     };
 
+    const handleImageUpload = async (treatmentId: string, event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        // Reset input so the same file can be selected again if needed
+        event.target.value = '';
+
+        setIsUploading(prev => ({ ...prev, [treatmentId]: true }));
+        setError(null);
+
+        try {
+            // Validate file (e.g., max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                throw new Error("Image size must be less than 5MB.");
+            }
+
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${treatmentId}_${Date.now()}.${fileExt}`;
+            const filePath = `${clinicId}/${fileName}`;
+
+            // 1. Upload the image directly to Supabase Storage
+            const { error: uploadError } = await supabase.storage
+                .from('treatment-images')
+                .upload(filePath, file, {
+                    cacheControl: '3600',
+                    upsert: true
+                });
+
+            if (uploadError) {
+                throw new Error(uploadError.message || "Failed to upload image.");
+            }
+
+            // 2. Get the public URL
+            const { data: { publicUrl } } = supabase.storage
+                .from('treatment-images')
+                .getPublicUrl(filePath);
+
+            // 3. Update the database and local state
+            await handleUpdateTreatment(treatmentId, { image_url: publicUrl });
+
+        } catch (err: any) {
+            console.error('[IMAGE UPLOAD] Error:', err);
+            setError(`Upload failed: ${err.message}`);
+        } finally {
+            setIsUploading(prev => ({ ...prev, [treatmentId]: false }));
+        }
+    };
+
     const handleDeleteTreatment = async (id: string) => {
         const itemToDelete = treatments.find(t => t.id === id);
         setTreatments(prev => prev.filter(t => t.id !== id));
@@ -215,9 +265,49 @@ export const TreatmentSettings: React.FC<TreatmentSettingsProps> = ({ clinicId, 
 
                             <div className="flex-1 flex items-center gap-6">
                                 <div
-                                    className="w-1.5 h-10 rounded-full"
+                                    className="w-1.5 h-10 rounded-full shrink-0"
                                     style={{ backgroundColor: treatment.color }}
                                 />
+
+                                {/* Image Placeholder / Uploader */}
+                                <div className="relative group shrink-0">
+                                    <label className={`w-14 h-14 rounded-2xl flex items-center justify-center overflow-hidden transition-all cursor-pointer border ${treatment.image_url
+                                        ? 'border-gray-100 bg-gray-50 shadow-sm'
+                                        : 'border-dashed border-gray-200 bg-gray-50/50 hover:bg-gray-50 hover:border-gray-300'
+                                        }`}>
+                                        <input
+                                            type="file"
+                                            accept="image/jpeg, image/png, image/webp"
+                                            className="hidden"
+                                            onChange={(e) => handleImageUpload(treatment.id, e)}
+                                            disabled={isUploading[treatment.id]}
+                                        />
+
+                                        {treatment.image_url ? (
+                                            <div
+                                                className="w-full h-full bg-cover bg-center transition-opacity duration-300 group-hover:opacity-80"
+                                                style={{ backgroundImage: `url(${treatment.image_url})` }}
+                                            />
+                                        ) : (
+                                            <Camera className="w-5 h-5 text-gray-400 group-hover:text-gray-600 transition-colors" />
+                                        )}
+
+                                        {/* Loading Overlay */}
+                                        {isUploading[treatment.id] && (
+                                            <div className="absolute inset-0 bg-white/60 flex items-center justify-center backdrop-blur-sm z-10 transition-all">
+                                                <Loader2 className="w-5 h-5 text-gray-800 animate-spin" />
+                                            </div>
+                                        )}
+
+                                        {/* Hover Overlay */}
+                                        {!isUploading[treatment.id] && treatment.image_url && (
+                                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-0">
+                                                <Camera className="w-5 h-5 text-white" />
+                                            </div>
+                                        )}
+                                    </label>
+                                </div>
+
                                 <input
                                     type="text"
                                     value={treatment.service_name}
