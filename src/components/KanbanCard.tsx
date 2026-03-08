@@ -39,7 +39,7 @@ export function KanbanCard({ lead, onClick }: KanbanCardProps) {
             className="group bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-[#87A96B]/30 transition-all cursor-grab active:cursor-grabbing relative overflow-hidden"
         >
             <div className="flex justify-between items-start mb-3">
-                <h4 className="font-bold text-gray-900 text-sm tracking-tight group-hover:text-[#87A96B] transition-colors">{lead.name}</h4>
+                <h4 className="font-bold text-gray-900 text-sm tracking-tight group-hover:text-[#87A96B] transition-colors" data-hj-suppress>{lead.name}</h4>
                 <div className={`px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-tighter border ${STATUS_COLORS[lead.status] || 'bg-gray-50 text-gray-400'}`}>
                     {lead.status}
                 </div>

@@ -74,7 +74,7 @@ export const ActivityLog: React.FC<{ clinicId: string }> = ({ clinicId }) => {
                 <div className="metric-label text-[9px] text-gray-400 min-w-[90px]">
                     {time}
                 </div>
-                <div className="flex-1 text-[13px] text-gray-600">
+                <div className="flex-1 text-[13px] text-gray-600" data-hj-suppress>
                     <span className="font-bold text-gray-900">{log.user_name}</span>
                     <span className="mx-3 text-gray-200">/</span>
                     <span className="leading-relaxed">{actionText}</span>

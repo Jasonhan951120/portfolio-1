@@ -165,10 +165,16 @@ function LandingPage({ clinic }: { clinic: any }) {
 }
 
 import { AuthProvider } from "./contexts/AuthContext";
+import { AnalyticsProvider } from "./context/AnalyticsContext";
+import { CookieConsent } from "./components/common/CookieConsent";
 import { ProtectedRoute } from "./components/GuardComponents";
+import { useTrafficTracker } from "./hooks/useTrafficTracker";
 
 export default function App() {
   const [clinic, setClinic] = useState<any>(null);
+
+  // Initialize silent traffic tracking
+  useTrafficTracker();
 
   useEffect(() => {
     async function loadClinic() {
@@ -187,34 +193,37 @@ export default function App() {
 
   return (
     <AuthProvider>
-      <Router>
-        <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<ProtectedRoute><SubscriptionGuard><AdminDashboard /></SubscriptionGuard></ProtectedRoute>} />
-          <Route path="/landing" element={<LandingPage clinic={clinic} />} />
-          <Route path="/services" element={<ServicesPage clinic={clinic} />} />
-          <Route path="/contact" element={<ContactPage clinic={clinic} />} />
-          <Route path="/specialists" element={<SpecialistsPage clinic={clinic} />} />
-          <Route path="/experts" element={<ExpertsPage clinic={clinic} />} />
-          <Route path="/portfolio/:id" element={<PortfolioPage clinic={clinic} />} />
-          <Route path="/what-we-do" element={<WhatWeDoPage clinic={clinic} />} />
-          <Route path="/care-solutions" element={<CareSolutionsPage clinic={clinic} />} />
-          <Route path="/results" element={<ResultsPage clinic={clinic} />} />
-          <Route path="/testimonials" element={<TestimonialsPage clinic={clinic} />} />
-          <Route path="/treatment/:slug" element={<TreatmentDetailPage clinic={clinic} />} />
-          <Route path="/pt/:id" element={<ClientPTPage />} />
-          <Route path="/visit/:clinicId" element={<VisitTrackingPage />} />
-          <Route path="/pricing" element={<PricingPage />} />
-          <Route path="/dashboard" element={<ProtectedRoute><SubscriptionGuard><AdminDashboard /></SubscriptionGuard></ProtectedRoute>} />
-          <Route path="/admin" element={<ProtectedRoute><SubscriptionGuard><AdminDashboard /></SubscriptionGuard></ProtectedRoute>} />
-          <Route path="/admin/dashboard" element={<ProtectedRoute><SubscriptionGuard><AdminDashboard /></SubscriptionGuard></ProtectedRoute>} />
-          <Route path="/admin/campaign-setup" element={<ProtectedRoute><SubscriptionGuard><CampaignSetupPage /></SubscriptionGuard></ProtectedRoute>} />
-          <Route path="/admin/integrations" element={<ProtectedRoute><SubscriptionGuard><ApiIntegrationPage /></SubscriptionGuard></ProtectedRoute>} />
-          <Route path="/admin/onboarding" element={<ProtectedRoute><SubscriptionGuard><AdminOnboarding /></SubscriptionGuard></ProtectedRoute>} />
-          <Route path="/login" element={<AdminLogin />} />
-          <Route path="/privacy" element={<PrivacyPolicy />} />
-        </Routes>
-      </Router>
+      <AnalyticsProvider>
+        <Router>
+          <ScrollToTop />
+          <CookieConsent />
+          <Routes>
+            <Route path="/" element={<ProtectedRoute><SubscriptionGuard><AdminDashboard /></SubscriptionGuard></ProtectedRoute>} />
+            <Route path="/landing" element={<LandingPage clinic={clinic} />} />
+            <Route path="/services" element={<ServicesPage clinic={clinic} />} />
+            <Route path="/contact" element={<ContactPage clinic={clinic} />} />
+            <Route path="/specialists" element={<SpecialistsPage clinic={clinic} />} />
+            <Route path="/experts" element={<ExpertsPage clinic={clinic} />} />
+            <Route path="/portfolio/:id" element={<PortfolioPage clinic={clinic} />} />
+            <Route path="/what-we-do" element={<WhatWeDoPage clinic={clinic} />} />
+            <Route path="/care-solutions" element={<CareSolutionsPage clinic={clinic} />} />
+            <Route path="/results" element={<ResultsPage clinic={clinic} />} />
+            <Route path="/testimonials" element={<TestimonialsPage clinic={clinic} />} />
+            <Route path="/treatment/:slug" element={<TreatmentDetailPage clinic={clinic} />} />
+            <Route path="/pt/:id" element={<ClientPTPage />} />
+            <Route path="/visit/:clinicId" element={<VisitTrackingPage />} />
+            <Route path="/pricing" element={<PricingPage />} />
+            <Route path="/dashboard" element={<ProtectedRoute><SubscriptionGuard><AdminDashboard /></SubscriptionGuard></ProtectedRoute>} />
+            <Route path="/admin" element={<ProtectedRoute><SubscriptionGuard><AdminDashboard /></SubscriptionGuard></ProtectedRoute>} />
+            <Route path="/admin/dashboard" element={<ProtectedRoute><SubscriptionGuard><AdminDashboard /></SubscriptionGuard></ProtectedRoute>} />
+            <Route path="/admin/campaign-setup" element={<ProtectedRoute><SubscriptionGuard><CampaignSetupPage /></SubscriptionGuard></ProtectedRoute>} />
+            <Route path="/admin/integrations" element={<ProtectedRoute><SubscriptionGuard><ApiIntegrationPage /></SubscriptionGuard></ProtectedRoute>} />
+            <Route path="/admin/onboarding" element={<ProtectedRoute><SubscriptionGuard><AdminOnboarding /></SubscriptionGuard></ProtectedRoute>} />
+            <Route path="/login" element={<AdminLogin />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+          </Routes>
+        </Router>
+      </AnalyticsProvider>
     </AuthProvider>
   );
 }

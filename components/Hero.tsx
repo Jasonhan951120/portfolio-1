@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { trackEvent } from '../src/lib/analytics';
 
 const Hero: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -68,11 +69,19 @@ const Hero: React.FC = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row items-start gap-4 mb-8">
-            <a href="#booking" className="px-8 py-4 rounded-xl bg-smile-accent text-darkText font-bold text-lg hover:bg-smile-gold hover:-translate-y-1 transition-all shadow-lg hover:shadow-xl flex items-center gap-2 w-full sm:w-auto justify-center">
-              Book a Consultation <ArrowRight size={20} />
+            <a
+              href="#booking"
+              onClick={() => trackEvent('hero_cta_membership_click')}
+              className="px-8 py-4 rounded-xl bg-smile-accent text-darkText font-bold text-lg hover:bg-smile-gold hover:-translate-y-1 transition-all shadow-lg hover:shadow-xl flex items-center gap-2 w-full sm:w-auto justify-center"
+            >
+              Start Membership <ArrowRight size={20} />
             </a>
-            <a href="#services" className="px-8 py-4 rounded-xl bg-white text-smile-mid font-semibold text-lg hover:bg-smile-light/20 border border-smile-light transition-all shadow-soft flex items-center gap-2 w-full sm:w-auto justify-center">
-              View Services
+            <a
+              href="#lead-form"
+              onClick={() => trackEvent('hero_cta_demo_click')}
+              className="px-8 py-4 rounded-xl bg-white text-smile-mid font-semibold text-lg hover:bg-smile-light/20 border border-smile-light transition-all shadow-soft flex items-center gap-2 w-full sm:w-auto justify-center"
+            >
+              Book Demo
             </a>
           </div>
 

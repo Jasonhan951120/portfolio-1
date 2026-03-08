@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { CheckCircle2, Loader2, Sparkles, ChevronDown, ArrowRight, ArrowLeft, ShieldCheck, Star } from "lucide-react";
 import { supabase } from "../lib/supabase";
+import { trackEvent } from "../lib/analytics";
 
 const SERVICES = [
   "General Inquiry",
@@ -129,6 +130,10 @@ export default function LeadForm({ clinic }: { clinic: any }) {
     }
 
     setStatus("success");
+    trackEvent('lead_form_submit_success', {
+      service: formData.service,
+      clinic_id: clinic?.id
+    });
     fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-notification`, {
       method: "POST",
       headers: { "Content-Type": "application/json", "apikey": import.meta.env.VITE_SUPABASE_ANON_KEY },
@@ -205,6 +210,7 @@ export default function LeadForm({ clinic }: { clinic: any }) {
                       type="text"
                       autoFocus
                       value={formData.name}
+                      data-hj-suppress
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       onKeyDown={(e) => e.key === "Enter" && isStepValid() && nextStep()}
                       className="w-full bg-[#1E1E1E] border-[1.5px] border-white/5 rounded-[12px] px-6 py-5 text-xl font-bold text-white focus:outline-none focus:border-[#2AF598]/30 transition-all placeholder:text-white/5"
@@ -219,6 +225,7 @@ export default function LeadForm({ clinic }: { clinic: any }) {
                       type="tel"
                       autoFocus
                       value={formData.phone}
+                      data-hj-suppress
                       onChange={(e) => handlePhoneChange(e.target.value)}
                       className="w-full bg-[#1E1E1E] border-[1.5px] border-white/5 rounded-[12px] px-6 py-5 text-xl font-bold text-white focus:outline-none focus:border-[#2AF598]/30 transition-all placeholder:text-white/10"
                       placeholder="휴대폰 번호 (예: 010-1234-5678)"
@@ -251,6 +258,7 @@ export default function LeadForm({ clinic }: { clinic: any }) {
                     autoFocus
                     rows={4}
                     value={formData.notes}
+                    data-hj-suppress
                     onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                     className="w-full bg-[#1E1E1E] border-[1.5px] border-white/5 rounded-[12px] px-6 py-5 text-lg font-bold text-white focus:outline-none focus:border-[#2AF598]/30 transition-all placeholder:text-white/5 resize-none"
                     placeholder={QUESTIONS[step].placeholder}

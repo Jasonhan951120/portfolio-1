@@ -108,6 +108,34 @@ const PrivacyPolicy: React.FC = () => {
                         </div>
                     </section>
 
+                    {/* Digital Tracking & Cookie Governance */}
+                    <section className="mb-24">
+                        <h2 className="font-serif text-3xl text-slate-900 mb-8 text-center">Digital Analytics & Cookies</h2>
+                        <div className="bg-white border border-slate-100 rounded-[32px] p-8 md:p-12 shadow-sm">
+                            <p className="text-slate-500 text-sm leading-relaxed mb-6">
+                                To optimize our service and your experience, we use industry-standard tracking technologies. In compliance with the UK's PECR and GDPR, these only activate upon your explicit "Accept All" consent.
+                            </p>
+                            <div className="grid md:grid-cols-2 gap-8">
+                                <div>
+                                    <h3 className="text-base font-bold text-slate-900 mb-3 flex items-center gap-2">
+                                        <div className="w-2 h-2 rounded-full bg-blue-400"></div> Google Analytics 4 (GA4)
+                                    </h3>
+                                    <p className="text-slate-500 text-xs leading-relaxed">
+                                        We use GA4 to understand user journeys. All IP addresses are anonymized before storage. No personally identifiable information (PII) is sent to Google's servers.
+                                    </p>
+                                </div>
+                                <div>
+                                    <h3 className="text-base font-bold text-slate-900 mb-3 flex items-center gap-2">
+                                        <div className="w-2 h-2 rounded-full bg-orange-400"></div> Hotjar (Session Insights)
+                                    </h3>
+                                    <p className="text-slate-500 text-xs leading-relaxed">
+                                        We use Hotjar to visualize user interaction behavior. All form inputs and sensitive financial data are strictly masked using <code className="bg-slate-50 px-1 rounded text-slate-700">data-hj-suppress</code> to ensure zero PII capture.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
                     {/* Technical Safeguards */}
                     <section className="mb-24">
                         <h2 className="font-serif text-3xl text-slate-900 mb-12 text-center">British Technical Safeguards</h2>

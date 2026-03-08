@@ -61,25 +61,57 @@ export const TreatmentSettings: React.FC<TreatmentSettingsProps> = ({ clinicId, 
     };
 
     const handleAddTreatment = async () => {
-        const newTreatment = {
-            clinic_id: clinicId,
-            service_name: 'New Treatment',
-            color: CURATED_COLORS[0],
-            order_index: treatments.length,
-        };
+        setSaving(true);
+        setError(null);
 
-        const { data, error } = await supabase
-            .from('clinic_treatments')
-            .insert([newTreatment])
-            .select()
-            .single();
+        try {
+            if (!clinicId || clinicId === "default-clinic") {
+                throw new Error("Invalid Clinic ID provided to TreatmentSettings. Operation aborted.");
+            }
 
-        if (error) {
-            console.error('Error adding treatment:', error);
-            setError('Failed to add treatment');
-        } else if (data) {
-            setTreatments([...treatments, data]);
-            onUpdate?.();
+            // Elite Unique Name Generation: Prevent constraint violation (clinic_id, service_name)
+            let uniqueName = 'New Treatment';
+            let index = 1;
+            while (treatments.some(t => t.service_name.toLowerCase() === uniqueName.toLowerCase())) {
+                uniqueName = `New Treatment ${index++}`;
+            }
+
+            const newTreatment = {
+                clinic_id: clinicId,
+                service_name: uniqueName,
+                color: CURATED_COLORS[0],
+                order_index: treatments.length,
+            };
+
+            const { data, error: insertError } = await supabase
+                .from('clinic_treatments')
+                .insert([newTreatment])
+                .select()
+                .single();
+
+            if (insertError) {
+                // Detailed logging for developers/Sentry
+                console.error('[SUPABASE ERROR] Failed to insert treatment:', {
+                    message: insertError.message,
+                    details: insertError.details,
+                    hint: insertError.hint,
+                    code: insertError.code,
+                    payload: newTreatment
+                });
+                throw new Error(insertError.message);
+            }
+
+            if (data) {
+                setTreatments(prev => [...prev, data]);
+                onUpdate?.();
+            }
+        } catch (err: any) {
+            const msg = err.message || 'An unexpected error occurred';
+            setError(`Failed to add treatment: ${msg}`);
+            // Explicit console logging as requested
+            console.error('[TREATMENT LOGIC] Runtime Exception:', err);
+        } finally {
+            setSaving(false);
         }
     };
 

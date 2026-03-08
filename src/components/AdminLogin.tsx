@@ -3,6 +3,7 @@ import { supabase } from "../lib/supabase";
 import { useNavigate } from "react-router-dom";
 import { Lock, Loader2 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
+import { trackEvent } from "../lib/analytics";
 
 export default function AdminLogin() {
     const navigate = useNavigate();
@@ -90,6 +91,7 @@ export default function AdminLogin() {
 
     const handleGoogleLogin = async () => {
         setLoading(true);
+        trackEvent('admin_login_google_attempt');
         const { error } = await supabase.auth.signInWithOAuth({
             provider: "google",
             options: {

@@ -44,7 +44,7 @@ export type ConsultationRequest = {
     phone: string;
     service: string;
     notes: string | null;
-    status: "New Lead" | "Qualified" | "Proposal Sent" | "Closed Won" | "Abandoned" | "Future Pipeline" | "Archived";
+    status: "New Lead" | "Qualified" | "Proposal Sent" | "Closed Won" | "Abandoned" | "Future Pipeline" | "Archived" | "Scheduled" | "Consultation Done" | "Sale Closed";
     created_at: string;
     first_contact_at?: string;
     review_requested_at?: string;
@@ -124,4 +124,16 @@ export type AuditLog = {
     previous_value: string;
     new_value: string;
     timestamp: string;
+};
+
+export type StaffPerformance = {
+    id: string;
+    full_name: string | null;
+    avatar_url: string | null;
+    clinic_id: string | null;
+    total_assigned: number;
+    closed_won_count: number;
+    total_revenue: number;
+    conversion_rate: number;
+    avg_response_mins: number;
 };

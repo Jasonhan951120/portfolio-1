@@ -300,7 +300,7 @@ export default function ApiIntegrationPage() {
 
     const handleCopy = (platform: string, utmSource: string) => {
         if (!clinicId) return;
-        const url = `https://hanlanoc.com/visit/${clinicId}?utm_source=${utmSource}`;
+        const url = `${window.location.origin}/landing?utm_source=${utmSource}`;
         navigator.clipboard.writeText(url).then(() => {
             setCopiedPlatform(platform);
             setTimeout(() => setCopiedPlatform(null), 2000);
@@ -386,84 +386,93 @@ export default function ApiIntegrationPage() {
                                 )}
                             </div>
 
-                            {/* Instagram Card */}
-                            <div className="p-8 rounded-[32px] bg-white border border-[#87A96B]/20 shadow-lg transition-all">
-                                <div className="flex justify-between items-start mb-6">
-                                    <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
-                                        <Camera className="w-6 h-6" />
-                                    </div>
-                                    <span className="px-2.5 py-1 bg-[#87A96B]/10 text-[#87A96B] rounded-full text-[8px] font-black uppercase tracking-widest">Active</span>
-                                </div>
-                                <h3 className="text-sm font-bold text-gray-900 mb-1">Instagram</h3>
-                                <p className="text-[10px] text-gray-400 mb-6 font-medium">Manual Tracking Link</p>
-                                <button onClick={() => setSetupMode("manual")} className="w-full py-3 bg-gray-50 text-gray-400 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-gray-100 transition-colors">Manage Link</button>
-                            </div>
-
-                            {/* Direct Website Card */}
-                            <div className="p-8 rounded-[32px] bg-white border border-[#87A96B]/20 shadow-lg transition-all">
-                                <div className="flex justify-between items-start mb-6">
-                                    <div className="w-12 h-12 rounded-xl bg-green-50 text-[#87A96B] flex items-center justify-center">
-                                        <Monitor className="w-6 h-6" />
-                                    </div>
-                                    <span className="px-2.5 py-1 bg-[#87A96B]/10 text-[#87A96B] rounded-full text-[8px] font-black uppercase tracking-widest">Active</span>
-                                </div>
-                                <h3 className="text-sm font-bold text-gray-900 mb-1">Direct Traffic</h3>
-                                <p className="text-[10px] text-gray-400 mb-6 font-medium">Native Website Tracking</p>
-                                <div className="flex items-center gap-1.5 px-3 py-2 bg-[#87A96B]/5 rounded-xl border border-[#87A96B]/10">
-                                    <Shield className="w-3 h-3 text-[#87A96B]" />
-                                    <span className="text-[8px] font-bold text-[#87A96B] uppercase tracking-widest">Protected Stream</span>
-                                </div>
-                            </div>
-
-                            {/* Organic & Referrals Card */}
-                            <div className="p-8 rounded-[32px] bg-white border border-[#87A96B]/20 shadow-lg transition-all">
-                                <div className="flex justify-between items-start mb-6">
-                                    <div className="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
-                                        <Share2 className="w-6 h-6" />
-                                    </div>
-                                    <span className="px-2.5 py-1 bg-[#87A96B]/10 text-[#87A96B] rounded-full text-[8px] font-black uppercase tracking-widest">Active</span>
-                                </div>
-                                <h3 className="text-sm font-bold text-gray-900 mb-1">Others</h3>
-                                <p className="text-[10px] text-gray-400 mb-6 font-medium">Organic Attribution Engine</p>
-                                <div className="flex items-center gap-1.5 px-3 py-2 bg-amber-50 rounded-xl border border-amber-100">
-                                    <Zap className="w-3 h-3 text-amber-600" />
-                                    <span className="text-[8px] font-bold text-amber-600 uppercase tracking-widest">AI Correlation</span>
-                                </div>
-                            </div>
-
-                            {/* WhatsApp Business API Card */}
-                            <div className="p-8 rounded-[32px] bg-white border border-[#87A96B]/20 shadow-lg transition-all">
-                                <div className="flex justify-between items-start mb-6">
-                                    <div className="w-12 h-12 rounded-xl bg-[#25D366]/10 text-[#25D366] flex items-center justify-center">
-                                        <MessageCircle className="w-6 h-6" />
-                                    </div>
-                                    <span className="px-2.5 py-1 bg-[#87A96B]/10 text-[#87A96B] rounded-full text-[8px] font-black uppercase tracking-widest">Active</span>
-                                </div>
-                                <h3 className="text-sm font-bold text-gray-900 mb-1">WhatsApp Business</h3>
-                                <p className="text-[10px] text-gray-400 mb-6 font-medium">Omnichannel Inbox Sync</p>
-                                <div className="flex items-center gap-1.5 px-3 py-2 bg-gray-50 rounded-xl border border-gray-100">
-                                    <Shield className="w-3 h-3 text-gray-400" />
-                                    <span className="text-[8px] font-bold text-gray-400 uppercase tracking-widest">Webhook Connected</span>
-                                </div>
-                            </div>
-
-                            {/* SMS (Twilio) Card */}
-                            <div className="p-8 rounded-[32px] bg-white border border-[#87A96B]/20 shadow-lg transition-all">
-                                <div className="flex justify-between items-start mb-6">
-                                    <div className="w-12 h-12 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center">
-                                        <MessageSquare className="w-6 h-6" />
-                                    </div>
-                                    <span className="px-2.5 py-1 bg-[#87A96B]/10 text-[#87A96B] rounded-full text-[8px] font-black uppercase tracking-widest">Active</span>
-                                </div>
-                                <h3 className="text-sm font-bold text-gray-900 mb-1">SMS (Twilio)</h3>
-                                <p className="text-[10px] text-gray-400 mb-6 font-medium">Omnichannel Inbox Sync</p>
-                                <div className="flex items-center gap-1.5 px-3 py-2 bg-gray-50 rounded-xl border border-gray-100">
-                                    <Shield className="w-3 h-3 text-gray-400" />
-                                    <span className="text-[8px] font-bold text-gray-400 uppercase tracking-widest">Webhook Connected</span>
-                                </div>
-                            </div>
-
+                            <h3 className="text-sm font-bold text-gray-900 mb-1">Instagram Ads</h3>
+                            <p className="text-[10px] text-gray-400 mb-6 font-medium">Tracking: utm_source=ig</p>
+                            <button onClick={() => {
+                                setManualTab("instagram");
+                                setSetupMode("manual");
+                            }} className="w-full py-3 bg-gray-50 text-gray-400 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-gray-100 transition-colors">Generate Link</button>
                         </div>
+
+                        {/* Facebook Ads Card */}
+                        <div className="p-8 rounded-[32px] bg-white border border-black/5 hover:border-black/10 transition-all">
+                            <div className="flex justify-between items-start mb-6">
+                                <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                                    <Share2 className="w-6 h-6" />
+                                </div>
+                            </div>
+                            <h3 className="text-sm font-bold text-gray-900 mb-1">Facebook Ads</h3>
+                            <p className="text-[10px] text-gray-400 mb-6 font-medium">Tracking: utm_source=fb</p>
+                            <button onClick={() => {
+                                setManualTab("instagram"); // Reuse IG logic for now
+                                setSetupMode("manual");
+                            }} className="w-full py-3 bg-gray-50 text-gray-400 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-gray-100 transition-colors">Generate Link</button>
+                        </div>
+
+                        {/* Direct Website Card */}
+                        <div className="p-8 rounded-[32px] bg-white border border-[#87A96B]/20 shadow-lg transition-all">
+                            <div className="flex justify-between items-start mb-6">
+                                <div className="w-12 h-12 rounded-xl bg-green-50 text-[#87A96B] flex items-center justify-center">
+                                    <Monitor className="w-6 h-6" />
+                                </div>
+                                <span className="px-2.5 py-1 bg-[#87A96B]/10 text-[#87A96B] rounded-full text-[8px] font-black uppercase tracking-widest">Active</span>
+                            </div>
+                            <h3 className="text-sm font-bold text-gray-900 mb-1">Direct Traffic</h3>
+                            <p className="text-[10px] text-gray-400 mb-6 font-medium">Native Website Tracking</p>
+                            <div className="flex items-center gap-1.5 px-3 py-2 bg-[#87A96B]/5 rounded-xl border border-[#87A96B]/10">
+                                <Shield className="w-3 h-3 text-[#87A96B]" />
+                                <span className="text-[8px] font-bold text-[#87A96B] uppercase tracking-widest">Protected Stream</span>
+                            </div>
+                        </div>
+
+                        {/* Organic & Referrals Card */}
+                        <div className="p-8 rounded-[32px] bg-white border border-[#87A96B]/20 shadow-lg transition-all">
+                            <div className="flex justify-between items-start mb-6">
+                                <div className="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                                    <Share2 className="w-6 h-6" />
+                                </div>
+                                <span className="px-2.5 py-1 bg-[#87A96B]/10 text-[#87A96B] rounded-full text-[8px] font-black uppercase tracking-widest">Active</span>
+                            </div>
+                            <h3 className="text-sm font-bold text-gray-900 mb-1">Others</h3>
+                            <p className="text-[10px] text-gray-400 mb-6 font-medium">Organic Attribution Engine</p>
+                            <div className="flex items-center gap-1.5 px-3 py-2 bg-amber-50 rounded-xl border border-amber-100">
+                                <Zap className="w-3 h-3 text-amber-600" />
+                                <span className="text-[8px] font-bold text-amber-600 uppercase tracking-widest">AI Correlation</span>
+                            </div>
+                        </div>
+
+                        {/* WhatsApp Business API Card */}
+                        <div className="p-8 rounded-[32px] bg-white border border-[#87A96B]/20 shadow-lg transition-all">
+                            <div className="flex justify-between items-start mb-6">
+                                <div className="w-12 h-12 rounded-xl bg-[#25D366]/10 text-[#25D366] flex items-center justify-center">
+                                    <MessageCircle className="w-6 h-6" />
+                                </div>
+                                <span className="px-2.5 py-1 bg-[#87A96B]/10 text-[#87A96B] rounded-full text-[8px] font-black uppercase tracking-widest">Active</span>
+                            </div>
+                            <h3 className="text-sm font-bold text-gray-900 mb-1">WhatsApp Business</h3>
+                            <p className="text-[10px] text-gray-400 mb-6 font-medium">Omnichannel Inbox Sync</p>
+                            <div className="flex items-center gap-1.5 px-3 py-2 bg-gray-50 rounded-xl border border-gray-100">
+                                <Shield className="w-3 h-3 text-gray-400" />
+                                <span className="text-[8px] font-bold text-gray-400 uppercase tracking-widest">Webhook Connected</span>
+                            </div>
+                        </div>
+
+                        {/* SMS (Twilio) Card */}
+                        <div className="p-8 rounded-[32px] bg-white border border-[#87A96B]/20 shadow-lg transition-all">
+                            <div className="flex justify-between items-start mb-6">
+                                <div className="w-12 h-12 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center">
+                                    <MessageSquare className="w-6 h-6" />
+                                </div>
+                                <span className="px-2.5 py-1 bg-[#87A96B]/10 text-[#87A96B] rounded-full text-[8px] font-black uppercase tracking-widest">Active</span>
+                            </div>
+                            <h3 className="text-sm font-bold text-gray-900 mb-1">SMS (Twilio)</h3>
+                            <p className="text-[10px] text-gray-400 mb-6 font-medium">Omnichannel Inbox Sync</p>
+                            <div className="flex items-center gap-1.5 px-3 py-2 bg-gray-50 rounded-xl border border-gray-100">
+                                <Shield className="w-3 h-3 text-gray-400" />
+                                <span className="text-[8px] font-bold text-gray-400 uppercase tracking-widest">Webhook Connected</span>
+                            </div>
+                        </div>
+
                     </div>
                 )}
 
@@ -502,6 +511,6 @@ export default function ApiIntegrationPage() {
                     </div>
                 )}
             </div>
-        </div>
+        </div >
     );
 }
