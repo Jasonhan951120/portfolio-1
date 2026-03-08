@@ -248,7 +248,21 @@ function NotificationDropdown({ notifications, onClose, onDismiss }: { notificat
 }
 
 // ── Waitlist Panel ───────────────────────────────────────────────────────
-function WaitlistPanel({ isOpen, onClose, waitlist, onInvite }: { isOpen: boolean; onClose: () => void; waitlist: ConsultationRequest[]; onInvite: (id: string) => void }) {
+function WaitlistPanel({
+  isOpen,
+  onClose,
+  waitlist,
+  onInvite,
+  onBroadcast,
+  isBroadcasting
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  waitlist: ConsultationRequest[];
+  onInvite: (id: string) => void;
+  onBroadcast: () => void;
+  isBroadcasting: boolean;
+}) {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -270,12 +284,17 @@ function WaitlistPanel({ isOpen, onClose, waitlist, onInvite }: { isOpen: boolea
           </div>
 
           <div className="space-y-6 mb-24">
-            <div className="p-6 bg-[#87A96B]/5 border border-[#87A96B]/20 rounded-3xl group cursor-pointer hover:bg-[#87A96B]/10 transition-all">
+            <div className="p-6 bg-[#87A96B]/5 border border-[#87A96B]/20 rounded-3xl group transition-all">
               <p className="text-[10px] font-bold text-[#87A96B] uppercase tracking-[0.2em] mb-3 leading-none">Intelligence Pack</p>
               <h3 className="text-lg font-bold text-gray-900 mb-2 underline decoration-[#87A96B]/30 underline-offset-4">1-Click Gap Filler</h3>
               <p className="text-xs text-gray-500 leading-relaxed mb-6">We found a 2:00 PM slot tomorrow. Notify all matching waitlist patients?</p>
-              <button className="w-full py-4 bg-[#87A96B] text-black font-black uppercase tracking-widest text-[11px] rounded-2xl hover:scale-[1.02] transition-transform active:scale-95 shadow-[0_0_30px_rgba(0,255,204,0.3)]">
-                Broadcast Availability
+              <button
+                onClick={onBroadcast}
+                disabled={isBroadcasting}
+                className="w-full py-4 bg-[#87A96B] text-black font-black uppercase tracking-widest text-[11px] rounded-2xl hover:scale-[1.02] transition-transform active:scale-95 shadow-[0_0_30px_rgba(0,255,204,0.3)] disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                {isBroadcasting ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                {isBroadcasting ? "Broadcasting..." : "Broadcast Availability"}
               </button>
             </div>
 
@@ -680,6 +699,32 @@ function KanbanSkeleton() {
   );
 }
 
+// ── Premium Toast Notification ───────────────────────────────────────────
+function Toast({ message, type, onClose }: { message: string, type: 'success' | 'error', onClose: () => void }) {
+  useEffect(() => {
+    const timer = setTimeout(onClose, 5000);
+    return () => clearTimeout(timer);
+  }, [onClose]);
+
+  return (
+    <motion.div
+      initial={{ y: 50, opacity: 0, scale: 0.9 }}
+      animate={{ y: 0, opacity: 1, scale: 1 }}
+      exit={{ y: 20, opacity: 0, scale: 0.9 }}
+      className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[200] flex items-center gap-3 px-6 py-4 bg-[#1A1A1A] border border-white/10 rounded-2xl shadow-2xl backdrop-blur-xl"
+    >
+      <div className={`p-2 rounded-xl ${type === 'success' ? 'bg-[#87A96B]/20 text-[#87A96B]' : 'bg-red-500/20 text-red-500'}`}>
+        {type === 'success' ? <Check className="w-4 h-4" /> : <AlertTriangle className="w-4 h-4" />}
+      </div>
+      <p className="text-[13px] font-medium text-white/90 tracking-tight">{message}</p>
+      <button onClick={onClose} className="ml-4 text-white/40 hover:text-white/70 transition-colors">
+        <X className="w-4 h-4" />
+      </button>
+      <div className={`absolute bottom-0 left-0 h-0.5 ${type === 'success' ? 'bg-[#87A96B]' : 'bg-red-500'} animate-toast-progress`} style={{ width: '100%' }} />
+    </motion.div>
+  );
+}
+
 export default function AdminDashboard() {
   const navigate = useNavigate();
   const { session, profile, isAdmin, signOut, loading: authLoading } = useAuth();
@@ -689,6 +734,8 @@ export default function AdminDashboard() {
   const [leads, setLeads] = useState<ConsultationRequest[]>([]);
   const [performedTreatments, setPerformedTreatments] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [isBroadcasting, setIsBroadcasting] = useState(false);
+  const [toast, setToast] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
   const [selectedLead, setSelectedLead] = useState<ConsultationRequest | null>(null);
   const [isRecording, setIsRecording] = useState(false);
   const [dictationText, setDictationText] = useState("");
@@ -1366,6 +1413,37 @@ export default function AdminDashboard() {
     } catch (err) {
       console.error("Failed to write audit log:", err);
       // Silent fail as per Postel's Law
+    }
+  };
+
+  const handleBroadcast = async () => {
+    const waitlistedLeads = leads.filter(l => (l.status as any) === "Waitlisted");
+
+    if (waitlistedLeads.length === 0) {
+      setToast({ message: "Waitlist is currently empty", type: "error" });
+      return;
+    }
+
+    setIsBroadcasting(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('broadcast-waitlist', {
+        body: {
+          clinic_id: profile?.clinic_id,
+          leads: waitlistedLeads.map(l => ({ id: l.id, name: l.name, phone: l.phone, email: l.email }))
+        }
+      });
+
+      if (error) throw error;
+
+      setToast({
+        message: `Success: ${waitlistedLeads.length} Patients Notified`,
+        type: "success"
+      });
+    } catch (err: any) {
+      console.error("[BROADCAST ERROR]", err);
+      setToast({ message: "Broadcast Failed. Please try again.", type: "error" });
+    } finally {
+      setIsBroadcasting(false);
     }
   };
 
@@ -3903,7 +3981,19 @@ export default function AdminDashboard() {
               onClose={() => setIsWaitlistOpen(false)}
               waitlist={leads.filter(l => l.status === "Waitlisted" as any)}
               onInvite={(id) => updateStatus(id, "Scheduled")}
+              onBroadcast={handleBroadcast}
+              isBroadcasting={isBroadcasting}
             />
+
+            <AnimatePresence>
+              {toast && (
+                <Toast
+                  message={toast.message}
+                  type={toast.type}
+                  onClose={() => setToast(null)}
+                />
+              )}
+            </AnimatePresence>
           </div>
         </>
       )}
