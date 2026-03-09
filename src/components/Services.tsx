@@ -48,7 +48,7 @@ export default function Services({ clinic }: { clinic: any }) {
               transition={{ delay: i * 0.1, duration: 0.8 }}
               className="group cursor-pointer"
             >
-              <div className="relative rounded-[40px] overflow-hidden aspect-[4/5] mb-8 shadow-2xl border border-black/5">
+              <div className="relative rounded-[40px] overflow-hidden aspect-[4/5] mb-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-black/5">
                 <img
                   src={service.image}
                   alt={service.title}

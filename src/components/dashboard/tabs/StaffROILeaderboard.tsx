@@ -15,7 +15,8 @@ interface StaffROILeaderboardProps {
     clinicId: string;
 }
 
-const Counter = ({ value, prefix = "" }: { value: number; prefix?: string }) => {
+const Counter = ({ value, prefix = "" }: { value: number | null | undefined; prefix?: string }) => {
+    if (value === null || value === undefined) return <span className="font-bold tabular-nums text-gray-500">{prefix}0</span>;
     return (
         <motion.span
             initial={{ opacity: 0, y: 10 }}
@@ -23,7 +24,7 @@ const Counter = ({ value, prefix = "" }: { value: number; prefix?: string }) => 
             key={value}
             className="font-bold tabular-nums"
         >
-            {prefix}{value.toLocaleString(undefined, { minimumFractionDigits: value % 1 === 0 ? 0 : 2, maximumFractionDigits: 2 })}
+            {prefix}{Number(value).toLocaleString(undefined, { minimumFractionDigits: value % 1 === 0 ? 0 : 2, maximumFractionDigits: 2 })}
         </motion.span>
     );
 };

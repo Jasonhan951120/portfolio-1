@@ -60,6 +60,10 @@ export type ConsultationRequest = {
     doctor_id?: string;
     resource_id?: string;
     duration_minutes?: number;
+    potential_value?: number;
+    intent_score?: number;
+    fbclid?: string | null;
+    recovered_by_ai?: boolean;
 };
 
 export type Resource = {

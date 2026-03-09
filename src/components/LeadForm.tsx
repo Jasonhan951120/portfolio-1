@@ -42,6 +42,7 @@ export default function LeadForm({ clinic }: { clinic: any }) {
     utm_campaign: "",
     utm_term: "",
     referrer: "",
+    fbclid: "",
   });
 
   useEffect(() => {
@@ -55,6 +56,7 @@ export default function LeadForm({ clinic }: { clinic: any }) {
       utm_campaign: params.get("utm_campaign") || "",
       utm_term: params.get("utm_term") || "",
       referrer: ref,
+      fbclid: params.get("fbclid") || "",
     });
   }, []);
 
@@ -98,6 +100,7 @@ export default function LeadForm({ clinic }: { clinic: any }) {
         utm_campaign: attribution.utm_campaign || null,
         utm_term: attribution.utm_term || null,
         referrer: attribution.referrer || null,
+        fbclid: attribution.fbclid || null,
       }).select().single();
       if (data) setPatientId(data.id);
     } else {
@@ -122,6 +125,7 @@ export default function LeadForm({ clinic }: { clinic: any }) {
       utm_campaign: attribution.utm_campaign || null,
       utm_term: attribution.utm_term || null,
       referrer: attribution.referrer || null,
+      fbclid: attribution.fbclid || null,
     }).eq('id', patientId || '');
 
     if (error) {

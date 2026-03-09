@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { motion } from 'framer-motion';
 import { MessageSquare, Clock, ArrowRight } from 'lucide-react';
 import { ConsultationRequest } from '../lib/supabase';
 import { STATUS_COLORS, SERVICE_CONVERSION_VALUES } from '../lib/constants';
@@ -21,22 +22,34 @@ export function KanbanCard({ lead, onClick }: KanbanCardProps) {
     } = useSortable({ id: lead.id });
 
     const style = {
-        transform: CSS.Transform.toString(transform),
+        transform: CSS.Translate.toString(transform),
         transition,
-        opacity: isDragging ? 0.3 : 1,
         zIndex: isDragging ? 100 : 1,
     };
 
     const value = SERVICE_CONVERSION_VALUES[lead.service] || 1000;
 
     return (
-        <div
+        <motion.div
             ref={setNodeRef}
             style={style}
             {...attributes}
             {...listeners}
             onClick={onClick}
-            className="group bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-[#87A96B]/30 transition-all cursor-grab active:cursor-grabbing relative overflow-hidden"
+            layout
+            whileDrag={{
+                scale: 1.05,
+                rotate: 2,
+                cursor: 'grabbing',
+                boxShadow: "0 20px 40px rgba(0,0,0,0.12)"
+            }}
+            transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 20
+            }}
+            animate={isDragging ? { opacity: 0.5 } : { opacity: 1 }}
+            className="group bg-white p-5 rounded-2xl border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] hover:border-[#87A96B]/30 transition-all cursor-grab active:cursor-grabbing relative overflow-hidden"
         >
             <div className="flex justify-between items-start mb-3">
                 <h4 className="font-bold text-gray-900 text-sm tracking-tight group-hover:text-[#87A96B] transition-colors" data-hj-suppress>{lead.name}</h4>
@@ -52,7 +65,7 @@ export function KanbanCard({ lead, onClick }: KanbanCardProps) {
                     <div className="w-6 h-6 rounded-lg bg-gray-50 flex items-center justify-center">
                         <MessageSquare className="w-3.5 h-3.5 text-gray-400" />
                     </div>
-                    <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">
+                    <span className="text-[9px] font-black text-gray-900 tabular-nums tracking-tighter uppercase">
                         £{value.toLocaleString()}
                     </span>
                 </div>
@@ -68,6 +81,6 @@ export function KanbanCard({ lead, onClick }: KanbanCardProps) {
             <div className="absolute bottom-0 right-0 p-2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <ArrowRight className="w-3 h-3 text-[#87A96B]" />
             </div>
-        </div>
+        </motion.div>
     );
 }

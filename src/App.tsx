@@ -35,6 +35,7 @@ import { motion, useScroll, useSpring } from "motion/react";
 import { ChevronDown, Phone } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "./lib/supabase";
+import VerifyUI from "./components/VerifyUI";
 
 
 function LandingPage({ clinic }: { clinic: any }) {
@@ -221,6 +222,7 @@ export default function App() {
             <Route path="/admin/onboarding" element={<ProtectedRoute><SubscriptionGuard><AdminOnboarding /></SubscriptionGuard></ProtectedRoute>} />
             <Route path="/login" element={<AdminLogin />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/verify-ui" element={<VerifyUI />} />
           </Routes>
         </Router>
       </AnalyticsProvider>

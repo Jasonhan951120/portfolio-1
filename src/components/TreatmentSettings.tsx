@@ -3,7 +3,7 @@ import { motion, Reorder, AnimatePresence } from 'motion/react';
 import {
     GripVertical, Plus, Trash2, Check,
     Palette, Save, AlertCircle, Sparkles,
-    ArrowRight, RefreshCw, Camera, Loader2
+    ArrowRight, RefreshCw, Camera, Loader2, Stethoscope
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
@@ -14,7 +14,46 @@ interface Treatment {
     color: string;
     order_index: number;
     image_url?: string;
+    potential_revenue?: number;
+    marketing_copy?: string;
 }
+
+// ── Premium Toast Notification (Clinical Luxury) ─────────────────────────
+interface ToastProps {
+    message: string;
+    type: 'success' | 'error';
+    onClose: () => void;
+}
+
+const Toast: React.FC<ToastProps> = ({ message, type, onClose }) => {
+    useEffect(() => {
+        const timer = setTimeout(onClose, 5000);
+        return () => clearTimeout(timer);
+    }, [onClose]);
+
+    return (
+        <motion.div
+            initial={{ y: 50, opacity: 0, scale: 0.9 }}
+            animate={{ y: 0, opacity: 1, scale: 1 }}
+            exit={{ y: 20, opacity: 0, scale: 0.9 }}
+            className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[5000] flex items-center gap-3 px-6 py-4 bg-[#1C1C1E] border border-white/10 rounded-2xl shadow-2xl backdrop-blur-xl"
+        >
+            <div className={`p-2 rounded-xl ${type === 'success' ? 'bg-[#00FFA3]/20 text-[#00FFA3]' : 'bg-[#FF3B30]/20 text-[#FF3B30]'}`}>
+                {type === 'success' ? <Check className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
+            </div>
+            <p className="text-[13px] font-medium text-white/90 tracking-tight">{message}</p>
+            <button onClick={onClose} className="ml-4 text-white/40 hover:text-white/70 transition-colors">
+                <Trash2 className="w-4 h-4" />
+            </button>
+            <motion.div
+                initial={{ width: "100%" }}
+                animate={{ width: 0 }}
+                transition={{ duration: 5, ease: "linear" }}
+                className={`absolute bottom-0 left-0 h-0.5 ${type === 'success' ? 'bg-[#00FFA3]' : 'bg-[#FF3B30]'}`}
+            />
+        </motion.div>
+    );
+};
 
 interface TreatmentSettingsProps {
     clinicId: string;
@@ -40,6 +79,16 @@ export const TreatmentSettings: React.FC<TreatmentSettingsProps> = ({ clinicId, 
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [isUploading, setIsUploading] = useState<Record<string, boolean>>({});
+    const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+
+    // Modal State
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [newTreatmentForm, setNewTreatmentForm] = useState({
+        service_name: '',
+        potential_revenue: 1000,
+        marketing_copy: '',
+        color: CURATED_COLORS[0]
+    });
 
     useEffect(() => {
         fetchTreatments();
@@ -62,26 +111,39 @@ export const TreatmentSettings: React.FC<TreatmentSettingsProps> = ({ clinicId, 
         setLoading(false);
     };
 
-    const handleAddTreatment = async () => {
+    const handleAddTreatment = () => {
+        setNewTreatmentForm({
+            service_name: '',
+            potential_revenue: 1000,
+            marketing_copy: '',
+            color: CURATED_COLORS[Math.floor(Math.random() * CURATED_COLORS.length)]
+        });
+        setIsModalOpen(true);
+    };
+
+    const handleConfirmAdd = async () => {
+        if (!newTreatmentForm.service_name.trim()) {
+            setToast({ message: "Procedure Name is required.", type: 'error' });
+            return;
+        }
+
         setSaving(true);
-        setError(null);
-
         try {
-            if (!clinicId || clinicId === "default-clinic") {
-                throw new Error("Invalid Clinic ID provided to TreatmentSettings. Operation aborted.");
-            }
+            if (!clinicId || clinicId === "default-clinic") throw new Error("Invalid Clinic ID");
 
-            // Elite Unique Name Generation: Prevent constraint violation (clinic_id, service_name)
-            let uniqueName = 'New Treatment';
+            // Unique Name Generation
+            let uniqueName = newTreatmentForm.service_name;
             let index = 1;
             while (treatments.some(t => t.service_name.toLowerCase() === uniqueName.toLowerCase())) {
-                uniqueName = `New Treatment ${index++}`;
+                uniqueName = `${newTreatmentForm.service_name} ${index++}`;
             }
 
             const newTreatment = {
                 clinic_id: clinicId,
                 service_name: uniqueName,
-                color: CURATED_COLORS[0],
+                color: newTreatmentForm.color,
+                potential_revenue: newTreatmentForm.potential_revenue,
+                marketing_copy: newTreatmentForm.marketing_copy,
                 order_index: treatments.length,
             };
 
@@ -91,27 +153,17 @@ export const TreatmentSettings: React.FC<TreatmentSettingsProps> = ({ clinicId, 
                 .select()
                 .single();
 
-            if (insertError) {
-                // Detailed logging for developers/Sentry
-                console.error('[SUPABASE ERROR] Failed to insert treatment:', {
-                    message: insertError.message,
-                    details: insertError.details,
-                    hint: insertError.hint,
-                    code: insertError.code,
-                    payload: newTreatment
-                });
-                throw new Error(insertError.message);
-            }
+            if (insertError) throw insertError;
 
             if (data) {
                 setTreatments(prev => [...prev, data]);
+                setToast({ message: "Asset Synchronized successfully.", type: 'success' });
+                setIsModalOpen(false);
                 onUpdate?.();
             }
         } catch (err: any) {
-            const msg = err.message || 'An unexpected error occurred';
-            setError(`Failed to add treatment: ${msg}`);
-            // Explicit console logging as requested
             console.error('[TREATMENT LOGIC] Runtime Exception:', err);
+            setToast({ message: `Sync Failed: ${err.message}`, type: 'error' });
         } finally {
             setSaving(false);
         }
@@ -234,17 +286,21 @@ export const TreatmentSettings: React.FC<TreatmentSettingsProps> = ({ clinicId, 
                 </div>
                 <button
                     onClick={handleAddTreatment}
-                    className="btn-primary-crisp px-6 py-3 text-xs"
+                    className="flex items-center gap-2 bg-[#007AFF] hover:bg-[#0055FF] text-white px-6 py-3 rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] transition-all hover:shadow-[0_0_20px_rgba(0,122,255,0.4)] active:scale-95"
                 >
-                    <Plus className="w-4 h-4" /> Add Treatment
+                    <Plus className="w-4 h-4" /> Add Regional Treatment Offering
                 </button>
             </div>
 
-            {error && (
-                <div className="p-4 bg-red-50 border border-red-100 rounded-2xl flex items-center gap-3 text-red-600 text-[11px] font-bold uppercase tracking-wide">
-                    <AlertCircle className="w-4 h-4" /> {error}
-                </div>
-            )}
+            <AnimatePresence>
+                {toast && (
+                    <Toast
+                        message={toast.message}
+                        type={toast.type}
+                        onClose={() => setToast(null)}
+                    />
+                )}
+            </AnimatePresence>
 
             <Reorder.Group axis="y" values={treatments} onReorder={handleReorder} className="space-y-4">
                 <AnimatePresence mode="popLayout">
@@ -284,12 +340,18 @@ export const TreatmentSettings: React.FC<TreatmentSettingsProps> = ({ clinicId, 
                                         />
 
                                         {treatment.image_url ? (
-                                            <div
-                                                className="w-full h-full bg-cover bg-center transition-opacity duration-300 group-hover:opacity-80"
-                                                style={{ backgroundImage: `url(${treatment.image_url})` }}
+                                            <motion.img
+                                                src={treatment.image_url}
+                                                alt={treatment.service_name}
+                                                className="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-80"
                                             />
                                         ) : (
-                                            <Camera className="w-5 h-5 text-gray-400 group-hover:text-gray-600 transition-colors" />
+                                            <div
+                                                className="w-full h-full flex items-center justify-center"
+                                                style={{ background: 'linear-gradient(135deg, #2c3e50, #4ca1af)' }}
+                                            >
+                                                <Stethoscope className="text-white opacity-40 w-8 h-8" strokeWidth={1.5} />
+                                            </div>
                                         )}
 
                                         {/* Loading Overlay */}
@@ -348,6 +410,102 @@ export const TreatmentSettings: React.FC<TreatmentSettingsProps> = ({ clinicId, 
                     <p className="metric-label text-[10px] text-gray-400">No clinical treatments defined</p>
                 </div>
             )}
+
+            {/* Sales Engine Upgrade: Add Treatment Modal */}
+            <AnimatePresence>
+                {isModalOpen && (
+                    <div className="fixed inset-0 z-[6000] flex items-center justify-center p-6">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setIsModalOpen(false)}
+                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                        />
+                        <motion.div
+                            initial={{ y: 50, opacity: 0, scale: 0.95 }}
+                            animate={{ y: 0, opacity: 1, scale: 1 }}
+                            exit={{ y: 50, opacity: 0, scale: 0.95 }}
+                            className="relative w-full max-w-lg bg-white rounded-[40px] shadow-2xl p-10 overflow-hidden"
+                        >
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-[#007AFF]/5 blur-[60px] rounded-full -mr-16 -mt-16" />
+
+                            <div className="mb-10">
+                                <h3 className="text-2xl font-display font-bold text-gray-900 uppercase tracking-tight">Sales Engine Upgrade</h3>
+                                <p className="text-[11px] text-gray-500 font-bold uppercase tracking-widest mt-1">Configure New Clinical Offering</p>
+                            </div>
+
+                            <div className="space-y-8">
+                                <div>
+                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3 block">Procedure Name</label>
+                                    <input
+                                        type="text"
+                                        value={newTreatmentForm.service_name}
+                                        onChange={(e) => setNewTreatmentForm(prev => ({ ...prev, service_name: e.target.value }))}
+                                        className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-5 py-4 text-sm font-bold placeholder:text-gray-300 focus:ring-2 focus:ring-[#007AFF]/20 transition-all"
+                                        placeholder="e.g. Implant Discovery"
+                                    />
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-6">
+                                    <div>
+                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3 block">Expected Patient Value (£)</label>
+                                        <div className="relative">
+                                            <span className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">£</span>
+                                            <input
+                                                type="number"
+                                                value={newTreatmentForm.potential_revenue}
+                                                onChange={(e) => setNewTreatmentForm(prev => ({ ...prev, potential_revenue: parseInt(e.target.value) }))}
+                                                className="w-full bg-gray-50 border border-gray-100 rounded-2xl pl-10 pr-5 py-4 text-sm font-bold focus:ring-2 focus:ring-[#007AFF]/20 transition-all"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3 block">Brand Accent</label>
+                                        <div className="flex flex-wrap gap-2 pt-1">
+                                            {CURATED_COLORS.slice(0, 5).map(color => (
+                                                <button
+                                                    key={color}
+                                                    onClick={() => setNewTreatmentForm(prev => ({ ...prev, color }))}
+                                                    className={`w-8 h-8 rounded-full border-2 transition-all ${newTreatmentForm.color === color ? 'border-[#007AFF] scale-110 shadow-lg' : 'border-transparent opacity-60'}`}
+                                                    style={{ backgroundColor: color }}
+                                                />
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3 block">Marketing Hook (Sales Trigger)</label>
+                                    <textarea
+                                        value={newTreatmentForm.marketing_copy}
+                                        onChange={(e) => setNewTreatmentForm(prev => ({ ...prev, marketing_copy: e.target.value }))}
+                                        className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-5 py-4 text-sm font-bold min-h-[100px] placeholder:text-gray-300 focus:ring-2 focus:ring-[#007AFF]/20 transition-all"
+                                        placeholder="e.g. Transform your smile in 1 day with our robotic guided precision..."
+                                    />
+                                </div>
+
+                                <div className="pt-4 flex gap-4">
+                                    <button
+                                        onClick={() => setIsModalOpen(false)}
+                                        className="flex-1 py-5 bg-gray-100 hover:bg-gray-200 text-gray-600 font-black uppercase tracking-[0.2em] text-[10px] rounded-2xl transition-all"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        onClick={handleConfirmAdd}
+                                        disabled={saving}
+                                        className="flex-2 py-5 bg-[#007AFF] hover:bg-[#0055FF] text-white font-black uppercase tracking-[0.2em] text-[10px] rounded-2xl transition-all hover:shadow-[0_0_30px_rgba(0,122,255,0.4)] disabled:opacity-50 flex items-center justify-center gap-3"
+                                    >
+                                        {saving ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                                        Synchronize Asset
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };
