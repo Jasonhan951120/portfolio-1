@@ -117,6 +117,6 @@ SELECT
   -- Average Response Time (simulated aggregate for UI completeness)
   15 AS avg_response_mins
 FROM public.profiles p
-LEFT JOIN public.consultation_requests c ON c.assigned_to = p.id
+LEFT JOIN public.consultation_requests c ON c.assigned_to = p.full_name
 WHERE p.role IN ('admin', 'staff', 'owner')
 GROUP BY p.id, p.clinic_id, p.full_name, p.avatar_url;

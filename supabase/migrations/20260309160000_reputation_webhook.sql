@@ -7,7 +7,7 @@ CREATE EXTENSION IF NOT EXISTS pg_net WITH SCHEMA extensions;
 CREATE OR REPLACE FUNCTION public.trigger_reputation_autopilot()
 RETURNS TRIGGER AS $$
 DECLARE
-  edge_function_url text := 'https://xszohwttvjeypbbqamnj.supabase.co/functions/v1/send-review-request';
+  edge_function_url text := 'https://tpzdercbacefqfpadhcb.supabase.co/functions/v1/send-review-request';
   request_body jsonb;
 BEGIN
   -- Only trigger when status changes TO 'Treated'
