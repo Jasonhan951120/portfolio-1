@@ -2680,11 +2680,40 @@ export default function AdminDashboard() {
                 </button>
               </div>
               <div>
-                <Link to="/" className="text-gray-400 hover:text-gray-900 flex items-center gap-2 mb-3 transition-colors text-xs font-bold uppercase tracking-widest">
-                  <ArrowLeft className="w-3.5 h-3.5" strokeWidth={1.5} /> Back to Website
-                </Link>
-                <div className="flex items-center gap-4 relative">
-                  <h1 className="text-3xl font-display font-bold">HQ Dashboard</h1>
+                <div className="flex items-center gap-6 relative">
+                  <div className="flex items-center gap-4">
+                    {/* Clinic Logo Placeholder */}
+                    <div className="w-14 h-14 rounded-full bg-black/5 border border-black/10 flex items-center justify-center overflow-hidden shadow-[inner_0_2px_4px_rgba(0,0,0,0.02)]">
+                      {clinic?.logo_url ? (
+                        <img src={clinic.logo_url} alt={clinic?.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <Building className="w-6 h-6 text-gray-300" strokeWidth={1} />
+                      )}
+                    </div>
+
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <Link to="/" className="text-gray-400 hover:text-gray-900 flex items-center gap-2 transition-colors text-[10px] font-bold uppercase tracking-[0.2em]">
+                          <ArrowLeft className="w-3 h-3" strokeWidth={2} /> Back to Site
+                        </Link>
+                        {isAdmin && (
+                          <span className="flex items-center gap-1.5 px-2 py-0.5 bg-emerald-500/10 text-emerald-600 rounded-full text-[9px] font-black uppercase tracking-widest border border-emerald-500/20">
+                            <ShieldCheck className="w-2.5 h-2.5" /> High-Level Admin
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="flex items-center gap-3 mt-1">
+                        <h1 className="text-3xl font-display font-medium text-gray-900 tracking-[0.05em] uppercase">
+                          {clinic?.name || "Hanlan OC"}{" "}
+                          <span className="font-light text-slate-400 lowercase tracking-normal italic">Dashboard</span>
+                        </h1>
+                        <div className="flex items-center justify-center p-1 bg-blue-500/10 rounded-full border border-blue-500/20" title="Verified Revenue Partner">
+                          <Check className="w-3.5 h-3.5 text-blue-500" strokeWidth={3} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
                   {/* Branch Selector (Hidden by default based on User Feedback) */}
                   {multiBranchMode && (
@@ -2762,7 +2791,7 @@ export default function AdminDashboard() {
                   className="flex items-center gap-3 px-6 py-3 bg-black/5 hover:bg-black/5 border border-black/10 rounded-2xl text-gray-900 transition-all group"
                 >
                   <Building className="w-5 h-5 text-gray-500 group-hover:text-[#87A96B]" strokeWidth={1.5} />
-                  <span className="text-[11px] font-bold uppercase tracking-widest">{multiBranchMode ? "Multi-Clinic: ON" : "HQ Dashboard"}</span>
+                  <span className="text-[11px] font-bold uppercase tracking-widest">{multiBranchMode ? "Multi-Clinic: ON" : `${clinic?.name || "Hanlan OC"} HQ`}</span>
                 </button>
 
                 <button
