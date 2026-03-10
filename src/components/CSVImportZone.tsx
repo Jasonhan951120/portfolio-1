@@ -22,16 +22,16 @@ export function CSVImportZone({ clinicId, onImportComplete }: CSVImportZoneProps
         let failCount = 0;
 
         const inserts = data.map((row, index) => {
-            // PII SCRUBBER: Immediately define what we keep. 
-            // We EXCLUDE: 'Name', 'Phone', 'Email', 'DOB', 'Address'
-            // We EXTRACT: 'Potential Value', 'Status', 'TreatmentType'
+            // PII SCRUBBER: Strict blocklist for EMR export headers
+            // We EXPLICITLY ignore: 'Name', 'First Name', 'Last Name', 'Phone', 'Mobile', 'Email', 'DOB', 'Birth Date', 'Address', 'Postcode'
 
             const serviceRaw = row['TreatmentType'] || row['Treatment Type'] || row['Service'] || row['Treatment'] || 'General Checkup';
-            const potentialValue = parseFloat(row['Potential Value'] || row['Value'] || '0') || 0;
+            const rawVal = String(row['Potential Value'] || row['Value'] || '0').replace(/[^0-9.]/g, '');
+            const potentialValue = parseFloat(rawVal) || 1000;
             const statusRaw = row['Status'] || row['Lead Status'] || 'New Lead';
 
-            // Generate pseudonym for privacy
-            const pseudonym = `Patient #${1000 + index}`;
+            // Generate pseudonym for privacy (Side-car architecture requirement)
+            const pseudonym = `Patient #${Math.floor(Math.random() * 9000) + 1000}`;
 
             // Try to find a matched service
             const serviceMatch = Object.keys(SERVICE_CONVERSION_VALUES).find(k =>
@@ -41,13 +41,14 @@ export function CSVImportZone({ clinicId, onImportComplete }: CSVImportZoneProps
 
             return {
                 clinic_id: clinicId,
-                name: pseudonym, // Local Scrubbing
-                email: "scrubbed@hanlan.private",
-                phone: "Privacy Protected",
+                name: pseudonym, // Local Scrubber Active
+                email: "privacy.protected@hanlan.private", // Dropped
+                phone: "SCRUBBED_PII", // Dropped
                 service,
                 status: statusRaw,
                 potential_value: potentialValue,
-                utm_source: "EXACT_CSV_IMPORT_SCRUBBED"
+                utm_source: "EXACT_EMR_IMPORT_SCRUBBED",
+                created_at: new Date().toISOString()
             };
         }).filter(Boolean);
 

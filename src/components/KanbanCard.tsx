@@ -53,8 +53,18 @@ export function KanbanCard({ lead, onClick }: KanbanCardProps) {
         >
             <div className="flex justify-between items-start mb-3">
                 <h4 className="font-bold text-gray-900 text-sm tracking-tight group-hover:text-[#87A96B] transition-colors" data-hj-suppress>{lead.name}</h4>
-                <div className={`px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-tighter border ${STATUS_COLORS[lead.status] || 'bg-gray-50 text-gray-400'}`}>
-                    {lead.status}
+                <div className="flex flex-col items-end gap-1.5">
+                    <div className={`px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-tighter border ${STATUS_COLORS[lead.status] || 'bg-gray-50 text-gray-400'}`}>
+                        {lead.status}
+                    </div>
+                    {lead.intent_score && (
+                        <div className={`px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-tighter border ${lead.intent_score > 70 ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
+                                lead.intent_score > 40 ? 'bg-blue-50 text-blue-600 border-blue-100' :
+                                    'bg-gray-50 text-gray-400 border-gray-100'
+                            }`}>
+                            AI Intel: {lead.intent_score}%
+                        </div>
+                    )}
                 </div>
             </div>
 

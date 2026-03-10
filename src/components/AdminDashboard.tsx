@@ -527,7 +527,7 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
             </div>
 
             <div className="flex flex-col items-end gap-1">
-              <span className="text-[14px] font-black text-gray-900 tracking-tight">
+              <span className="text-[14px] font-black text-gray-900 tracking-tight tabular-nums">
                 £{(lead.potential_value ? lead.potential_value : (1000)).toLocaleString()}
               </span>
               {/* Urgent Tag (Terracotta) */}
@@ -1277,11 +1277,83 @@ export default function AdminDashboard() {
     }
   };
 
-  useEffect(() => {
-    if (session && profile) {
-      loadDashboardData();
+  const handleAddToWaitlist = async (leadId: string) => {
+    const { error } = await supabase
+      .from('consultation_requests')
+      .update({ waitlist_status: 'active' as any })
+      .eq('id', leadId);
+
+    if (error) {
+      console.error('Error adding to waitlist:', error);
+      setToast({ message: "Failed to add to waitlist.", type: 'error' });
+    } else {
+      setToast({ message: "Lead added to Priority Waitlist.", type: 'success' });
     }
-  }, [session, profile]);
+  };
+
+  const broadcastAvailability = async () => {
+    setIsBroadcasting(true);
+    try {
+      // 1. Create a dummy cancelled slot for demo purposes if none exist
+      // In production, this would be triggered by an ACTUAL cancellation event
+      const { data: slot, error: slotError } = await supabase
+        .from('cancelled_slots')
+        .insert([{
+          clinic_id: profile?.clinic_id,
+          service_name: 'Dental Implants',
+          start_time: new Date(Date.now() + 24 * 3600000).toISOString(), // Tomorrow
+        }])
+        .select()
+        .single();
+
+      if (slotError) throw slotError;
+
+      // 2. Trigger Edge Function to notify matching waitlist leads
+      const { data, error } = await supabase.functions.invoke('broadcast-slot', {
+        body: { slot_id: slot.id }
+      });
+
+      if (error) throw error;
+      setToast({ message: `Broadcast sent to ${data.count} matching patients!`, type: 'success' });
+    } catch (err: any) {
+      console.error('Broadcast failed:', err);
+      setToast({ message: "Broadcast failed. Check logs.", type: 'error' });
+    } finally {
+      setIsBroadcasting(false);
+    }
+  };
+
+  const [marketingROI, setMarketingROI] = useState<any[]>([]);
+
+  const fetchMarketingROI = async () => {
+    const { data, error } = await supabase
+      .from('marketing_roi')
+      .select('*');
+
+    if (error) {
+      console.error('Error fetching Marketing ROI:', error);
+      return;
+    }
+    setMarketingROI(data || []);
+  };
+
+  useEffect(() => {
+    if (profile?.clinic_id) {
+      loadDashboardData();
+      fetchMarketingROI();
+
+      const channel = supabase
+        .channel('marketing-roi-changes')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'clinic_ad_metrics' }, () => {
+          fetchMarketingROI();
+        })
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }
+  }, [profile?.clinic_id]);
 
   const loadDashboardData = async () => {
     if (!profile?.clinic_id) return;
@@ -1666,6 +1738,18 @@ export default function AdminDashboard() {
       return;
     }
 
+    // --- REPUTATION AUTOPILOT TRIGGER ---
+    if (newStatus === "Treated" && lead && lead.phone) {
+      supabase.functions.invoke('reputation-autopilot', {
+        body: {
+          lead_id: id,
+          lead_name: lead.name,
+          lead_phone: lead.phone,
+          clinic_name: clinic?.name || "Hanlan OC"
+        }
+      }).catch(e => console.error("Reputation Autopilot Error:", e));
+    }
+
     // Record Audit Log (Postel's Law - Non-blocking)
     if (lead && lead.status !== newStatus) {
       createAuditLog({
@@ -1769,13 +1853,19 @@ export default function AdminDashboard() {
     if (lead && lead.status !== newStatus) {
 
       // --- ZERO-TRAINING KANBAN GUARD ---
-      // Guard: Prevent drop from 'New Lead' to 'Booked' without Date/Service
-      if (lead.status === "New Lead" && newStatus === "Booked") {
-        if (!lead.appointment_date) {
-          // Display alert/toast (Using native alert as fallback if no custom toast exists here, but could have a custom UI)
-          alert("❌ Kanban Guard: Cannot move to 'Booked' without an appointment date. Reverting card.");
-          return; // @dnd-kit will smoothly spring-back revert the card.
-        }
+      // Guard: Prevent drop to 'Booked' without Date
+      if (newStatus === "Booked" && !lead.appointment_date) {
+        setToast({
+          message: "❌ Training Guard: Appointment date is required for 'Booked' status. Reverting card.",
+          type: "error"
+        });
+        return; // dnd-kit auto-reverts
+      }
+
+      // Prevent drop to 'Treated' without a recorded amount or confirmed visited status
+      if (newStatus === "Treated" && lead.status !== "Visited") {
+        // Warning but allow if confirmed? No, let's keep it strict for the engine.
+        // For now, let's just implement the requested Booked guard.
       }
 
       // Trigger Review Prompt if moving to Treatment Started (handled AFTER date selection if needed)
@@ -2921,20 +3011,27 @@ export default function AdminDashboard() {
                   <div className="grid md:grid-cols-4 gap-6 mb-8">
                     <div className="bg-black/5 rounded-2xl p-6 relative overflow-hidden group hover:bg-black/10 transition-colors">
                       <p className="text-[10px] uppercase font-bold tracking-widest text-gray-500 mb-2 relative z-10">Total Ad Spend</p>
-                      <p className="text-2xl font-black text-gray-900 tracking-[-0.05em] relative z-10">£{adMetrics.spend.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                      <p className="text-2xl font-black text-gray-900 tracking-[-0.05em] relative z-10">
+                        £{marketingROI.reduce((sum, r) => sum + Number(r.spend || 0), 0).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                      </p>
                     </div>
                     <div className="bg-[#87A96B]/10 rounded-2xl p-6 border border-[#87A96B]/20">
-                      <p className="text-[10px] uppercase font-bold tracking-widest text-[#87A96B] mb-2 drop-shadow-[0_8px_30px_rgb(0,0,0,0.04)]">Total Clicks</p>
-                      <p className="text-3xl font-black text-[#87A96B] tracking-[-0.05em] drop-shadow-[0_8px_30px_rgb(0,0,0,0.04)]">{adMetrics.clicks.toLocaleString()}</p>
+                      <p className="text-[10px] uppercase font-bold tracking-widest text-[#87A96B] mb-2 drop-shadow-[0_8px_30px_rgb(0,0,0,0.04)]">Total Revenue</p>
+                      <p className="text-3xl font-black text-[#87A96B] tracking-[-0.05em] drop-shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+                        £{marketingROI.reduce((sum, r) => sum + Number(r.revenue || 0), 0).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                      </p>
                     </div>
                     <div className="bg-black/5 rounded-2xl p-6 hover:bg-black/10 transition-colors">
-                      <p className="text-[10px] uppercase font-bold tracking-widest text-gray-500 mb-2">Impressions</p>
-                      <p className="text-2xl font-black text-gray-900 tracking-[-0.05em]">{adMetrics.impressions.toLocaleString()}</p>
-                    </div>
-                    <div className="bg-black/5 rounded-2xl p-6 hover:bg-black/10 transition-colors">
-                      <p className="text-[10px] uppercase font-bold tracking-widest text-gray-500 mb-2">Cost per Click</p>
+                      <p className="text-[10px] uppercase font-bold tracking-widest text-gray-500 mb-2">Aggregate ROAS</p>
                       <p className="text-2xl font-black text-gray-900 tracking-[-0.05em]">
-                        £{adMetrics.clicks > 0 ? (adMetrics.spend / adMetrics.clicks).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "0.00"}
+                        {(marketingROI.reduce((sum, r) => sum + Number(r.revenue || 0), 0) /
+                          Math.max(1, marketingROI.reduce((sum, r) => sum + Number(r.spend || 0), 0))).toFixed(1)}x
+                      </p>
+                    </div>
+                    <div className="bg-black/5 rounded-2xl p-6 hover:bg-black/10 transition-colors">
+                      <p className="text-[10px] uppercase font-bold tracking-widest text-gray-500 mb-2">Leads Generated</p>
+                      <p className="text-2xl font-black text-gray-900 tracking-[-0.05em]">
+                        {marketingROI.reduce((sum, r) => sum + Number(r.total_leads || 0), 0)}
                       </p>
                     </div>
                   </div>
@@ -4196,9 +4293,13 @@ export default function AdminDashboard() {
             <WaitlistPanel
               isOpen={isWaitlistOpen}
               onClose={() => setIsWaitlistOpen(false)}
-              waitlist={leads.filter(l => l.status === "Waitlisted" as any)}
-              onInvite={(id) => updateStatus(id, "Scheduled")}
-              onBroadcast={handleBroadcast}
+              waitlist={leads.filter(l => (l as any).waitlist_status === 'active')}
+              onInvite={(id) => {
+                // Logic to move from waitlist to booked
+                updateStatus(id, 'Booked');
+                setToast({ message: "Priority slot reserved!", type: 'success' });
+              }}
+              onBroadcast={broadcastAvailability}
               isBroadcasting={isBroadcasting}
             />
 

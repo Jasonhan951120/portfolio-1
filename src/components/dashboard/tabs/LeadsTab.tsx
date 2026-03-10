@@ -73,13 +73,14 @@ export function LeadsTab({
 }: LeadsTabProps) {
     const activeLead = activeId ? (leads.find(l => l.id === activeId) || null) : null;
 
-    // Revenue at Risk Calculation (Logic matching the SQL view created)
+    // Revenue at Risk Calculation (Strict 48h stale rule)
     const atRiskLeads = activeLeads.filter(l => {
-        if (l.status === 'Closed Won' || l.status === 'Abandoned') return false;
-        const diffHours = (Date.now() - new Date(l.updated_at || l.created_at).getTime()) / 3600000;
+        if (l.status === 'Closed Won' || l.status === 'Abandoned' || l.status === 'Treated') return false;
+        const updatedAt = l.updated_at || l.created_at;
+        const diffHours = (Date.now() - new Date(updatedAt).getTime()) / 3600000;
         return diffHours > 48;
     });
-    const atRiskValue = atRiskLeads.reduce((sum, l) => sum + (Number(l.potential_value) || 0), 0);
+    const atRiskValue = atRiskLeads.reduce((sum, l) => sum + (Number(l.potential_value) || 1000), 0);
 
     return (
         <DndContext
@@ -155,7 +156,7 @@ export function LeadsTab({
                                             Revenue at Risk
                                             <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
                                         </h4>
-                                        <div className="text-2xl font-black text-red-900 tabular-nums tracking-tighter">
+                                        <div className="text-2xl font-black text-red-900 tabular-nums tracking-tighter leading-none">
                                             £{atRiskValue.toLocaleString()}
                                         </div>
                                     </div>
