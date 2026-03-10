@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Building, Check, ShieldCheck, MapPin, ChevronDown } from "lucide-react";
+import { ArrowLeft, Building, Check, ShieldCheck, MapPin, ChevronDown, Settings } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface DashboardHeaderProps {
@@ -12,6 +12,7 @@ interface DashboardHeaderProps {
     isBranchDropdownOpen: boolean;
     setIsBranchDropdownOpen: (open: boolean) => void;
     branches: string[];
+    onOpenSettings?: () => void;
 }
 
 export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
@@ -23,6 +24,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
     isBranchDropdownOpen,
     setIsBranchDropdownOpen,
     branches,
+    onOpenSettings,
 }) => {
     return (
         <div className="flex items-center gap-6 relative">
@@ -60,44 +62,55 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                 </div>
             </div>
 
-            {/* Branch Selector */}
-            {multiBranchMode && (
-                <div className="relative">
-                    <button
-                        onClick={() => setIsBranchDropdownOpen(!isBranchDropdownOpen)}
-                        className="flex items-center gap-2 bg-black/5 hover:bg-black/5 border border-black/10 px-4 py-2 rounded-xl text-sm font-bold transition-all text-gray-900/80 group"
-                    >
-                        <MapPin className="w-4 h-4 text-gray-500 group-hover:text-[#87A96B]" strokeWidth={1.5} />
-                        {selectedBranch}
-                        <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${isBranchDropdownOpen ? "rotate-180" : ""}`} />
-                    </button>
+            <div className="flex items-center gap-3">
+                {/* Settings Button */}
+                <button
+                    onClick={onOpenSettings}
+                    className="flex items-center justify-center w-10 h-10 bg-slate-800/40 hover:bg-slate-700/60 border border-slate-700/50 rounded-xl transition-all group shadow-[0_2px_10px_rgb(0,0,0,0.1)] backdrop-blur-md"
+                    title="Clinic Settings"
+                >
+                    <Settings className="w-4 h-4 text-slate-400 group-hover:text-emerald-400 transition-colors" strokeWidth={2} />
+                </button>
 
-                    <AnimatePresence>
-                        {isBranchDropdownOpen && (
-                            <motion.div
-                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                                className="absolute top-full left-0 mt-2 w-56 bg-white/80 backdrop-blur-xl border border-black/10 rounded-2xl p-2 z-[2000] shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
-                            >
-                                {branches.map(branch => (
-                                    <button
-                                        key={branch}
-                                        onClick={() => { setSelectedBranch(branch); setIsBranchDropdownOpen(false); }}
-                                        className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${selectedBranch === branch
-                                            ? "bg-[#87A96B]/10 text-[#87A96B] font-bold"
-                                            : "text-gray-600 hover:text-gray-900 hover:bg-black/5"
-                                            }`}
-                                    >
-                                        {branch}
-                                    </button>
-                                ))}
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                </div>
-            )}
+                {/* Branch Selector */}
+                {multiBranchMode && (
+                    <div className="relative">
+                        <button
+                            onClick={() => setIsBranchDropdownOpen(!isBranchDropdownOpen)}
+                            className="flex items-center gap-2 bg-black/5 hover:bg-black/5 border border-black/10 px-4 py-2 rounded-xl text-sm font-bold transition-all text-gray-900/80 group"
+                        >
+                            <MapPin className="w-4 h-4 text-gray-500 group-hover:text-[#87A96B]" strokeWidth={1.5} />
+                            {selectedBranch}
+                            <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${isBranchDropdownOpen ? "rotate-180" : ""}`} />
+                        </button>
+
+                        <AnimatePresence>
+                            {isBranchDropdownOpen && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                                    className="absolute top-full left-0 mt-2 w-56 bg-white/80 backdrop-blur-xl border border-black/10 rounded-2xl p-2 z-[2000] shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
+                                >
+                                    {branches.map(branch => (
+                                        <button
+                                            key={branch}
+                                            onClick={() => { setSelectedBranch(branch); setIsBranchDropdownOpen(false); }}
+                                            className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${selectedBranch === branch
+                                                ? "bg-[#87A96B]/10 text-[#87A96B] font-bold"
+                                                : "text-gray-600 hover:text-gray-900 hover:bg-black/5"
+                                                }`}
+                                        >
+                                            {branch}
+                                        </button>
+                                    ))}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

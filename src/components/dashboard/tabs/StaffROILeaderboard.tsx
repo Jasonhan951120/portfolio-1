@@ -147,7 +147,7 @@ export const StaffROILeaderboard: React.FC<StaffROILeaderboardProps> = ({ clinic
                                             )}
                                         </div>
                                         <div>
-                                            <h4 className="text-sm font-bold text-white uppercase tracking-tight">{staff.full_name}</h4>
+                                            <h4 className="text-sm font-bold tracking-tight text-slate-100">{staff.full_name}</h4>
                                             <div className="flex items-center gap-3 mt-1">
                                                 <span className="text-[9px] font-bold text-gray-500 uppercase tracking-widest flex items-center gap-1">
                                                     <Target className="w-3 h-3" />
@@ -163,7 +163,7 @@ export const StaffROILeaderboard: React.FC<StaffROILeaderboardProps> = ({ clinic
                                     </div>
 
                                     <div className="text-right">
-                                        <div className="text-lg font-black text-white tracking-tight">
+                                        <div className="text-lg font-black text-slate-100 tracking-tight tabular-nums">
                                             <Counter value={staff.total_revenue} prefix="£" />
                                         </div>
                                         <div className="flex items-center justify-end gap-1.5 mt-1">

@@ -1,0 +1,152 @@
+components/AuthForm.tsx(2,26): error TS2307: Cannot find module '../lib/supabase' or its corresponding type declarations.
+components/Booking.tsx(3,26): error TS2307: Cannot find module '../lib/supabase' or its corresponding type declarations.
+legacy_root/index.tsx(3,17): error TS2307: Cannot find module './App' or its corresponding type declarations.
+legacy_root/skills/ui-ux-pro-max/cli/src/commands/init.ts(3,19): error TS2307: Cannot find module 'chalk' or its corresponding type declarations.
+legacy_root/skills/ui-ux-pro-max/cli/src/commands/init.ts(4,17): error TS2307: Cannot find module 'ora' or its corresponding type declarations.
+legacy_root/skills/ui-ux-pro-max/cli/src/commands/init.ts(5,21): error TS2307: Cannot find module 'prompts' or its corresponding type declarations.
+legacy_root/skills/ui-ux-pro-max/cli/src/commands/update.ts(1,19): error TS2307: Cannot find module 'chalk' or its corresponding type declarations.
+legacy_root/skills/ui-ux-pro-max/cli/src/commands/update.ts(2,17): error TS2307: Cannot find module 'ora' or its corresponding type declarations.
+legacy_root/skills/ui-ux-pro-max/cli/src/commands/versions.ts(1,19): error TS2307: Cannot find module 'chalk' or its corresponding type declarations.
+legacy_root/skills/ui-ux-pro-max/cli/src/commands/versions.ts(2,17): error TS2307: Cannot find module 'ora' or its corresponding type declarations.
+legacy_root/skills/ui-ux-pro-max/cli/src/index.ts(3,25): error TS2307: Cannot find module 'commander' or its corresponding type declarations.
+legacy_root/skills/ui-ux-pro-max/cli/src/utils/logger.ts(1,19): error TS2307: Cannot find module 'chalk' or its corresponding type declarations.
+src/components/AdminDashboard.bak2.tsx(17,10): error TS2305: Module '"../lib/constants"' has no exported member 'TREATMENT_VALUES'.
+src/components/AdminDashboard.bak2.tsx(422,52): error TS2367: This comparison appears to be unintentional because the types '"Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"New"' have no overlap.
+src/components/AdminDashboard.bak2.tsx(492,16): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"New"' have no overlap.
+src/components/AdminDashboard.bak2.tsx(734,86): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"Consultation Booked"' have no overlap.
+src/components/AdminDashboard.bak2.tsx(849,11): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"Treatment Started"' have no overlap.
+src/components/AdminDashboard.bak2.tsx(889,11): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"Treatment Started"' have no overlap.
+src/components/AdminDashboard.bak2.tsx(1042,53): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"Treatment Started"' have no overlap.
+src/components/AdminDashboard.bak2.tsx(1044,22): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"Treatment Started"' have no overlap.
+src/components/AdminDashboard.bak2.tsx(1251,10): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"New"' have no overlap.
+src/components/AdminDashboard.bak2.tsx(1659,38): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"New"' have no overlap.
+src/components/AdminDashboard.bak2.tsx(1660,43): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"New"' have no overlap.
+src/components/AdminDashboard.bak2.tsx(1665,44): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"Treatment Started"' have no overlap.
+src/components/AdminDashboard.bak2.tsx(1669,37): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Proposal Sent"' and '"Treatment Started"' have no overlap.
+src/components/AdminDashboard.bak2.tsx(1674,37): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Proposal Sent"' and '"Treatment Started"' have no overlap.
+src/components/AdminDashboard.bak2.tsx(1876,116): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"Treatment Started"' have no overlap.
+src/components/AdminDashboard.bak2.tsx(1926,112): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"Treatment Started"' have no overlap.
+src/components/AdminDashboard.bak2.tsx(3677,50): error TS2345: Argument of type '"Contacted"' is not assignable to parameter of type '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"'.
+src/components/AdminDashboard.broken.bak.tsx(440,52): error TS2367: This comparison appears to be unintentional because the types '"Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"New"' have no overlap.
+src/components/AdminDashboard.broken.bak.tsx(510,16): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"New"' have no overlap.
+src/components/AdminDashboard.broken.bak.tsx(741,86): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"Consultation Booked"' have no overlap.
+src/components/AdminDashboard.broken.bak.tsx(790,11): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"Treatment Started"' have no overlap.
+src/components/AdminDashboard.broken.bak.tsx(830,11): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"Treatment Started"' have no overlap.
+src/components/AdminDashboard.broken.bak.tsx(983,53): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"Treatment Started"' have no overlap.
+src/components/AdminDashboard.broken.bak.tsx(985,22): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"Treatment Started"' have no overlap.
+src/components/AdminDashboard.broken.bak.tsx(1192,10): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"New"' have no overlap.
+src/components/AdminDashboard.broken.bak.tsx(1600,38): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"New"' have no overlap.
+src/components/AdminDashboard.broken.bak.tsx(1601,43): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"New"' have no overlap.
+src/components/AdminDashboard.broken.bak.tsx(1606,44): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"Treatment Started"' have no overlap.
+src/components/AdminDashboard.broken.bak.tsx(1610,37): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Proposal Sent"' and '"Treatment Started"' have no overlap.
+src/components/AdminDashboard.broken.bak.tsx(1615,37): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Proposal Sent"' and '"Treatment Started"' have no overlap.
+src/components/AdminDashboard.broken.bak.tsx(1820,98): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"Treatment Started"' have no overlap.
+src/components/AdminDashboard.broken.bak.tsx(1870,94): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"Treatment Started"' have no overlap.
+src/components/AdminDashboard.broken.bak.tsx(3182,48): error TS2345: Argument of type '"Contacted"' is not assignable to parameter of type '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"'.
+src/components/AdminDashboard.clinical-premium.bak.tsx(431,52): error TS2367: This comparison appears to be unintentional because the types '"Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"New"' have no overlap.
+src/components/AdminDashboard.clinical-premium.bak.tsx(501,16): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"New"' have no overlap.
+src/components/AdminDashboard.clinical-premium.bak.tsx(732,86): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"Consultation Booked"' have no overlap.
+src/components/AdminDashboard.clinical-premium.bak.tsx(781,11): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"Treatment Started"' have no overlap.
+src/components/AdminDashboard.clinical-premium.bak.tsx(821,11): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"Treatment Started"' have no overlap.
+src/components/AdminDashboard.clinical-premium.bak.tsx(974,53): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"Treatment Started"' have no overlap.
+src/components/AdminDashboard.clinical-premium.bak.tsx(976,22): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"Treatment Started"' have no overlap.
+src/components/AdminDashboard.clinical-premium.bak.tsx(1183,10): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"New"' have no overlap.
+src/components/AdminDashboard.clinical-premium.bak.tsx(1591,38): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"New"' have no overlap.
+src/components/AdminDashboard.clinical-premium.bak.tsx(1592,43): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"New"' have no overlap.
+src/components/AdminDashboard.clinical-premium.bak.tsx(1597,44): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"Treatment Started"' have no overlap.
+src/components/AdminDashboard.clinical-premium.bak.tsx(1601,37): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Proposal Sent"' and '"Treatment Started"' have no overlap.
+src/components/AdminDashboard.clinical-premium.bak.tsx(1606,37): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Proposal Sent"' and '"Treatment Started"' have no overlap.
+src/components/AdminDashboard.clinical-premium.bak.tsx(1808,98): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"Treatment Started"' have no overlap.
+src/components/AdminDashboard.clinical-premium.bak.tsx(1858,94): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"Treatment Started"' have no overlap.
+src/components/AdminDashboard.clinical-premium.bak.tsx(3496,50): error TS2345: Argument of type '"Contacted"' is not assignable to parameter of type '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"'.
+src/components/AdminDashboard.design-refinement.bak.tsx(737,58): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"Scheduled"' have no overlap.
+src/components/AdminDashboard.design-refinement.bak.tsx(3681,50): error TS2345: Argument of type '"Scheduled"' is not assignable to parameter of type '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"'.
+src/components/AdminDashboard.neon-kpi.bak.tsx(872,58): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"Scheduled"' have no overlap.
+src/components/AdminDashboard.neon-kpi.bak.tsx(4147,50): error TS2345: Argument of type '"Scheduled"' is not assignable to parameter of type '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"'.
+src/components/AdminDashboard.sales-refactor.bak.tsx(424,52): error TS2367: This comparison appears to be unintentional because the types '"Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"Waitlisted"' have no overlap.
+src/components/AdminDashboard.sales-refactor.bak.tsx(736,58): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"Scheduled"' have no overlap.
+src/components/AdminDashboard.sales-refactor.bak.tsx(3680,50): error TS2345: Argument of type '"Scheduled"' is not assignable to parameter of type '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"'.
+src/components/AdminDashboard.tsx(889,58): error TS2367: This comparison appears to be unintentional because the types '"New Lead" | "Booked" | "Visited" | "Treated" | "Consultation Done" | "Sale Closed" | "Future Pipeline" | "Closed Won" | "Archived" | "Abandoned" | "Proposal Sent"' and '"Scheduled"' have no overlap.
+src/components/AdminDashboard.tsx(1282,9): error TS2451: Cannot redeclare block-scoped variable 'handleAddToWaitlist'.
+src/components/AdminDashboard.tsx(1808,9): error TS2451: Cannot redeclare block-scoped variable 'handleAddToWaitlist'.
+src/components/dashboard/tabs/LeadsTab.tsx(248,40): error TS2304: Cannot find name 'SERVICE_CONVERSION_VALUES'.
+supabase/functions/accept-invite/index.ts(1,30): error TS2307: Cannot find module 'jsr:@supabase/supabase-js@2' or its corresponding type declarations.
+supabase/functions/accept-invite/index.ts(3,21): error TS2304: Cannot find name 'Deno'.
+supabase/functions/accept-invite/index.ts(4,28): error TS2304: Cannot find name 'Deno'.
+supabase/functions/accept-invite/index.ts(6,1): error TS2304: Cannot find name 'Deno'.
+supabase/functions/broadcast-slot/index.ts(1,23): error TS2307: Cannot find module 'https://deno.land/std@0.168.0/http/server.ts' or its corresponding type declarations.
+supabase/functions/broadcast-slot/index.ts(2,30): error TS2307: Cannot find module 'https://esm.sh/@supabase/supabase-js@2' or its corresponding type declarations.
+supabase/functions/broadcast-slot/index.ts(18,13): error TS2304: Cannot find name 'Deno'.
+supabase/functions/broadcast-slot/index.ts(19,13): error TS2304: Cannot find name 'Deno'.
+supabase/functions/broadcast-waitlist/index.ts(1,23): error TS2307: Cannot find module 'https://deno.land/std@0.168.0/http/server.ts' or its corresponding type declarations.
+supabase/functions/broadcast-waitlist/index.ts(2,30): error TS2307: Cannot find module 'https://esm.sh/@supabase/supabase-js@2.39.8' or its corresponding type declarations.
+supabase/functions/broadcast-waitlist/index.ts(23,13): error TS2304: Cannot find name 'Deno'.
+supabase/functions/broadcast-waitlist/index.ts(24,13): error TS2304: Cannot find name 'Deno'.
+supabase/functions/capi-sync/index.ts(1,23): error TS2307: Cannot find module 'https://deno.land/std@0.168.0/http/server.ts' or its corresponding type declarations.
+supabase/functions/enable-auto-tracking/index.ts(11,1): error TS2304: Cannot find name 'Deno'.
+supabase/functions/enable-auto-tracking/index.ts(24,30): error TS2304: Cannot find name 'Deno'.
+supabase/functions/enable-auto-tracking/index.ts(25,38): error TS2304: Cannot find name 'Deno'.
+supabase/functions/google-oauth-callback/index.ts(9,1): error TS2304: Cannot find name 'Deno'.
+supabase/functions/google-oauth-callback/index.ts(15,26): error TS2304: Cannot find name 'Deno'.
+supabase/functions/google-oauth-callback/index.ts(21,23): error TS2304: Cannot find name 'Deno'.
+supabase/functions/google-oauth-callback/index.ts(22,27): error TS2304: Cannot find name 'Deno'.
+supabase/functions/google-oauth-callback/index.ts(23,29): error TS2304: Cannot find name 'Deno'.
+supabase/functions/google-oauth-callback/index.ts(24,26): error TS2304: Cannot find name 'Deno'.
+supabase/functions/google-oauth-callback/index.ts(25,34): error TS2304: Cannot find name 'Deno'.
+supabase/functions/meta-oauth-callback/index.ts(15,1): error TS2304: Cannot find name 'Deno'.
+supabase/functions/meta-oauth-callback/index.ts(21,26): error TS2304: Cannot find name 'Deno'.
+supabase/functions/meta-oauth-callback/index.ts(27,20): error TS2304: Cannot find name 'Deno'.
+supabase/functions/meta-oauth-callback/index.ts(28,24): error TS2304: Cannot find name 'Deno'.
+supabase/functions/meta-oauth-callback/index.ts(29,29): error TS2304: Cannot find name 'Deno'.
+supabase/functions/meta-oauth-callback/index.ts(31,26): error TS2304: Cannot find name 'Deno'.
+supabase/functions/meta-oauth-callback/index.ts(32,34): error TS2304: Cannot find name 'Deno'.
+supabase/functions/oauth-orchestrator/index.ts(2,30): error TS2307: Cannot find module 'https://esm.sh/@supabase/supabase-js@2' or its corresponding type declarations.
+supabase/functions/oauth-orchestrator/index.ts(4,22): error TS2304: Cannot find name 'Deno'.
+supabase/functions/oauth-orchestrator/index.ts(5,35): error TS2304: Cannot find name 'Deno'.
+supabase/functions/oauth-orchestrator/index.ts(8,24): error TS2304: Cannot find name 'Deno'.
+supabase/functions/oauth-orchestrator/index.ts(9,28): error TS2304: Cannot find name 'Deno'.
+supabase/functions/oauth-orchestrator/index.ts(10,26): error TS2304: Cannot find name 'Deno'.
+supabase/functions/oauth-orchestrator/index.ts(11,30): error TS2304: Cannot find name 'Deno'.
+supabase/functions/oauth-orchestrator/index.ts(18,1): error TS2304: Cannot find name 'Deno'.
+supabase/functions/retarget-webhook/index.ts(8,1): error TS2304: Cannot find name 'Deno'.
+supabase/functions/revenue-recovery/index.ts(1,23): error TS2307: Cannot find module 'https://deno.land/std@0.168.0/http/server.ts' or its corresponding type declarations.
+supabase/functions/revenue-recovery/index.ts(2,30): error TS2307: Cannot find module 'https://esm.sh/@supabase/supabase-js@2' or its corresponding type declarations.
+supabase/functions/revenue-recovery/index.ts(17,13): error TS2304: Cannot find name 'Deno'.
+supabase/functions/revenue-recovery/index.ts(18,13): error TS2304: Cannot find name 'Deno'.
+supabase/functions/score-lead-intent/index.ts(1,23): error TS2307: Cannot find module 'https://deno.land/std@0.168.0/http/server.ts' or its corresponding type declarations.
+supabase/functions/score-lead-intent/index.ts(2,30): error TS2307: Cannot find module 'https://esm.sh/@supabase/supabase-js@2' or its corresponding type declarations.
+supabase/functions/score-lead-intent/index.ts(19,13): error TS2304: Cannot find name 'Deno'.
+supabase/functions/score-lead-intent/index.ts(20,13): error TS2304: Cannot find name 'Deno'.
+supabase/functions/score-lead-intent/index.ts(40,44): error TS2304: Cannot find name 'Deno'.
+supabase/functions/send-notification/index.ts(3,24): error TS2304: Cannot find name 'Deno'.
+supabase/functions/send-notification/index.ts(4,21): error TS2304: Cannot find name 'Deno'.
+supabase/functions/send-notification/index.ts(7,1): error TS2304: Cannot find name 'Deno'.
+supabase/functions/send-pt-link/index.ts(3,24): error TS2304: Cannot find name 'Deno'.
+supabase/functions/send-pt-link/index.ts(6,1): error TS2304: Cannot find name 'Deno'.
+supabase/functions/send-review-request/index.ts(1,23): error TS2307: Cannot find module 'https://deno.land/std@0.168.0/http/server.ts' or its corresponding type declarations.
+supabase/functions/send-staff-invite/index.ts(5,1): error TS2304: Cannot find name 'Deno'.
+supabase/functions/send-staff-invite/index.ts(16,28): error TS2304: Cannot find name 'Deno'.
+supabase/functions/stripe-webhook/index.ts(2,30): error TS2307: Cannot find module 'https://esm.sh/@supabase/supabase-js@2.39.0' or its corresponding type declarations.
+supabase/functions/stripe-webhook/index.ts(4,31): error TS2304: Cannot find name 'Deno'.
+supabase/functions/stripe-webhook/index.ts(5,22): error TS2304: Cannot find name 'Deno'.
+supabase/functions/stripe-webhook/index.ts(6,35): error TS2304: Cannot find name 'Deno'.
+supabase/functions/stripe-webhook/index.ts(8,1): error TS2304: Cannot find name 'Deno'.
+supabase/functions/sync-ad-metrics/index.ts(12,1): error TS2304: Cannot find name 'Deno'.
+supabase/functions/sync-ad-metrics/index.ts(13,26): error TS2304: Cannot find name 'Deno'.
+supabase/functions/sync-ad-metrics/index.ts(14,34): error TS2304: Cannot find name 'Deno'.
+supabase/functions/sync-ad-metrics/index.ts(93,30): error TS2304: Cannot find name 'Deno'.
+supabase/functions/sync-ad-metrics/index.ts(94,34): error TS2304: Cannot find name 'Deno'.
+supabase/functions/sync-ad-metrics/index.ts(132,36): error TS2304: Cannot find name 'Deno'.
+supabase/functions/webhook-twilio/index.ts(1,23): error TS2307: Cannot find module 'https://deno.land/std@0.168.0/http/server.ts' or its corresponding type declarations.
+supabase/functions/webhook-twilio/index.ts(2,30): error TS2307: Cannot find module 'https://esm.sh/@supabase/supabase-js@2.39.3' or its corresponding type declarations.
+supabase/functions/webhook-twilio/index.ts(28,29): error TS2304: Cannot find name 'Deno'.
+supabase/functions/webhook-twilio/index.ts(29,36): error TS2304: Cannot find name 'Deno'.
+supabase/functions/webhook-whatsapp/index.ts(1,23): error TS2307: Cannot find module 'https://deno.land/std@0.168.0/http/server.ts' or its corresponding type declarations.
+supabase/functions/webhook-whatsapp/index.ts(2,30): error TS2307: Cannot find module 'https://esm.sh/@supabase/supabase-js@2.39.3' or its corresponding type declarations.
+supabase/functions/webhook-whatsapp/index.ts(25,55): error TS2304: Cannot find name 'Deno'.
+supabase/functions/webhook-whatsapp/index.ts(51,29): error TS2304: Cannot find name 'Deno'.
+supabase/functions/webhook-whatsapp/index.ts(52,36): error TS2304: Cannot find name 'Deno'.
+supabase/functions/whatsapp-ai-scorer/index.ts(1,23): error TS2307: Cannot find module 'https://deno.land/std@0.168.0/http/server.ts' or its corresponding type declarations.
+supabase/functions/whatsapp-ai-scorer/index.ts(2,30): error TS2307: Cannot find module 'https://esm.sh/@supabase/supabase-js@2' or its corresponding type declarations.
+supabase/functions/whatsapp-ai-scorer/index.ts(23,13): error TS2304: Cannot find name 'Deno'.
+supabase/functions/whatsapp-ai-scorer/index.ts(24,13): error TS2304: Cannot find name 'Deno'.
