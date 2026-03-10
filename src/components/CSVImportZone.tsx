@@ -22,9 +22,13 @@ export function CSVImportZone({ clinicId, onImportComplete }: CSVImportZoneProps
         let failCount = 0;
 
         const inserts = data.map((row, index) => {
-            // PII SCRUBBER: Extract raw values but NEVER save them as is
-            const rawName = row['Patient Name'] || row['Name'] || row['Patient'] || row['First Name'];
-            const serviceRaw = row['Treatment Type'] || row['Service'] || row['Treatment'] || 'General Checkup';
+            // PII SCRUBBER: Immediately define what we keep. 
+            // We EXCLUDE: 'Name', 'Phone', 'Email', 'DOB', 'Address'
+            // We EXTRACT: 'Potential Value', 'Status', 'TreatmentType'
+
+            const serviceRaw = row['TreatmentType'] || row['Treatment Type'] || row['Service'] || row['Treatment'] || 'General Checkup';
+            const potentialValue = parseFloat(row['Potential Value'] || row['Value'] || '0') || 0;
+            const statusRaw = row['Status'] || row['Lead Status'] || 'New Lead';
 
             // Generate pseudonym for privacy
             const pseudonym = `Patient #${1000 + index}`;
@@ -35,18 +39,14 @@ export function CSVImportZone({ clinicId, onImportComplete }: CSVImportZoneProps
             );
             const service = serviceMatch || "Dental Implants";
 
-            if (!rawName) {
-                failCount++;
-                return null;
-            }
-
             return {
                 clinic_id: clinicId,
-                name: pseudonym, // Local Scrubbing: Real name is never sent
-                email: "scrubbed@hanlan.private", // PII Redacted
-                phone: "Privacy Protected", // PII Redacted
+                name: pseudonym, // Local Scrubbing
+                email: "scrubbed@hanlan.private",
+                phone: "Privacy Protected",
                 service,
-                status: "New Lead",
+                status: statusRaw,
+                potential_value: potentialValue,
                 utm_source: "EXACT_CSV_IMPORT_SCRUBBED"
             };
         }).filter(Boolean);

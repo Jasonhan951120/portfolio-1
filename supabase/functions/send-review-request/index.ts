@@ -10,18 +10,31 @@ serve(async (req) => {
 
         if (payload.record && payload.record.status === 'Treated') {
             const patientName = payload.record.name || 'Patient';
-            console.log(`[Reputation Autopilot] Triggering automated review request for: ${patientName}`);
+            const clinicId = payload.record.clinic_id || 'default';
+            console.log(`[Reputation Autopilot] Triggering automated review request for: ${patientName} at clinic ${clinicId}`);
 
-            // Simulate SMS/WhatsApp send
-            const message = `Hi ${patientName}, it was great seeing you! If you loved your treatment, we'd appreciate a quick Google review: https://g.page/r/clinic-link/review`;
+            // Simulate WhatsApp Business API payload
+            const whatsappPayload = {
+                messaging_product: "whatsapp",
+                to: payload.record.whatsapp_number || payload.record.phone || "00000000",
+                type: "template",
+                template: {
+                    name: "luxury_review_request",
+                    language: { code: "en_GB" },
+                    components: [
+                        { type: "body", parameters: [{ type: "text", text: patientName }] }
+                    ]
+                }
+            };
 
-            // In a real scenario, integrate twilio or whatsapp cloud API here.
+            const simulatedMessage = `[WhatsApp API Log] Sent Template: "Hi ${patientName}, it was a pleasure welcoming you to the clinic. If you loved your clinical experience, we would be honoured by a Google review: https://g.page/r/clinic-link/review"`;
+            console.log(simulatedMessage);
 
             return new Response(
                 JSON.stringify({
                     success: true,
-                    action: "sent_review_request",
-                    message: message,
+                    action: "whatsapp_review_requested",
+                    payload: whatsappPayload,
                     timestamp: new Date().toISOString()
                 }),
                 { headers: { "Content-Type": "application/json" } },

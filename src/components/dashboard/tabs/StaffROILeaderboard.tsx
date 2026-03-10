@@ -93,7 +93,7 @@ export const StaffROILeaderboard: React.FC<StaffROILeaderboardProps> = ({ clinic
     }
 
     return (
-        <div className="bg-[#1A1C1E] rounded-[32px] p-8 border border-white/5 shadow-2xl relative overflow-hidden group">
+        <div className="bg-slate-900/40 backdrop-blur-2xl rounded-[2.5rem] p-8 border border-slate-800/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden group">
             {/* Background Glow */}
             <div className="absolute -top-24 -right-24 w-64 h-64 bg-[#87A96B]/5 blur-[100px] rounded-full group-hover:bg-[#87A96B]/10 transition-colors duration-1000" />
 
@@ -124,8 +124,8 @@ export const StaffROILeaderboard: React.FC<StaffROILeaderboardProps> = ({ clinic
                                 exit={{ opacity: 0, scale: 0.95 }}
                                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
                                 className={`p-5 rounded-2xl border transition-all duration-500 ${isTop
-                                    ? 'bg-gradient-to-r from-[#87A96B]/10 to-transparent border-[#87A96B]/30 shadow-[0_0_20px_rgba(135,169,107,0.1)]'
-                                    : 'bg-white/[0.02] border-white/5 hover:border-white/10'
+                                    ? 'bg-gradient-to-r from-emerald-400/10 to-transparent border-emerald-400/20 shadow-[0_0_20px_rgba(16,185,129,0.1)]'
+                                    : 'bg-slate-800/20 border-slate-700/50 hover:border-slate-700'
                                     }`}
                             >
                                 <div className="flex items-center justify-between">

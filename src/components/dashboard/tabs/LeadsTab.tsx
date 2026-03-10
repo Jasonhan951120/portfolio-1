@@ -73,6 +73,14 @@ export function LeadsTab({
 }: LeadsTabProps) {
     const activeLead = activeId ? (leads.find(l => l.id === activeId) || null) : null;
 
+    // Revenue at Risk Calculation (Logic matching the SQL view created)
+    const atRiskLeads = activeLeads.filter(l => {
+        if (l.status === 'Closed Won' || l.status === 'Abandoned') return false;
+        const diffHours = (Date.now() - new Date(l.updated_at || l.created_at).getTime()) / 3600000;
+        return diffHours > 48;
+    });
+    const atRiskValue = atRiskLeads.reduce((sum, l) => sum + (Number(l.potential_value) || 0), 0);
+
     return (
         <DndContext
             sensors={sensors}
@@ -123,6 +131,42 @@ export function LeadsTab({
 
                 {/* Intelligence Sidebar - Right Column */}
                 <div className="lg:col-span-3 space-y-8">
+
+                    {/* LEADS AT RISK PULSE UI */}
+                    <AnimatePresence>
+                        {atRiskLeads.length > 0 && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.95 }}
+                                className="p-6 bg-red-50/80 rounded-[32px] border border-red-100/50 flex flex-col gap-4 relative overflow-hidden group hover:bg-red-50 transition-colors shadow-[0_8px_30px_rgb(239,68,68,0.05)]"
+                            >
+                                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                                    <TrendingUp className="w-32 h-32 text-red-500 rotate-180" />
+                                </div>
+
+                                <div className="flex items-center gap-3 relative z-10">
+                                    <div className="w-10 h-10 rounded-2xl bg-red-100/80 flex items-center justify-center flex-shrink-0 border border-red-200/50 relative">
+                                        <div className="absolute inset-0 rounded-2xl border-2 border-red-400/30 animate-ping"></div>
+                                        <Clock className="w-5 h-5 text-red-600" />
+                                    </div>
+                                    <div>
+                                        <h4 className="text-[10px] font-bold text-red-600 uppercase tracking-widest mb-0.5 flex items-center gap-2">
+                                            Revenue at Risk
+                                            <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
+                                        </h4>
+                                        <div className="text-2xl font-black text-red-900 tabular-nums tracking-tighter">
+                                            £{atRiskValue.toLocaleString()}
+                                        </div>
+                                    </div>
+                                </div>
+                                <p className="text-xs text-red-800/80 font-medium relative z-10 leading-relaxed border-t border-red-200/50 pt-3">
+                                    <span className="font-bold text-red-700">{atRiskLeads.length} Patients</span> stagnant for &gt;48h. Action required to prevent revenue decay.
+                                </p>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
                     {/* Revenue Potential Card */}
                     <div className="bg-white border border-[rgba(0,0,0,0.04)] rounded-[40px] p-10 shadow-[0_1px_2px_rgba(0,0,0,0.02),_0_8px_24px_-4px_rgba(0,0,0,0.04)]">
                         <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-8">Revenue Distribution</h3>

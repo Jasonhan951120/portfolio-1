@@ -57,16 +57,16 @@ export const TreatmentDetailDrawer: React.FC<TreatmentDetailDrawerProps> = ({
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="fixed inset-0 z-[6000] bg-slate-900/20 backdrop-blur-sm"
+                        className="fixed inset-0 z-[6000] bg-slate-900/40 backdrop-blur-md"
                     />
 
                     {/* Drawer */}
                     <motion.div
-                        initial={{ x: '100%' }}
-                        animate={{ x: 0 }}
-                        exit={{ x: '100%' }}
-                        transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                        className="fixed top-0 right-0 h-screen w-full max-w-[500px] bg-white shadow-2xl z-[6001] flex flex-col rounded-l-3xl overflow-hidden"
+                        initial={{ x: '100%', opacity: 0.5 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        exit={{ x: '100%', opacity: 0.5 }}
+                        transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+                        className="fixed top-0 right-0 h-screen w-full max-w-[500px] bg-white/95 backdrop-blur-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] z-[6001] flex flex-col rounded-l-[2.5rem] overflow-hidden border-l border-white/20"
                     >
                         {/* Header */}
                         <div className="p-8 pb-4 flex justify-between items-start">

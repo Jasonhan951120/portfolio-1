@@ -1,4 +1,4 @@
-export const KANBAN_COLUMNS = ["New Lead", "Qualified", "Proposal Sent", "Closed Won", "Abandoned", "Future Pipeline"];
+export const KANBAN_COLUMNS = ["New Lead", "Booked", "Proposal Sent", "Closed Won", "Abandoned", "Future Pipeline"];
 
 export const SERVICE_CONVERSION_VALUES: Record<string, number> = {
     "Dental Implants": 3500,
@@ -21,7 +21,7 @@ export const DONUT_SEGMENTS = [
 
 export const STATUS_COLORS: Record<string, string> = {
     "New Lead": "text-[#C5A059] border-[#C5A059]/40 bg-[#C5A059]/10",
-    "Qualified": "text-purple-400 border-purple-400/40 bg-transparent",
+    "Booked": "text-purple-400 border-purple-400/40 bg-purple-400/10",
     "Proposal Sent": "text-yellow-400 border-yellow-400/40 bg-yellow-400/10",
     "Closed Won": "text-[#87A96B] border-[#87A96B]/40 bg-[#87A96B]/10",
     "Abandoned": "text-gray-400 border-black/10 bg-black/5",

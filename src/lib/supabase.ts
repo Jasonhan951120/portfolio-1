@@ -44,8 +44,9 @@ export type ConsultationRequest = {
     phone: string;
     service: string;
     notes: string | null;
-    status: "New Lead" | "Qualified" | "Proposal Sent" | "Closed Won" | "Abandoned" | "Future Pipeline" | "Archived" | "Scheduled" | "Consultation Done" | "Sale Closed";
+    status: "New Lead" | "Booked" | "Proposal Sent" | "Closed Won" | "Abandoned" | "Future Pipeline" | "Archived" | "Consultation Done" | "Sale Closed";
     created_at: string;
+    updated_at?: string;
     first_contact_at?: string;
     review_requested_at?: string;
     assigned_to?: string;
