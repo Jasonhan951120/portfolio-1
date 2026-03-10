@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Users, TrendingUp, Zap, Globe, Sparkles, Activity } from 'lucide-react';
+import { Users, TrendingUp, Zap, Globe, Sparkles, Activity, RefreshCw, Check } from 'lucide-react';
 
 interface LiveTrackingHeaderProps {
     metrics: {
@@ -9,10 +9,14 @@ interface LiveTrackingHeaderProps {
         conversionRate: number;
         liveLeads: number;
     };
+    onSync?: () => Promise<void>;
 }
 
-export function LiveTrackingHeader({ metrics }: LiveTrackingHeaderProps) {
+type SyncState = 'idle' | 'syncing' | 'success';
+
+export function LiveTrackingHeader({ metrics, onSync }: LiveTrackingHeaderProps) {
     const [pulse, setPulse] = useState(false);
+    const [syncState, setSyncState] = useState<SyncState>('idle');
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -20,6 +24,19 @@ export function LiveTrackingHeader({ metrics }: LiveTrackingHeaderProps) {
         }, 2000);
         return () => clearInterval(interval);
     }, []);
+
+    const handleSync = async () => {
+        if (syncState !== 'idle') return;
+        setSyncState('syncing');
+        try {
+            if (onSync) await onSync();
+            else await new Promise(r => setTimeout(r, 1800)); // Demo delay
+        } catch (e) {
+            console.error("Sync error:", e);
+        }
+        setSyncState('success');
+        setTimeout(() => setSyncState('idle'), 2500);
+    };
 
     const stats = [
         {
@@ -36,7 +53,8 @@ export function LiveTrackingHeader({ metrics }: LiveTrackingHeaderProps) {
             icon: TrendingUp,
             color: "text-[#87A96B]",
             bg: "bg-[#87A96B]/10",
-            sub: "Today's stream"
+            sub: "Today's stream",
+            tabular: true
         },
         {
             label: "Conversion",
@@ -99,24 +117,74 @@ export function LiveTrackingHeader({ metrics }: LiveTrackingHeaderProps) {
                                     <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{stat.label}</span>
                                 </div>
                                 <div className="flex flex-col">
-                                    <span className="text-lg font-bold text-gray-900 tracking-tight">{stat.value}</span>
+                                    <span className={`text-lg font-bold text-gray-900 tracking-tight ${stat.tabular ? 'tabular-nums' : ''}`}>{stat.value}</span>
                                     <span className="text-[9px] text-gray-400 font-bold uppercase tracking-tighter">{stat.sub}</span>
                                 </div>
                             </motion.div>
                         ))}
                     </div>
 
-                    <div className="hidden xl:flex items-center gap-3 px-6 py-4 bg-gray-900 rounded-2xl shadow-xl shadow-black/5">
-                        <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-[#87A96B]">
-                            <Sparkles className="w-4 h-4" />
-                        </div>
-                        <div>
-                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">AI Suggestion</p>
-                            <p className="text-[11px] text-white font-medium pr-4">Increase Meta spend by 15%</p>
-                        </div>
+                    {/* ── SYNC BUTTON: AnimatePresence State Machine ─────────────────── */}
+                    <div className="hidden xl:flex items-center gap-3">
+                        <button
+                            onClick={handleSync}
+                            disabled={syncState !== 'idle'}
+                            className="relative overflow-hidden px-5 py-3 rounded-2xl bg-gray-900 shadow-xl shadow-black/5 flex items-center gap-3 group/sync disabled:cursor-not-allowed select-none"
+                        >
+                            {/* Green ripple expand on success */}
+                            <AnimatePresence>
+                                {syncState === 'success' && (
+                                    <motion.div
+                                        key="ripple"
+                                        initial={{ scale: 0, opacity: 0.7 }}
+                                        animate={{ scale: 4, opacity: 0 }}
+                                        exit={{ opacity: 0 }}
+                                        transition={{ duration: 0.8, ease: "easeOut" }}
+                                        className="absolute inset-0 m-auto w-8 h-8 rounded-full bg-emerald-400 pointer-events-none"
+                                    />
+                                )}
+                            </AnimatePresence>
+
+                            {/* Icon state machine */}
+                            <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-[#87A96B] relative overflow-hidden">
+                                <AnimatePresence mode="wait">
+                                    {syncState === 'idle' && (
+                                        <motion.div key="idle" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.15 }}>
+                                            <Sparkles className="w-4 h-4" />
+                                        </motion.div>
+                                    )}
+                                    {syncState === 'syncing' && (
+                                        <motion.div key="syncing" initial={{ opacity: 0, rotate: -90 }} animate={{ opacity: 1, rotate: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
+                                            <RefreshCw className="w-4 h-4 text-blue-300 animate-spin" />
+                                        </motion.div>
+                                    )}
+                                    {syncState === 'success' && (
+                                        <motion.div key="success" initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ type: "spring", stiffness: 500, damping: 20 }}>
+                                            <Check className="w-4 h-4 text-emerald-400" strokeWidth={3} />
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
+
+                            {/* Label state machine */}
+                            <div className="relative overflow-hidden h-5 w-24">
+                                <AnimatePresence mode="wait">
+                                    {syncState === 'idle' && (
+                                        <motion.p key="l-idle" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -20, opacity: 0 }} transition={{ duration: 0.15 }} className="text-[10px] text-white font-bold absolute uppercase tracking-widest whitespace-nowrap">Sync Dashboard</motion.p>
+                                    )}
+                                    {syncState === 'syncing' && (
+                                        <motion.p key="l-sync" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -20, opacity: 0 }} transition={{ duration: 0.15 }} className="text-[10px] text-blue-300 font-bold absolute uppercase tracking-widest whitespace-nowrap">Syncing...</motion.p>
+                                    )}
+                                    {syncState === 'success' && (
+                                        <motion.p key="l-ok" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -20, opacity: 0 }} transition={{ duration: 0.15 }} className="text-[10px] text-emerald-400 font-bold absolute uppercase tracking-widest whitespace-nowrap">All Synced!</motion.p>
+                                    )}
+                                </AnimatePresence>
+                            </div>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     );
 }
+

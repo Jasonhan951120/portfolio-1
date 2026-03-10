@@ -221,29 +221,43 @@ export function LeadsTab({
                 </div>
             </div>
 
-            <DragOverlay dropAnimation={{
-                sideEffects: defaultDropAnimationSideEffects({
-                    styles: {
-                        active: {
-                            opacity: '0.5',
+            <DragOverlay
+                dropAnimation={{
+                    sideEffects: defaultDropAnimationSideEffects({
+                        styles: {
+                            active: {
+                                opacity: '0.4',
+                            },
                         },
-                    },
-                }),
-            }}>
+                    }),
+                }}
+            >
                 {activeLead ? (
-                    <div className="w-[300px] pointer-events-none rotate-3">
-                        <div className="bg-white p-5 rounded-3xl border border-black/5 shadow-2xl">
-                            <div className="flex justify-between items-start mb-2">
-                                <h4 className="font-bold text-gray-900">{activeLead.name}</h4>
-                                <span className="text-[10px] font-black text-[#87A96B] uppercase tracking-tighter">
-                                    £{(DONUT_SEGMENTS.find(s => activeLead.service.includes(s.label))?.count || 1000).toLocaleString()}
+                    <motion.div
+                        initial={{ scale: 1.05, rotate: 2 }}
+                        animate={{ scale: 1.05, rotate: 2 }}
+                        className="w-[300px] pointer-events-none"
+                        style={{ filter: "drop-shadow(0 25px 50px rgba(0,0,0,0.18))" }}
+                    >
+                        <div className="bg-white p-5 rounded-[24px] border border-black/8 shadow-2xl relative overflow-hidden">
+                            {/* Shimmer accent */}
+                            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#87A96B]/60 to-transparent" />
+                            <div className="flex justify-between items-start mb-3">
+                                <h4 className="font-bold text-gray-900 text-sm tracking-tight" data-hj-suppress>{activeLead.name}</h4>
+                                <span className="text-[10px] font-black text-[#87A96B] tabular-nums bg-[#87A96B]/10 px-2 py-0.5 rounded-lg border border-[#87A96B]/20">
+                                    £{(SERVICE_CONVERSION_VALUES[activeLead.service] || 1000).toLocaleString()}
                                 </span>
                             </div>
-                            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{activeLead.service}</p>
+                            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-3">{activeLead.service}</p>
+                            <div className="flex items-center gap-2">
+                                <div className="w-2 h-2 rounded-full bg-[#87A96B] animate-pulse" />
+                                <span className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Dragging...</span>
+                            </div>
                         </div>
-                    </div>
+                    </motion.div>
                 ) : null}
             </DragOverlay>
+
         </DndContext>
     );
 }
