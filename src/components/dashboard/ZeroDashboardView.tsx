@@ -168,8 +168,8 @@ function HotLeadCard({
                             w-full font-black uppercase tracking-widest py-7 rounded-[28px]
                             transition-all duration-600 flex items-center justify-center gap-3 text-sm
                             ${sent
-                                ? 'bg-emerald-500 text-white cursor-default shadow-[0_0_50px_rgba(16,185,129,0.5)]'
-                                : 'bg-white text-gray-900 hover:bg-gray-50 shadow-[0_20px_60px_rgba(255,255,255,0.12)] hover:shadow-[0_24px_70px_rgba(255,255,255,0.18)]'
+                                ? 'bg-[#10B981] text-white cursor-default shadow-[0_0_50px_rgba(16,185,129,0.5)]'
+                                : 'bg-white text-gray-900 border border-transparent hover:border-emerald-400/50 shadow-[0_20px_60px_rgba(255,255,255,0.12)] hover:shadow-[0_20px_60px_rgba(255,255,255,0.18),inset_0_0_20px_rgba(16,185,129,0.3)]'
                             }
                         `}
                     >
@@ -292,12 +292,12 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
                                 🎉 Pipeline Clear — Today's Total
                             </p>
                             <div
-                                className="font-black tabular-nums leading-none text-emerald-400 tracking-tighter"
-                                style={{ fontSize: 'clamp(4.5rem, 16vw, 9rem)' }}
+                                className="font-black tabular-nums leading-none text-white tracking-tighter"
+                                style={{ fontSize: 'clamp(5.5rem, 18vw, 10rem)', letterSpacing: '-0.04em' }}
                             >
                                 £{totalSecured.toLocaleString()}
                             </div>
-                            <p className="text-emerald-500/60 font-black text-xs uppercase tracking-[0.3em] mt-5">
+                            <p className="text-emerald-500 font-black text-xs uppercase tracking-[0.4em] mt-5">
                                 Revenue Secured ↗
                             </p>
                         </motion.div>
@@ -311,8 +311,8 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
                                 ⚠ Money At Risk Today
                             </p>
                             <div
-                                className="font-black tabular-nums leading-none text-white tracking-tighter drop-shadow-2xl"
-                                style={{ fontSize: 'clamp(4.5rem, 16vw, 9rem)' }}
+                                className="font-black tabular-nums leading-none text-white drop-shadow-2xl"
+                                style={{ fontSize: 'clamp(5.5rem, 18vw, 10rem)', letterSpacing: '-0.04em' }}
                             >
                                 £{totalAtRisk.toLocaleString()}
                             </div>
@@ -354,7 +354,7 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
                                 <motion.div
                                     className="absolute inset-x-0 h-full bg-[#161616] border border-white/[0.05] rounded-[56px] -z-10 shadow-xl"
                                     initial={false}
-                                    animate={{ scale: 0.95, y: 15, opacity: 0.5 }}
+                                    animate={{ scale: 0.95, y: 16, opacity: 0.5 }}
                                     transition={{ type: "spring", stiffness: 300, damping: 25 }}
                                 />
                             )}
@@ -362,7 +362,7 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
                                 <motion.div
                                     className="absolute inset-x-0 h-full bg-[#121212] border border-white/[0.03] rounded-[56px] -z-20 shadow-2xl"
                                     initial={false}
-                                    animate={{ scale: 0.90, y: 30, opacity: 0.2 }}
+                                    animate={{ scale: 0.90, y: 32, opacity: 0.2 }}
                                     transition={{ type: "spring", stiffness: 300, damping: 25 }}
                                 />
                             )}
