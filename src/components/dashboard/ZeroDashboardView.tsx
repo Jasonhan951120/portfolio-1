@@ -2,22 +2,13 @@ import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ConsultationRequest } from '../../lib/supabase';
 import { SERVICE_CONVERSION_VALUES } from '../../lib/constants';
-import { MessageCircle, Send, X, Cloud, Sparkles, AlertTriangle, ArrowUp, ChevronDown } from 'lucide-react';
+import { MessageCircle, Send, X, Sparkles, CheckCircle } from 'lucide-react';
 import { CSVImportZone } from '../CSVImportZone';
 import confetti from 'canvas-confetti';
 
-const Shield = ({ className }: { className?: string }) => (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-.856.12-1.685.344-2.47" />
-    </svg>
-);
-
-const CheckCircle2 = ({ className, strokeWidth = 3 }: { className?: string; strokeWidth?: number }) => (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={strokeWidth}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-    </svg>
-);
-
+// ─────────────────────────────────────────────────────────────────────────────
+// TYPES
+// ─────────────────────────────────────────────────────────────────────────────
 interface ZeroDashboardViewProps {
     leads: ConsultationRequest[];
     clinicId: string;
@@ -26,201 +17,328 @@ interface ZeroDashboardViewProps {
     onImportComplete: () => void;
 }
 
-// ──────────────────────────────────────────────────────────
-// 1. FORCED WORKFLOW CARD (Dopamine-Driven Action)
-// ──────────────────────────────────────────────────────────
-function DecisionCard({ 
-    lead, 
-    onAction, 
-    onNext 
-}: { 
-    lead: ConsultationRequest, 
-    onAction: (l: ConsultationRequest) => void, 
-    onNext: () => void 
+// ─────────────────────────────────────────────────────────────────────────────
+// HOT LEAD CARD  (Loss Aversion → Dopamine Reward state machine)
+// ─────────────────────────────────────────────────────────────────────────────
+function HotLeadCard({
+    lead,
+    onSend,
+    onSkip,
+}: {
+    lead: ConsultationRequest;
+    onSend: (l: ConsultationRequest) => void;
+    onSkip: () => void;
 }) {
+    const [sent, setSent] = useState(false);
     const value = lead.potential_value || SERVICE_CONVERSION_VALUES[lead.service] || 1000;
-    const isVIP = lead.intent_score && lead.intent_score >= 80;
+    const isVIP = (lead.intent_score ?? 0) >= 80;
 
-    const triggerSuccess = () => {
-        confetti({
-            particleCount: 150,
-            spread: 70,
-            origin: { y: 0.6 },
-            colors: ['#00FFA3', '#87A96B', '#ffffff']
-        });
-        onAction(lead);
+    const handleSend = () => {
+        if (sent) return;
+
+        // 1. CONFETTI – full-screen explosion
+        confetti({ particleCount: 200, spread: 80, origin: { y: 0.55 }, colors: ['#10b981', '#34d399', '#ffffff', '#fde047'] });
+        setTimeout(() => confetti({ particleCount: 80, spread: 120, origin: { y: 0.4 }, colors: ['#10b981', '#6ee7b7'] }), 300);
+
+        // 2. Flip state → reward
+        setSent(true);
+        onSend(lead);
     };
 
     return (
         <motion.div
             key={lead.id}
-            initial={{ opacity: 0, y: 100, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.5, filter: 'blur(20px)', transition: { duration: 0.4 } }}
-            className="w-full max-w-[450px] aspect-[3/4] bg-white rounded-[64px] p-12 relative shadow-[0_40px_100px_rgba(0,0,0,0.08)] border border-black/5 flex flex-col justify-between overflow-hidden"
+            initial={{ opacity: 0, scale: 0.85, y: 60 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.7, y: -60, filter: 'blur(12px)' }}
+            transition={{ type: 'spring', stiffness: 280, damping: 26 }}
+            className={`
+                relative w-full max-w-[440px] bg-[#1E1E1E] rounded-[52px] p-10
+                flex flex-col justify-between
+                border-2 transition-all duration-700
+                ${sent
+                    ? 'border-emerald-500/60 shadow-[0_0_40px_rgba(16,185,129,0.25)]'
+                    : 'border-red-500/40 shadow-[0_0_20px_rgba(239,68,68,0.35),0_40px_80px_rgba(0,0,0,0.6)]'
+                }
+            `}
+            style={{ minHeight: 480 }}
         >
-            {/* Urgency Pulse */}
-            <div className="absolute inset-0 rounded-[64px] border-4 border-[#00FFA3]/20 animate-pulse pointer-events-none" />
-            
+            {/* Red urgency pulse ring – disappears when sent */}
+            {!sent && (
+                <div className="absolute inset-0 rounded-[52px] border-2 border-red-500/30 animate-pulse pointer-events-none" />
+            )}
+            {/* Green success glow ring */}
+            {sent && (
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="absolute inset-0 rounded-[52px] border-2 border-emerald-500/50 pointer-events-none"
+                />
+            )}
+
+            {/* ── HEADER ── */}
             <div className="relative z-10">
-                <div className="flex justify-between items-start mb-8">
-                    <div className="space-y-1">
-                        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#87A96B]">Urgent Opportunity</p>
-                        <h3 className="text-4xl font-black text-gray-900 tracking-tight leading-tight">{lead.name}</h3>
+                <div className="flex justify-between items-start mb-6">
+                    <div>
+                        <p className={`text-[9px] font-black uppercase tracking-[0.35em] mb-2 ${sent ? 'text-emerald-400' : 'text-red-400'}`}>
+                            {sent ? '✓ Action Taken' : '⚡ Urgent Action Required'}
+                        </p>
+                        <h3 className="text-3xl font-black text-white tracking-tight leading-tight">{lead.name}</h3>
+                        <p className="text-gray-500 text-xs font-bold uppercase tracking-widest mt-1">{lead.service}</p>
                     </div>
                     {isVIP && (
-                        <div className="p-3 bg-amber-100 rounded-2xl">
-                            <Sparkles className="w-5 h-5 text-amber-600" />
+                        <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-2xl">
+                            <Sparkles className="w-5 h-5 text-amber-400" />
                         </div>
                     )}
                 </div>
 
-                <div className="mb-10">
-                    <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-2">{lead.service}</p>
-                    <p className="text-gray-900 font-black text-6xl tabular-nums tracking-tighter">
+                {/* ── POTENTIAL VALUE ── */}
+                <div className="mb-8">
+                    <p className="text-gray-600 text-[9px] font-black uppercase tracking-[0.25em] mb-1">Potential Revenue</p>
+                    <p className={`font-black text-5xl tabular-nums tracking-tighter transition-colors duration-700 ${sent ? 'text-emerald-400' : 'text-white'}`}>
                         £{value.toLocaleString()}
                     </p>
-                    {lead.intent_score && (
-                        <div className="mt-4 inline-flex items-center gap-2 px-3 py-1 bg-[#00FFA3]/10 text-[#008F5B] rounded-full text-[10px] font-black uppercase tracking-widest">
-                            <Shield className="w-3 h-3" /> AI Intent: {lead.intent_score}%
+                    {lead.intent_score != null && (
+                        <div className={`mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all duration-700 ${sent ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-red-500/10 border-red-500/20 text-red-400'}`}>
+                            AI Intent: {lead.intent_score}%
                         </div>
                     )}
                 </div>
-                
+
                 {lead.ai_summary && (
-                    <div className="bg-gray-50 p-6 rounded-[32px] border border-black/5">
-                        <p className="text-sm text-gray-600 leading-relaxed font-medium italic">
-                            "{lead.ai_summary}"
-                        </p>
+                    <div className="bg-white/5 p-5 rounded-[28px] border border-white/8">
+                        <p className="text-xs text-gray-400 leading-relaxed italic">"{lead.ai_summary}"</p>
                     </div>
                 )}
             </div>
 
-            <div className="space-y-4 relative z-10">
-                <button 
-                    onClick={triggerSuccess}
-                    className="w-full bg-gray-900 hover:bg-black text-white font-black uppercase tracking-widest py-7 rounded-[32px] transition-all transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-3 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)]"
+            {/* ── CTA ── */}
+            <div className="space-y-3 relative z-10 mt-8">
+                <motion.button
+                    whileHover={!sent ? { scale: 1.02 } : {}}
+                    whileTap={!sent ? { scale: 0.97 } : {}}
+                    onClick={handleSend}
+                    disabled={sent}
+                    className={`
+                        w-full font-black uppercase tracking-widest py-6 rounded-[28px]
+                        transition-all duration-500 flex items-center justify-center gap-3 text-sm
+                        ${sent
+                            ? 'bg-emerald-500 text-white cursor-default shadow-[0_0_40px_rgba(16,185,129,0.4)]'
+                            : 'bg-white text-gray-900 hover:bg-gray-100 shadow-[0_20px_50px_rgba(255,255,255,0.1)]'
+                        }
+                    `}
                 >
-                    <MessageCircle className="w-6 h-6 text-[#00FFA3]" /> Send WhatsApp
-                </button>
-                <button 
-                    onClick={onNext}
-                    className="w-full text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-gray-900 py-2 transition-colors"
-                >
-                    Skip to Next
-                </button>
+                    {sent ? (
+                        <><CheckCircle className="w-5 h-5" /> Sent Successfully</>
+                    ) : (
+                        <><MessageCircle className="w-5 h-5" /> Send WhatsApp AI Draft</>
+                    )}
+                </motion.button>
+
+                {!sent && (
+                    <button
+                        onClick={onSkip}
+                        className="w-full text-[9px] font-black uppercase tracking-[0.2em] text-gray-600 hover:text-gray-400 py-2 transition-colors"
+                    >
+                        Skip to Next →
+                    </button>
+                )}
             </div>
         </motion.div>
     );
 }
 
-// ──────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
 // MAIN COMPONENT
-// ──────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
 export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, onImportComplete }: ZeroDashboardViewProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [sentLeads, setSentLeads] = useState<Set<string>>(new Set());
     const [whatsappModalLead, setWhatsappModalLead] = useState<ConsultationRequest | null>(null);
 
-    const activeLeads = useMemo(() => {
-        return leads
-            .filter(l => l.status === "New Lead")
-            .sort((a, b) => (b.intent_score || 0) - (a.intent_score || 0));
-    }, [leads]);
+    const activeLeads = useMemo(() =>
+        leads
+            .filter(l => l.status === 'New Lead')
+            .sort((a, b) => (b.intent_score ?? 0) - (a.intent_score ?? 0)),
+        [leads]
+    );
 
+    // Loss aversion metric
+    const totalAtRisk = useMemo(() =>
+        activeLeads.reduce((sum, l) => sum + (l.potential_value || SERVICE_CONVERSION_VALUES[l.service] || 1000), 0),
+        [activeLeads]
+    );
+
+    const totalSecured = useMemo(() =>
+        activeLeads
+            .filter(l => sentLeads.has(l.id))
+            .reduce((sum, l) => sum + (l.potential_value || SERVICE_CONVERSION_VALUES[l.service] || 1000), 0),
+        [activeLeads, sentLeads]
+    );
+
+    const allSent = sentLeads.size > 0 && sentLeads.size >= activeLeads.length;
     const currentLead = activeLeads[currentIndex];
 
-    const handleNext = () => {
-        if (currentIndex < activeLeads.length - 1) {
-            setCurrentIndex(prev => prev + 1);
-        } else {
-            setCurrentIndex(0);
-        }
+    const handleSend = (lead: ConsultationRequest) => {
+        setSentLeads(prev => new Set([...prev, lead.id]));
+        setWhatsappModalLead(lead);
     };
 
+    const handleNext = () => {
+        setCurrentIndex(prev => (prev < activeLeads.length - 1 ? prev + 1 : 0));
+    };
+
+    const heroState = allSent ? 'secured' : totalSecured > 0 ? 'partial' : 'risk';
+
     return (
-        <div className="max-w-4xl mx-auto py-12">
-            <div className="flex flex-col items-center justify-center space-y-12">
-                
+        <div className="min-h-screen bg-[#121212] flex flex-col items-center justify-center px-6 py-16 relative overflow-hidden">
+
+            {/* Ambient gradient */}
+            <div className={`absolute inset-0 pointer-events-none transition-all duration-1000 ${heroState === 'secured' ? 'bg-[radial-gradient(ellipse_at_center,rgba(16,185,129,0.08),transparent_65%)]' : 'bg-[radial-gradient(ellipse_at_top,rgba(239,68,68,0.07),transparent_65%)]'}`} />
+
+            {/* ── HERO METRIC ── */}
+            <motion.div
+                layout
+                className="text-center mb-14 relative z-10"
+            >
+                <AnimatePresence mode="wait">
+                    {heroState === 'secured' ? (
+                        <motion.div
+                            key="secured"
+                            initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            transition={{ type: 'spring', stiffness: 300, damping: 22 }}
+                        >
+                            <p className="text-[9px] font-black uppercase tracking-[0.4em] text-emerald-500 mb-4">
+                                🎉 Pipeline Clear
+                            </p>
+                            <div className="font-black tabular-nums leading-none text-emerald-400"
+                                style={{ fontSize: 'clamp(3rem, 12vw, 7rem)' }}>
+                                £{totalSecured.toLocaleString()}
+                            </div>
+                            <p className="text-emerald-500/70 font-black text-sm uppercase tracking-widest mt-3">
+                                Revenue Secured
+                            </p>
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            key="risk"
+                            initial={{ opacity: 0, scale: 0.8, y: -20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                        >
+                            <p className="text-[9px] font-black uppercase tracking-[0.4em] text-red-400/80 mb-4">
+                                ⚠️ Money At Risk Today
+                            </p>
+                            <div className="font-black tabular-nums leading-none text-white"
+                                style={{ fontSize: 'clamp(3rem, 12vw, 7rem)' }}>
+                                £{totalAtRisk.toLocaleString()}
+                            </div>
+                            {totalSecured > 0 && (
+                                <p className="text-emerald-400/70 font-bold text-sm mt-3">
+                                    £{totalSecured.toLocaleString()} secured so far ↗
+                                </p>
+                            )}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </motion.div>
+
+            {/* ── CARD STACK ── */}
+            <div className="relative z-10 flex flex-col items-center w-full">
                 <AnimatePresence mode="wait">
                     {currentLead ? (
-                        <div key="card-container" className="relative">
-                            {/* Visual Stacking Effect */}
+                        <div key={`stack-${currentIndex}`} className="relative">
+                            {/* Ghost cards behind */}
                             {activeLeads.length > 1 && (
-                                <div className="absolute top-4 left-4 right-4 bottom-[-16px] bg-gray-200 rounded-[64px] -z-10 opacity-50 scale-95" />
+                                <div className="absolute inset-x-4 -bottom-4 h-full bg-white/5 rounded-[52px] -z-10 scale-95" />
                             )}
-                            <DecisionCard 
-                                lead={currentLead} 
-                                onAction={setWhatsappModalLead} 
-                                onNext={handleNext}
+                            {activeLeads.length > 2 && (
+                                <div className="absolute inset-x-8 -bottom-8 h-full bg-white/3 rounded-[52px] -z-20 scale-90" />
+                            )}
+                            <HotLeadCard
+                                lead={currentLead}
+                                onSend={handleSend}
+                                onSkip={handleNext}
                             />
                         </div>
                     ) : (
-                        <motion.div 
+                        <motion.div
+                            key="empty"
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            className="bg-white rounded-[64px] p-24 text-center border border-black/5 shadow-xl max-w-lg"
+                            className="text-center py-24"
                         >
-                            <div className="w-24 h-24 bg-[#00FFA3]/10 rounded-full flex items-center justify-center mx-auto mb-8">
-                                <CheckCircle2 className="w-12 h-12 text-[#00FFA3]" strokeWidth={3} />
+                            <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-8">
+                                <CheckCircle className="w-10 h-10 text-emerald-400" />
                             </div>
-                            <h2 className="text-4xl font-black text-gray-900 tracking-tight">Zero Debt.</h2>
-                            <p className="text-gray-500 font-medium mt-4 leading-relaxed">
-                                You've processed all urgent leads. <br/> Your pipeline is clean.
-                            </p>
-                            <button 
+                            <h2 className="text-3xl font-black text-white">All Clear.</h2>
+                            <p className="text-gray-500 mt-3">No new leads require action right now.</p>
+                            <button
                                 onClick={() => setCurrentIndex(0)}
-                                className="mt-12 text-xs font-black uppercase tracking-[0.2em] text-[#87A96B] hover:text-gray-900 transition-colors"
+                                className="mt-10 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-400 hover:text-white transition-colors"
                             >
                                 Refresh Queue
                             </button>
                         </motion.div>
                     )}
                 </AnimatePresence>
+
+                {/* Queue counter */}
+                {activeLeads.length > 0 && (
+                    <p className="mt-8 text-[9px] font-black uppercase tracking-[0.25em] text-gray-700">
+                        {currentIndex + 1} of {activeLeads.length} leads
+                    </p>
+                )}
             </div>
 
-            {/* WHATSAPP MODAL */}
+            {/* ── WHATSAPP MODAL ── */}
             <AnimatePresence>
                 {whatsappModalLead && (
-                    <motion.div 
-                        initial={{ opacity: 0 }} 
-                        animate={{ opacity: 1 }} 
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[200] bg-black/40 backdrop-blur-md flex items-center justify-center p-6"
+                        className="fixed inset-0 z-[300] bg-black/60 backdrop-blur-xl flex items-center justify-center p-6"
                     >
-                        <motion.div 
-                            initial={{ y: 50, scale: 0.95 }}
+                        <motion.div
+                            initial={{ y: 60, scale: 0.93 }}
                             animate={{ y: 0, scale: 1 }}
-                            exit={{ y: 50, scale: 0.95 }}
-                            className="bg-white w-full max-w-xl rounded-[48px] overflow-hidden shadow-2xl border border-black/5"
+                            exit={{ y: 60, scale: 0.93 }}
+                            transition={{ type: 'spring', stiffness: 320, damping: 28 }}
+                            className="bg-[#1A1A1A] border border-white/10 w-full max-w-lg rounded-[44px] overflow-hidden shadow-2xl"
                         >
-                            <div className="p-10 border-b border-black/5 flex justify-between items-center bg-gray-50">
+                            <div className="p-8 border-b border-white/8 flex justify-between items-center">
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 bg-[#25D366] rounded-full flex items-center justify-center">
                                         <Send className="w-5 h-5 text-white" />
                                     </div>
-                                    <h3 className="font-black text-gray-900 uppercase tracking-widest text-sm">Draft Response</h3>
+                                    <div>
+                                        <p className="text-[9px] text-gray-500 font-black uppercase tracking-widest">Sending to</p>
+                                        <p className="text-white font-black text-lg leading-tight">{whatsappModalLead.name}</p>
+                                    </div>
                                 </div>
-                                <button onClick={() => setWhatsappModalLead(null)} className="p-2 hover:bg-black/5 rounded-full transition-all">
-                                    <X className="w-5 h-5 text-gray-400" />
+                                <button onClick={() => { setWhatsappModalLead(null); handleNext(); }} className="p-2 hover:bg-white/8 rounded-full transition-all">
+                                    <X className="w-5 h-5 text-gray-500" />
                                 </button>
                             </div>
-                            
-                            <div className="p-12 space-y-8">
-                                <div className="bg-gray-50 rounded-[32px] p-8 text-gray-700 text-lg leading-relaxed border border-black/5 font-medium">
-                                    {`Hi ${whatsappModalLead.name.split(' ')[0]},\n\nI saw you were looking at our ${whatsappModalLead.service} options. ${whatsappModalLead.ai_summary ? `\n\nRegarding your interest: ${whatsappModalLead.ai_summary}\n` : ''}\nWould you like me to send over our 0% finance details?`}
+
+                            <div className="p-10 space-y-6">
+                                <div className="bg-[#25D366]/8 border border-[#25D366]/20 rounded-[28px] p-7 text-gray-200 text-base leading-relaxed whitespace-pre-wrap font-medium">
+                                    {`Hi ${whatsappModalLead.name.split(' ')[0]},\n\nI noticed you were interested in ${whatsappModalLead.service}. ${whatsappModalLead.ai_summary ? `\n\n"${whatsappModalLead.ai_summary}"\n` : ''}\nWould you like me to send over our 0% finance options or book a quick chat?`}
                                 </div>
-                                
-                                <button 
+
+                                <button
                                     onClick={() => {
                                         const phone = whatsappModalLead.phone || '';
-                                        const text = encodeURIComponent(`Hi ${whatsappModalLead.name.split(' ')[0]},\n\nI saw you were looking at our ${whatsappModalLead.service} options...`);
+                                        const text = encodeURIComponent(`Hi ${whatsappModalLead.name.split(' ')[0]}, I noticed you were interested in ${whatsappModalLead.service}...`);
                                         window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
                                         setWhatsappModalLead(null);
                                         handleNext();
                                     }}
-                                    className="w-full bg-[#25D366] hover:bg-[#1EBE55] text-white font-black uppercase tracking-widest py-8 rounded-[32px] transition-all flex items-center justify-center gap-4 shadow-[0_20px_40px_rgba(37,211,102,0.2)] text-lg"
+                                    className="w-full bg-[#25D366] hover:bg-[#1EBE55] text-white font-black uppercase tracking-widest py-7 rounded-[28px] transition-all flex items-center justify-center gap-3 shadow-[0_20px_50px_rgba(37,211,102,0.35)] text-base"
                                 >
-                                    Confirm & Open WhatsApp
+                                    <Send className="w-5 h-5" /> Open WhatsApp & Send
                                 </button>
                             </div>
                         </motion.div>
@@ -230,5 +348,3 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
         </div>
     );
 }
-
-
