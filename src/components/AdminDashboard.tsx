@@ -7,7 +7,7 @@ import {
   Presentation, Play, ChevronRight, Check, XCircle,
   MessageSquare, Send, Sparkles, Layout,
   ArrowRight, ShieldCheck, Zap, Settings, Building, Save, Plus, Trash2, Camera, Palette, CreditCard,
-  Mail, UserPlus, Loader2, Clock, Copy, Shield,
+  Mail, UserPlus, Loader2, Clock, Copy, Shield, UploadCloud,
   Link2, AlertTriangle, MapPin, ChevronDown, Instagram, MessageCircle, Link as LinkIcon, Monitor, Stethoscope
 } from 'lucide-react';
 import { Link, useNavigate } from "react-router-dom";
@@ -817,6 +817,7 @@ export default function AdminDashboard() {
   const [editingTreatment, setEditingTreatment] = useState<any | null>(null);
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [showZeroUploader, setShowZeroUploader] = useState(false);
 
   // Toast Notification State
 
@@ -2807,6 +2808,15 @@ export default function AdminDashboard() {
                   onNameUpdated={(newName) => setClinic({ ...clinic, name: newName })}
                 />
                 <div className="relative">
+                  {zeroMode && (
+                    <button
+                      onClick={() => setShowZeroUploader(!showZeroUploader)}
+                      className={`p-3 rounded-2xl transition-all group mr-2 ${showZeroUploader ? 'bg-[#00FFA3]/20 text-[#00FFA3]' : 'bg-black/5 text-gray-900/60 hover:text-[#00FFA3]'}`}
+                      title="Deposit Data"
+                    >
+                      <UploadCloud className="w-5 h-5" strokeWidth={1.5} />
+                    </button>
+                  )}
                   <button
                     onClick={() => setIsNotificationOpen(!isNotificationOpen)}
                     className="p-3 bg-black/5 hover:bg-black/5 rounded-2xl text-gray-900 transition-all relative group"
@@ -2866,6 +2876,8 @@ export default function AdminDashboard() {
                         specialty={profile?.specialty}
                         onStatusChange={updateStatus} 
                         onImportComplete={() => fetchLeads(limit, false)} 
+                        showUploader={showZeroUploader}
+                        onToggleUploader={setShowZeroUploader}
                     />
                 </div>
             ) : (

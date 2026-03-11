@@ -11,6 +11,8 @@ interface ZeroDashboardViewProps {
     specialty?: string | null;
     onStatusChange: (leadId: string, newStatus: string) => Promise<void>;
     onImportComplete: () => void;
+    showUploader?: boolean;
+    onToggleUploader?: (show: boolean) => void;
 }
 
 // ──────────────────────────────────────────────────────────
@@ -95,7 +97,15 @@ function DecisionCard({
 // ──────────────────────────────────────────────────────────
 // MAIN COMPONENT
 // ──────────────────────────────────────────────────────────
-export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, onImportComplete }: ZeroDashboardViewProps) {
+export function ZeroDashboardView({ 
+    leads, 
+    clinicId, 
+    specialty, 
+    onStatusChange, 
+    onImportComplete,
+    showUploader: externalShowUploader,
+    onToggleUploader
+}: ZeroDashboardViewProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [whatsappModalLead, setWhatsappModalLead] = useState<ConsultationRequest | null>(null);
 
@@ -112,6 +122,10 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
     const totalPotentialLoss = useMemo(() => {
         return activeLeads.reduce((sum, l) => sum + (l.potential_value || SERVICE_CONVERSION_VALUES[l.service] || 1000), 0);
     }, [activeLeads]);
+    
+    // 3. State Detection
+    const isEmptyState = leads.length === 0;
+    const isCompletedState = leads.length > 0 && activeLeads.length === 0;
 
     const handleNext = () => {
         if (currentIndex < activeLeads.length - 1) {
@@ -129,10 +143,13 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
             
             <div className="relative z-10 flex flex-col h-screen max-w-[1400px] mx-auto px-6 py-12">
                 
-                {/* 1. CONCLUSION (Loss Aversion) */}
+                {/* 1. CONCLUSION (Loss Aversion) - Hidden in Empty State */}
+                <AnimatePresence>
+                {!isEmptyState && !externalShowUploader && (
                 <motion.div 
                     initial={{ y: -20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -20, opacity: 0 }}
                     className="text-center mb-12"
                 >
                     <p className="text-gray-500 font-black uppercase tracking-[0.3em] text-[10px] mb-2">Money To Lose Today</p>
@@ -140,11 +157,45 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
                         £{totalPotentialLoss.toLocaleString()}
                     </h1>
                 </motion.div>
+                )}
+                </AnimatePresence>
 
                 {/* 2. THE DECISION (1 Thing 1 Page) */}
                 <div className="flex-1 flex items-center justify-center relative">
                     <AnimatePresence mode="wait">
-                        {currentLead ? (
+                        {externalShowUploader || isEmptyState ? (
+                            <motion.div 
+                                key="uploader"
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.95 }}
+                                className="w-full max-w-2xl px-4"
+                            >
+                                {isEmptyState && (
+                                    <div className="text-center mb-10">
+                                        <h2 className="text-4xl font-black text-white mb-4 tracking-tight">Your Dashboard is Empty</h2>
+                                        <p className="text-gray-400 text-lg">Securely deposit your practice data to uncover hidden revenue.</p>
+                                    </div>
+                                )}
+                                <CSVImportZone 
+                                    clinicId={clinicId} 
+                                    specialty={specialty}
+                                    onImportComplete={() => {
+                                        onImportComplete();
+                                        onToggleUploader?.(false);
+                                    }}
+                                    variant="hero"
+                                />
+                                {externalShowUploader && !isEmptyState && (
+                                    <button 
+                                        onClick={() => onToggleUploader?.(false)}
+                                        className="mt-8 mx-auto block text-gray-500 hover:text-white font-bold uppercase tracking-widest text-[10px]"
+                                    >
+                                        Cancel & Go Back
+                                    </button>
+                                )}
+                            </motion.div>
+                        ) : currentLead ? (
                             <DecisionCard 
                                 lead={currentLead} 
                                 onAction={setWhatsappModalLead} 
@@ -152,6 +203,7 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
                             />
                         ) : (
                             <motion.div 
+                                key="completed"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 className="text-center space-y-4"
@@ -172,21 +224,18 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
                     </AnimatePresence>
                 </div>
 
-                {/* 3. THE FUEL (Dropzone) */}
+                {/* FOOTER - Hidden in Completed/Uploader states to reduce noise */}
+                {!externalShowUploader && !isEmptyState && !isCompletedState && (
                 <motion.div 
                     initial={{ y: 50, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
-                    className="mt-12 max-w-sm mx-auto w-full opacity-60 hover:opacity-100 transition-opacity"
+                    className="mt-12 text-center"
                 >
-                     <div className="bg-[#1E1E1E] rounded-[32px] p-1 border-2 border-dashed border-white/10 hover:border-[#00FFA3]/30 transition-colors">
-                         <CSVImportZone 
-                            clinicId={clinicId} 
-                            specialty={specialty}
-                            onImportComplete={onImportComplete}
-                         />
-                     </div>
-                     <p className="text-center text-[9px] font-black uppercase tracking-widest text-gray-600 mt-4">Feed the System (Drop CSV)</p>
+                     <p className="text-[9px] font-black uppercase tracking-[0.3em] text-gray-700">
+                        Secure AI Remote Control • Locked by Hanlan
+                     </p>
                 </motion.div>
+                )}
             </div>
 
             {/* WHATSAPP MODAL */}

@@ -9,9 +9,10 @@ interface CSVImportZoneProps {
     clinicId: string;
     specialty?: string | null;
     onImportComplete: () => void;
+    variant?: 'standard' | 'hero';
 }
 
-export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImportZoneProps) {
+export function CSVImportZone({ clinicId, specialty, onImportComplete, variant = 'standard' }: CSVImportZoneProps) {
     const [isHovering, setIsHovering] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
     const [result, setResult] = useState<{ success: number; failed: number } | null>(null);
@@ -110,15 +111,21 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
     }
 
     return (
-        <div className="mb-8">
+        <div className={variant === 'hero' ? 'w-full' : 'mb-8'}>
             <div
                 onDragOver={(e) => { e.preventDefault(); setIsHovering(true); }}
                 onDragLeave={() => setIsHovering(false)}
                 onDrop={onDrop}
-                className={`relative overflow-hidden rounded-[32px] border-2 border-dashed transition-all duration-300 p-8 flex flex-col items-center justify-center min-h-[160px]
-          ${isHovering ? 'border-[#00FFA3]/60 bg-[#00FFA3]/5 scale-[1.02] shadow-[0_8px_30px_rgb(0,255,163,0.15)]' : 'border-[#00FFA3]/30 bg-black/5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:bg-black/10'}
+                className={`relative overflow-hidden rounded-[32px] border-2 border-dashed transition-all duration-500 p-8 flex flex-col items-center justify-center
+          ${variant === 'hero' ? 'min-h-[350px] bg-[#121212] border-slate-500/30' : 'min-h-[160px] bg-black/5 border-[#00FFA3]/30'}
+          ${isHovering ? 'border-[#00FFA3]/60 bg-[#00FFA3]/5 scale-[1.01] shadow-[0_0_50px_rgba(0,255,163,0.1)]' : 'shadow-[0_8px_30px_rgba(0,0,0,0.04)]'}
+          group cursor-pointer
         `}
             >
+                {/* Vault Glow Effect (Hero only) */}
+                {variant === 'hero' && (
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,255,163,0.03),transparent_70%)] pointer-events-none" />
+                )}
                 <AnimatePresence mode="wait">
                     {isProcessing ? (
                         <motion.div key="processing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center">
@@ -147,14 +154,18 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
                             )}
                         </motion.div>
                     ) : (
-                        <motion.div key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center text-center pointer-events-none">
-                            <div className="w-14 h-14 bg-black/[0.03] dark:bg-white/5 rounded-[20px] flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110">
-                                <UploadCloud className={`w-6 h-6 transition-colors duration-300 ${isHovering ? 'text-[#00FFA3]' : 'text-gray-400'}`} />
+                        <motion.div key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center text-center pointer-events-none z-10">
+                            <div className={`rounded-[24px] flex items-center justify-center mb-6 transition-all duration-500 group-hover:scale-110
+                                ${variant === 'hero' ? 'w-20 h-20 bg-white/5 border border-white/10' : 'w-14 h-14 bg-black/[0.03] dark:bg-white/5'}
+                            `}>
+                                <UploadCloud className={`transition-colors duration-300 ${isHovering ? 'text-[#00FFA3]' : 'text-gray-400'} ${variant === 'hero' ? 'w-8 h-8' : 'w-6 h-6'}`} />
                             </div>
-                            <h3 className="text-[15px] font-bold text-gray-900 dark:text-white mb-1">Drop your Patient Data here</h3>
-                            <p className="text-xs text-slate-400 font-medium max-w-[280px]">
-                                Supported formats: CSV, Excel. <br/>
-                                <span className="text-[#00FFA3]/80">{dropzoneSubCopy}</span>
+                            <h3 className={`font-black text-white mb-2 tracking-tight ${variant === 'hero' ? 'text-2xl' : 'text-[15px]'}`}>
+                                {variant === 'hero' ? "Secure Vault: Deposit PMS Export" : "Drop Patient Data here"}
+                            </h3>
+                            <p className="text-xs text-slate-400 font-medium max-w-[320px] leading-relaxed">
+                                {variant === 'hero' ? "Lock in your practice data to unlock hidden revenue instantly." : "Supported formats: CSV, Excel."} <br/>
+                                <span className="text-[#00FFA3]/80 mt-2 inline-block font-bold">{dropzoneSubCopy}</span>
                             </p>
                         </motion.div>
                     )}
