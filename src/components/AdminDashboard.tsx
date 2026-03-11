@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-// Deploy Trigger: Rollback Verification
+// FORCE_UPDATE: Ultimate Clinical Luxury V2 Final Sync
 import { motion } from "motion/react";
 import {
   Users, ArrowLeft, MoreHorizontal,
