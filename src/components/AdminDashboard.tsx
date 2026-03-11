@@ -897,7 +897,7 @@ export default function AdminDashboard() {
     const today = new Date().toISOString().split('T')[0];
     return leads.filter(lead => {
       if (!lead.appointment_date) return false;
-      return lead.appointment_date.startsWith(today) && (lead.status === "Scheduled");
+      return lead.appointment_date.startsWith(today) && (lead.status === "Booked");
     }).sort((a, b) => new Date(a.appointment_date!).getTime() - new Date(b.appointment_date!).getTime());
   }, [leads]);
 
