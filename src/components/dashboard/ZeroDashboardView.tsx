@@ -5,6 +5,7 @@ import { SERVICE_CONVERSION_VALUES } from '../../lib/constants';
 import { MessageCircle, CheckCircle, Sparkles, X, Send, SkipForward } from 'lucide-react';
 import { CSVImportZone } from '../CSVImportZone';
 import confetti from 'canvas-confetti';
+import { SecureHistoryToast } from './SecureHistoryToast';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TYPES
@@ -220,6 +221,9 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
     const [sentLeads, setSentLeads] = useState<Set<string>>(new Set());
     const [whatsappModalLead, setWhatsappModalLead] = useState<ConsultationRequest | null>(null);
 
+    // ── TOAST STATE ──
+    const [toast, setToast] = useState<{ visible: boolean; amount: number; total: number; prevTotal: number } | null>(null);
+
     const activeLeads = useMemo(() =>
         leads
             .filter(l => l.status === 'New Lead')
@@ -244,8 +248,17 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
     const heroState: 'secured' | 'partial' | 'risk' = allSent ? 'secured' : totalSecured > 0 ? 'partial' : 'risk';
 
     const handleSend = (lead: ConsultationRequest) => {
+        const leadValue = lead.potential_value || SERVICE_CONVERSION_VALUES[lead.service] || 1000;
+        const prevTotal = activeLeads
+            .filter(l => sentLeads.has(l.id))
+            .reduce((sum, l) => sum + (l.potential_value || SERVICE_CONVERSION_VALUES[l.service] || 1000), 0);
+        const newTotal = prevTotal + leadValue;
+
         setSentLeads(prev => new Set([...prev, lead.id]));
         setWhatsappModalLead(lead);
+
+        // Trigger toast simultaneously with confetti (confetti fires in HotLeadCard)
+        setToast({ visible: true, amount: leadValue, total: newTotal, prevTotal });
     };
 
     const handleNext = () => {
@@ -317,7 +330,21 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
                 </AnimatePresence>
             </div>
 
+            {/* ── SECURE HISTORY TOAST (below hero, above card) ── */}
+            <div className="relative z-20 mb-6">
+                {toast && (
+                    <SecureHistoryToast
+                        amount={toast.amount}
+                        total={toast.total}
+                        prevTotal={toast.prevTotal}
+                        visible={toast.visible}
+                        onDone={() => setToast(prev => prev ? { ...prev, visible: false } : null)}
+                    />
+                )}
+            </div>
+
             {/* ── CARD AREA ── */}
+
             <div className="relative z-10 flex flex-col items-center w-full">
                 <AnimatePresence mode="wait">
                     {currentLead ? (
