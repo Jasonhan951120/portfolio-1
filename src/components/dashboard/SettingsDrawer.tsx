@@ -64,11 +64,11 @@ export function SettingsDrawer({ isOpen, onClose, clinicId, currentName, onNameU
                         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                         className="fixed top-0 right-0 h-full w-[420px] z-[600] flex flex-col"
                         style={{
-                            background: 'rgba(15, 23, 42, 0.85)',
-                            backdropFilter: 'blur(24px) saturate(180%)',
-                            WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                            borderLeft: '1px solid rgba(100, 116, 139, 0.2)',
-                            boxShadow: '-32px 0 80px rgba(0,0,0,0.4)',
+                            background: 'rgba(10, 15, 30, 0.8)',
+                            backdropFilter: 'blur(32px) saturate(180%)',
+                            WebkitBackdropFilter: 'blur(32px) saturate(180%)',
+                            borderLeft: '1px solid rgba(255, 255, 255, 0.1)',
+                            boxShadow: '-32px 0 80px rgba(0,0,0,0.6)',
                         }}
                     >
                         {/* Header */}

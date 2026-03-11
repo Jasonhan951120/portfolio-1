@@ -512,9 +512,9 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
         }}
         transition={{ type: "spring", stiffness: 80, damping: 20 }}
         className={`rounded-2xl p-4 relative group focus:outline-none transition-all
-          ${isDragging ? 'border-black/10 cursor-grabbing bg-white/95' :
-            isOverdue ? 'border-[#E63946] hover:border-[#E63946]/80 cursor-grab animate-pulse bg-white' :
-              'border-black/5 hover:border-black/10 cursor-grab hover:bg-white/[0.02] bg-white'
+          ${isDragging ? 'border-white/20 cursor-grabbing bg-white/10 backdrop-blur-2xl' :
+            isOverdue ? 'border-[#E63946] hover:border-[#E63946]/80 cursor-grab animate-pulse bg-white/5 backdrop-blur-xl' :
+              'border-white/10 hover:border-white/20 cursor-grab hover:bg-white/[0.08] bg-white/5 backdrop-blur-xl'
           }`}
       >
         {/* Drag Handle Area */}
@@ -531,7 +531,7 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
             </div>
 
             <div className="flex flex-col items-end gap-1">
-              <span className="text-[14px] font-black text-gray-900 tracking-tight tabular-nums">
+              <span className="text-[14px] font-black text-white tracking-tight tabular-nums">
                 £{(lead.potential_value ? lead.potential_value : (1000)).toLocaleString()}
               </span>
               {/* Urgent Tag (Terracotta) */}
@@ -701,11 +701,17 @@ function KanbanColumn({
           </AnimatePresence>
         </SortableContext>
 
-        {/* Postel's Law: Graceful Empty State */}
+        {/* Sophisticated SVG Empty State */}
         {columnLeads.length === 0 && (
-          <div className="h-32 rounded-[16px] flex flex-col items-center justify-center opacity-40 mt-2 border border-dashed border-[#A0A0A0]/20 bg-white/[0.01]">
-            <Sparkles className="w-4 h-4 text-[#87A96B] mb-2 opacity-50" strokeWidth={1.5} />
-            <span className="text-[11px] font-medium text-[#A0A0A0]">Drop here</span>
+          <div className="h-40 rounded-[24px] flex flex-col items-center justify-center opacity-40 mt-2 border border-dashed border-white/10 bg-white/[0.02] backdrop-blur-sm relative overflow-hidden group">
+            <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none" />
+            <div className="relative w-12 h-12 mb-4 rounded-full bg-white/[0.03] border border-white/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/40">
+                  <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83" />
+                  <circle cx="12" cy="12" r="4" />
+               </svg>
+            </div>
+            <span className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Ready for Leads</span>
           </div>
         )}
       </div>

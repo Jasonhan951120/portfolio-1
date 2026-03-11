@@ -277,10 +277,10 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
 
             {/* ── AMBIENT STAGE BACKGROUND GLOW ── */}
             <div className="absolute inset-0 pointer-events-none z-0">
-                {/* Layer 1: Wide Deep Navy Base */}
+                {/* Layer 1: Wide Deep Navy Base (Matte Stage) */}
                 <div
-                    className="absolute inset-0 opacity-80"
-                    style={{ background: 'radial-gradient(circle at 50% 60%, rgba(16,40,75,0.4) 0%, transparent 70%)' }}
+                    className="absolute inset-0 opacity-100"
+                    style={{ background: 'radial-gradient(circle at 50% 60%, rgba(16,40,75,0.4) 0%, #0A0F1E 75%)' }}
                 />
                 {/* Layer 2: Focused Emerald/Red Spotlight */}
                 <div
@@ -293,8 +293,9 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
                 />
             </div>
 
-            {/* ── HERO METRIC ── */}
-            <div className="text-center mb-14 relative z-10 w-full max-w-[460px]">
+            {/* ── HERO METRIC BANNER ── */}
+            <div className="flex flex-col items-center justify-center text-center mb-14 relative z-10 w-full">
+                <div className="w-full max-w-[500px]">
                 <AnimatePresence mode="wait">
                     {heroState === 'secured' ? (
                         <motion.div
@@ -351,6 +352,7 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
                         </motion.div>
                     )}
                 </AnimatePresence>
+                </div>
             </div>
 
             {/* ── SECURE HISTORY TOAST (below hero, above card) ── */}

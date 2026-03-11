@@ -115,8 +115,8 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
                 onDragOver={(e) => { e.preventDefault(); setIsHovering(true); }}
                 onDragLeave={() => setIsHovering(false)}
                 onDrop={onDrop}
-                className={`relative overflow-hidden rounded-[32px] border-2 border-dashed transition-all duration-300 p-8 flex flex-col items-center justify-center min-h-[160px]
-          ${isHovering ? 'border-[#00FFA3]/60 bg-[#00FFA3]/5 scale-[1.02] shadow-[0_8px_30px_rgb(0,255,163,0.15)]' : 'border-[#00FFA3]/30 bg-black/5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:bg-black/10'}
+                className={`relative overflow-hidden rounded-[44px] border border-dashed transition-all duration-500 p-12 flex flex-col items-center justify-center min-h-[220px]
+          ${isHovering ? 'border-emerald-400/60 bg-emerald-400/5 scale-[1.01] shadow-[0_20px_60px_rgba(16,185,129,0.1)]' : 'border-white/10 bg-white/[0.02] backdrop-blur-xl shadow-2xl hover:bg-white/[0.05] hover:border-white/20'}
         `}
             >
                 <AnimatePresence mode="wait">
@@ -148,13 +148,17 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
                         </motion.div>
                     ) : (
                         <motion.div key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center text-center pointer-events-none">
-                            <div className="w-14 h-14 bg-black/[0.03] dark:bg-white/5 rounded-[20px] flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110">
-                                <UploadCloud className={`w-6 h-6 transition-colors duration-300 ${isHovering ? 'text-[#00FFA3]' : 'text-gray-400'}`} />
+                            <div className="w-20 h-20 mb-6 rounded-3xl bg-white/[0.03] border border-white/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-500 relative">
+                                <div className="absolute inset-0 bg-emerald-400/10 blur-[20px] rounded-full opacity-50" />
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={`relative z-10 transition-colors duration-300 ${isHovering ? 'text-emerald-400' : 'text-white/40'}`}>
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
+                                    <path d="m9 12 2 2 4-4" />
+                                </svg>
                             </div>
-                            <h3 className="text-[15px] font-bold text-gray-900 dark:text-white mb-1">Drop your Patient Data here</h3>
-                            <p className="text-xs text-slate-400 font-medium max-w-[280px]">
-                                Supported formats: CSV, Excel. <br/>
-                                <span className="text-[#00FFA3]/80">{dropzoneSubCopy}</span>
+                            <h3 className="text-lg font-black text-white mb-2 tracking-tight">Synchronize Your Vault</h3>
+                            <p className="text-xs text-slate-500 font-medium max-w-[320px] leading-relaxed">
+                                {dropzoneSubCopy} <br/>
+                                <span className="text-emerald-400/60 mt-1 block italic opacity-80">Supported formats: CSV, (XLSX planned)</span>
                             </p>
                         </motion.div>
                     )}
