@@ -15,6 +15,28 @@ interface ZeroDashboardViewProps {
     onToggleUploader?: (show: boolean) => void;
 }
 
+function ZenParticles() {
+    const particles = useMemo(() => Array.from({ length: 30 }), []);
+    return (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+            {particles.map((_, i) => (
+                <motion.div
+                    key={i}
+                    className="absolute w-1 h-1 rounded-full bg-[#00FFA3]/40 blur-[1px]"
+                    style={{ left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%` }}
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ 
+                        opacity: [0, 0.8, 0],
+                        scale: [0, Math.random() * 2 + 1, 0],
+                        y: [0, -Math.random() * 150 - 50]
+                    }}
+                    transition={{ duration: Math.random() * 5 + 5, repeat: Infinity, delay: Math.random() * 5, ease: "easeInOut" }}
+                />
+            ))}
+        </div>
+    );
+}
+
 // ──────────────────────────────────────────────────────────
 // 1. FORCED WORKFLOW CARD (Instagram/Tinder Style)
 // ──────────────────────────────────────────────────────────
@@ -33,9 +55,11 @@ function DecisionCard({
     return (
         <motion.div
             key={lead.id}
+            layout
             initial={{ opacity: 0, y: 100, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -100, scale: 0.9, transition: { duration: 0.3 } }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
             drag="y"
             dragConstraints={{ top: 0, bottom: 0 }}
             dragElastic={0.4}
@@ -137,10 +161,18 @@ export function ZeroDashboardView({
     };
 
     return (
-        <div className="w-full min-h-screen bg-[#121212] overflow-hidden selection:bg-[#00FFA3]/30 selection:text-white">
+        <div className="w-full min-h-screen bg-[#121212] overflow-hidden selection:bg-[#00FFA3]/30 selection:text-white relative">
             {/* Depth Gradients */}
             <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,rgba(0,255,163,0.05),transparent_70%)]" />
             
+            <AnimatePresence>
+                {isCompletedState && (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 pointer-events-none">
+                        <ZenParticles />
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
             <div className="relative z-10 flex flex-col h-screen max-w-[1400px] mx-auto px-6 py-12">
                 
                 {/* 1. CONCLUSION (Loss Aversion) - Hidden in Empty State */}
