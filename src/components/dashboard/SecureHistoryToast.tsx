@@ -1,22 +1,23 @@
 import React, { useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useMotionValue, useTransform, animate } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, animate } from 'framer-motion';
 import { CheckCircle } from 'lucide-react';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// COUNT-UP HOOK  (casino slot feel)
+// COUNT-UP HOOK  (casino-slot snap: decelerates exponentially)
 // ─────────────────────────────────────────────────────────────────────────────
-function useCountUp(to: number, from: number, duration = 0.55): React.ReactNode {
+function useCountUp(to: number, from: number, duration = 0.5) {
     const motionVal = useMotionValue(from);
-    const rounded   = useTransform(motionVal, v => `£${Math.round(v).toLocaleString()}`);
     const [display, setDisplay] = React.useState(`£${Math.round(from).toLocaleString()}`);
 
     useEffect(() => {
         motionVal.set(from);
         const controls = animate(motionVal, to, {
             duration,
-            ease: [0.16, 1, 0.3, 1], // expo-out — fast start, smooth land
+            ease: [0.22, 1, 0.36, 1], // sharp expo-out – slot-machine snap
         });
-        const unsub = motionVal.on('change', v => setDisplay(`£${Math.round(v).toLocaleString()}`));
+        const unsub = motionVal.on('change', v =>
+            setDisplay(`£${Math.round(v).toLocaleString()}`)
+        );
         return () => { controls.stop(); unsub(); };
     }, [to, from]);
 
@@ -27,15 +28,10 @@ function useCountUp(to: number, from: number, duration = 0.55): React.ReactNode 
 // COMPONENT
 // ─────────────────────────────────────────────────────────────────────────────
 interface SecureHistoryToastProps {
-    /** Individual amount just secured */
     amount: number;
-    /** Running total including this amount */
     total: number;
-    /** Previous total (before this amount) — used for count-up start */
     prevTotal: number;
-    /** Whether toast is visible */
     visible: boolean;
-    /** Called when auto-dismiss completes */
     onDone: () => void;
 }
 
@@ -46,48 +42,72 @@ export function SecureHistoryToast({ amount, total, prevTotal, visible, onDone }
     useEffect(() => {
         if (visible) {
             if (timerRef.current) clearTimeout(timerRef.current);
-            timerRef.current = setTimeout(onDone, 1800); // auto-dismiss after 1.8s
+            timerRef.current = setTimeout(onDone, 1900);
         }
         return () => { if (timerRef.current) clearTimeout(timerRef.current); };
     }, [visible, onDone]);
 
     return (
-        <AnimatePresence>
-            {visible && (
-                <motion.div
-                    key="secure-toast"
-                    initial={{ opacity: 0, y: -28, scale: 0.94 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -20, scale: 0.96 }}
-                    transition={{ type: 'spring', stiffness: 420, damping: 30 }}
-                    className="
-                        flex items-center gap-4 px-6 py-4
-                        bg-[#121212]/80 backdrop-blur-xl
-                        border-[0.5px] border-emerald-500/30
-                        rounded-2xl shadow-[0_4px_32px_rgba(16,185,129,0.20)]
-                        pointer-events-none
-                    "
-                >
-                    {/* Icon */}
-                    <div className="w-8 h-8 rounded-full bg-emerald-500/15 flex items-center justify-center flex-shrink-0">
-                        <CheckCircle className="w-4 h-4 text-emerald-400" strokeWidth={2.5} />
-                    </div>
+        <>
+            {/* Keyframe for metallic diagonal sweep */}
+            <style>{`
+                @keyframes shimmer-sweep {
+                    0%   { background-position: -200% center; }
+                    100% { background-position: 200% center; }
+                }
+                .toast-shimmer {
+                    background: linear-gradient(
+                        105deg,
+                        transparent 30%,
+                        rgba(255,255,255,0.09) 50%,
+                        transparent 70%
+                    );
+                    background-size: 300% 100%;
+                    animation: shimmer-sweep 1.4s ease-in-out infinite;
+                }
+            `}</style>
 
-                    {/* Text */}
-                    <div className="text-left">
-                        <p className="text-[11px] text-slate-300 leading-tight">
-                            <span className="font-bold text-white">+£{amount.toLocaleString()}</span>
-                            {' '}Secured.
-                        </p>
-                        <p className="text-[11px] text-slate-500 leading-tight mt-0.5">
-                            Total:{' '}
-                            <span className="text-emerald-400 font-bold tabular-nums">
-                                {totalDisplay}
-                            </span>
-                        </p>
-                    </div>
-                </motion.div>
-            )}
-        </AnimatePresence>
+            <AnimatePresence>
+                {visible && (
+                    <motion.div
+                        key="secure-toast"
+                        initial={{ opacity: 0, y: -32, scale: 0.91 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -24, scale: 0.95 }}
+                        transition={{ type: 'spring', stiffness: 460, damping: 32 }}
+                        className="relative overflow-hidden flex items-center gap-4 px-7 py-4
+                            bg-[#0D1F1A]/85 backdrop-blur-2xl
+                            border-[0.5px] border-emerald-500/35
+                            rounded-2xl shadow-[0_8px_40px_rgba(16,185,129,0.28),0_0_0_1px_rgba(16,185,129,0.08)]
+                            pointer-events-none"
+                    >
+                        {/* ── METALLIC SHIMMER OVERLAY ── */}
+                        <div className="toast-shimmer absolute inset-0 rounded-2xl pointer-events-none z-0" />
+
+                        {/* Icon */}
+                        <div className="relative z-10 w-9 h-9 rounded-full bg-emerald-500/20
+                            border border-emerald-500/30 flex items-center justify-center flex-shrink-0
+                            shadow-[0_0_12px_rgba(16,185,129,0.35)]">
+                            <CheckCircle className="w-4 h-4 text-emerald-400" strokeWidth={2.5} />
+                        </div>
+
+                        {/* Text */}
+                        <div className="relative z-10 text-left">
+                            <p className="text-[12px] text-slate-300 leading-tight">
+                                <span className="font-bold text-white tracking-tight">+£{amount.toLocaleString()}</span>
+                                {' '}
+                                <span className="text-slate-400">Secured.</span>
+                            </p>
+                            <p className="text-[11px] text-slate-600 leading-tight mt-0.5">
+                                Running Total:{' '}
+                                <span className="text-emerald-400 font-black tabular-nums tracking-tighter">
+                                    {totalDisplay}
+                                </span>
+                            </p>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </>
     );
 }

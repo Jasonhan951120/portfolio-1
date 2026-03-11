@@ -7,7 +7,7 @@ import {
   Search, Globe, Star, UserCheck, Calendar, X, Filter, List, BarChart2,
   Presentation, Play, ChevronRight, Check, XCircle,
   MessageSquare, Send, Sparkles, Layout,
-  ArrowRight, ShieldCheck, Zap, Settings, Building, Save, Plus, Trash2, Camera, Palette, CreditCard,
+  ArrowRight, ShieldCheck, Zap, Settings, SlidersHorizontal, Building, Save, Plus, Trash2, Camera, Palette, CreditCard,
   Mail, UserPlus, Loader2, Clock, Copy, Shield,
   Link2, AlertTriangle, MapPin, ChevronDown, Instagram, MessageCircle, Link as LinkIcon, Monitor, Stethoscope
 } from 'lucide-react';
@@ -2270,10 +2270,10 @@ export default function AdminDashboard() {
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => setIsExpertModeOpen(true)}
-                  className="p-2 hover:bg-white/10 rounded-xl transition-all text-gray-500 hover:text-[#87A96B]"
+                  className="p-2 hover:bg-white/10 rounded-xl transition-all text-gray-500 hover:text-cyan-400 hover:drop-shadow-[0_0_8px_rgba(0,210,255,0.8)]"
                   title="Expert Centre"
                 >
-                  <Settings className="w-5 h-5" />
+                  <SlidersHorizontal className="w-5 h-5" />
                 </button>
                 <button
                   onClick={() => signOut()}
@@ -2287,7 +2287,7 @@ export default function AdminDashboard() {
           </header>
 
           {/* ── MAIN CONTENT ── */}
-          <main>
+          <main className={`transition-all duration-700 ease-in-out ${isExpertModeOpen ? 'blur-md scale-[0.98] opacity-60' : 'blur-0 scale-100 opacity-100'}`}>
             <AnimatePresence mode="wait">
 
               {/* ACTION TAB */}

@@ -268,13 +268,13 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
     return (
         <div className="min-h-screen bg-[#121212] flex flex-col items-center justify-center px-6 py-16 relative overflow-hidden">
 
-            {/* ── AMBIENT BACKGROUND GLOW ── */}
+            {/* ── AMBIENT STAGE BACKGROUND GLOW ── */}
             <div
                 className="absolute inset-0 pointer-events-none transition-all duration-1500"
                 style={{
                     background: heroState === 'secured'
-                        ? 'radial-gradient(ellipse 80% 50% at 50% 30%, rgba(16,185,129,0.10) 0%, transparent 70%)'
-                        : 'radial-gradient(ellipse 80% 50% at 50% 10%, rgba(239,68,68,0.09) 0%, transparent 70%)'
+                        ? 'radial-gradient(circle at 50% 55%, rgba(16,185,129,0.15) 0%, rgba(18,18,18,0) 65%)'
+                        : 'radial-gradient(circle at 50% 55%, rgba(16,40,75,0.4) 0%, rgba(18,18,18,0) 70%)'
                 }}
             />
 
@@ -288,16 +288,16 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             transition={{ type: 'spring', stiffness: 280, damping: 22 }}
                         >
-                            <p className="text-[9px] font-black uppercase tracking-[0.5em] text-emerald-500 mb-5">
+                            <p className="text-[10px] font-black uppercase tracking-[0.5em] text-[#A0A0A0] mb-5">
                                 🎉 Pipeline Clear — Today's Total
                             </p>
                             <div
-                                className="font-black tabular-nums leading-none text-emerald-400"
-                                style={{ fontSize: 'clamp(3.5rem, 14vw, 8rem)' }}
+                                className="font-black tabular-nums leading-none text-emerald-400 tracking-tighter"
+                                style={{ fontSize: 'clamp(4.5rem, 16vw, 9rem)' }}
                             >
                                 £{totalSecured.toLocaleString()}
                             </div>
-                            <p className="text-emerald-500/60 font-black text-sm uppercase tracking-[0.3em] mt-4">
+                            <p className="text-emerald-500/60 font-black text-xs uppercase tracking-[0.3em] mt-5">
                                 Revenue Secured ↗
                             </p>
                         </motion.div>
@@ -307,12 +307,12 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
                             initial={{ opacity: 0, scale: 0.75, y: -20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                         >
-                            <p className="text-[9px] font-black uppercase tracking-[0.5em] text-red-400/80 mb-5">
+                            <p className="text-[10px] font-black uppercase tracking-[0.5em] text-[#A0A0A0] mb-5">
                                 ⚠ Money At Risk Today
                             </p>
                             <div
-                                className="font-black tabular-nums leading-none text-white"
-                                style={{ fontSize: 'clamp(3.5rem, 14vw, 8rem)' }}
+                                className="font-black tabular-nums leading-none text-white tracking-tighter drop-shadow-2xl"
+                                style={{ fontSize: 'clamp(4.5rem, 16vw, 9rem)' }}
                             >
                                 £{totalAtRisk.toLocaleString()}
                             </div>
@@ -320,7 +320,7 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
                                 <motion.p
                                     initial={{ opacity: 0, y: 8 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    className="text-emerald-400/70 font-bold text-sm mt-4"
+                                    className="text-emerald-400/80 font-bold text-xs mt-5"
                                 >
                                     £{totalSecured.toLocaleString()} secured so far ↗
                                 </motion.p>
@@ -351,10 +351,20 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
                         <div key={`stack-${currentIndex}`} className="relative w-full flex justify-center">
                             {/* Ghost stack cards behind */}
                             {activeLeads.length > 1 && (
-                                <div className="absolute inset-x-6 -bottom-3 h-full bg-white/[0.04] rounded-[56px] -z-10 scale-[0.96]" />
+                                <motion.div
+                                    className="absolute inset-x-0 h-full bg-[#161616] border border-white/[0.05] rounded-[56px] -z-10 shadow-xl"
+                                    initial={false}
+                                    animate={{ scale: 0.95, y: 15, opacity: 0.5 }}
+                                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                                />
                             )}
                             {activeLeads.length > 2 && (
-                                <div className="absolute inset-x-12 -bottom-6 h-full bg-white/[0.02] rounded-[56px] -z-20 scale-[0.92]" />
+                                <motion.div
+                                    className="absolute inset-x-0 h-full bg-[#121212] border border-white/[0.03] rounded-[56px] -z-20 shadow-2xl"
+                                    initial={false}
+                                    animate={{ scale: 0.90, y: 30, opacity: 0.2 }}
+                                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                                />
                             )}
                             <HotLeadCard
                                 lead={currentLead}
