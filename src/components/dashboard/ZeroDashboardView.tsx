@@ -277,10 +277,15 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
 
             {/* ── AMBIENT STAGE BACKGROUND GLOW ── */}
             <div className="absolute inset-0 pointer-events-none z-0">
-                {/* Layer 1: Wide Deep Navy Base (Matte Stage) */}
+                {/* Layer 1: Wide Deep Navy Base (The Stage) */}
                 <div
                     className="absolute inset-0 opacity-100"
-                    style={{ background: 'radial-gradient(circle at 50% 60%, rgba(16,40,75,0.4) 0%, #0A0F1E 75%)' }}
+                    style={{ background: '#0A0F1E' }}
+                />
+                {/* Layer 2: Intense Radial Spotlight (Center Authority) */}
+                <div
+                    className="absolute inset-0 opacity-60"
+                    style={{ background: 'radial-gradient(ellipse at center, rgba(16,185,129,0.15) 0%, rgba(10,15,30,0) 70%)' }}
                 />
                 {/* Layer 2: Focused Emerald/Red Spotlight */}
                 <div
@@ -305,20 +310,21 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
                             transition={{ type: 'spring', stiffness: 280, damping: 22 }}
                         >
                             <p className="text-[10px] font-black uppercase tracking-[0.5em] text-[#A0A0A0] mb-5">
-                                🎉 Pipeline Clear — Today's Total
+                                🎉 Clinic Secured — Today's Total
                             </p>
                             <div
-                                className="font-black tabular-nums leading-none text-white tracking-tighter"
+                                className="font-black tabular-nums leading-none text-[#2AF598] tracking-tighter"
                                 style={{
                                     fontSize: 'clamp(5.5rem, 18vw, 10rem)',
                                     letterSpacing: '-0.04em',
-                                    textShadow: '0 0 80px rgba(16,185,129,0.4), 0 0 25px rgba(16,185,129,0.2)'
+                                    filter: 'drop-shadow(0 0 15px rgba(42,245,152,0.4))',
+                                    textShadow: '0 0 60px rgba(42,245,152,0.2)'
                                 }}
                             >
                                 £{totalSecured.toLocaleString()}
                             </div>
-                            <p className="text-emerald-500 font-black text-xs uppercase tracking-[0.4em] mt-5">
-                                Revenue Secured ↗
+                            <p className="text-[#2AF598] font-black text-xs uppercase tracking-[0.4em] mt-8 opacity-80">
+                                Protected Portfolio ↗
                             </p>
                         </motion.div>
                     ) : (
@@ -335,7 +341,7 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
                                 style={{
                                     fontSize: 'clamp(5.5rem, 18vw, 10rem)',
                                     letterSpacing: '-0.04em',
-                                    textShadow: '0 0 80px rgba(255,255,255,0.15), 0 0 25px rgba(255,255,255,0.08)'
+                                    textShadow: '0 0 80px rgba(239,68,68,0.2), 0 0 25px rgba(239,68,68,0.1)'
                                 }}
                             >
                                 £{totalAtRisk.toLocaleString()}

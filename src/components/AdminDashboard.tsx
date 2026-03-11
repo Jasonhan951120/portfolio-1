@@ -500,21 +500,21 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
         whileHover={{ scale: 1.02 }}
         animate={isExiting ? { opacity: 0, scale: 0.8, x: 50, filter: "blur(4px)" } : {
           scale: isDragging ? 1.02 : 1,
-          rotate: isDragging ? 2 : 0,
+          rotate: isDragging ? 1 : 0,
           boxShadow: isDragging
             ? "0 30px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1)"
             : isOverdue
-              ? "0 0 15px rgba(230,57,70,0.6)"
-              : "0 10px 30px -10px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(0,0,0,0.05)",
+              ? "0 0 15px rgba(239,68,68,0.4)"
+              : "0 10px 40px -10px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.05)",
           opacity: isDragging ? 0.95 : 1,
-          backgroundColor: isDragging ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,1)",
+          backgroundColor: isDragging ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.03)",
           y: isDragging ? -10 : 0
         }}
-        transition={{ type: "spring", stiffness: 80, damping: 20 }}
-        className={`rounded-2xl p-4 relative group focus:outline-none transition-all
-          ${isDragging ? 'border-white/20 cursor-grabbing bg-white/10 backdrop-blur-2xl' :
-            isOverdue ? 'border-[#E63946] hover:border-[#E63946]/80 cursor-grab animate-pulse bg-white/5 backdrop-blur-xl' :
-              'border-white/10 hover:border-white/20 cursor-grab hover:bg-white/[0.08] bg-white/5 backdrop-blur-xl'
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        className={`rounded-2xl p-4 relative group focus:outline-none transition-all border
+          ${isDragging ? 'border-white/30 cursor-grabbing backdrop-blur-3xl shadow-2xl' :
+            isOverdue ? 'border-red-500/50 hover:border-red-500 cursor-grab bg-white/[0.04] backdrop-blur-xl' :
+              'border-white/10 hover:border-white/20 cursor-grab hover:bg-white/[0.08] bg-white/[0.03] backdrop-blur-xl shadow-lg'
           }`}
       >
         {/* Drag Handle Area */}
@@ -524,10 +524,10 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
         <div className="relative z-10 pointer-events-none">
           <div className="flex justify-between items-start mb-3">
             <div>
-              <h4 className="font-bold text-[14px] tracking-[-0.02em] text-gray-900 truncate mr-2 flex items-center gap-2" data-hj-suppress>
+              <h4 className="font-bold text-[14px] tracking-tight text-white/95 truncate mr-2 flex items-center gap-2">
                 {lead.name}
               </h4>
-              <p className="text-[10px] text-gray-500 font-medium mt-1 lowercase">Joined {timeAgo(lead.created_at)}</p>
+              <p className="text-[10px] text-white/40 font-medium mt-1 lowercase">Inquired {timeAgo(lead.created_at)}</p>
             </div>
 
             <div className="flex flex-col items-end gap-1">
@@ -553,11 +553,11 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
                 <Sparkles className="w-2 h-2" /> AI {lead.intent_score}%
               </span>
             )}
-            <span className="text-[10px] font-medium text-gray-500 bg-black/5 px-2 py-0.5 rounded-md border border-black/5">
+            <span className="text-[10px] font-medium text-white/50 bg-white/5 px-2 py-0.5 rounded-md border border-white/5">
               {lead.service}
             </span>
             {lead.appointment_date && !isNaN(new Date(lead.appointment_date).getTime()) && (
-              <span className="text-[10px] font-medium text-[#87A96B] bg-[#87A96B]/10 px-2 py-0.5 rounded-md border border-[#87A96B]/10">
+              <span className="text-[10px] font-medium text-[#2AF598] bg-[#2AF598]/10 px-2 py-0.5 rounded-md border border-[#2AF598]/10">
                 {new Date(lead.appointment_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
               </span>
             )}
@@ -2238,15 +2238,15 @@ export default function AdminDashboard() {
   );
 
   return (
-    <div className="min-h-screen bg-[#0A0F1E] text-white font-sans">
+    <div className="min-h-screen bg-[#0A0F1E] text-white font-sans selection:bg-emerald-500/30">
       {session === null ? (
-        <div className="flex items-center justify-center h-screen">
-          <RefreshCw className="w-6 h-6 text-gray-400 animate-spin" strokeWidth={1.5} />
+        <div className="flex items-center justify-center h-screen bg-[#0A0F1E]">
+          <RefreshCw className="w-6 h-6 text-emerald-500 animate-spin" strokeWidth={1.5} />
         </div>
       ) : (
         <>
           {/* ── CLINICAL LUXURY HERO HEADER ── */}
-          <header className="sticky top-0 z-50 bg-[#08091A]/90 backdrop-blur-2xl border-b border-[0.5px] border-white/[0.07] shadow-[0_1px_0_rgba(255,255,255,0.04)]">
+          <header className="sticky top-0 z-50 bg-[#0A0F1E]/80 backdrop-blur-3xl border-b border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
             <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between gap-6">
 
               {/* Left: Money At Risk */}
@@ -2256,15 +2256,15 @@ export default function AdminDashboard() {
               </div>
 
               {/* Centre: 3-Tab Nav (Glass Capsule) */}
-              <div className="flex bg-[#1A1A2E]/60 backdrop-blur-md p-1 rounded-xl border-[0.5px] border-white/[0.12] shadow-inner">
+              <div className="flex bg-white/5 backdrop-blur-xl p-1 rounded-2xl border border-white/10 shadow-[inset_0_0_20px_rgba(255,255,255,0.02)]">
                 {(['action', 'pipeline', 'vault'] as const).map(tab => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`px-5 py-2 rounded-lg text-[10px] font-black uppercase tracking-[0.2em] transition-all ${
+                    className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.25em] transition-all duration-300 ${
                       activeTab === tab
-                        ? 'bg-[#10B981] text-white shadow-[0_0_15px_rgba(16,185,129,0.4)]'
-                        : 'text-gray-500 hover:text-white'
+                        ? 'bg-[#10B981] text-white shadow-[0_0_20px_rgba(16,185,129,0.5),inset_0_0_10px_rgba(255,255,255,0.2)]'
+                        : 'text-white/40 hover:text-white hover:bg-white/5'
                     }`}
                   >
                     {tab}
@@ -2276,14 +2276,14 @@ export default function AdminDashboard() {
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => setIsExpertModeOpen(true)}
-                  className="p-2 hover:bg-white/10 rounded-xl transition-all text-gray-500 hover:text-cyan-400 hover:drop-shadow-[0_0_8px_rgba(0,210,255,0.8)]"
-                  title="Expert Centre"
+                  className="p-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all text-white/40 hover:text-[#00D2FF] hover:shadow-[0_0_15px_rgba(0,210,255,0.3),inset_0_0_10px_rgba(0,210,255,0.2)]"
+                  title="Control Center"
                 >
-                  <SlidersHorizontal className="w-5 h-5" />
+                  <Settings className="w-5 h-5 animate-pulse-slow" />
                 </button>
                 <button
                   onClick={() => signOut()}
-                  className="p-2 hover:bg-white/10 rounded-xl transition-all text-gray-500 hover:text-red-400"
+                  className="p-2.5 bg-white/5 hover:bg-red-500/10 border border-white/5 rounded-xl transition-all text-white/40 hover:text-red-400"
                   title="Sign Out"
                 >
                   <LogOut className="w-5 h-5" />
@@ -2293,7 +2293,7 @@ export default function AdminDashboard() {
           </header>
 
           {/* ── MAIN CONTENT ── */}
-          <main className={`transition-all duration-700 ease-in-out ${isExpertModeOpen ? 'blur-md scale-[0.98] opacity-60' : 'blur-0 scale-100 opacity-100'}`}>
+          <main className={`transition-all duration-1000 ease-in-out ${isExpertModeOpen ? 'blur-2xl grayscale-[0.2] scale-[0.97] opacity-40' : 'blur-0 scale-100 opacity-100'}`}>
             <AnimatePresence mode="wait">
 
               {/* ACTION TAB */}
