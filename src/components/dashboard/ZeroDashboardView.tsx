@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useSpring } from 'framer-motion';
 import { ConsultationRequest } from '../../lib/supabase';
 import { SERVICE_CONVERSION_VALUES } from '../../lib/constants';
 import { MessageCircle, CheckCircle, Sparkles, X, Send, SkipForward } from 'lucide-react';
@@ -57,6 +57,11 @@ function HotLeadCard({
     const [sent, setSent] = useState(false);
     const value = lead.potential_value || SERVICE_CONVERSION_VALUES[lead.service] || 1000;
     const isVIP = (lead.intent_score ?? 0) >= 80;
+
+    // ── SPRING PHYSICS FOR TACTILE CTA ──
+    const springConfig = { stiffness: 400, damping: 22, mass: 0.8 };
+    const scale = useSpring(1, springConfig);
+    const y = useSpring(0, { stiffness: 380, damping: 20 });
 
     const handleSend = () => {
         if (sent) return;
@@ -156,12 +161,14 @@ function HotLeadCard({
                     </div>
                 )}
 
-                {/* ── GIANT CTA ── */}
                 <div className="relative z-10 space-y-3 mt-auto">
                     <motion.button
                         id="send-whatsapp-btn"
-                        whileHover={!sent ? { scale: 1.025, y: -2 } : {}}
-                        whileTap={!sent ? { scale: 0.97 } : {}}
+                        style={{ scale, y }}
+                        onHoverStart={() => !sent && (scale.set(1.025), y.set(-3))}
+                        onHoverEnd={() => !sent && (scale.set(1), y.set(0))}
+                        onTapStart={() => !sent && scale.set(0.97)}
+                        onTapCancel={() => !sent && scale.set(1)}
                         onClick={handleSend}
                         disabled={sent}
                         className={`
@@ -269,14 +276,22 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
         <div className="min-h-screen bg-[#121212] flex flex-col items-center justify-center px-6 py-16 relative overflow-hidden">
 
             {/* ── AMBIENT STAGE BACKGROUND GLOW ── */}
-            <div
-                className="absolute inset-0 pointer-events-none transition-all duration-1500"
-                style={{
-                    background: heroState === 'secured'
-                        ? 'radial-gradient(circle at 50% 55%, rgba(16,185,129,0.15) 0%, rgba(18,18,18,0) 65%)'
-                        : 'radial-gradient(circle at 50% 55%, rgba(16,40,75,0.4) 0%, rgba(18,18,18,0) 70%)'
-                }}
-            />
+            <div className="absolute inset-0 pointer-events-none z-0">
+                {/* Layer 1: Wide Deep Navy Base */}
+                <div
+                    className="absolute inset-0 opacity-80"
+                    style={{ background: 'radial-gradient(circle at 50% 60%, rgba(16,40,75,0.4) 0%, transparent 70%)' }}
+                />
+                {/* Layer 2: Focused Emerald/Red Spotlight */}
+                <div
+                    className="absolute inset-0 transition-all duration-1500"
+                    style={{
+                        background: heroState === 'secured'
+                            ? 'radial-gradient(circle at 50% 55%, rgba(16,185,129,0.12) 0%, transparent 45%)'
+                            : 'radial-gradient(circle at 50% 55%, rgba(239,68,68,0.08) 0%, transparent 45%)'
+                    }}
+                />
+            </div>
 
             {/* ── HERO METRIC ── */}
             <div className="text-center mb-14 relative z-10 w-full max-w-[460px]">
@@ -293,7 +308,11 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
                             </p>
                             <div
                                 className="font-black tabular-nums leading-none text-white tracking-tighter"
-                                style={{ fontSize: 'clamp(5.5rem, 18vw, 10rem)', letterSpacing: '-0.04em' }}
+                                style={{
+                                    fontSize: 'clamp(5.5rem, 18vw, 10rem)',
+                                    letterSpacing: '-0.04em',
+                                    textShadow: '0 0 80px rgba(16,185,129,0.4), 0 0 25px rgba(16,185,129,0.2)'
+                                }}
                             >
                                 £{totalSecured.toLocaleString()}
                             </div>
@@ -312,7 +331,11 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
                             </p>
                             <div
                                 className="font-black tabular-nums leading-none text-white drop-shadow-2xl"
-                                style={{ fontSize: 'clamp(5.5rem, 18vw, 10rem)', letterSpacing: '-0.04em' }}
+                                style={{
+                                    fontSize: 'clamp(5.5rem, 18vw, 10rem)',
+                                    letterSpacing: '-0.04em',
+                                    textShadow: '0 0 80px rgba(255,255,255,0.15), 0 0 25px rgba(255,255,255,0.08)'
+                                }}
                             >
                                 £{totalAtRisk.toLocaleString()}
                             </div>

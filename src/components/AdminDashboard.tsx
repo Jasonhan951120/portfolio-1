@@ -2239,8 +2239,8 @@ export default function AdminDashboard() {
         </div>
       ) : (
         <>
-          {/* ── LOSS AVERSION HERO HEADER ── */}
-          <header className="sticky top-0 z-50 bg-[#0A0F1E]/95 backdrop-blur-xl border-b border-white/8">
+          {/* ── CLINICAL LUXURY HERO HEADER ── */}
+          <header className="sticky top-0 z-50 bg-[#08091A]/90 backdrop-blur-2xl border-b border-[0.5px] border-white/[0.07] shadow-[0_1px_0_rgba(255,255,255,0.04)]">
             <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between gap-6">
 
               {/* Left: Money At Risk */}
@@ -2249,15 +2249,15 @@ export default function AdminDashboard() {
                 <span className="text-xl font-black tabular-nums text-white">£{totalAtRisk.toLocaleString()}</span>
               </div>
 
-              {/* Centre: 3-Tab Nav */}
-              <div className="flex bg-white/5 p-1 rounded-xl border border-white/10">
+              {/* Centre: 3-Tab Nav (Glass Capsule) */}
+              <div className="flex bg-[#1A1A2E]/60 backdrop-blur-md p-1 rounded-xl border-[0.5px] border-white/[0.12] shadow-inner">
                 {(['action', 'pipeline', 'vault'] as const).map(tab => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
                     className={`px-5 py-2 rounded-lg text-[10px] font-black uppercase tracking-[0.2em] transition-all ${
                       activeTab === tab
-                        ? 'bg-[#87A96B] text-black shadow-lg'
+                        ? 'bg-[#10B981] text-white shadow-[0_0_15px_rgba(16,185,129,0.4)]'
                         : 'text-gray-500 hover:text-white'
                     }`}
                   >
