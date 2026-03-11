@@ -25,7 +25,7 @@ Deno.serve(async (req: Request) => {
 
                 if (clinicId) {
                     console.log(`✅ Activating subscription for clinic: ${clinicId}`);
-                    await supabase
+                    const { error } = await supabase
                         .from("clinics")
                         .update({
                             subscription_status: "active",
@@ -33,6 +33,8 @@ Deno.serve(async (req: Request) => {
                             subscription_id: subscriptionId,
                         })
                         .eq("id", clinicId);
+                    
+                    if (error) throw error;
                 }
                 break;
             }
@@ -51,10 +53,12 @@ Deno.serve(async (req: Request) => {
 
                 console.log(`ℹ️ Updating subscription status for customer ${customerId} to ${dbStatus}`);
 
-                await supabase
+                const { error } = await supabase
                     .from("clinics")
                     .update({ subscription_status: dbStatus })
                     .eq("stripe_customer_id", customerId);
+                
+                if (error) throw error;
                 break;
             }
 

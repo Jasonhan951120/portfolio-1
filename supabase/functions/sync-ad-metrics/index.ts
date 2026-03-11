@@ -24,6 +24,7 @@ Deno.serve(async (_req: Request) => {
         `${SUPABASE_URL}/rest/v1/clinic_ad_connections?status=eq.connected&select=*`,
         { headers }
     );
+    if (!connectionsRes.ok) throw new Error(`Connections fetch failed ${connectionsRes.status}: ${await connectionsRes.text()}`);
     const connections: any[] = await connectionsRes.json();
 
     const today = new Date().toISOString().split("T")[0];
@@ -40,11 +41,12 @@ Deno.serve(async (_req: Request) => {
             }
 
             // Update last_synced_at
-            await fetch(`${SUPABASE_URL}/rest/v1/clinic_ad_connections?id=eq.${conn.id}`, {
+            const patchRes = await fetch(`${SUPABASE_URL}/rest/v1/clinic_ad_connections?id=eq.${conn.id}`, {
                 method: "PATCH",
                 headers,
                 body: JSON.stringify({ last_synced_at: new Date().toISOString() }),
             });
+            if (!patchRes.ok) throw new Error(`PATCH conn failed: ${patchRes.status}`);
         } catch (err) {
             console.error(`Sync failed for clinic ${conn.clinic_id} / ${conn.platform}:`, err);
             results.push({ clinic_id: conn.clinic_id, platform: conn.platform, status: "error", error: String(err) });
@@ -66,12 +68,13 @@ async function syncMetaMetrics(conn: any, date: string, supabaseUrl: string, hea
         `fields=impressions,clicks,spend,campaign_name&time_range={"since":"${date}","until":"${date}"}` +
         `&access_token=${conn.access_token}`
     );
+    if (!res.ok) throw new Error(`Meta API error ${res.status}: ${await res.text()}`);
     const data = await res.json();
 
     if (data.error) throw new Error(data.error.message);
 
     for (const row of data.data || []) {
-        await fetch(`${supabaseUrl}/rest/v1/clinic_ad_metrics`, {
+        const dbRes = await fetch(`${supabaseUrl}/rest/v1/clinic_ad_metrics`, {
             method: "POST",
             headers: { ...headers, "Prefer": "resolution=merge-duplicates" },
             body: JSON.stringify({
@@ -86,6 +89,7 @@ async function syncMetaMetrics(conn: any, date: string, supabaseUrl: string, hea
                 campaign_name: row.campaign_name || "All Campaigns",
             }),
         });
+        if (!dbRes.ok) throw new Error(`Supa DB fail meta ${dbRes.status}: ${await dbRes.text()}`);
     }
 }
 
@@ -104,6 +108,8 @@ async function syncGoogleMetrics(conn: any, date: string, supabaseUrl: string, h
             grant_type: "refresh_token",
         }),
     });
+    if (!refreshRes.ok) throw new Error(`Google OAuth error ${refreshRes.status}: ${await refreshRes.text()}`);
+    
     const refreshData = await refreshRes.json();
     if (refreshData.error) throw new Error(refreshData.error_description || refreshData.error);
 
@@ -135,11 +141,12 @@ async function syncGoogleMetrics(conn: any, date: string, supabaseUrl: string, h
             body: JSON.stringify({ query }),
         }
     );
+    if (!gaRes.ok) throw new Error(`Google Ads API error ${gaRes.status}: ${await gaRes.text()}`);
     const gaData = await gaRes.json();
 
     for (const batch of gaData) {
         for (const row of batch.results || []) {
-            await fetch(`${supabaseUrl}/rest/v1/clinic_ad_metrics`, {
+            const dbRes = await fetch(`${supabaseUrl}/rest/v1/clinic_ad_metrics`, {
                 method: "POST",
                 headers: { ...headers, "Prefer": "resolution=merge-duplicates" },
                 body: JSON.stringify({
@@ -152,6 +159,7 @@ async function syncGoogleMetrics(conn: any, date: string, supabaseUrl: string, h
                     campaign_name: row.campaign?.name || "All Campaigns",
                 }),
             });
+            if (!dbRes.ok) throw new Error(`Supa DB fail google ${dbRes.status}: ${await dbRes.text()}`);
         }
     }
 }

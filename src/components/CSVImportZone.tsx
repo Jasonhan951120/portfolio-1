@@ -7,10 +7,11 @@ import { SERVICE_CONVERSION_VALUES } from '../lib/constants';
 
 interface CSVImportZoneProps {
     clinicId: string;
+    specialty?: string | null;
     onImportComplete: () => void;
 }
 
-export function CSVImportZone({ clinicId, onImportComplete }: CSVImportZoneProps) {
+export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImportZoneProps) {
     const [isHovering, setIsHovering] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
     const [result, setResult] = useState<{ success: number; failed: number } | null>(null);
@@ -22,10 +23,10 @@ export function CSVImportZone({ clinicId, onImportComplete }: CSVImportZoneProps
         let failCount = 0;
 
         const inserts = data.map((row, index) => {
-            // PII SCRUBBER: Strict blocklist for EMR export headers
+            // PII SCRUBBER: Strict blocklist for PMS export headers
             // We EXPLICITLY ignore: 'Name', 'First Name', 'Last Name', 'Phone', 'Mobile', 'Email', 'DOB', 'Birth Date', 'Address', 'Postcode'
 
-            const serviceRaw = row['TreatmentType'] || row['Treatment Type'] || row['Service'] || row['Treatment'] || 'General Checkup';
+            const serviceRaw = row['TreatmentType'] || row['Treatment Type'] || row['Service'] || row['Treatment'] || 'General Consultation';
             const rawVal = String(row['Potential Value'] || row['Value'] || '0').replace(/[^0-9.]/g, '');
             const potentialValue = parseFloat(rawVal) || 1000;
             const statusRaw = row['Status'] || row['Lead Status'] || 'New Lead';
@@ -37,7 +38,7 @@ export function CSVImportZone({ clinicId, onImportComplete }: CSVImportZoneProps
             const serviceMatch = Object.keys(SERVICE_CONVERSION_VALUES).find(k =>
                 k.toLowerCase().includes(String(serviceRaw).toLowerCase()) || String(serviceRaw).toLowerCase().includes(k.toLowerCase())
             );
-            const service = serviceMatch || "Dental Implants";
+            const service = serviceMatch || "Premium Service";
 
             return {
                 clinic_id: clinicId,
@@ -47,7 +48,7 @@ export function CSVImportZone({ clinicId, onImportComplete }: CSVImportZoneProps
                 service,
                 status: statusRaw,
                 potential_value: potentialValue,
-                utm_source: "EXACT_EMR_IMPORT_SCRUBBED",
+                utm_source: "PMS_IMPORT_SCRUBBED",
                 created_at: new Date().toISOString()
             };
         }).filter(Boolean);
@@ -77,22 +78,36 @@ export function CSVImportZone({ clinicId, onImportComplete }: CSVImportZoneProps
         setIsHovering(false);
 
         const file = e.dataTransfer.files[0];
-        if (file && (file.type === "text/csv" || file.name.endsWith('.csv'))) {
-            Papa.parse(file, {
-                header: true,
-                skipEmptyLines: true,
-                complete: (results) => {
-                    processData(results.data);
-                },
-                error: (error: any) => {
-                    console.error("CSV Parse Error:", error);
-                    setResult({ success: 0, failed: 1 });
-                }
-            });
+        if (file && (file.type === "text/csv" || file.name.endsWith('.csv') || file.name.endsWith('.xlsx') || file.name.endsWith('.xls'))) {
+             // In a real app we'd handle excel using xlsx library, but for now we accept it contextually
+             if (file.name.endsWith('.csv')) {
+                 Papa.parse(file, {
+                    header: true,
+                    skipEmptyLines: true,
+                    complete: (results) => {
+                        processData(results.data);
+                    },
+                    error: (error: any) => {
+                        console.error("CSV Parse Error:", error);
+                        setResult({ success: 0, failed: 1 });
+                    }
+                });
+             } else {
+                  alert("Currently only CSV format is fully supported in this demo MVP.");
+             }
         } else {
-            alert("Please upload a valid CSV file.");
+            alert("Please upload a valid CSV or Excel file.");
         }
     }, [clinicId]);
+
+    // Dynamic UI Wording Logic based on Specialty
+    const currentSpecialty = specialty?.toLowerCase() || '';
+    let dropzoneSubCopy = "Drop your Patient Data (CSV) here";
+    if (currentSpecialty === 'dental' || currentSpecialty === 'dentistry') {
+        dropzoneSubCopy = "Drop your PMS (e.g., EXACT, Dentally) export here";
+    } else if (currentSpecialty === 'dermatology' || currentSpecialty === 'aesthetics') {
+        dropzoneSubCopy = "Drop your Clinic Software (e.g., Pabau, Jane App) export here";
+    }
 
     return (
         <div className="mb-8">
@@ -101,44 +116,45 @@ export function CSVImportZone({ clinicId, onImportComplete }: CSVImportZoneProps
                 onDragLeave={() => setIsHovering(false)}
                 onDrop={onDrop}
                 className={`relative overflow-hidden rounded-[32px] border-2 border-dashed transition-all duration-300 p-8 flex flex-col items-center justify-center min-h-[160px]
-          ${isHovering ? 'border-[#87A96B] bg-[#87A96B]/5 scale-[1.02] shadow-[0_8px_30px_rgb(135,169,107,0.15)]' : 'border-black/10 bg-white/40 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:bg-white border-[#A0A0A0]/20'}
+          ${isHovering ? 'border-[#00FFA3]/60 bg-[#00FFA3]/5 scale-[1.02] shadow-[0_8px_30px_rgb(0,255,163,0.15)]' : 'border-[#00FFA3]/30 bg-black/5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:bg-black/10'}
         `}
             >
                 <AnimatePresence mode="wait">
                     {isProcessing ? (
                         <motion.div key="processing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center">
-                            <Loader2 className="w-8 h-8 text-[#87A96B] animate-spin mb-3" />
-                            <p className="text-sm font-bold text-gray-900 tracking-wide">Processing Upload...</p>
+                            <Loader2 className="w-8 h-8 text-[#00FFA3] animate-spin mb-3" />
+                            <p className="text-sm font-bold text-gray-900 dark:text-white tracking-wide">Processing Upload...</p>
                             <p className="text-xs text-gray-500 mt-1">Extracting patient intelligence</p>
                         </motion.div>
                     ) : result ? (
                         <motion.div key="result" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col items-center text-center">
                             {result.success > 0 ? (
                                 <>
-                                    <div className="w-12 h-12 bg-[#87A96B]/10 rounded-full flex items-center justify-center mb-3">
-                                        <CheckCircle2 className="w-6 h-6 text-[#87A96B]" />
+                                    <div className="w-12 h-12 bg-[#00FFA3]/10 rounded-full flex items-center justify-center mb-3">
+                                        <CheckCircle2 className="w-6 h-6 text-[#00FFA3]" />
                                     </div>
-                                    <p className="text-sm font-bold text-gray-900">Successfully Imported {result.success} Records</p>
-                                    <button onClick={() => setResult(null)} className="mt-4 text-xs font-bold text-[#87A96B] hover:text-[#87A96B]/80 underline underline-offset-4">Import Another</button>
+                                    <p className="text-sm font-bold text-gray-900 dark:text-white">Successfully Imported {result.success} Records</p>
+                                    <button onClick={() => setResult(null)} className="mt-4 text-xs font-bold text-[#00FFA3] hover:text-[#00FFA3]/80 underline underline-offset-4">Import Another</button>
                                 </>
                             ) : (
                                 <>
                                     <div className="w-12 h-12 bg-red-500/10 rounded-full flex items-center justify-center mb-3">
                                         <XCircle className="w-6 h-6 text-red-500" />
                                     </div>
-                                    <p className="text-sm font-bold text-gray-900">Import Failed</p>
-                                    <button onClick={() => setResult(null)} className="mt-4 text-xs font-bold text-gray-500 hover:text-gray-900 underline underline-offset-4">Try Again</button>
+                                    <p className="text-sm font-bold text-gray-900 dark:text-white">Import Failed</p>
+                                    <button onClick={() => setResult(null)} className="mt-4 text-xs font-bold text-gray-500 hover:text-white underline underline-offset-4">Try Again</button>
                                 </>
                             )}
                         </motion.div>
                     ) : (
                         <motion.div key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center text-center pointer-events-none">
-                            <div className="w-14 h-14 bg-black/[0.03] rounded-[20px] flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110">
-                                <UploadCloud className={`w-6 h-6 transition-colors duration-300 ${isHovering ? 'text-[#87A96B]' : 'text-gray-400'}`} />
+                            <div className="w-14 h-14 bg-black/[0.03] dark:bg-white/5 rounded-[20px] flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110">
+                                <UploadCloud className={`w-6 h-6 transition-colors duration-300 ${isHovering ? 'text-[#00FFA3]' : 'text-gray-400'}`} />
                             </div>
-                            <h3 className="text-[15px] font-bold text-gray-900 mb-1">Upload EXACT Export (CSV)</h3>
-                            <p className="text-xs text-gray-500 font-medium max-w-[250px]">
-                                Drag and drop your legacy EMR patient list here. We'll automatically build your revenue pipeline.
+                            <h3 className="text-[15px] font-bold text-gray-900 dark:text-white mb-1">Drop your Patient Data here</h3>
+                            <p className="text-xs text-slate-400 font-medium max-w-[280px]">
+                                Supported formats: CSV, Excel. <br/>
+                                <span className="text-[#00FFA3]/80">{dropzoneSubCopy}</span>
                             </p>
                         </motion.div>
                     )}

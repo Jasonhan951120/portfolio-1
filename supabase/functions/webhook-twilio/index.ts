@@ -31,12 +31,14 @@ serve(async (req) => {
 
         // Identity matching logic
         // Attempt to match the sender's phone number to a lead in the CRM
-        const { data: leadMatch } = await supabase
+        const { data: leadMatch, error: matchError } = await supabase
             .from('consultation_requests')
             .select('id, clinic_id')
             .eq('phone', fromNumber)
             .limit(1)
             .maybeSingle();
+
+        if (matchError) throw matchError;
 
         // If no lead match, we might assign it to a default clinic or leave clinic_id null.
         // For this prototype, we'll assume a default clinic_id if not matched, or handle it dynamically.

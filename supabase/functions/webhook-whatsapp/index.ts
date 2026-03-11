@@ -53,12 +53,14 @@ serve(async (req) => {
         const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
         // Identity matching logic
-        const { data: leadMatch } = await supabase
+        const { data: leadMatch, error: matchError } = await supabase
             .from('consultation_requests')
             .select('id, clinic_id')
             .eq('phone', fromNumber)
             .limit(1)
             .maybeSingle();
+
+        if (matchError) throw matchError;
 
         const messageData = {
             clinic_id: leadMatch?.clinic_id || null, // Best effort

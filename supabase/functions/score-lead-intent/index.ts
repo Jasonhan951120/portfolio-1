@@ -47,6 +47,11 @@ Return ONLY JSON:
             }),
         })
 
+        if (!openAiResponse.ok) {
+            const errText = await openAiResponse.text();
+            throw new Error(`OpenAI API error ${openAiResponse.status}: ${errText}`);
+        }
+
         const aiData = await openAiResponse.json()
         const content = JSON.parse(aiData.choices[0].message.content)
 
