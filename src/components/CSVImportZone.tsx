@@ -116,9 +116,9 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete, variant =
                 onDragOver={(e) => { e.preventDefault(); setIsHovering(true); }}
                 onDragLeave={() => setIsHovering(false)}
                 onDrop={onDrop}
-                className={`relative overflow-hidden rounded-[32px] border-2 border-dashed transition-all duration-500 p-8 flex flex-col items-center justify-center
-          ${variant === 'hero' ? 'min-h-[350px] bg-[#121212] border-slate-500/30' : 'min-h-[160px] bg-black/5 border-[#00FFA3]/30'}
-          ${isHovering ? 'border-[#00FFA3]/60 bg-[#00FFA3]/5 scale-[1.01] shadow-[0_0_50px_rgba(0,255,163,0.1)]' : 'shadow-[0_8px_30px_rgba(0,0,0,0.04)]'}
+                className={`relative overflow-hidden rounded-[32px] border-dashed transition-all duration-500 p-8 flex flex-col items-center justify-center
+          ${variant === 'hero' ? 'min-h-[350px] bg-[#121212] border-[0.5px] border-slate-500/30' : 'min-h-[160px] bg-[#121212]/50 border-[0.5px] border-slate-500/20 backdrop-blur-xl'}
+          ${isHovering ? 'border-emerald-400/60 bg-emerald-400/5 scale-[1.01] shadow-[0_0_50px_rgba(16,185,129,0.1)]' : 'shadow-[0_8px_30px_rgba(0,0,0,0.04)]'}
           group cursor-pointer
         `}
             >
@@ -158,13 +158,13 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete, variant =
                             <div className={`rounded-[24px] flex items-center justify-center mb-6 transition-all duration-500 group-hover:scale-110
                                 ${variant === 'hero' ? 'w-20 h-20 bg-white/5 border border-white/10' : 'w-14 h-14 bg-black/[0.03] dark:bg-white/5'}
                             `}>
-                                <UploadCloud className={`transition-colors duration-300 ${isHovering ? 'text-[#00FFA3]' : 'text-gray-400'} ${variant === 'hero' ? 'w-8 h-8' : 'w-6 h-6'}`} />
+                                <ShieldCheck className={`transition-colors duration-300 ${isHovering ? 'text-[#00FFA3]' : 'text-gray-400'} ${variant === 'hero' ? 'w-8 h-8' : 'w-6 h-6'}`} />
                             </div>
                             <h3 className={`font-black text-white mb-2 tracking-tight ${variant === 'hero' ? 'text-2xl' : 'text-[15px]'}`}>
-                                {variant === 'hero' ? "Secure Vault: Deposit PMS Export" : "Drop Patient Data here"}
+                                {variant === 'hero' ? "Secure Vault: Deposit PMS Export" : "Secure Vault: Practice Data"}
                             </h3>
                             <p className="text-xs text-slate-400 font-medium max-w-[320px] leading-relaxed">
-                                {variant === 'hero' ? "Lock in your practice data to unlock hidden revenue instantly." : "Supported formats: CSV, Excel."} <br/>
+                                {variant === 'hero' ? "Lock in your practice data to unlock hidden revenue instantly." : "Protected local parsing. (CSV/Excel)"} <br/>
                                 <span className="text-[#00FFA3]/80 mt-2 inline-block font-bold">{dropzoneSubCopy}</span>
                             </p>
                         </motion.div>

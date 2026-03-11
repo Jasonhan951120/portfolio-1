@@ -86,7 +86,7 @@ const PrivacyPolicy: React.FC = () => {
                                         <div>
                                             <h3 className="text-lg font-bold text-slate-900 mb-2">B. System Role Separation</h3>
                                             <p className="text-slate-500 text-sm leading-relaxed">
-                                                Your existing EMR (e.g., EXACT, R4, Dentally) remains your secure "System of Record". Hanlan OC acts purely as a "System of Engagement" for marketing automation. By decoupling these layers, we eliminate the risk of clinical data leaks during marketing activities.
+                                                Your existing Practice Management System (PMS) remains your secure "System of Record". Hanlan OC acts purely as a "System of Engagement" for marketing automation. By decoupling these layers, we eliminate the risk of clinical data leaks during marketing activities.
                                             </p>
                                         </div>
                                     </div>

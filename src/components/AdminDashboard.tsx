@@ -3344,10 +3344,7 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              {/* Side-Car CSV Parser for EXACT Uploads */}
-              <CSVImportZone clinicId={profile?.clinic_id || ""} onImportComplete={() => fetchLeads()} />
-
-              {/* Side-Car CSV Parser for EXACT Uploads */}
+              {/* Side-Car CSV Parser for PMS Uploads */}
               <CSVImportZone clinicId={profile?.clinic_id || ""} onImportComplete={() => fetchLeads()} />
 
               {/* Kanban Board */}
