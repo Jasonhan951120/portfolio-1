@@ -2435,11 +2435,12 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          <div className="max-w-2xl text-center md:text-right">
+          <div className="max-w-3xl text-center md:text-right">
             <p className="text-[10px] text-zinc-500 leading-relaxed font-medium">
-              Hanlan OC operates on a strict <span className="text-zinc-300 font-bold uppercase tracking-tighter">"Privacy-First, Zero-Retention"</span> architecture compliant with UK GDPR.
-              By using this service, the Clinic acknowledges it acts as the sole <span className="text-zinc-300">"Data Controller"</span> with full legal liability. Hanlan OC acts strictly as a <span className="text-zinc-300">"Data Processor"</span>.
-              All Patient PII is scrubbed locally. Your continued use constitutes acceptance of our standard <span className="text-emerald-500">Data Processing Agreement (DPA)</span>.
+              Hanlan OC operates on a strict <span className="text-zinc-300 font-bold uppercase tracking-tighter">"Privacy-First, Zero-Retention"</span> architecture compliant with UK GDPR. 
+              By using Hanlan OC, the Clinic acknowledges and agrees that it acts as the sole <span className="text-zinc-300">"Data Controller"</span> with full legal liability for patient data under the UK GDPR. 
+              Hanlan OC acts strictly as a <span className="text-zinc-300">"Data Processor"</span> providing a local visualization tool. 
+              Your continued use of the service constitutes explicit acceptance of our standard <span className="text-emerald-500 font-bold uppercase tracking-tighter">Data Processing Agreement (DPA)</span>.
             </p>
           </div>
         </div>

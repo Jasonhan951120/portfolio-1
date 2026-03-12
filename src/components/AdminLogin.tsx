@@ -200,6 +200,18 @@ export default function AdminLogin() {
                     </form>
                 )}
 
+                <div className="flex items-start gap-3 px-4 py-3 bg-white/5 border border-white/10 rounded-2xl mb-6 group cursor-pointer hover:bg-white/10 transition-all" onClick={() => setAgreed(!agreed)}>
+                    <input
+                        type="checkbox"
+                        checked={agreed}
+                        onChange={(e) => { e.stopPropagation(); setAgreed(e.target.checked); }}
+                        className="w-4 h-4 mt-0.5 rounded border-white/20 bg-transparent text-cyan-500 focus:ring-cyan-500/50"
+                    />
+                    <p className="text-[10px] text-left text-white/50 leading-relaxed font-bold uppercase tracking-tight group-hover:text-white/80 transition-colors">
+                        I agree to the <span className="text-cyan-400">Terms of Service</span>, <span className="text-cyan-400">Privacy Policy</span>, and the <span className="text-cyan-400 underline underline-offset-2">Zero-Retention DPA</span>.
+                    </p>
+                </div>
+
                 <div className="relative mb-6">
                     <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/10"></div></div>
                     <div className="relative flex justify-center text-[10px] uppercase font-bold tracking-widest"><span className="bg-[#0f1115] px-4 text-white/20">or</span></div>
