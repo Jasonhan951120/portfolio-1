@@ -5,7 +5,7 @@ import { motion } from "motion/react";
 import {
   Users, ArrowLeft, MoreHorizontal,
   LogOut, TrendingUp, RefreshCw, FileText,
-  Search, Globe, Star, UserCheck, Calendar, X, Filter, List, BarChart2,
+  Search, Globe, Star, UserCheck, Calendar, X, Filter, List as LucideList, BarChart2,
   Presentation, Play, ChevronRight, Check, XCircle,
   MessageSquare, Send, Sparkles, Layout,
   ArrowRight, ShieldCheck, Zap, Settings, SlidersHorizontal, Building, Save, Plus, Trash2, Camera, Palette, CreditCard,
@@ -43,20 +43,20 @@ import { SettingsDrawer } from "./dashboard/SettingsDrawer";
 import { ZeroDashboardView } from "./dashboard/ZeroDashboardView";
 import { ExpertModeDrawer } from "./dashboard/ExpertModeDrawer";
 
-// Onboarding Tooltip Component (Premium Glassmorphism)
+// Onboarding Tooltip Component (Medical Precision)
 const OnboardingTooltip = ({ message, onClose }: { message: string; onClose: () => void }) => (
   <motion.div
     initial={{ opacity: 0, scale: 0.9, y: 10 }}
     animate={{ opacity: 1, scale: 1, y: 0 }}
-    className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-64 p-5 bg-[#0A0F1E]/90 backdrop-blur-3xl border border-[#00FFA3]/30 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_20px_rgba(0,255,163,0.2)] z-[60]"
+    className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-64 p-5 bg-white border border-emerald-500/20 rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.08)] z-[60]"
   >
-    <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#0A0F1E] border-t border-l border-[#00FFA3]/30 rotate-45" />
-    <p className="text-[11px] font-bold text-white leading-relaxed mb-3">
+    <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-t border-l border-emerald-500/20 rotate-45" />
+    <p className="text-[11px] font-bold text-slate-900 leading-relaxed mb-3">
       {message}
     </p>
     <button 
       onClick={onClose}
-      className="w-full py-2 bg-[#00FFA3]/10 hover:bg-[#00FFA3]/20 border border-[#00FFA3]/30 rounded-xl text-[9px] font-black uppercase tracking-widest text-[#00FFA3] transition-all"
+      className="w-full py-2 bg-emerald-500/5 hover:bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-[9px] font-black uppercase tracking-widest text-emerald-600 transition-all"
     >
       Got it
     </button>
@@ -124,12 +124,12 @@ function timeAgo(dateStr: string): string {
 
 
 const STATUS_COLORS: Record<string, string> = {
-  "New Lead": "text-[#C5A059] border-[#C5A059]/40 bg-[#C5A059]/10",
-  "Qualified": "text-purple-400 border-purple-400/40 bg-transparent",
-  "Proposal Sent": "text-yellow-400 border-yellow-400/40 bg-yellow-400/10",
-  "Closed Won": "text-[#87A96B] border-[#87A96B]/40 bg-[#87A96B]/10",
-  "Abandoned": "text-gray-400 border-black/10 bg-black/5",
-  "Future Pipeline": "text-blue-400 border-blue-400/40 bg-blue-400/10",
+  "New Lead": "text-emerald-600 border-emerald-200 bg-emerald-50/50",
+  "Qualified": "text-blue-600 border-blue-200 bg-blue-50/50",
+  "Proposal Sent": "text-indigo-600 border-indigo-200 bg-indigo-50/50",
+  "Closed Won": "text-emerald-700 border-emerald-300 bg-emerald-100",
+  "Abandoned": "text-slate-400 border-slate-200 bg-slate-50",
+  "Future Pipeline": "text-slate-600 border-slate-200 bg-slate-100/50",
 };
 
 // Static staff list removed. Using dynamic list from teamMembers and leads instead.
@@ -214,7 +214,7 @@ function DonutChart({ segments, total, totalValue }: { segments: DonutSegment[];
           <circle
             cx={cx} cy={cy} r={radius}
             fill="none"
-            stroke="rgba(255,255,255,0.05)"
+            stroke="#F1F5F9"
             strokeWidth={strokeWidth}
           />
           {segmentElements}
@@ -222,13 +222,13 @@ function DonutChart({ segments, total, totalValue }: { segments: DonutSegment[];
         {/* Centre label */}
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 mt-1">
           <div className="flex flex-col items-center">
-            <span className="text-xl font-bold text-gray-900 leading-none">{total}</span>
-            <span className="text-[9px] text-gray-500 uppercase tracking-widest font-bold">Leads</span>
+            <span className="text-xl font-bold text-slate-900 leading-none">{total}</span>
+            <span className="text-[9px] text-slate-500 uppercase tracking-widest font-bold">Leads</span>
           </div>
-          <div className="w-8 h-px bg-white/20 my-0.5" />
+          <div className="w-8 h-px bg-slate-100 my-0.5" />
           <div className="flex flex-col items-center">
-            <span className="text-[15px] font-bold text-[#87A96B] leading-none" data-hj-suppress>£{(totalValue / 1000).toFixed(1)}k</span>
-            <span className="text-[9px] text-gray-500 uppercase tracking-widest font-bold">Value</span>
+            <span className="text-[15px] font-bold text-emerald-600 leading-none" data-hj-suppress>£{(totalValue / 1000).toFixed(1)}k</span>
+            <span className="text-[9px] text-slate-500 uppercase tracking-widest font-bold">Value</span>
           </div>
         </div>
       </div>
@@ -241,10 +241,10 @@ function DonutChart({ segments, total, totalValue }: { segments: DonutSegment[];
             <div key={seg.label} className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: seg.hex }} />
-                <span className="text-[11px] text-gray-500 font-medium">{seg.label}</span>
+                <span className="text-[11px] text-slate-500 font-medium">{seg.label}</span>
               </div>
-              <span className="text-[11px] font-bold text-gray-900/80">
-                {seg.count} <span className="text-gray-400">({pct}%)</span>
+              <span className="text-[11px] font-bold text-slate-900/80">
+                {seg.count} <span className="text-slate-400">({pct}%)</span>
               </span>
             </div>
           );
@@ -261,32 +261,32 @@ function NotificationDropdown({ notifications, onClose, onDismiss }: { notificat
       initial={{ opacity: 0, y: 10, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 10, scale: 0.95 }}
-      className="absolute top-full right-0 mt-4 w-80 bg-white border border-black/10 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 z-[100] backdrop-blur-xl"
+      className="absolute top-full right-0 mt-4 w-80 bg-white border border-slate-200 rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.08)] p-6 z-[100]"
     >
       <div className="flex justify-between items-center mb-6">
-        <h3 className="text-xs font-bold text-gray-900 uppercase tracking-widest">Recent Activity</h3>
-        <button onClick={onClose} className="p-1 hover:bg-black/5 rounded-lg text-gray-500">
+        <h3 className="text-xs font-bold text-slate-900 uppercase tracking-widest">Recent Activity</h3>
+        <button onClick={onClose} className="p-1 hover:bg-slate-50 rounded-lg text-slate-400">
           <X className="w-4 h-4" />
         </button>
       </div>
       <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
         {notifications.length === 0 ? (
-          <p className="text-[10px] text-gray-400 text-center py-8 italic">No new activity</p>
+          <p className="text-[10px] text-slate-400 text-center py-8 italic">No new activity</p>
         ) : (
           notifications.map((n) => (
-            <div key={n.id} className="relative p-4 bg-white/[0.03] border border-black/5 rounded-2xl group transition-all hover:bg-white/[0.05]">
+            <div key={n.id} className="relative p-4 bg-slate-50 border border-slate-100 rounded-2xl group transition-all hover:bg-slate-100/50">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   onDismiss(n.id);
                 }}
-                className="absolute top-3 right-3 p-1 rounded-md text-gray-400 hover:text-gray-900 hover:bg-black/5 transition-colors"
+                className="absolute top-3 right-3 p-1 rounded-md text-slate-300 hover:text-slate-900 hover:bg-white transition-colors"
                 title="Dismiss"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
-              <p className="text-[11px] text-gray-900/80 leading-relaxed mb-2 pr-6">{n.message}</p>
-              <span className="text-[8px] font-bold text-[#87A96B] uppercase tracking-tighter">{n.time}</span>
+              <p className="text-[11px] text-slate-600 leading-relaxed mb-2 pr-6">{n.message}</p>
+              <span className="text-[8px] font-bold text-emerald-600 uppercase tracking-tighter">{n.time}</span>
             </div>
           ))
         )}
@@ -319,27 +319,27 @@ function WaitlistPanel({
           animate={{ x: 0 }}
           exit={{ x: 400 }}
           transition={{ type: "spring", damping: 25, stiffness: 200 }}
-          className="fixed top-0 right-0 h-full w-[380px] bg-white border-l border-black/10 shadow-[-20px_0_50px_rgba(0,0,0,0.5)] z-[101] p-10 backdrop-blur-3xl overflow-y-auto custom-scrollbar"
+          className="fixed top-0 right-0 h-full w-[380px] bg-white border-l border-slate-200 shadow-[-20px_0_50px_rgba(0,0,0,0.05)] z-[101] p-10 overflow-y-auto custom-scrollbar"
         >
           <div className="flex justify-between items-center mb-10">
             <div>
-              <h2 className="text-2xl font-display font-bold text-gray-900">Smart Waitlist</h2>
-              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">Gap Filling Automation</p>
+              <h2 className="text-2xl font-bold text-slate-900">Smart Waitlist</h2>
+              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Gap Filling Automation</p>
             </div>
-            <button onClick={onClose} className="p-3 bg-black/5 hover:bg-black/5 rounded-2xl text-gray-900 transition-all">
+            <button onClick={onClose} className="p-3 bg-slate-50 hover:bg-slate-100 rounded-2xl text-slate-900 transition-all">
               <X className="w-6 h-6" />
             </button>
           </div>
 
           <div className="space-y-6 mb-24">
-            <div className="p-6 bg-[#87A96B]/5 border border-[#87A96B]/20 rounded-3xl group transition-all">
-              <p className="text-[10px] font-bold text-[#87A96B] uppercase tracking-[0.2em] mb-3 leading-none">Intelligence Pack</p>
-              <h3 className="text-lg font-bold text-gray-900 mb-2 underline decoration-[#87A96B]/30 underline-offset-4">1-Click Gap Filler</h3>
-              <p className="text-xs text-gray-500 leading-relaxed mb-6">We found a 2:00 PM slot tomorrow. Notify all matching waitlist patients?</p>
+            <div className="p-6 bg-slate-50 border border-slate-200 rounded-3xl group transition-all">
+              <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-[0.2em] mb-3 leading-none">Intelligence Pack</p>
+              <h3 className="text-lg font-bold text-slate-900 mb-2 underline decoration-emerald-200 underline-offset-4">1-Click Gap Filler</h3>
+              <p className="text-xs text-slate-500 leading-relaxed mb-6">We found a 2:00 PM slot tomorrow. Notify all matching waitlist patients?</p>
               <button
                 onClick={onBroadcast}
                 disabled={isBroadcasting}
-                className="w-full py-4 bg-[#87A96B] text-black font-black uppercase tracking-widest text-[11px] rounded-2xl hover:scale-[1.02] transition-transform active:scale-95 shadow-[0_0_30px_rgba(0,255,204,0.3)] disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full py-4 bg-emerald-500 text-white font-black uppercase tracking-widest text-[11px] rounded-2xl hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-500/20 disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {isBroadcasting ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
                 {isBroadcasting ? "Broadcasting..." : "Broadcast Availability"}
@@ -455,26 +455,26 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
     <div ref={setNodeRef} style={style} className="mb-3 outline-none px-1 h-[148px]">
       <motion.div
         layout
-        whileHover={{ scale: 1.02 }}
-        className={`h-full rounded-2xl p-4 relative group transition-all bg-white/5 backdrop-blur-xl border border-white/10 shadow-lg hover:border-emerald-500/20
-          ${isDragging ? 'opacity-50' : ''} ${isOverdue ? 'border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.2)]' : ''}`}
+        whileHover={{ scale: 1.02, y: -2 }}
+        className={`h-full rounded-2xl p-4 relative group transition-all bg-white border border-slate-200 shadow-sm hover:shadow-md hover:border-emerald-500/30
+          ${isDragging ? 'opacity-50' : ''} ${isOverdue ? 'border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.1)]' : ''}`}
       >
         <div {...attributes} {...listeners} className="absolute inset-0 z-0 cursor-grab" />
         <div className="relative z-10 pointer-events-none">
           <div className="flex justify-between items-start mb-2">
             <div>
-              <h4 className="font-bold text-[13px] text-white truncate w-40">{lead.name}</h4>
-              <p className="text-[9px] text-zinc-500 uppercase tracking-widest mt-0.5">{timeAgo(lead.created_at)}</p>
+              <h4 className="font-bold text-[13px] text-slate-900 truncate w-40">{lead.name}</h4>
+              <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">{timeAgo(lead.created_at)}</p>
             </div>
-            <span className="text-[13px] font-black text-[#10B981]">£{(lead.potential_value || 1000).toLocaleString()}</span>
+            <span className="text-[14px] font-black text-slate-900 tabular-nums tracking-tighter">£{(lead.potential_value || 1000).toLocaleString()}</span>
           </div>
-          <div className="flex gap-1">
-            <span className="text-[8px] font-black px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase">AI {lead.intent_score || 0}%</span>
-            <span className="text-[8px] font-bold px-1.5 py-0.5 rounded bg-white/5 text-zinc-400 border border-white/10 uppercase">{lead.service}</span>
+          <div className="flex gap-1 mb-3">
+            <span className="text-[8px] font-black px-1.5 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 uppercase">AI {lead.intent_score || 0}%</span>
+            <span className="text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-slate-50 text-slate-500 border border-slate-100 uppercase">{lead.service}</span>
           </div>
-          <div className="mt-4 pt-4 border-t border-white/[0.05] flex justify-end gap-2 pointer-events-auto opacity-0 group-hover:opacity-100 transition-all">
-            <button onClick={() => onOpenPTMode(lead)} className="p-1.5 text-emerald-400 hover:bg-emerald-500/10 rounded-lg"><Monitor className="w-3 h-3" /></button>
-            <button onClick={() => setSelectedLead(lead)} className="p-1.5 text-zinc-400 hover:bg-white/5 rounded-lg"><FileText className="w-3 h-3" /></button>
+          <div className="pt-3 border-t border-slate-100 flex justify-end gap-2 pointer-events-auto opacity-0 group-hover:opacity-100 transition-all">
+            <button onClick={() => onOpenPTMode(lead)} className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"><Monitor className="w-3.5 h-3.5" /></button>
+            <button onClick={() => setSelectedLead(lead)} className="p-1.5 text-slate-400 hover:bg-slate-50 rounded-lg transition-colors"><FileText className="w-3.5 h-3.5" /></button>
           </div>
         </div>
       </motion.div>
@@ -504,27 +504,26 @@ function KanbanColumn({
   return (
     <div className="w-[290px] shrink-0 flex flex-col h-[calc(100vh-280px)] pr-4 mr-4 last:mr-0 last:pr-0 transition-all duration-500">
       <div className="flex flex-col mb-6 px-1">
-        <h3 className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-1 flex items-center justify-between">
+        <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1 flex items-center justify-between">
           {columnId}
-          <span className="opacity-30">{columnLeads.length}</span>
+          <span className="opacity-40">{columnLeads.length}</span>
         </h3>
-        <span className="text-xl font-black text-white tabular-nums tracking-tighter">
+        <span className="text-xl font-bold text-slate-900 tabular-nums tracking-tighter">
           £{columnLeads.reduce((sum, l) => sum + (SERVICE_CONVERSION_VALUES[l.service] || 1000), 0).toLocaleString()}
         </span>
-        <div className="h-[1px] w-full bg-gradient-to-r from-white/10 to-transparent mt-3" />
+        <div className="h-[2px] w-full bg-slate-100 mt-3 rounded-full" />
       </div>
 
       <div className="flex-1 overflow-hidden" ref={setNodeRef}>
         <SortableContext items={columnLeads.map(l => l.id)}>
           {columnLeads.length > 0 ? (
-            <List
-              height={500}
+            <List<{}>
               rowCount={columnLeads.length}
               rowHeight={160}
-              width="100%"
+              rowProps={{}}
               className="custom-scrollbar-mini"
-              rowComponent={({ index, style }) => (
-                <div style={style}>
+              rowComponent={({ index, style, ariaAttributes }: { index: number; style: React.CSSProperties; ariaAttributes: any }) => (
+                <div style={style} {...ariaAttributes}>
                   <SortableLeadCard
                     id={columnLeads[index].id}
                     lead={columnLeads[index]}
@@ -542,12 +541,12 @@ function KanbanColumn({
               )}
             />
           ) : (
-            <div className="h-48 rounded-[32px] flex flex-col items-center justify-center border border-dashed border-emerald-500/20 bg-emerald-500/5 backdrop-blur-xl group">
-              <div className="w-12 h-12 mb-3 rounded-2xl bg-[#0A0F1E]/40 border border-[#00FFA3]/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                <Zap className="w-6 h-6 text-[#00FFA3]" />
+            <div className="h-48 rounded-[32px] flex flex-col items-center justify-center border border-dashed border-slate-200 bg-white shadow-sm group">
+              <div className="w-12 h-12 mb-3 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Zap className="w-6 h-6 text-emerald-500" />
               </div>
-              <h4 className="text-[10px] font-black text-white uppercase tracking-widest px-8 text-center leading-relaxed">Secure Pipeline Ready</h4>
-              <p className="text-[9px] text-zinc-500 font-bold uppercase tracking-tight mt-1">Upload data to reveal revenue</p>
+              <h4 className="text-[10px] font-black text-slate-900 uppercase tracking-widest px-8 text-center leading-relaxed">Secure Pipeline Ready</h4>
+              <p className="text-[9px] text-slate-400 font-bold uppercase tracking-tight mt-1">Upload data to reveal revenue</p>
             </div>
           )}
         </SortableContext>
@@ -566,19 +565,19 @@ function KanbanSkeleton() {
   return (
     <div className="flex min-w-max animate-pulse gap-6 overflow-hidden">
       {[1, 2, 3, 4].map(i => (
-        <div key={i} className="flex-shrink-0 w-[280px] bg-white border border-black/5 rounded-[32px] p-5 flex flex-col h-[65vh]">
+        <div key={i} className="flex-shrink-0 w-[280px] bg-white border border-slate-200 rounded-[32px] p-5 flex flex-col h-[65vh]">
           <div className="flex items-center justify-between mb-6">
-            <div className="h-4 w-24 bg-black/5 rounded-full"></div>
-            <div className="h-5 w-8 bg-black/5 rounded-full"></div>
+            <div className="h-4 w-24 bg-slate-100 rounded-full"></div>
+            <div className="h-5 w-8 bg-slate-100 rounded-full"></div>
           </div>
           <div className="flex-1 space-y-4 overflow-hidden">
             {[1, 2, 3].map(j => (
-              <div key={j} className="bg-black/[0.02] p-5 rounded-[24px] h-36 border border-black/5">
-                <div className="h-4 w-3/4 bg-black/5 rounded-full mb-3"></div>
-                <div className="h-3 w-1/2 bg-black/5 rounded-full mb-5"></div>
+              <div key={j} className="bg-slate-50 p-5 rounded-[24px] h-36 border border-slate-100">
+                <div className="h-4 w-3/4 bg-slate-200 rounded-full mb-3"></div>
+                <div className="h-3 w-1/2 bg-slate-200 rounded-full mb-5"></div>
                 <div className="flex gap-2">
-                  <div className="h-8 w-20 bg-[#ffffff0d] rounded-full"></div>
-                  <div className="h-8 w-12 bg-[#ffffff0d] rounded-full"></div>
+                  <div className="h-8 w-20 bg-slate-100 rounded-full"></div>
+                  <div className="h-8 w-12 bg-slate-100 rounded-full"></div>
                 </div>
               </div>
             ))}
@@ -601,16 +600,16 @@ function Toast({ message, type, onClose }: { message: string, type: 'success' | 
       initial={{ y: 50, opacity: 0, scale: 0.9 }}
       animate={{ y: 0, opacity: 1, scale: 1 }}
       exit={{ y: 20, opacity: 0, scale: 0.9 }}
-      className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[200] flex items-center gap-3 px-6 py-4 bg-[#1A1A1A] border border-white/10 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-xl"
+      className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[200] flex items-center gap-3 px-6 py-4 bg-white border border-slate-200 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.1)]"
     >
-      <div className={`p-2 rounded-xl ${type === 'success' ? 'bg-[#87A96B]/20 text-[#87A96B]' : 'bg-red-500/20 text-red-500'}`}>
+      <div className={`p-2 rounded-xl ${type === 'success' ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'}`}>
         {type === 'success' ? <Check className="w-4 h-4" /> : <AlertTriangle className="w-4 h-4" />}
       </div>
-      <p className="text-[13px] font-medium text-white/90 tracking-tight">{message}</p>
-      <button onClick={onClose} className="ml-4 text-white/40 hover:text-white/70 transition-colors">
+      <p className="text-[13px] font-bold text-slate-900 tracking-tight">{message}</p>
+      <button onClick={onClose} className="ml-4 text-slate-300 hover:text-slate-900 transition-colors">
         <X className="w-4 h-4" />
       </button>
-      <div className={`absolute bottom-0 left-0 h-0.5 ${type === 'success' ? 'bg-[#87A96B]' : 'bg-red-500'} animate-toast-progress`} style={{ width: '100%' }} />
+      <div className={`absolute bottom-0 left-0 h-0.5 ${type === 'success' ? 'bg-emerald-500' : 'bg-red-500'} animate-toast-progress`} style={{ width: '100%' }} />
     </motion.div>
   );
 }
@@ -2084,29 +2083,28 @@ export default function AdminDashboard() {
   );
 
   return (
-    <div className="min-h-screen bg-[#0A0F1E] text-white font-sans">
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans">
       {session === null ? (
         <div className="flex items-center justify-center h-screen">
           <RefreshCw className="w-6 h-6 text-gray-400 animate-spin" strokeWidth={1.5} />
         </div>
       ) : (
         <>
-          {/* ── CLINICAL LUXURY HERO HEADER ── */}
-          <header className="sticky top-0 z-50 bg-[#08091A]/90 backdrop-blur-2xl border-b border-[0.5px] border-white/[0.07] shadow-[0_1px_0_rgba(255,255,255,0.04)]">
+          {/* ── MEDICAL GRADE HERO HEADER ── */}
+          <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm">
             <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between gap-6">
 
               {/* Left: Authority Metric Overlay */}
               <div className="flex items-center gap-3">
-                <div className="h-6 w-[1.5px] bg-[#10B981]/40 rounded-full" />
+                <div className="h-6 w-[2px] bg-emerald-500 rounded-full" />
                 <div className="flex flex-col">
-                  <span className="text-[9px] font-black uppercase tracking-[0.4em] text-[#A0A0A0]">Clinic Secured</span>
-                  <span className="text-lg font-black tabular-nums text-[#2AF598] tracking-tighter drop-shadow-[0_0_10px_rgba(42,245,152,0.3)]">£{totalAtRisk.toLocaleString()}</span>
+                  <span className="text-[9px] font-black uppercase tracking-[0.4em] text-slate-400">Clinic Secured</span>
+                  <span className="text-lg font-black tabular-nums text-slate-900 tracking-tighter">£{totalAtRisk.toLocaleString()}</span>
                 </div>
               </div>
 
-              {/* Centre: 3-Tab Nav (Ultimate Glass Capsule) */}
-              <div className="flex bg-white/[0.03] backdrop-blur-3xl p-1.5 rounded-2xl border-[0.5px] border-white/10 shadow-2xl relative overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+              {/* Centre: 3-Tab Nav (Medical Capsule) */}
+              <div className="flex bg-slate-100 p-1 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden group">
                 {(['action', 'pipeline', 'vault'] as const).map(tab => (
                   <div key={tab} className="relative">
                     <button
@@ -2114,14 +2112,14 @@ export default function AdminDashboard() {
                         setActiveTab(tab);
                         if (tab === 'vault') setShowOnboardingTooltip(false);
                       }}
-                      className={`px-8 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.25em] transition-all duration-500 relative z-10 ${activeTab === tab
-                          ? 'bg-[#10B981] text-[#0A0F1E] shadow-[0_0_25px_rgba(16,185,129,0.5)] scale-[1.02]'
-                          : 'text-zinc-500 hover:text-white hover:bg-white/5'
+                      className={`px-8 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.25em] transition-all duration-300 relative z-10 ${activeTab === tab
+                          ? 'bg-white text-emerald-600 shadow-sm'
+                          : 'text-slate-400 hover:text-slate-600 hover:bg-white/50'
                         }`}
                     >
                       {tab}
                       {tab === 'vault' && showOnboardingTooltip && (
-                        <span className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 border-2 border-[#0A0F1E] rounded-full animate-pulse shadow-[0_0_10px_rgba(52,211,153,0.8)]" />
+                        <span className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full animate-pulse shadow-sm" />
                       )}
                     </button>
                     {tab === 'vault' && showOnboardingTooltip && (
@@ -2140,22 +2138,22 @@ export default function AdminDashboard() {
                   <motion.div
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/5 border border-emerald-500/10"
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-100"
                   >
-                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-                    <span className="text-[9px] font-black uppercase tracking-widest text-emerald-400">System Active | Last Scanned: Just now</span>
+                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="text-[9px] font-black uppercase tracking-widest text-emerald-600">System Active | Last Scanned: Just now</span>
                   </motion.div>
                 )}
                 <button
                   onClick={() => setIsExpertModeOpen(true)}
-                  className="p-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl transition-all text-zinc-400 hover:text-emerald-400 hover:shadow-[inset_0_0_15px_rgba(16,185,129,0.2)]"
+                  className="p-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl transition-all text-slate-400 hover:text-emerald-600"
                   title="Control Center (Expert Mode)"
                 >
                   <Settings className="w-5 h-5" />
                 </button>
                 <button
                   onClick={() => signOut()}
-                  className="p-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl transition-all text-zinc-500 hover:text-red-400"
+                  className="p-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl transition-all text-slate-400 hover:text-red-600"
                   title="Secure Exit"
                 >
                   <LogOut className="w-5 h-5" />
@@ -2198,8 +2196,8 @@ export default function AdminDashboard() {
                   className="max-w-7xl mx-auto px-6 py-10 space-y-8"
                 >
                   <div className="flex justify-between items-end">
-                    <h2 className="text-3xl font-black text-white tracking-tight">Lead Flow</h2>
-                    <p className="text-xs font-bold text-gray-600 uppercase tracking-widest">{leads.length} total leads</p>
+                    <h2 className="text-3xl font-bold text-slate-900 tracking-tight">Lead Flow</h2>
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">{leads.length} total leads</p>
                   </div>
 
                   <div className="flex overflow-x-auto pb-10 gap-4 custom-scrollbar">
@@ -2234,11 +2232,11 @@ export default function AdminDashboard() {
                   className="max-w-2xl mx-auto px-6 py-20 space-y-10"
                 >
                   <div className="text-center space-y-4">
-                    <h2 className="text-3xl font-black text-white tracking-tighter uppercase italic">The Clinical Vault</h2>
-                    <p className="text-zinc-400 font-bold uppercase tracking-[0.2em] text-[10px]">Authoritative Data Processing Engine ↗</p>
+                    <h2 className="text-3xl font-bold text-slate-900 tracking-tighter uppercase italic">The Clinical Vault</h2>
+                    <p className="text-slate-400 font-bold uppercase tracking-[0.2em] text-[10px]">Authoritative Data Processing Engine ↗</p>
                   </div>
 
-                  <div className="bg-[#1A1A2E] rounded-[44px] p-2 border border-white/10 shadow-2xl">
+                  <div className="bg-white rounded-[44px] p-2 border border-slate-200 shadow-xl">
                     <CSVImportZone
                       clinicId={profile?.clinic_id || ''}
                       specialty={profile?.specialty}
@@ -2271,24 +2269,24 @@ export default function AdminDashboard() {
       )}
 
       {/* Legal & Security Footer */}
-      <footer className="mt-20 pb-12 px-6 border-t border-white/5 bg-black/20 backdrop-blur-sm">
+      <footer className="mt-20 pb-12 px-6 border-t border-slate-200 bg-white/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center">
               <Shield className="w-5 h-5 text-emerald-500" />
             </div>
             <div>
-              <p className="text-[10px] font-black text-white uppercase tracking-[0.2em]">Enterprise Guard</p>
-              <p className="text-[10px] text-emerald-500 font-bold">Bank-Grade Protection Active</p>
+              <p className="text-[10px] font-black text-slate-900 uppercase tracking-[0.2em]">Enterprise Guard</p>
+              <p className="text-[10px] text-emerald-600 font-bold">Bank-Grade Protection Active</p>
             </div>
           </div>
 
           <div className="max-w-3xl text-center md:text-right">
-            <p className="text-[10px] text-zinc-500 leading-relaxed font-medium">
-              Hanlan OC operates on a strict <span className="text-zinc-300 font-bold uppercase tracking-tighter">"Privacy-First, Zero-Retention"</span> architecture compliant with UK GDPR. 
-              By using Hanlan OC, the Clinic acknowledges and agrees that it acts as the sole <span className="text-zinc-300">"Data Controller"</span> with full legal liability for patient data under the UK GDPR. 
-              Hanlan OC acts strictly as a <span className="text-zinc-300">"Data Processor"</span> providing a local visualization tool. 
-              Your continued use of the service constitutes explicit acceptance of our standard <span className="text-emerald-500 font-bold uppercase tracking-tighter">Data Processing Agreement (DPA)</span>.
+            <p className="text-[10px] text-slate-400 leading-relaxed font-medium">
+              Hanlan OC operates on a strict <span className="text-slate-900 font-bold uppercase tracking-tighter">"Privacy-First, Zero-Retention"</span> architecture compliant with UK GDPR. 
+              By using Hanlan OC, the Clinic acknowledges and agrees that it acts as the sole <span className="text-slate-900">"Data Controller"</span> with full legal liability for patient data under the UK GDPR. 
+              Hanlan OC acts strictly as a <span className="text-slate-900">"Data Processor"</span> providing a local visualization tool. 
+              Your continued use of the service constitutes explicit acceptance of our standard <span className="text-emerald-600 font-bold uppercase tracking-tighter">Data Processing Agreement (DPA)</span>.
             </p>
           </div>
         </div>
