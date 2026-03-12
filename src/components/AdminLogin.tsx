@@ -145,99 +145,99 @@ export default function AdminLogin() {
 
     if (loading || processingInvite) {
         return (
-            <div className="min-h-screen bg-[#0f1115] flex items-center justify-center flex-col gap-4">
-                <Loader2 className="w-8 h-8 text-cyan-400 animate-spin" />
+            <div className="min-h-screen bg-slate-50 flex items-center justify-center flex-col gap-4">
+                <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
                 {processingInvite && (
-                    <p className="text-cyan-400 font-medium">Setting up your team access...</p>
+                    <p className="text-emerald-600 font-bold uppercase tracking-widest text-[10px]">Setting up your team access...</p>
                 )}
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-[#050A0F] flex items-center justify-center p-6 relative overflow-hidden">
+        <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 relative overflow-hidden">
             {/* Decorative Blur */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#2AF598]/10 rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none" />
 
-            <div className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 p-10 rounded-[32px] shadow-2xl relative z-10 text-center">
-                <div className="w-16 h-16 bg-cyan-400/20 rounded-2xl flex items-center justify-center mx-auto mb-8 border border-cyan-400/30">
-                    <Lock className="w-8 h-8 text-cyan-400" />
+            <div className="w-full max-w-md bg-white border border-slate-200 p-10 rounded-[44px] shadow-sm relative z-10 text-center">
+                <div className="w-16 h-16 bg-emerald-50 rounded-3xl flex items-center justify-center mx-auto mb-8 border border-emerald-100">
+                    <Lock className="w-8 h-8 text-emerald-500" />
                 </div>
 
-                <h1 className="text-3xl font-display font-bold text-white mb-2 tracking-tight uppercase">
+                <h1 className="text-3xl font-display font-black text-slate-900 mb-2 tracking-tight uppercase">
                     {inviteToken ? "Join the Team" : "Clinic Portal"}
                 </h1>
-                <p className="text-white/40 text-sm font-medium mb-10">
+                <p className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-10">
                     {inviteToken ? "Sign in to accept your invitation." : "Sign in to manage your consultations."}
                 </p>
 
                 {emailSent ? (
-                    <div className="bg-cyan-500/10 border border-cyan-500/30 p-6 rounded-3xl mb-6">
-                        <p className="text-cyan-400 font-bold mb-2">Check your email! ✉️</p>
-                        <p className="text-white/60 text-xs">We sent a secure login link to <span className="text-white font-mono">{email}</span>.</p>
-                        <button onClick={() => setEmailSent(false)} className="mt-4 text-xs text-cyan-400 underline underline-offset-4">Try different email</button>
+                    <div className="bg-emerald-50 border border-emerald-100 p-6 rounded-[32px] mb-6">
+                        <p className="text-emerald-600 font-bold mb-2">Check your email! ✉️</p>
+                        <p className="text-slate-500 text-xs">We sent a secure login link to <span className="text-slate-900 font-bold">{email}</span>.</p>
+                        <button onClick={() => setEmailSent(false)} className="mt-4 text-xs text-emerald-600 font-bold underline underline-offset-4">Try different email</button>
                     </div>
                 ) : (
                     <form onSubmit={handleEmailLogin} className="mb-6 space-y-4 text-left">
                         <div className="space-y-2">
-                            <label className="text-[10px] font-bold uppercase tracking-widest text-white/30 ml-1">Email Address</label>
+                            <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400 ml-1">Email Address</label>
                             <input
                                 required
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-5 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/30 transition-all placeholder:text-white/10"
+                                className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 px-5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all placeholder:text-slate-300"
                                 placeholder="name@practice.com"
                             />
                         </div>
                         <button
                             type="submit"
                             disabled={loading || !agreed}
-                            className="w-full bg-cyan-500 hover:bg-cyan-400 text-black font-bold py-4 px-6 rounded-2xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-30 disabled:grayscale"
+                            className="w-full bg-slate-900 hover:bg-slate-800 text-white font-black py-4 px-6 rounded-2xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-30 disabled:grayscale uppercase tracking-widest text-xs"
                         >
                             {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Send Login Link ✉️"}
                         </button>
                     </form>
                 )}
 
-                <div className="flex items-start gap-3 px-4 py-3 bg-white/5 border border-white/10 rounded-2xl mb-6 group cursor-pointer hover:bg-white/10 transition-all" onClick={() => setAgreed(!agreed)}>
+                <div className="flex items-start gap-3 px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl mb-6 group cursor-pointer hover:bg-slate-100/50 transition-all" onClick={() => setAgreed(!agreed)}>
                     <input
                         type="checkbox"
                         checked={agreed}
                         onChange={(e) => { e.stopPropagation(); setAgreed(e.target.checked); }}
-                        className="w-4 h-4 mt-0.5 rounded border-white/20 bg-transparent text-cyan-500 focus:ring-cyan-500/50"
+                        className="w-4 h-4 mt-0.5 rounded border-slate-300 bg-transparent text-emerald-500 focus:ring-emerald-500/20"
                     />
-                    <p className="text-[10px] text-left text-white/50 leading-relaxed font-bold uppercase tracking-tight group-hover:text-white/80 transition-colors">
-                        I agree to the <span className="text-cyan-400">Terms of Service</span>, <span className="text-cyan-400">Privacy Policy</span>, and the <span className="text-cyan-400 underline underline-offset-2">Zero-Retention DPA</span>.
+                    <p className="text-[10px] text-left text-slate-400 leading-relaxed font-bold uppercase tracking-tight group-hover:text-slate-600 transition-colors">
+                        I agree to the <span className="text-emerald-500">Terms of Service</span>, <span className="text-emerald-500">Privacy Policy</span>, and the <span className="text-emerald-500 underline underline-offset-2">Zero-Retention DPA</span>.
                     </p>
                 </div>
 
                 <div className="relative mb-6">
-                    <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/10"></div></div>
-                    <div className="relative flex justify-center text-[10px] uppercase font-bold tracking-widest"><span className="bg-[#0f1115] px-4 text-white/20">or</span></div>
+                    <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-100"></div></div>
+                    <div className="relative flex justify-center text-[10px] uppercase font-bold tracking-widest"><span className="bg-white px-4 text-slate-300 font-black">or</span></div>
                 </div>
 
                 <div className="space-y-4">
                     <button
                         onClick={handleGoogleLogin}
                         disabled={loading || !agreed}
-                        className="w-full bg-white text-black hover:bg-zinc-200 border border-white font-black py-4 px-6 rounded-2xl flex items-center justify-center gap-3 transition-all active:scale-[0.98] disabled:opacity-30 disabled:grayscale shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+                        className="w-full bg-white text-slate-900 hover:bg-slate-50 border border-slate-200 font-black py-4 px-6 rounded-2xl flex items-center justify-center gap-3 transition-all active:scale-[0.98] disabled:opacity-30 disabled:grayscale shadow-sm uppercase tracking-widest text-xs"
                     >
                         <img src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5" />
                         Continue with Google
                     </button>
                 </div>
 
-                <div className="mt-10 pt-8 border-t border-white/5 space-y-4">
+                <div className="mt-10 pt-8 border-t border-slate-100 space-y-4">
                     <div className="flex items-center justify-center gap-2 text-[10px] font-bold text-emerald-500 uppercase tracking-[0.2em]">
                         <Shield className="w-3 h-3" /> Bank-Grade Encryption Active
                     </div>
-                    <p className="text-[9px] text-white/20 leading-relaxed px-4">
+                    <p className="text-[9px] text-slate-400 leading-relaxed px-4 font-bold uppercase tracking-tight">
                         Secured by Supabase MFA. Zero-PII retention protocol enforced for UK GDPR compliance.
                     </p>
                 </div>
 
-                <p className="mt-8 text-[11px] font-bold uppercase tracking-widest text-white/30">
+                <p className="mt-8 text-[11px] font-black uppercase tracking-[0.3em] text-slate-300">
                     Halan Agency 2026
                 </p>
             </div>

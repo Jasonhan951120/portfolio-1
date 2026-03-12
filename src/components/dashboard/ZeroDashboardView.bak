@@ -101,12 +101,12 @@ function HotLeadCard({
             {/* ── MAIN CARD ── */}
             <div
                 className={`
-                    relative w-full bg-white rounded-[44px] p-8
-                    flex flex-col gap-6
-                    border transition-all duration-700 ease-out
+                    relative w-full bg-[#1E1E1E] rounded-[56px] p-10
+                    flex flex-col gap-8
+                    border-2 transition-all duration-700 ease-out
                     ${sent
-                        ? 'border-emerald-500/20 shadow-[0_20px_40px_rgba(16,185,129,0.1)]'
-                        : 'border-slate-200 shadow-[0_20px_40px_rgba(0,0,0,0.05)]'
+                        ? 'border-emerald-500/60 shadow-[0_0_60px_rgba(16,185,129,0.30),0_40px_90px_rgba(0,0,0,0.7)]'
+                        : 'border-red-500/40 shadow-[0_0_25px_rgba(239,68,68,0.50),0_40px_90px_rgba(0,0,0,0.7)]'
                     }
                 `}
             >
@@ -125,15 +125,15 @@ function HotLeadCard({
                 <div className="relative z-10">
                     <div className="flex justify-between items-start">
                         <div>
-                            <p className={`text-[9px] font-black uppercase tracking-[0.4em] mb-3 transition-colors duration-700 ${sent ? 'text-emerald-500' : 'text-slate-400'}`}>
-                                {sent ? '✓ Revenue Secured' : '⚡ Priority Action'}
+                            <p className={`text-[9px] font-black uppercase tracking-[0.4em] mb-3 transition-colors duration-700 ${sent ? 'text-emerald-400' : 'text-red-400'}`}>
+                                {sent ? '✓ Revenue Secured' : '⚡ Urgent — Act Now'}
                             </p>
-                            <h3 className="text-[1.8rem] font-black text-slate-900 tracking-tight leading-none uppercase">{lead.name}</h3>
-                            <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.3em] mt-2">{lead.service}</p>
+                            <h3 className="text-[2.2rem] font-black text-white tracking-tight leading-none">{lead.name}</h3>
+                            <p className="text-gray-600 text-[10px] font-black uppercase tracking-[0.3em] mt-2">{lead.service}</p>
                         </div>
                         {isVIP && (
-                            <div className="p-3 bg-emerald-50 border border-emerald-100 rounded-2xl flex-shrink-0">
-                                <Sparkles className="w-5 h-5 text-emerald-500" />
+                            <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex-shrink-0">
+                                <Sparkles className="w-5 h-5 text-amber-400" />
                             </div>
                         )}
                     </div>
@@ -141,43 +141,43 @@ function HotLeadCard({
 
                 {/* ── POTENTIAL VALUE ── */}
                 <div className="relative z-10">
-                    <p className="text-slate-400 text-[9px] font-black uppercase tracking-[0.3em] mb-2">Estimated Value</p>
+                    <p className="text-gray-700 text-[9px] font-black uppercase tracking-[0.3em] mb-2">Potential Revenue</p>
                     <motion.p
-                        animate={{ color: sent ? '#10b981' : '#0F172A' }}
+                        animate={{ color: sent ? '#34d399' : '#ffffff' }}
                         transition={{ duration: 0.7 }}
-                        className="font-black tabular-nums tracking-tighter text-slate-900"
-                        style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', lineHeight: 1 }}
+                        className="font-black tabular-nums tracking-tighter"
+                        style={{ fontSize: 'clamp(2.5rem, 9vw, 4.5rem)', lineHeight: 1 }}
                     >
                         £{value.toLocaleString()}
                     </motion.p>
-                    <div className="flex flex-wrap items-center gap-2 mt-4">
+                    <div className="flex flex-wrap items-center gap-2 mt-3">
                         {lead.intent_score != null && (
-                            <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all duration-700 ${sent ? 'bg-emerald-50 border-emerald-100 text-emerald-600' : 'bg-slate-50 border-slate-200 text-slate-600'}`}>
-                                Intent: {lead.intent_score}%
+                            <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all duration-700 ${sent ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-red-500/10 border-red-500/20 text-red-400'}`}>
+                                AI Intent: {lead.intent_score}%
                             </div>
                         )}
                         {isVIP && (
-                            <div className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full text-[9px] font-black uppercase tracking-widest bg-emerald-50 border border-emerald-100 text-emerald-600">
-                                <Sparkles className="w-3 h-3" /> Priority Case
+                            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest bg-amber-500/10 border border-amber-500/20 text-amber-400">
+                                <Sparkles className="w-3 h-3" /> VIP High Value
                             </div>
                         )}
                     </div>
                 </div>
 
                 {/* ── CONTEXTUAL FOOTER ── */}
-                <div className="relative z-10 flex items-center gap-2 mt-auto pt-6 border-t border-slate-100">
-                    <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-slate-50 border border-slate-100">
-                        <span className="text-[10px] text-slate-500 font-black uppercase tracking-tight">🕒 {Math.floor(Math.random() * 5) + 1}h ago</span>
+                <div className="relative z-10 flex items-center gap-2 mt-auto pt-5 border-t border-white/5">
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/5 border border-white/5">
+                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-tight">🕒 {Math.floor(Math.random() * 5) + 1} hrs ago</span>
                     </div>
-                    <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-slate-50 border border-slate-100">
-                        <span className="text-[10px] text-slate-500 font-black uppercase tracking-tight">🦷 {lead.service.split(' ')[0]}</span>
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/5 border border-white/5">
+                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-tight">🦷 {lead.service.split(' ')[0]}</span>
                     </div>
                 </div>
 
                 {/* ── AI SUMMARY ── */}
                 {lead.ai_summary && (
-                    <div className="relative z-10 bg-slate-50 p-5 rounded-[28px] border border-slate-100">
-                        <p className="text-[11px] text-slate-600 leading-relaxed font-bold italic">"{lead.ai_summary}"</p>
+                    <div className="relative z-10 bg-white/[0.04] p-5 rounded-[28px] border border-white/8">
+                        <p className="text-xs text-gray-400 leading-relaxed italic">"{lead.ai_summary}"</p>
                     </div>
                 )}
 
@@ -192,11 +192,11 @@ function HotLeadCard({
                         onClick={handleSend}
                         disabled={sent}
                         className={`
-                            w-full font-black uppercase tracking-widest py-6 rounded-[28px]
-                            transition-all duration-300 flex items-center justify-center gap-3 text-xs
+                            w-full font-black uppercase tracking-widest py-7 rounded-[28px]
+                            transition-all duration-600 flex items-center justify-center gap-3 text-sm
                             ${sent
-                                ? 'bg-emerald-500 text-white cursor-default shadow-lg shadow-emerald-200'
-                                : 'bg-slate-900 text-white border border-transparent hover:bg-slate-800 shadow-sm'
+                                ? 'bg-[#10B981] text-white cursor-default shadow-[0_0_50px_rgba(16,185,129,0.5)]'
+                                : 'bg-white text-gray-900 border border-transparent hover:border-emerald-400/50 shadow-[0_20px_60px_rgba(255,255,255,0.12)] hover:shadow-[0_20px_60px_rgba(255,255,255,0.18),inset_0_0_20px_rgba(16,185,129,0.3)]'
                             }
                         `}
                     >
@@ -228,10 +228,10 @@ function HotLeadCard({
                     {!sent && (
                         <button
                             onClick={onSkip}
-                            className="w-full text-[9px] font-black uppercase tracking-[0.25em] text-slate-400 hover:text-slate-900 py-2 transition-colors flex items-center justify-center gap-2"
+                            className="w-full text-[9px] font-black uppercase tracking-[0.25em] text-gray-700 hover:text-gray-400 py-2 transition-colors flex items-center justify-center gap-2"
                         >
                             <SkipForward className="w-3 h-3" />
-                            Next Patient
+                            Skip to Next
                         </button>
                     )}
                 </div>
@@ -300,99 +300,89 @@ export function ZeroDashboardView({
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 flex flex-col items-center px-6 py-12 relative overflow-hidden">
-            {/* ── AMBIENT STAGE BACKGROUND GLOW removed for light mode ── */}
+        <div className="min-h-screen bg-[#0A0F1E] flex flex-col items-center justify-center px-6 py-16 relative overflow-hidden">
 
-            {/* ── BENTO GRID LAYOUT ── */}
-            <div className="w-full max-w-7xl grid grid-cols-12 gap-8 relative z-10">
-                
-                {/* 1. HERO METRIC (Span 8) */}
-                <div className="col-span-12 lg:col-span-8 bg-white rounded-[44px] p-10 border border-slate-200 shadow-sm flex flex-col justify-center">
+            {/* ── AMBIENT STAGE BACKGROUND GLOW ── */}
+            <div className="absolute inset-0 pointer-events-none z-0">
+                {/* Layer 1: Wide Deep Navy Base (Matte Stage) */}
+                <div
+                    className="absolute inset-0 opacity-100"
+                    style={{ background: 'radial-gradient(circle at 50% 60%, rgba(16,40,75,0.4) 0%, #0A0F1E 75%)' }}
+                />
+                {/* Layer 2: Focused Emerald/Red Spotlight */}
+                <div
+                    className="absolute inset-0 transition-all duration-1500"
+                    style={{
+                        background: heroState === 'secured'
+                            ? 'radial-gradient(circle at 50% 55%, rgba(16,185,129,0.12) 0%, transparent 45%)'
+                            : 'radial-gradient(circle at 50% 55%, rgba(239,68,68,0.08) 0%, transparent 45%)'
+                    }}
+                />
+            </div>
+
+            {/* ── HERO METRIC BANNER ── */}
+            <div className="flex flex-col items-center justify-center text-center mb-14 relative z-10 w-full">
+                <div className="w-full max-w-[500px]">
                     <AnimatePresence mode="wait">
                         {heroState === 'secured' ? (
                             <motion.div
                                 key="secured"
-                                initial={{ opacity: 0, scale: 0.95 }}
-                                animate={{ opacity: 1, scale: 1 }}
+                                initial={{ opacity: 0, scale: 0.75, y: 30 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                transition={{ type: 'spring', stiffness: 280, damping: 22 }}
                             >
-                                <p className="text-[10px] font-black uppercase tracking-[0.5em] text-emerald-600 mb-5">
-                                    🎉 Portfolio Secured — Today
+                                <p className="text-[10px] font-black uppercase tracking-[0.5em] text-[#A0A0A0] mb-5">
+                                    🎉 Clinic Secured — Today's Total
                                 </p>
-                                <div className="text-5xl font-black tabular-nums tracking-tighter text-slate-900 leading-none">
+                                <div
+                                    className="text-5xl font-black tabular-nums tracking-tighter leading-none text-transparent bg-clip-text bg-gradient-to-r from-slate-300 via-white to-slate-400 drop-shadow-[0_0_12px_rgba(255,255,255,0.2)]"
+                                >
                                     £{totalSecured.toLocaleString()}
                                 </div>
-                                <div className="flex items-center gap-2 mt-8">
-                                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-500">All Priority Cases Handled</span>
-                                </div>
+                                <p className="text-[#2AF598] font-black text-xs uppercase tracking-[0.4em] mt-8 opacity-80">
+                                    Protected Portfolio ↗
+                                </p>
                             </motion.div>
                         ) : (
                             <motion.div
                                 key="risk"
-                                initial={{ opacity: 0, scale: 0.95 }}
-                                animate={{ opacity: 1, scale: 1 }}
+                                initial={{ opacity: 0, scale: 0.75, y: 30 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                transition={{ type: 'spring', stiffness: 280, damping: 22 }}
                             >
-                                <p className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-400 mb-5">
-                                    ⚠ Identified Revenue Opportunities
+                                <p className="text-[10px] font-black uppercase tracking-[0.5em] text-[#A0A0A0] mb-5">
+                                    ⚠ Money At Risk Today
                                 </p>
-                                <div className="text-5xl font-black tabular-nums tracking-tighter text-slate-900 leading-none">
+                                <div
+                                    className="text-5xl font-black tabular-nums tracking-tighter leading-none text-transparent bg-clip-text bg-gradient-to-r from-red-200 via-white to-red-400 drop-shadow-[0_0_12px_rgba(239,68,68,0.2)]"
+                                >
                                     £{totalAtRisk.toLocaleString()}
                                 </div>
-                                <div className="flex items-center gap-2 mt-8">
-                                    <div className="w-2 h-2 rounded-full bg-emerald-500 scale-75" />
-                                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400">Action Required: {activeLeads.length} High-Intent Patients</span>
-                                </div>
+                                <p className="text-[#A0A0A0] font-black text-xs uppercase tracking-[0.4em] mt-8 opacity-60">
+                                    High Priority Pipeline ↘
+                                </p>
                             </motion.div>
                         )}
                     </AnimatePresence>
                 </div>
-
-                {/* 2. SECONDARY STAT: ENGAGEMENT (Span 4) */}
-                <div className="col-span-12 lg:col-span-4 bg-emerald-500 rounded-[44px] p-10 flex flex-col justify-between text-white shadow-lg shadow-emerald-200">
-                    <div className="flex justify-between items-start">
-                        <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center">
-                            <CheckCircle className="w-6 h-6 text-white" />
-                        </div>
-                        <span className="text-[9px] font-black uppercase tracking-widest text-emerald-100">Live Metric</span>
-                    </div>
-                    <div>
-                        <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-1 opacity-80">Conversion Rate</p>
-                        <h4 className="text-4xl font-black">94.2%</h4>
-                    </div>
-                </div>
             </div>
 
-            {/* ── ACTION STACK AREA ── */}
-            <div className="w-full max-w-7xl grid grid-cols-12 gap-8 mt-8 relative z-10">
-                
-                {/* 3. QUICK ACTIONS / NEWS (Span 4) */}
-                <div className="hidden lg:flex lg:col-span-4 flex-col gap-8">
-                    <div className="bg-white rounded-[44px] p-8 border border-slate-200 shadow-sm grow">
-                        <h5 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-6">Patient Pipeline</h5>
-                        <div className="space-y-6">
-                            {[1, 2, 3].map(i => (
-                                <div key={i} className="flex items-center gap-4 opacity-40 grayscale">
-                                    <div className="w-12 h-12 rounded-2xl bg-slate-100" />
-                                    <div className="grow space-y-2">
-                                        <div className="h-4 w-24 bg-slate-100 rounded-lg" />
-                                        <div className="h-2 w-full bg-slate-50 rounded-full" />
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                    
-                    <div className="bg-slate-900 rounded-[44px] p-8 text-white flex items-center justify-between">
-                        <div>
-                            <p className="text-[9px] font-black uppercase tracking-widest text-slate-500 mb-1">Clinic Focus</p>
-                            <h6 className="text-lg font-bold">Implant High Intensity</h6>
-                        </div>
-                        <Sparkles className="w-8 h-8 text-emerald-400 opacity-50" />
-                    </div>
-                </div>
+            {/* ── SECURE HISTORY TOAST (below hero, above card) ── */}
+            <div className="relative z-20 mb-6">
+                {toast && (
+                    <SecureHistoryToast
+                        amount={toast.amount}
+                        total={toast.total}
+                        prevTotal={toast.prevTotal}
+                        visible={toast.visible}
+                        onDone={() => setToast(prev => prev ? { ...prev, visible: false } : null)}
+                    />
+                )}
+            </div>
 
-                {/* 4. THE ACTION CARD (Span 8) */}
-                <div className="col-span-12 lg:col-span-8">
+            {/* ── CARD AREA ── */}
+
+            <div className="relative z-10 flex flex-col items-center w-full">
                 <AnimatePresence mode="wait">
                     {loading ? (
                         <div className="relative w-full flex justify-center">
@@ -403,17 +393,17 @@ export function ZeroDashboardView({
                             {/* Ghost stack cards behind */}
                             {activeLeads.length > 1 && (
                                 <motion.div
-                                    className="absolute inset-x-0 h-full bg-white border border-slate-100 rounded-[44px] -z-10 shadow-sm"
+                                    className="absolute inset-x-0 h-full bg-[#161616] border border-white/[0.05] rounded-[56px] -z-10 shadow-xl"
                                     initial={false}
-                                    animate={{ scale: 0.96, y: 12, opacity: 0.6 }}
+                                    animate={{ scale: 0.95, y: 16, opacity: 0.5 }}
                                     transition={{ type: "spring", stiffness: 300, damping: 25 }}
                                 />
                             )}
                             {activeLeads.length > 2 && (
                                 <motion.div
-                                    className="absolute inset-x-0 h-full bg-white border border-slate-100 rounded-[44px] -z-20 shadow-sm"
+                                    className="absolute inset-x-0 h-full bg-[#121212] border border-white/[0.03] rounded-[56px] -z-20 shadow-2xl"
                                     initial={false}
-                                    animate={{ scale: 0.92, y: 24, opacity: 0.3 }}
+                                    animate={{ scale: 0.90, y: 32, opacity: 0.2 }}
                                     transition={{ type: "spring", stiffness: 300, damping: 25 }}
                                 />
                             )}
@@ -426,36 +416,37 @@ export function ZeroDashboardView({
                     ) : (
                         <motion.div
                             key="empty"
-                            initial={{ opacity: 0, scale: 0.95 }}
+                            initial={{ opacity: 0, scale: 0.88 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            className="w-full bg-white border border-slate-200 rounded-[44px] p-12 text-center shadow-sm relative overflow-hidden"
+                            className="w-full max-w-[500px] bg-white/[0.03] backdrop-blur-2xl border border-white/10 rounded-[48px] p-12 text-center shadow-2xl relative overflow-hidden"
                         >
-                            <div className="w-20 h-20 bg-emerald-50 border border-emerald-100 rounded-3xl flex items-center justify-center mx-auto mb-8 relative z-10">
-                                <CheckCircle className="w-10 h-10 text-emerald-500" />
-                            </div>
-                            <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-tight relative z-10">Daily Targets Met.</h2>
-                            <p className="text-slate-400 text-sm mb-10 relative z-10">All high-priority patients have been contacted.</p>
+                            {/* Infographic Glow */}
+                            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-emerald-500/10 blur-[60px] rounded-full" />
                             
-                            <div className="bg-slate-50 border border-slate-100 rounded-3xl p-6 relative z-10">
-                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2">Total Secured Today</p>
-                                <p className="text-3xl font-black text-slate-900 tabular-nums">£{(totalSecured || 12450).toLocaleString()}</p>
+                            <div className="w-20 h-20 bg-emerald-500/10 border border-emerald-500/20 rounded-3xl flex items-center justify-center mx-auto mb-8 relative z-10">
+                                <CheckCircle className="w-10 h-10 text-emerald-400" />
+                            </div>
+                            <h2 className="text-3xl font-black text-white mb-2 tracking-tight relative z-10">Inbox Zero. Great job.</h2>
+                            <p className="text-slate-400 text-sm mb-10 relative z-10">All high-priority leads have been engaged.</p>
+                            
+                            <div className="bg-white/[0.04] border border-white/5 rounded-3xl p-6 relative z-10">
+                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-2">Total Secured This Week</p>
+                                <p className="text-3xl font-black text-white tabular-nums">£{(totalSecured * 4.2 + 12000).toLocaleString()}</p>
                                 <div className="mt-3 flex items-center justify-center gap-2">
                                     <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                                    <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Efficiency Peak</span>
+                                    <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Performance Peak</span>
                                 </div>
                             </div>
 
                             <button
                                 onClick={() => setCurrentIndex(0)}
-                                className="mt-10 inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 hover:text-slate-900 transition-all group"
+                                className="mt-10 inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 hover:text-white transition-all group"
                             >
-                                <span className="group-hover:rotate-180 transition-transform duration-500">↺</span> Refresh Patient Queue
+                                <span className="group-hover:rotate-180 transition-transform duration-500">↺</span> Refresh Queue
                             </button>
                         </motion.div>
                     )}
                 </AnimatePresence>
-                </div>
-            </div>
 
                 {/* Queue indicator dots */}
                 {activeLeads.length > 1 && currentLead && (
@@ -474,17 +465,18 @@ export function ZeroDashboardView({
                         ))}
                     </div>
                 )}
+            </div>
 
             {/* ── MOBILE STICKY CTA (Task 1) ── */}
             <div className="md:hidden fixed bottom-6 left-6 right-6 z-[250]">
-                <div className="bg-white border border-slate-200 rounded-3xl p-4 flex items-center justify-between shadow-xl">
+                <div className="bg-[#0A0F1E]/80 backdrop-blur-2xl border border-white/10 rounded-3xl p-4 flex items-center justify-between shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
                     <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center">
+                        <div className="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center">
                             <Shield className="w-4 h-4 text-emerald-500" />
                         </div>
                         <div>
-                            <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">PII Scrubbed</p>
-                            <p className="text-[10px] text-slate-900 font-bold">Secure Gateway</p>
+                            <p className="text-[8px] font-black text-white/40 uppercase tracking-widest">PII Scrubbed</p>
+                            <p className="text-[10px] text-white font-bold">Bank-Grade Secure</p>
                         </div>
                     </div>
                     {leads.length > 0 && (
@@ -509,32 +501,32 @@ export function ZeroDashboardView({
                         className="fixed inset-0 z-[300] bg-black/70 backdrop-blur-2xl flex items-center justify-center p-6"
                     >
                         <motion.div
-                            initial={{ y: 70, scale: 0.95, opacity: 0 }}
+                            initial={{ y: 70, scale: 0.91, opacity: 0 }}
                             animate={{ y: 0, scale: 1, opacity: 1 }}
-                            exit={{ y: 70, scale: 0.95, opacity: 0 }}
+                            exit={{ y: 70, scale: 0.91, opacity: 0 }}
                             transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-                            className="bg-white border border-slate-200 w-full max-w-md rounded-[48px] overflow-hidden shadow-2xl"
+                            className="bg-[#161616] border border-white/10 w-full max-w-md rounded-[48px] overflow-hidden shadow-2xl"
                         >
-                            <div className="p-8 border-b border-slate-100 flex justify-between items-center">
+                            <div className="p-8 border-b border-white/8 flex justify-between items-center">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-11 h-11 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg shadow-emerald-100">
+                                    <div className="w-11 h-11 bg-[#25D366] rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(37,211,102,0.4)]">
                                         <Send className="w-5 h-5 text-white" />
                                     </div>
                                     <div>
-                                        <p className="text-[9px] text-slate-400 font-black uppercase tracking-widest">Sending AI Draft To</p>
-                                        <p className="text-slate-900 font-bold text-lg leading-tight">{whatsappModalLead.name}</p>
+                                        <p className="text-[9px] text-gray-600 font-black uppercase tracking-widest">Sending AI Draft To</p>
+                                        <p className="text-white font-black text-lg leading-tight">{whatsappModalLead.name}</p>
                                     </div>
                                 </div>
                                 <button
                                     onClick={() => { setWhatsappModalLead(null); handleNext(); }}
-                                    className="p-2 hover:bg-slate-50 rounded-full transition-all text-slate-300 hover:text-slate-900"
+                                    className="p-2 hover:bg-white/10 rounded-full transition-all text-gray-600 hover:text-white"
                                 >
                                     <X className="w-5 h-5" />
                                 </button>
                             </div>
 
                             <div className="p-8 space-y-5">
-                                <div className="bg-[#25D366]/5 border border-[#25D366]/10 rounded-[28px] p-6 text-slate-600 text-sm leading-relaxed whitespace-pre-wrap">
+                                <div className="bg-[#25D366]/8 border border-[#25D366]/20 rounded-[28px] p-6 text-gray-200 text-sm leading-relaxed whitespace-pre-wrap">
                                     {`Hi ${whatsappModalLead.name.split(' ')[0]} 👋\n\nI noticed you were interested in ${whatsappModalLead.service}.${whatsappModalLead.ai_summary ? `\n\n"${whatsappModalLead.ai_summary}"\n` : '\n'}\nWould you like me to send over our 0% finance options or book a quick chat?`}
                                 </div>
 
@@ -547,7 +539,7 @@ export function ZeroDashboardView({
                                         setWhatsappModalLead(null);
                                         handleNext();
                                     }}
-                                    className="w-full bg-[#25D366] hover:bg-[#1EBE55] text-white font-bold uppercase tracking-widest py-6 rounded-[28px] transition-all flex items-center justify-center gap-3 shadow-lg shadow-emerald-100 text-sm"
+                                    className="w-full bg-[#25D366] hover:bg-[#1EBE55] text-white font-black uppercase tracking-widest py-6 rounded-[28px] transition-all flex items-center justify-center gap-3 shadow-[0_20px_50px_rgba(37,211,102,0.4)] text-sm"
                                 >
                                     <Send className="w-5 h-5" />
                                     Open WhatsApp & Send
