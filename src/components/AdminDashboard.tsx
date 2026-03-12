@@ -2411,6 +2411,30 @@ export default function AdminDashboard() {
           </AnimatePresence>
         </>
       )}
+      
+      {/* Legal & Security Footer */}
+      <footer className="mt-20 pb-12 px-6 border-t border-white/5 bg-black/20 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+              <Shield className="w-5 h-5 text-emerald-500" />
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-white uppercase tracking-[0.2em]">Enterprise Guard</p>
+              <p className="text-[10px] text-emerald-500 font-bold">Bank-Grade Protection Active</p>
+            </div>
+          </div>
+          
+          <div className="max-w-2xl text-center md:text-right">
+            <p className="text-[10px] text-zinc-500 leading-relaxed font-medium">
+              Hanlan OC operates on a strict <span className="text-zinc-300 font-bold uppercase tracking-tighter">"Privacy-First, Zero-Retention"</span> architecture compliant with UK GDPR. 
+              All Patient PII (Name, Contact, DOB) is strictly processed and scrubbed locally within your web browser. 
+              We do not transmit, collect, or store any patient PII on our servers. 
+              The Clinic retains full ownership and legal liability for the original patient data.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
