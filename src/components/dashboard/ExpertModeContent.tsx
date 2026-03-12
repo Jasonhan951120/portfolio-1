@@ -9,6 +9,8 @@ import { ReputationROIChart } from './ReputationROIChart';
 import { RevenueForecastChart } from './RevenueForecastChart';
 
 export function ExpertModeContent() {
+  const [selectedTone, setSelectedTone] = React.useState('Professional');
+
   return (
     <div className="space-y-12">
       {/* Header */}
@@ -29,10 +31,12 @@ export function ExpertModeContent() {
             {['Professional', 'Friendly', 'Direct'].map((tone) => (
               <button
                 key={tone}
-                className="flex-1 py-3 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all hover:bg-white/50 active:scale-95"
+                onClick={() => setSelectedTone(tone)}
+                className="flex-1 py-3 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all active:scale-95"
                 style={{
-                  backgroundColor: tone === 'Professional' ? 'white' : 'transparent',
-                  boxShadow: tone === 'Professional' ? '0 4px 12px rgba(0,0,0,0.05)' : 'none'
+                  backgroundColor: tone === selectedTone ? 'white' : 'transparent',
+                  boxShadow: tone === selectedTone ? '0 4px 12px rgba(0,0,0,0.05)' : 'none',
+                  color: tone === selectedTone ? 'black' : '#A0A0A0'
                 }}
               >
                 {tone}
@@ -40,7 +44,11 @@ export function ExpertModeContent() {
             ))}
           </div>
           <p className="text-[10px] text-zinc-500 italic px-2">
-            "Professional" mode uses clinical terminology and authoritative tone. (Changes applied to all future AI summaries)
+            "{selectedTone}" mode {
+              selectedTone === 'Professional' ? 'uses clinical terminology and authoritative tone.' :
+              selectedTone === 'Friendly' ? 'uses warm, empathetic, and conversational language.' :
+              'uses concise, action-oriented directives for staff.'
+            } (Changes applied to all future AI summaries)
           </p>
         </div>
       </section>
