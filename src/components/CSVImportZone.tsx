@@ -24,22 +24,38 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
         let failCount = 0;
 
         const inserts = data.map((row, index) => {
+            // Validation: Skip completely empty or malformed rows early
+            if (!row || Object.values(row).every(v => !v || String(v).trim() === '')) {
+                return null;
+            }
+
             // PII SCRUBBER: Strict blocklist for PMS export headers
             // We EXPLICITLY ignore: 'Name', 'First Name', 'Last Name', 'Phone', 'Mobile', 'Email', 'DOB', 'Birth Date', 'Address', 'Postcode'
 
             const serviceRaw = row['TreatmentType'] || row['Treatment Type'] || row['Service'] || row['Treatment'] || 'General Consultation';
-            const rawVal = String(row['Potential Value'] || row['Value'] || '0').replace(/[^0-9.]/g, '');
+            
+            // Defensive parsing for legacy currency formats (e.g., £5,000.00 or NULL)
+            let rawVal = String(row['Potential Value'] || row['Value'] || '0');
+            rawVal = rawVal.replace(/[^0-9.]/g, ''); // Strip currency symbols and letters
+            
             const potentialValue = parseFloat(rawVal) || 1000;
             const statusRaw = row['Status'] || row['Lead Status'] || 'New Lead';
 
             // Generate pseudonym for privacy (Side-car architecture requirement)
-            const pseudonym = `Patient #${Math.floor(Math.random() * 9000) + 1000}`;
+            const randomID = Math.floor(Math.random() * 9000) + 1000;
+            const pseudonym = `Patient #${randomID}`;
 
-            // Try to find a matched service
+            // Try to find a matched service using fuzzy match or fallback
+            const sRawStr = String(serviceRaw).toLowerCase();
             const serviceMatch = Object.keys(SERVICE_CONVERSION_VALUES).find(k =>
-                k.toLowerCase().includes(String(serviceRaw).toLowerCase()) || String(serviceRaw).toLowerCase().includes(k.toLowerCase())
+                k.toLowerCase().includes(sRawStr) || sRawStr.includes(k.toLowerCase())
             );
-            const service = serviceMatch || "Premium Service";
+            
+            const service = serviceMatch || "Premium Consultation";
+
+            // Determine status fallback if nonsensical
+            const validStatuses = ["New Lead", "Booked", "Visited", "Treated", "Sale Closed"];
+            const status = validStatuses.includes(statusRaw) ? statusRaw : "New Lead";
 
             return {
                 clinic_id: clinicId,
@@ -47,9 +63,9 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
                 email: "privacy.protected@hanlan.private", // Dropped
                 phone: "SCRUBBED_PII", // Dropped
                 service,
-                status: statusRaw,
+                status,
                 potential_value: potentialValue,
-                utm_source: "PMS_IMPORT_SCRUBBED",
+                utm_source: "PMS_IMPORT_HARDENED",
                 created_at: new Date().toISOString()
             };
         }).filter(Boolean);

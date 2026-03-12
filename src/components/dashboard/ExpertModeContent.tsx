@@ -2,11 +2,87 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { 
   TrendingUp, BarChart2, Users, Settings, 
-  Target, Zap, Shield, PieChart, Database, Sparkles
+  Target, Zap, Shield, PieChart, Database, Sparkles,
+  ArrowDownCircle, Clock, CheckCircle, TrendingDown
 } from 'lucide-react';
 import { StaffROILeaderboard } from './tabs/StaffROILeaderboard';
 import { ReputationROIChart } from './ReputationROIChart';
 import { RevenueForecastChart } from './RevenueForecastChart';
+import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
+
+function SalesFunnel() {
+  const data = [
+    { name: 'New Leads', value: 120, color: '#3b82f6' },
+    { name: 'WhatsApp Sent', value: 85, color: '#8b5cf6' },
+    { name: 'Consultations', value: 42, color: '#00FFA3' }
+  ];
+
+  return (
+    <div className="h-48 w-full mt-6 flex items-center justify-around gap-2 px-4">
+      {data.map((item, idx) => (
+        <div key={item.name} className="flex flex-col items-center gap-4 relative w-full">
+          <div 
+            className="w-full bg-white/10 rounded-3xl border border-white/10 flex flex-col items-center justify-center p-4 group hover:bg-white/[0.15] transition-all"
+            style={{ height: `${100 - idx * 25}%` }}
+          >
+            <span className="text-2xl font-black text-white">{item.value}</span>
+            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">{item.name}</span>
+          </div>
+          {idx < data.length - 1 && (
+            <div className="absolute -right-4 top-1/2 -translate-y-1/2 z-10">
+              <Zap className="w-4 h-4 text-[#00FFA3] animate-pulse" />
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function SalesROIDashboard() {
+  return (
+    <section className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest flex items-center gap-2">
+          <TrendingUp className="w-4 h-4 text-[#00FFA3]" /> Conversion Analytics (ROI)
+        </h3>
+        <span className="px-3 py-1 bg-[#00FFA3]/10 text-[#00FFA3] text-[9px] font-bold rounded-full border border-[#00FFA3]/20 animate-pulse">Live Tracking</span>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div className="p-6 bg-gray-900 rounded-[32px] border border-white/5 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-[#00FFA3]/10 blur-3xl rounded-full" />
+          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Total Pipeline Value</p>
+          <p className="text-3xl font-black text-[#00FFA3] tracking-tighter">£142.5k</p>
+          <div className="flex items-center gap-1 mt-2 text-[10px] text-emerald-400 font-bold">
+            <TrendingUp className="w-3 h-3" /> +14.2% (7d)
+          </div>
+        </div>
+        <div className="p-6 bg-white rounded-[32px] border border-black/5 relative overflow-hidden group">
+          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Avg Response Speed</p>
+          <p className="text-3xl font-black text-gray-900 tracking-tighter">4.2m</p>
+          <div className="flex items-center gap-1 mt-2 text-[10px] text-emerald-600 font-bold">
+            <Clock className="w-3 h-3" /> Industry Leading
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-gray-900 rounded-[40px] p-8 border border-white/5 shadow-2xl">
+        <div className="flex justify-between items-start mb-4">
+          <div>
+            <h4 className="text-white font-bold text-lg">Sales Funnel</h4>
+            <p className="text-[10px] text-gray-400 uppercase tracking-widest">Lead to Consultation booked</p>
+          </div>
+          <div className="text-right">
+            <p className="text-[10px] font-black text-[#00FFA3] uppercase tracking-widest">Conversion Rate</p>
+            <p className="text-2xl font-black text-white">35%</p>
+          </div>
+        </div>
+        <SalesFunnel />
+      </div>
+    </section>
+  );
+}
 
 export function ExpertModeContent() {
   const [selectedTone, setSelectedTone] = React.useState('Professional');
@@ -52,6 +128,9 @@ export function ExpertModeContent() {
           </p>
         </div>
       </section>
+
+      {/* Sales ROI Dashboard (Task 2) */}
+      <SalesROIDashboard />
 
       {/* Quick Stats Grid */}
       <div className="grid grid-cols-2 gap-4">

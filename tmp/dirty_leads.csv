@@ -1,0 +1,8 @@
+Patient Name,Treatment Type,Value,Status,Date
+"John Doe","Dental Implants","£5,000.00","New Lead","2023-10-27"
+"","Invisalign","invalid","Booked","bad-date"
+"Jane Smith",,"NULL","Treated","2023/10/28"
+"Special & Characters !@#","Veneers","1,234.56#","New Lead","---"
+,,,
+"Missing Value Row",,,
+"Valid Record","Implants","2000","New Lead","2023-10-29"

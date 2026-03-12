@@ -27,6 +27,16 @@ async function startServer() {
   const PORT = Number(process.env.PORT) || 5173;
 
   app.use(express.json());
+  
+  // Enforce HTTPS in production
+  if (process.env.NODE_ENV === "production") {
+    app.use((req, res, next) => {
+      if (req.headers["x-forwarded-proto"] !== "https") {
+        return res.redirect(`https://${req.headers.host}${req.url}`);
+      }
+      next();
+    });
+  }
 
   // API Routes
   app.post("/api/leads", (req, res) => {
