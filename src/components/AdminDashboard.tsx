@@ -717,10 +717,10 @@ function KanbanColumn({
           <div className="h-40 rounded-[24px] flex flex-col items-center justify-center opacity-40 mt-2 border border-dashed border-white/10 bg-white/[0.02] backdrop-blur-sm relative overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none" />
             <div className="relative w-12 h-12 mb-4 rounded-full bg-white/[0.03] border border-white/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
-               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/40">
-                  <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83" />
-                  <circle cx="12" cy="12" r="4" />
-               </svg>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/40">
+                <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83" />
+                <circle cx="12" cy="12" r="4" />
+              </svg>
             </div>
             <span className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Ready for Leads</span>
           </div>
@@ -2276,11 +2276,10 @@ export default function AdminDashboard() {
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`px-8 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.25em] transition-all duration-500 relative z-10 ${
-                      activeTab === tab
+                    className={`px-8 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.25em] transition-all duration-500 relative z-10 ${activeTab === tab
                         ? 'bg-[#10B981] text-[#0A0F1E] shadow-[0_0_25px_rgba(16,185,129,0.5)] scale-[1.02]'
                         : 'text-zinc-500 hover:text-white hover:bg-white/5'
-                    }`}
+                      }`}
                   >
                     {tab}
                   </button>
@@ -2290,7 +2289,7 @@ export default function AdminDashboard() {
               {/* Right: Expert Mode + Profile (Tactile Interaction) */}
               <div className="flex items-center gap-4">
                 {activeTab === 'vault' && (
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/5 border border-emerald-500/10"
@@ -2361,14 +2360,14 @@ export default function AdminDashboard() {
                         key={col}
                         columnId={col}
                         columnLeads={leads.filter(l => l.status === col)}
-                        setDepositModal={() => {}}
+                        setDepositModal={() => { }}
                         setSelectedLead={setSelectedLead}
                         updateStatus={updateStatus}
                         STAFF_LIST={dynamicStaffList}
                         updateAssignedTo={updateAssignedTo}
                         timeAgo={timeAgo}
                         clinic={profile}
-                        onOpenPTMode={() => {}}
+                        onOpenPTMode={() => { }}
                         selectedDate={selectedDate}
                       />
                     ))}
@@ -2422,7 +2421,7 @@ export default function AdminDashboard() {
           </AnimatePresence>
         </>
       )}
-      
+
       {/* Legal & Security Footer */}
       <footer className="mt-20 pb-12 px-6 border-t border-white/5 bg-black/20 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
@@ -2435,10 +2434,10 @@ export default function AdminDashboard() {
               <p className="text-[10px] text-emerald-500 font-bold">Bank-Grade Protection Active</p>
             </div>
           </div>
-          
+
           <div className="max-w-2xl text-center md:text-right">
             <p className="text-[10px] text-zinc-500 leading-relaxed font-medium">
-              Hanlan OC operates on a strict <span className="text-zinc-300 font-bold uppercase tracking-tighter">"Privacy-First, Zero-Retention"</span> architecture compliant with UK GDPR. 
+              Hanlan OC operates on a strict <span className="text-zinc-300 font-bold uppercase tracking-tighter">"Privacy-First, Zero-Retention"</span> architecture compliant with UK GDPR.
               By using this service, the Clinic acknowledges it acts as the sole <span className="text-zinc-300">"Data Controller"</span> with full legal liability. Hanlan OC acts strictly as a <span className="text-zinc-300">"Data Processor"</span>.
               All Patient PII is scrubbed locally. Your continued use constitutes acceptance of our standard <span className="text-emerald-500">Data Processing Agreement (DPA)</span>.
             </p>

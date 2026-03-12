@@ -118,7 +118,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         // Events to track activity
         const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
-        
+
         // Use a throttled reset to avoid excessive processing
         let lastReset = 0;
         const throttledReset = () => {

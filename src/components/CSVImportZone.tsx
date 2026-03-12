@@ -71,7 +71,7 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
 
         setResult({ success: successCount, failed: failCount });
         setIsProcessing(false);
-        
+
         if (successCount > 0) {
             // Log consent for CSV processing audit
             const { data: { user } } = await supabase.auth.getUser();
@@ -94,9 +94,9 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
 
         const file = e.dataTransfer.files[0];
         if (file && (file.type === "text/csv" || file.name.endsWith('.csv') || file.name.endsWith('.xlsx') || file.name.endsWith('.xls'))) {
-             // In a real app we'd handle excel using xlsx library, but for now we accept it contextually
-             if (file.name.endsWith('.csv')) {
-                 Papa.parse(file, {
+            // In a real app we'd handle excel using xlsx library, but for now we accept it contextually
+            if (file.name.endsWith('.csv')) {
+                Papa.parse(file, {
                     header: true,
                     skipEmptyLines: true,
                     complete: (results) => {
@@ -107,9 +107,9 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
                         setResult({ success: 0, failed: 1 });
                     }
                 });
-             } else {
-                  alert("Currently only CSV format is fully supported in this demo MVP.");
-             }
+            } else {
+                alert("Currently only CSV format is fully supported in this demo MVP.");
+            }
         } else {
             alert("Please upload a valid CSV or Excel file.");
         }
@@ -172,7 +172,7 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
                             </div>
                             <h3 className="text-lg font-black text-white mb-2 tracking-tight">Synchronize Your Vault</h3>
                             <div className="px-8 pb-4">
-                                <div 
+                                <div
                                     className="flex items-start gap-3 p-4 bg-white/5 border border-white/10 rounded-2xl cursor-pointer hover:bg-white/10 transition-all text-left pointer-events-auto"
                                     onClick={(e) => { e.stopPropagation(); setAgreed(!agreed); }}
                                 >
@@ -188,7 +188,7 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
                                 </div>
                             </div>
                             <p className="text-xs text-slate-500 font-medium max-w-[320px] leading-relaxed">
-                                {dropzoneSubCopy} <br/>
+                                {dropzoneSubCopy} <br />
                                 <span className={`mt-1 block italic font-bold transition-colors ${agreed ? 'text-emerald-400' : 'text-slate-600'}`}>
                                     {agreed ? 'Authorized ready for drop' : 'Consent Required to proceed'}
                                 </span>

@@ -15,6 +15,17 @@ export default function AdminLogin() {
     const [processingInvite, setProcessingInvite] = useState(false);
     const [agreed, setAgreed] = useState(false);
 
+    // Helper to get IP for Audit Trail
+    const getClientIP = async () => {
+        try {
+            const res = await fetch('https://api.ipify.org?format=json');
+            const data = await res.json();
+            return data.ip;
+        } catch (err) {
+            return 'unknown';
+        }
+    };
+
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
 
@@ -35,11 +46,13 @@ export default function AdminLogin() {
         supabase.auth.getSession().then(async ({ data: { session } }) => {
             if (session && !localStorage.getItem('invite_token')) {
                 // Log consent for existing session if not already logged (simplified)
+                const ip = await getClientIP();
                 await supabase.from('consent_logs').insert({
                     user_id: session.user.id,
                     consent_type: 'auth',
                     user_email: session.user.email,
-                    policy_version: 'v3.2.0-GDPR'
+                    policy_version: 'v3.2.0-GDPR',
+                    ip_address: ip
                 });
                 navigate("/admin");
             }
