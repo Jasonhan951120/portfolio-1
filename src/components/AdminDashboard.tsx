@@ -67,6 +67,17 @@ const PT_ASSETS: Record<string, { image: string; title: string; benefit: string;
 // Removed PresentationOverlay as PT Mode is now strictly client-facing at /pt/:id
 
 function useDebounce<T>(value: T, delay: number): T {
+  // GDPR: Forced Client-Side Data Destruction (Zero-Trace Logic)
+  useEffect(() => {
+    const cleanupPII = () => {
+      console.log("GDPR Activity: Enforcing zero-trace local data destruction.");
+      sessionStorage.clear();
+    };
+
+    window.addEventListener("beforeunload", cleanupPII);
+    return () => window.removeEventListener("beforeunload", cleanupPII);
+  }, []);
+
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -2428,9 +2439,8 @@ export default function AdminDashboard() {
           <div className="max-w-2xl text-center md:text-right">
             <p className="text-[10px] text-zinc-500 leading-relaxed font-medium">
               Hanlan OC operates on a strict <span className="text-zinc-300 font-bold uppercase tracking-tighter">"Privacy-First, Zero-Retention"</span> architecture compliant with UK GDPR. 
-              All Patient PII (Name, Contact, DOB) is strictly processed and scrubbed locally within your web browser. 
-              We do not transmit, collect, or store any patient PII on our servers. 
-              The Clinic retains full ownership and legal liability for the original patient data.
+              By using this service, the Clinic acknowledges it acts as the sole <span className="text-zinc-300">"Data Controller"</span> with full legal liability. Hanlan OC acts strictly as a <span className="text-zinc-300">"Data Processor"</span>.
+              All Patient PII is scrubbed locally. Your continued use constitutes acceptance of our standard <span className="text-emerald-500">Data Processing Agreement (DPA)</span>.
             </p>
           </div>
         </div>

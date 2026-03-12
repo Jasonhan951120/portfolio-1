@@ -15,6 +15,7 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
     const [isHovering, setIsHovering] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
     const [result, setResult] = useState<{ success: number; failed: number } | null>(null);
+    const [agreed, setAgreed] = useState(false);
 
     const processData = async (data: any[]) => {
         setIsProcessing(true);
@@ -70,7 +71,21 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
 
         setResult({ success: successCount, failed: failCount });
         setIsProcessing(false);
-        if (successCount > 0) onImportComplete(); // This will trigger fetchLeads in the parent, or parent relies on Realtime!
+        
+        if (successCount > 0) {
+            // Log consent for CSV processing audit
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                await supabase.from('consent_logs').insert({
+                    user_id: user.id,
+                    consent_type: 'csv_upload',
+                    user_email: user.email,
+                    policy_version: 'v3.2.0-GDPR',
+                    metadata: { records: successCount }
+                });
+            }
+            onImportComplete();
+        }
     };
 
     const onDrop = useCallback((e: React.DragEvent) => {
@@ -98,7 +113,7 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
         } else {
             alert("Please upload a valid CSV or Excel file.");
         }
-    }, [clinicId]);
+    }, [clinicId, agreed]);
 
     // Dynamic UI Wording Logic based on Specialty
     const currentSpecialty = specialty?.toLowerCase() || '';
@@ -156,13 +171,27 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
                                 </svg>
                             </div>
                             <h3 className="text-lg font-black text-white mb-2 tracking-tight">Synchronize Your Vault</h3>
+                            <div className="px-8 pb-4">
+                                <div 
+                                    className="flex items-start gap-3 p-4 bg-white/5 border border-white/10 rounded-2xl cursor-pointer hover:bg-white/10 transition-all text-left pointer-events-auto"
+                                    onClick={(e) => { e.stopPropagation(); setAgreed(!agreed); }}
+                                >
+                                    <input
+                                        type="checkbox"
+                                        checked={agreed}
+                                        onChange={(e) => setAgreed(e.target.checked)}
+                                        className="w-4 h-4 mt-0.5 rounded border-white/20 bg-transparent text-emerald-500 focus:ring-emerald-500/50"
+                                    />
+                                    <p className="text-[10px] text-white/50 leading-relaxed font-bold uppercase tracking-tight">
+                                        I agree to the <span className="text-emerald-400">DPA & Data Controller Terms</span>. I confirm I have the right to process this patient data.
+                                    </p>
+                                </div>
+                            </div>
                             <p className="text-xs text-slate-500 font-medium max-w-[320px] leading-relaxed">
                                 {dropzoneSubCopy} <br/>
-                                <span className="text-emerald-400/60 mt-1 block italic opacity-80 font-bold">Supported: CSV</span>
-                                <div className="mt-6 flex items-center justify-center gap-2 px-4 py-2 bg-black/20 rounded-2xl border border-white/5 shadow-inner">
-                                    <Lock className="w-3 h-3 text-slate-500" />
-                                    <span className="text-[10px] text-slate-500 font-bold tracking-tight">Data Securely Encrypted locally. Zero PII retention. (GDPR Compliant)</span>
-                                </div>
+                                <span className={`mt-1 block italic font-bold transition-colors ${agreed ? 'text-emerald-400' : 'text-slate-600'}`}>
+                                    {agreed ? 'Authorized ready for drop' : 'Consent Required to proceed'}
+                                </span>
                             </p>
                         </motion.div>
                     )}

@@ -13,6 +13,7 @@ export default function AdminLogin() {
     const [emailSent, setEmailSent] = useState(false);
     const [inviteToken, setInviteToken] = useState<string | null>(null);
     const [processingInvite, setProcessingInvite] = useState(false);
+    const [agreed, setAgreed] = useState(false);
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
@@ -31,10 +32,15 @@ export default function AdminLogin() {
             localStorage.setItem('invite_token', token);
         }
 
-        supabase.auth.getSession().then(({ data: { session } }) => {
+        supabase.auth.getSession().then(async ({ data: { session } }) => {
             if (session && !localStorage.getItem('invite_token')) {
-                // If there's a session and NO invite token to process, redirect.
-                // If there IS an invite token, let the onAuthStateChange handle it.
+                // Log consent for existing session if not already logged (simplified)
+                await supabase.from('consent_logs').insert({
+                    user_id: session.user.id,
+                    consent_type: 'auth',
+                    user_email: session.user.email,
+                    policy_version: 'v3.2.0-GDPR'
+                });
                 navigate("/admin");
             }
             setLoading(false);
@@ -173,8 +179,8 @@ export default function AdminLogin() {
                         </div>
                         <button
                             type="submit"
-                            disabled={loading}
-                            className="w-full bg-cyan-500 hover:bg-cyan-400 text-black font-bold py-4 px-6 rounded-2xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-50"
+                            disabled={loading || !agreed}
+                            className="w-full bg-cyan-500 hover:bg-cyan-400 text-black font-bold py-4 px-6 rounded-2xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-30 disabled:grayscale"
                         >
                             {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Send Login Link ✉️"}
                         </button>
