@@ -330,31 +330,27 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
                     ) : (
                         <motion.div
                             key="risk"
-                            initial={{ opacity: 0, scale: 0.75, y: -20 }}
+                            initial={{ opacity: 0, scale: 0.75, y: 30 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
+                            transition={{ type: 'spring', stiffness: 280, damping: 22 }}
                         >
                             <p className="text-[10px] font-black uppercase tracking-[0.5em] text-[#A0A0A0] mb-5">
                                 ⚠ Money At Risk Today
                             </p>
                             <div
-                                className="font-black tabular-nums leading-none text-white drop-shadow-2xl"
+                                className="font-black tabular-nums leading-none text-[#2AF598] tracking-tighter"
                                 style={{
                                     fontSize: 'clamp(5.5rem, 18vw, 10rem)',
                                     letterSpacing: '-0.04em',
-                                    textShadow: '0 0 80px rgba(239,68,68,0.2), 0 0 25px rgba(239,68,68,0.1)'
+                                    filter: 'drop-shadow(0 0 15px rgba(42,245,152,0.4))',
+                                    textShadow: '0 0 60px rgba(42,245,152,0.2)'
                                 }}
                             >
                                 £{totalAtRisk.toLocaleString()}
                             </div>
-                            {totalSecured > 0 && (
-                                <motion.p
-                                    initial={{ opacity: 0, y: 8 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    className="text-emerald-400/80 font-bold text-xs mt-5"
-                                >
-                                    £{totalSecured.toLocaleString()} secured so far ↗
-                                </motion.p>
-                            )}
+                            <p className="text-[#A0A0A0] font-black text-xs uppercase tracking-[0.4em] mt-8 opacity-60">
+                                High Priority Pipeline ↘
+                            </p>
                         </motion.div>
                     )}
                 </AnimatePresence>
