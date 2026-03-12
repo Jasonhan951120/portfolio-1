@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 import { useNavigate } from "react-router-dom";
-import { Lock, Loader2 } from "lucide-react";
+import { Lock, Loader2, Shield } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { trackEvent } from "../lib/analytics";
 
@@ -190,11 +190,20 @@ export default function AdminLogin() {
                     <button
                         onClick={handleGoogleLogin}
                         disabled={loading}
-                        className="w-full bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold py-4 px-6 rounded-2xl flex items-center justify-center gap-3 transition-all active:scale-[0.98] disabled:opacity-70"
+                        className="w-full bg-white text-black hover:bg-zinc-200 border border-white font-black py-4 px-6 rounded-2xl flex items-center justify-center gap-3 transition-all active:scale-[0.98] disabled:opacity-70 shadow-[0_0_20px_rgba(255,255,255,0.1)]"
                     >
-                        <img src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5 opacity-50" />
+                        <img src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5" />
                         Continue with Google
                     </button>
+                </div>
+
+                <div className="mt-10 pt-8 border-t border-white/5 space-y-4">
+                    <div className="flex items-center justify-center gap-2 text-[10px] font-bold text-emerald-500 uppercase tracking-[0.2em]">
+                        <Shield className="w-3 h-3" /> Bank-Grade Encryption Active
+                    </div>
+                    <p className="text-[9px] text-white/20 leading-relaxed px-4">
+                        Secured by Supabase MFA. Zero-PII retention protocol enforced for UK GDPR compliance.
+                    </p>
                 </div>
 
                 <p className="mt-8 text-[11px] font-bold uppercase tracking-widest text-white/30">

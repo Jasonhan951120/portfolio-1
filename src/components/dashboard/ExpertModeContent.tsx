@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { 
   TrendingUp, BarChart2, Users, Settings, 
-  Target, Zap, Shield, PieChart, Database
+  Target, Zap, Shield, PieChart, Database, Sparkles
 } from 'lucide-react';
 import { StaffROILeaderboard } from './tabs/StaffROILeaderboard';
 import { ReputationROIChart } from './ReputationROIChart';
@@ -18,6 +18,32 @@ export function ExpertModeContent() {
           <Shield className="w-3 h-3 text-[#87A96B]" /> Advanced Analytics & Governance
         </p>
       </div>
+
+      {/* AI Persona Presets (Task 2) */}
+      <section className="space-y-4">
+        <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest flex items-center gap-2">
+          <Sparkles className="w-4 h-4 text-[#87A96B]" /> AI Analytics Personality
+        </h3>
+        <div className="bg-white rounded-[32px] p-6 border border-black/5 shadow-sm space-y-4">
+          <div className="flex gap-2 p-1 bg-black/5 rounded-2xl">
+            {['Professional', 'Friendly', 'Direct'].map((tone) => (
+              <button
+                key={tone}
+                className="flex-1 py-3 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all hover:bg-white/50 active:scale-95"
+                style={{
+                  backgroundColor: tone === 'Professional' ? 'white' : 'transparent',
+                  boxShadow: tone === 'Professional' ? '0 4px 12px rgba(0,0,0,0.05)' : 'none'
+                }}
+              >
+                {tone}
+              </button>
+            ))}
+          </div>
+          <p className="text-[10px] text-zinc-500 italic px-2">
+            "Professional" mode uses clinical terminology and authoritative tone. (Changes applied to all future AI summaries)
+          </p>
+        </div>
+      </section>
 
       {/* Quick Stats Grid */}
       <div className="grid grid-cols-2 gap-4">

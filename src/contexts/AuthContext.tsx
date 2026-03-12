@@ -98,6 +98,46 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         await supabase.auth.signOut();
     };
 
+    // ─────────────────────────────────────────────────────────────────────────
+    // ⏰ Inactivity Timeout Logic (30 Minutes)
+    // ─────────────────────────────────────────────────────────────────────────
+    useEffect(() => {
+        if (!session || localStorage.getItem("demo_mode") === "true") return;
+
+        let timeoutId: NodeJS.Timeout;
+
+        const resetTimer = () => {
+            if (timeoutId) clearTimeout(timeoutId);
+            // 30 minutes in milliseconds
+            timeoutId = setTimeout(() => {
+                console.log("Session timed out due to inactivity.");
+                signOut();
+                alert("Session expired due to 30 minutes of inactivity. Please log in again.");
+            }, 30 * 60 * 1000);
+        };
+
+        // Events to track activity
+        const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
+        
+        // Use a throttled reset to avoid excessive processing
+        let lastReset = 0;
+        const throttledReset = () => {
+            const now = Date.now();
+            if (now - lastReset > 5000) { // Reset every 5 seconds at most
+                resetTimer();
+                lastReset = now;
+            }
+        };
+
+        events.forEach(event => document.addEventListener(event, throttledReset));
+        resetTimer(); // Initial start
+
+        return () => {
+            if (timeoutId) clearTimeout(timeoutId);
+            events.forEach(event => document.removeEventListener(event, throttledReset));
+        };
+    }, [session]);
+
     const refreshProfile = async () => {
         if (session?.user.id) {
             await fetchProfile(session.user.id);

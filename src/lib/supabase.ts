@@ -16,6 +16,7 @@ export type Clinic = {
     subscription_status: 'active' | 'past_due' | 'none' | 'trialing';
     stripe_customer_id?: string | null;
     subscription_id?: string | null;
+    ai_tone?: 'professional' | 'friendly' | 'direct';
 };
 
 export type Profile = {

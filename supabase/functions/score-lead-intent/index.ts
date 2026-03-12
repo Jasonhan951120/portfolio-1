@@ -20,15 +20,25 @@ serve(async (req) => {
             Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
         )
 
-        // 2. Prepare Prompt (Anonymized)
+        // 2. Prepare Tone-Specific Prompt
+        const tone = record.ai_tone || 'professional';
+        const toneInstructionsMap = {
+            professional: "Use formal, clinical, and authoritative medical terminology. Be precise and reassuring.",
+            friendly: "Use warm, empathetic, and conversational language. You can use subtle emojis. Be inviting.",
+            direct: "Be extremely concise and action-oriented. Focus only on the 'Bottom Line' for the staff."
+        };
+        const toneInstructions = toneInstructionsMap[tone as keyof typeof toneInstructionsMap] || toneInstructionsMap.professional;
+
         const prompt = `Analyze this dental lead:
 Treatment: ${record.service}
 Notes: ${record.notes || 'No message provided'}
 
+Tone Preference: ${toneInstructions}
+
 Tasks:
 1. Assign an Intent Score (1-100) based on urgency and clarity of the message.
 2. Estimate Potential Value in GBP (£).
-3. Provide a 1-sentence "AI Summary" for the clinical staff.
+3. Provide a 1-sentence "AI Summary" for the clinical staff following the Tone Preference.
 
 Return ONLY JSON:
 { "intent_score": number, "potential_value": number, "ai_summary": "string" }`

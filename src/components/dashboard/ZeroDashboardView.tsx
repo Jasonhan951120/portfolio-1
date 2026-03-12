@@ -6,6 +6,8 @@ import { MessageCircle, CheckCircle, Sparkles, X, Send, SkipForward } from 'luci
 import { CSVImportZone } from '../CSVImportZone';
 import confetti from 'canvas-confetti';
 import { SecureHistoryToast } from './SecureHistoryToast';
+import { SkeletonLeadCard } from './SkeletonLeadCard';
+import { Shield } from 'lucide-react';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TYPES
@@ -16,6 +18,7 @@ interface ZeroDashboardViewProps {
     specialty?: string | null;
     onStatusChange: (leadId: string, newStatus: string) => Promise<void>;
     onImportComplete: () => void;
+    loading?: boolean;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -81,8 +84,8 @@ function HotLeadCard({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.7, y: -70, filter: 'blur(16px)' }}
             transition={{ type: 'spring', stiffness: 260, damping: 24 }}
-            className="relative w-full max-w-[460px]"
-            style={{ minHeight: 500 }}
+            className="relative w-full max-w-[460px] md:max-w-none"
+            style={{ minHeight: window.innerWidth < 768 ? 400 : 500 }}
         >
             {/* ── URGENCY PULSE RING (loss aversion, disappears when sent) ── */}
             <AnimatePresence>
@@ -240,7 +243,14 @@ function HotLeadCard({
 // ─────────────────────────────────────────────────────────────────────────────
 // MAIN COMPONENT
 // ─────────────────────────────────────────────────────────────────────────────
-export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, onImportComplete }: ZeroDashboardViewProps) {
+export function ZeroDashboardView({
+    leads,
+    clinicId,
+    specialty,
+    onStatusChange,
+    onImportComplete,
+    loading = false
+}: ZeroDashboardViewProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [sentLeads, setSentLeads] = useState<Set<string>>(new Set());
     const [whatsappModalLead, setWhatsappModalLead] = useState<ConsultationRequest | null>(null);
@@ -374,7 +384,11 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
 
             <div className="relative z-10 flex flex-col items-center w-full">
                 <AnimatePresence mode="wait">
-                    {currentLead ? (
+                    {loading ? (
+                        <div className="relative w-full flex justify-center">
+                            <SkeletonLeadCard />
+                        </div>
+                    ) : currentLead ? (
                         <div key={`stack-${currentIndex}`} className="relative w-full flex justify-center">
                             {/* Ghost stack cards behind */}
                             {activeLeads.length > 1 && (
@@ -453,7 +467,31 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
                 )}
             </div>
 
+            {/* ── MOBILE STICKY CTA (Task 1) ── */}
+            <div className="md:hidden fixed bottom-6 left-6 right-6 z-[250]">
+                <div className="bg-[#0A0F1E]/80 backdrop-blur-2xl border border-white/10 rounded-3xl p-4 flex items-center justify-between shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+                    <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center">
+                            <Shield className="w-4 h-4 text-emerald-500" />
+                        </div>
+                        <div>
+                            <p className="text-[8px] font-black text-white/40 uppercase tracking-widest">PII Scrubbed</p>
+                            <p className="text-[10px] text-white font-bold">Bank-Grade Secure</p>
+                        </div>
+                    </div>
+                    {leads.length > 0 && (
+                        <button
+                            onClick={() => document.getElementById('primary-cta-btn')?.click()}
+                            className="bg-emerald-500 text-black font-black text-[10px] uppercase tracking-widest px-6 py-3 rounded-2xl active:scale-95 transition-transform"
+                        >
+                            Send Now
+                        </button>
+                    )}
+                </div>
+            </div>
+
             {/* ── WHATSAPP PREVIEW MODAL ── */}
+            {/* ... Modal content remains the same ... */}
             <AnimatePresence>
                 {whatsappModalLead && (
                     <motion.div
@@ -504,7 +542,7 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
                                     className="w-full bg-[#25D366] hover:bg-[#1EBE55] text-white font-black uppercase tracking-widest py-6 rounded-[28px] transition-all flex items-center justify-center gap-3 shadow-[0_20px_50px_rgba(37,211,102,0.4)] text-sm"
                                 >
                                     <Send className="w-5 h-5" />
-                                    Open WhatsApp &amp; Send
+                                    Open WhatsApp & Send
                                 </button>
                             </div>
                         </motion.div>
