@@ -13,14 +13,14 @@ import { supabase } from "../lib/supabase";
 function IPhoneFrame({ children }: { children: React.ReactNode }) {
     return (
         <div className="relative w-full max-w-[220px] mx-auto my-4 select-none">
-            <div className="bg-gray-900 rounded-[36px] p-[7px] shadow-[0_20px_60px_rgba(0,0,0,0.18)]">
-                <div className="absolute left-[-6px] top-24 w-[5px] h-8 bg-gray-700 rounded-l-md" />
-                <div className="absolute left-[-6px] top-36 w-[5px] h-12 bg-gray-700 rounded-l-md" />
-                <div className="absolute left-[-6px] top-[200px] w-[5px] h-12 bg-gray-700 rounded-l-md" />
-                <div className="absolute right-[-6px] top-28 w-[5px] h-16 bg-gray-700 rounded-r-md" />
+            <div className="bg-slate-200 rounded-[36px] p-[7px] shadow-lg">
+                <div className="absolute left-[-6px] top-24 w-[5px] h-8 bg-slate-300 rounded-l-md" />
+                <div className="absolute left-[-6px] top-36 w-[5px] h-12 bg-slate-300 rounded-l-md" />
+                <div className="absolute left-[-6px] top-[200px] w-[5px] h-12 bg-slate-300 rounded-l-md" />
+                <div className="absolute right-[-6px] top-28 w-[5px] h-16 bg-slate-300 rounded-r-md" />
                 <div className="bg-white rounded-[30px] overflow-hidden min-h-[340px]">
                     <div className="bg-white flex justify-center pt-3 pb-0">
-                        <div className="w-[72px] h-[22px] bg-gray-900 rounded-full" />
+                        <div className="w-[72px] h-[22px] bg-slate-200 rounded-full" />
                     </div>
                     {children}
                 </div>
@@ -98,14 +98,14 @@ function MockupQRScan() {
                     </div>
                     <div className="absolute top-1/2 w-full h-0.5 bg-[#87A96B]/80 shadow-[0_0_8px_rgba(135,169,107,0.8)]" />
                 </div>
-                <div className="w-full bg-[#1C1C1E]/90 rounded-xl p-3 border border-white/10 mt-1">
+                <div className="w-full bg-slate-50 rounded-xl p-3 border border-slate-200 mt-1">
                     <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded bg-[#87A96B] flex items-center justify-center flex-shrink-0">
+                        <div className="w-6 h-6 rounded bg-emerald-500 flex items-center justify-center flex-shrink-0">
                             <Globe className="w-3.5 h-3.5 text-white" />
                         </div>
                         <div>
-                            <p className="text-white text-[9px] font-bold">Open hanlanoc.com</p>
-                            <p className="text-gray-400 text-[8px]">Tap the link to copy</p>
+                            <p className="text-slate-900 text-[9px] font-bold">Open hanlanoc.com</p>
+                            <p className="text-slate-400 text-[8px]">Tap the link to copy</p>
                         </div>
                     </div>
                 </div>
@@ -126,14 +126,14 @@ function MockupSafariCopy() {
                 <div className="bg-[#F9FAFB] rounded-xl p-3 border border-black/5 mb-3">
                     <p className="text-[8px] text-gray-500 font-medium text-center">Redirecting...</p>
                 </div>
-                <div className="bg-[#1C1C1E] rounded-xl overflow-hidden border border-white/10 shadow-xl">
-                    <div className="px-4 py-2.5 border-b border-white/10">
-                        <p className="text-white text-[9px] font-semibold text-center">hanlanoc.com/visit/...</p>
+                <div className="bg-white rounded-xl overflow-hidden border border-slate-200 shadow-lg">
+                    <div className="px-4 py-2.5 border-b border-slate-100">
+                        <p className="text-slate-900 text-[9px] font-semibold text-center">hanlanoc.com/visit/...</p>
                     </div>
                     {["Copy", "Share", "Add Bookmark"].map((item, i) => (
-                        <div key={item} className={`px-4 py-2.5 flex items-center justify-between ${i === 0 ? "bg-[#87A96B]/20" : ""} ${i < 2 ? "border-b border-white/5" : ""}`}>
-                            <p className={`text-[9px] font-bold ${i === 0 ? "text-[#87A96B]" : "text-white/70"}`}>{item}</p>
-                            {i === 0 && <CheckCircle2 className="w-3 h-3 text-[#87A96B]" />}
+                        <div key={item} className={`px-4 py-2.5 flex items-center justify-between ${i === 0 ? "bg-emerald-50" : ""} ${i < 2 ? "border-b border-slate-100" : ""}`}>
+                            <p className={`text-[9px] font-bold ${i === 0 ? "text-emerald-600" : "text-slate-500"}`}>{item}</p>
+                            {i === 0 && <CheckCircle2 className="w-3 h-3 text-emerald-500" />}
                         </div>
                     ))}
                 </div>
@@ -207,13 +207,13 @@ function MockupIGLinkSaved() {
                         <div className="h-2 w-20 bg-gray-100 rounded mt-1" />
                     </div>
                 ))}
-                <div className="border-b-2 border-[#87A96B] py-2 mt-1 bg-[#87A96B]/5 -mx-1 px-1 rounded-lg">
-                    <p className="text-[7px] font-black uppercase tracking-widest text-[#87A96B]">Website / Links ✓</p>
-                    <p className="text-[9px] text-[#87A96B] mt-0.5 font-bold truncate">hanlanoc.com/visit/30bea…</p>
+                <div className="border-b-2 border-emerald-500 py-2 mt-1 bg-emerald-50 -mx-1 px-1 rounded-lg">
+                    <p className="text-[7px] font-black uppercase tracking-widest text-emerald-600">Website / Links ✓</p>
+                    <p className="text-[9px] text-emerald-600 mt-0.5 font-bold truncate">hanlanoc.com/visit/30bea…</p>
                 </div>
-                <div className="mt-3 flex items-center gap-1.5 justify-center bg-[#87A96B]/10 rounded-xl p-2">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#87A96B]" />
-                    <p className="text-[9px] text-[#87A96B] font-bold">Saved — syncing to dashboard</p>
+                <div className="mt-3 flex items-center gap-1.5 justify-center bg-emerald-50 rounded-xl p-2">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                    <p className="text-[9px] text-emerald-600 font-bold">Saved — syncing to dashboard</p>
                 </div>
             </div>
         </IPhoneFrame>
@@ -344,9 +344,9 @@ function MockupGoogleSave() {
                         </div>
                     </div>
                 </div>
-                <div className="mt-2 flex items-center gap-1.5 justify-center bg-[#87A96B]/10 rounded-xl p-2.5">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#87A96B]" />
-                    <p className="text-[9px] text-[#87A96B] font-bold">Saved — visitors now appear live on your dashboard</p>
+                <div className="mt-2 flex items-center gap-1.5 justify-center bg-emerald-50 rounded-xl p-2.5">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                    <p className="text-[9px] text-emerald-600 font-bold">Saved — visitors now appear live on your dashboard</p>
                 </div>
             </div>
         </BrowserFrame>
@@ -427,18 +427,18 @@ export default function CampaignSetupPage() {
             <div className="absolute -top-[400px] -right-[400px] w-[900px] h-[900px] bg-[#C5A059]/[0.025] blur-[140px] rounded-full pointer-events-none" />
 
             <div className="max-w-4xl mx-auto px-6 py-12 relative z-10">
-                <Link to="/admin" className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-gray-900 transition-colors mb-10 group">
+                <Link to="/admin" className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors mb-10 group">
                     <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back to Dashboard
                 </Link>
 
                 <div className="mb-14">
                     <div className="flex items-center gap-4 mb-5">
-                        <div className="w-12 h-12 rounded-2xl bg-white border border-black/5 shadow-sm flex items-center justify-center">
-                            <LinkIcon className="w-5 h-5 text-[#C5A059]" strokeWidth={1.5} />
+                        <div className="w-12 h-12 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center justify-center">
+                            <LinkIcon className="w-5 h-5 text-emerald-500" strokeWidth={1.5} />
                         </div>
-                        <h1 className="text-4xl font-display font-medium text-gray-900 tracking-tight">Campaign Setup</h1>
+                        <h1 className="text-4xl font-display font-medium text-slate-900 tracking-tight">Campaign Setup</h1>
                     </div>
-                    <p className="text-gray-500 text-lg leading-relaxed max-w-2xl">Paste these links into your ad platforms. Every visit will be tracked in real-time on your Dashboard.</p>
+                    <p className="text-slate-500 text-lg leading-relaxed max-w-2xl">Paste these links into your ad platforms. Every visit will be tracked in real-time on your Dashboard.</p>
                 </div>
 
                 {/* Tracking Link Cards */}
@@ -448,48 +448,48 @@ export default function CampaignSetupPage() {
                         const url = `https://hanlanoc.com/visit/${clinicId}?utm_source=${p.utm}`;
                         return (
                             <motion.div key={p.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07 }}
-                                className="bg-white p-8 rounded-[28px] border border-black/5 shadow-[0_2px_20px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all">
-                                <div className="flex items-center gap-3 mb-4">{p.icon}<h3 className="text-sm font-bold uppercase tracking-widest text-gray-900">{p.name}</h3></div>
+                                className="bg-white p-8 rounded-[28px] border border-slate-200 shadow-sm hover:shadow-md transition-all">
+                                <div className="flex items-center gap-3 mb-4">{p.icon}<h3 className="text-sm font-bold uppercase tracking-widest text-slate-900">{p.name}</h3></div>
                                 <div className="relative">
-                                    <input type="text" readOnly value={url} className="w-full bg-[#F9FAFB] border border-black/5 rounded-xl py-4 pl-4 pr-36 text-sm text-gray-900 font-mono tracking-tight focus:outline-none" />
+                                    <input type="text" readOnly value={url} className="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 pl-4 pr-36 text-sm text-slate-900 font-mono tracking-tight focus:outline-none" />
                                     <AnimatePresence mode="wait">
                                         {isCopied ? (
                                             <motion.button key="c1" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
-                                                className="absolute right-2 top-2 bottom-2 px-5 flex items-center gap-2 bg-[#87A96B] text-white rounded-lg text-xs font-bold uppercase tracking-widest">
+                                                className="absolute right-2 top-2 bottom-2 px-5 flex items-center gap-2 bg-emerald-500 text-white rounded-lg text-xs font-bold uppercase tracking-widest">
                                                 <CheckCircle2 className="w-4 h-4" /> Copied
                                             </motion.button>
                                         ) : (
                                             <motion.button key="c2" onClick={() => handleCopy(p.id, p.utm)} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
-                                                className="absolute right-2 top-2 bottom-2 px-5 bg-black/5 hover:bg-black/10 text-gray-900 rounded-lg text-xs font-bold uppercase tracking-widest transition-colors">
+                                                className="absolute right-2 top-2 bottom-2 px-5 bg-slate-100 hover:bg-slate-200 text-slate-900 rounded-lg text-xs font-bold uppercase tracking-widest transition-colors">
                                                 Copy Link
                                             </motion.button>
                                         )}
                                     </AnimatePresence>
                                 </div>
-                                <p className="text-[13px] text-[#888] tracking-wide mt-3 leading-relaxed">{p.instruction}</p>
+                                <p className="text-[13px] text-slate-400 tracking-wide mt-3 leading-relaxed">{p.instruction}</p>
                             </motion.div>
                         );
                     })}
                 </div>
 
                 {/* Guide Section */}
-                <div className="flex items-center gap-4 mb-10"><div className="h-px flex-1 bg-black/5" /><span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400">Setup Guide</span><div className="h-px flex-1 bg-black/5" /></div>
+                <div className="flex items-center gap-4 mb-10"><div className="h-px flex-1 bg-slate-200" /><span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Setup Guide</span><div className="h-px flex-1 bg-slate-200" /></div>
 
                 <div className="text-center mb-10">
-                    <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-[#C5A059] mb-3">Premium Manual</p>
-                    <h2 className="text-3xl md:text-[2.5rem] font-display font-medium text-gray-900 tracking-tight leading-tight">
+                    <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-emerald-600 mb-3">Premium Manual</p>
+                    <h2 className="text-3xl md:text-[2.5rem] font-display font-medium text-slate-900 tracking-tight leading-tight">
                         See exactly where every patient<br />comes from — starting today.
                     </h2>
-                    <p className="text-gray-400 mt-4 text-[15px] leading-relaxed max-w-lg mx-auto">Select a platform to see the step-by-step setup guide.</p>
+                    <p className="text-slate-400 mt-4 text-[15px] leading-relaxed max-w-lg mx-auto">Select a platform to see the step-by-step setup guide.</p>
                 </div>
 
                 {/* Tabs */}
-                <div className="flex bg-white border border-black/5 rounded-2xl p-1.5 mb-8 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+                <div className="flex bg-white border border-slate-200 rounded-2xl p-1.5 mb-8 shadow-sm">
                     {([{ key: "instagram", label: "📱  Instagram Setup", sub: "Mobile app workflow" }, { key: "google", label: "💻  Google Ads Setup", sub: "PC admin workflow" }] as const).map(tab => (
                         <button key={tab.key} onClick={() => setGuideTab(tab.key)}
-                            className={`flex-1 flex flex-col items-center py-3.5 px-4 rounded-xl transition-all duration-300 ${guideTab === tab.key ? "bg-[#F9FAFB] shadow-sm border border-black/5" : "hover:bg-black/[0.02]"}`}>
-                            <span className={`text-[13px] font-bold tracking-tight ${guideTab === tab.key ? "text-gray-900" : "text-gray-400"}`}>{tab.label}</span>
-                            <span className={`text-[10px] mt-0.5 font-medium tracking-wide ${guideTab === tab.key ? "text-[#87A96B]" : "text-gray-300"}`}>{tab.sub}</span>
+                            className={`flex-1 flex flex-col items-center py-3.5 px-4 rounded-xl transition-all duration-300 ${guideTab === tab.key ? "bg-slate-50 border border-slate-200 shadow-sm" : "hover:bg-slate-50/50"}`}>
+                            <span className={`text-[13px] font-bold tracking-tight ${guideTab === tab.key ? "text-slate-900" : "text-slate-400"}`}>{tab.label}</span>
+                            <span className={`text-[10px] mt-0.5 font-medium tracking-wide ${guideTab === tab.key ? "text-emerald-500" : "text-slate-300"}`}>{tab.sub}</span>
                         </button>
                     ))}
                 </div>
@@ -499,15 +499,15 @@ export default function CampaignSetupPage() {
                         <motion.div key="ig" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
                             <div className="grid md:grid-cols-5 gap-6 mb-4 items-start">
                                 <div className="md:col-span-2">
-                                    <div className="bg-white rounded-[28px] border border-black/5 shadow-[0_4px_24px_rgba(0,0,0,0.04)] p-7 flex flex-col items-center">
-                                        <p className="text-[10px] font-black uppercase tracking-[0.25em] text-gray-400 mb-5 text-center">Instagram Tracking QR</p>
-                                        {instagramUrl && <div className="p-3 bg-white rounded-2xl border border-black/5 shadow-inner mb-5"><QRCodeSVG value={instagramUrl} size={160} bgColor="#FFFFFF" fgColor="#111111" level="H" includeMargin={false} /></div>}
-                                        <p className="text-center text-[12px] text-gray-400 leading-relaxed mb-4">Scan with your phone camera<br />then copy the link</p>
+                                    <div className="bg-white rounded-[28px] border border-slate-200 shadow-sm p-7 flex flex-col items-center">
+                                        <p className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-400 mb-5 text-center">Instagram Tracking QR</p>
+                                        {instagramUrl && <div className="p-3 bg-white rounded-2xl border border-slate-100 shadow-inner mb-5"><QRCodeSVG value={instagramUrl} size={160} bgColor="#FFFFFF" fgColor="#111111" level="H" includeMargin={false} /></div>}
+                                        <p className="text-center text-[12px] text-slate-400 leading-relaxed mb-4">Scan with your phone camera<br />then copy the link</p>
                                         <AnimatePresence mode="wait">
                                             {copiedPlatform === "instagram-qr" ? (
-                                                <motion.div key="d" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full py-3 rounded-xl bg-[#87A96B] flex items-center justify-center gap-2 text-white text-xs font-bold tracking-widest"><CheckCircle2 className="w-4 h-4" /> Copied</motion.div>
+                                                <motion.div key="d" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full py-3 rounded-xl bg-emerald-500 flex items-center justify-center gap-2 text-white text-xs font-bold tracking-widest"><CheckCircle2 className="w-4 h-4" /> Copied</motion.div>
                                             ) : (
-                                                <motion.button key="b" onClick={() => handleCopy("instagram-qr", "instagram")} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full py-3 rounded-xl border border-[#C5A059]/30 bg-[#C5A059]/5 hover:bg-[#C5A059]/10 text-[#C5A059] text-xs font-bold uppercase tracking-widest transition-colors">Copy Link</motion.button>
+                                                <motion.button key="b" onClick={() => handleCopy("instagram-qr", "instagram")} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full py-3 rounded-xl border border-emerald-500/30 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 text-xs font-bold uppercase tracking-widest transition-colors">Copy Link</motion.button>
                                             )}
                                         </AnimatePresence>
                                     </div>
@@ -533,12 +533,12 @@ export default function CampaignSetupPage() {
                 </AnimatePresence>
 
                 {/* Warning Box */}
-                <div className="bg-[#FFF8F0] border border-[#F5C27A]/40 rounded-2xl p-7 mt-4 mb-4">
+                <div className="bg-amber-50 border border-amber-200/60 rounded-2xl p-7 mt-4 mb-4">
                     <div className="flex items-start gap-4">
-                        <AlertTriangle className="w-5 h-5 text-[#D4860A] flex-shrink-0 mt-0.5" strokeWidth={1.5} />
+                        <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" strokeWidth={1.5} />
                         <div>
-                            <p className="text-[15px] font-semibold text-gray-900 mb-3">⚠️ Important Reminders</p>
-                            <ul className="space-y-2 text-[13px] text-[#9C6100] leading-relaxed">
+                            <p className="text-[15px] font-semibold text-slate-900 mb-3">⚠️ Important Reminders</p>
+                            <ul className="space-y-2 text-[13px] text-amber-700 leading-relaxed">
                                 <li>• Do not manually edit or shorten the link. Modifying the URL may prevent tracking data from being recorded correctly.</li>
                                 <li>• When sharing the link via messaging apps or SMS, copy and paste it exactly as shown — do not retype it.</li>
                                 <li>• Instagram profiles can only hold one website link. If you already have a link set, it will be replaced.</li>
@@ -548,12 +548,12 @@ export default function CampaignSetupPage() {
                 </div>
 
                 {/* Troubleshooting Box */}
-                <div className="bg-[#F5F7FF] border border-[#C7D2FE]/60 rounded-2xl p-7 mb-16">
+                <div className="bg-indigo-50 border border-indigo-200/60 rounded-2xl p-7 mb-16">
                     <div className="flex items-start gap-4">
-                        <HelpCircle className="w-5 h-5 text-[#6366F1] flex-shrink-0 mt-0.5" strokeWidth={1.5} />
+                        <HelpCircle className="w-5 h-5 text-indigo-500 flex-shrink-0 mt-0.5" strokeWidth={1.5} />
                         <div>
-                            <p className="text-[15px] font-semibold text-gray-900 mb-3">💡 Having trouble with the setup?</p>
-                            <ul className="space-y-2 text-[13px] text-[#5149A0] leading-relaxed">
+                            <p className="text-[15px] font-semibold text-slate-900 mb-3">💡 Having trouble with the setup?</p>
+                            <ul className="space-y-2 text-[13px] text-indigo-700 leading-relaxed">
                                 <li>• <strong>QR code not scanning?</strong> — Move to a brighter area and hold your camera 15–20cm away from the QR code.</li>
                                 <li>• <strong>Dashboard numbers not updating?</strong> — Paste the tracking link directly into a browser address bar to test it first.</li>
                                 <li>• <strong>Still stuck?</strong> — Use the chat button in the bottom-right corner to reach your dedicated support manager instantly.</li>

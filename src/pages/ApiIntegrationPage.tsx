@@ -17,14 +17,14 @@ import { saveTokenToBackend } from "../lib/integrations";
 function IPhoneFrame({ children }: { children: React.ReactNode }) {
     return (
         <div className="relative w-full max-w-[220px] mx-auto my-4 select-none">
-            <div className="bg-gray-900 rounded-[36px] p-[7px] shadow-[0_20px_60px_rgba(0,0,0,0.18)]">
-                <div className="absolute left-[-6px] top-24 w-[5px] h-8 bg-gray-700 rounded-l-md" />
-                <div className="absolute left-[-6px] top-36 w-[5px] h-12 bg-gray-700 rounded-l-md" />
-                <div className="absolute left-[-6px] top-[200px] w-[5px] h-12 bg-gray-700 rounded-l-md" />
-                <div className="absolute right-[-6px] top-28 w-[5px] h-16 bg-gray-700 rounded-r-md" />
+            <div className="bg-slate-200 rounded-[36px] p-[7px] shadow-lg">
+                <div className="absolute left-[-6px] top-24 w-[5px] h-8 bg-slate-300 rounded-l-md" />
+                <div className="absolute left-[-6px] top-36 w-[5px] h-12 bg-slate-300 rounded-l-md" />
+                <div className="absolute left-[-6px] top-[200px] w-[5px] h-12 bg-slate-300 rounded-l-md" />
+                <div className="absolute right-[-6px] top-28 w-[5px] h-16 bg-slate-300 rounded-r-md" />
                 <div className="bg-white rounded-[30px] overflow-hidden min-h-[340px]">
                     <div className="bg-white flex justify-center pt-3 pb-0">
-                        <div className="w-[72px] h-[22px] bg-gray-900 rounded-full" />
+                        <div className="w-[72px] h-[22px] bg-slate-200 rounded-full" />
                     </div>
                     {children}
                 </div>
@@ -35,14 +35,14 @@ function IPhoneFrame({ children }: { children: React.ReactNode }) {
 
 function BrowserFrame({ children, url = "ads.google.com" }: { children: React.ReactNode; url?: string }) {
     return (
-        <div className="w-full bg-white rounded-2xl border border-black/8 shadow-[0_4px_24px_rgba(0,0,0,0.06)] overflow-hidden my-4 select-none">
-            <div className="bg-[#F3F4F6] px-4 py-2.5 flex items-center gap-3 border-b border-black/5">
+        <div className="w-full bg-white rounded-2xl border border-slate-200 shadow-[0_4px_24px_rgba(0,0,0,0.06)] overflow-hidden my-4 select-none">
+            <div className="bg-slate-50 px-4 py-2.5 flex items-center gap-3 border-b border-slate-100">
                 <div className="flex gap-1.5 flex-shrink-0">
                     <div className="w-3 h-3 rounded-full bg-[#FF5F57]" />
                     <div className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
                     <div className="w-3 h-3 rounded-full bg-[#28C840]" />
                 </div>
-                <div className="flex-1 bg-white rounded-md px-3 py-1 text-[10px] text-gray-400 font-medium border border-black/5 truncate">
+                <div className="flex-1 bg-white rounded-md px-3 py-1 text-[10px] text-slate-400 font-medium border border-slate-100 truncate">
                     🔒 {url}
                 </div>
             </div>
@@ -56,14 +56,14 @@ function MockupPCDashboard() {
         <BrowserFrame url="app.hanlanoc.com/admin/integrations">
             <div className="space-y-2">
                 <div className="flex items-center gap-2 mb-3">
-                    <div className="w-5 h-5 rounded bg-[#C5A059]/20" />
-                    <div className="h-3 w-32 rounded bg-gray-200" />
+                    <div className="w-5 h-5 rounded bg-emerald-500/10" />
+                    <div className="h-3 w-32 rounded bg-slate-100" />
                 </div>
-                <div className="bg-gray-50 rounded-xl p-3 border border-black/5">
-                    <div className="h-2.5 w-20 rounded bg-gray-200 mb-2" />
-                    <div className="h-8 w-full rounded-lg bg-white border border-black/5 flex items-center px-3">
-                        <div className="h-2 flex-1 rounded bg-gray-100" />
-                        <div className="ml-2 px-3 py-1 bg-black/5 rounded-md text-[9px] text-gray-500 font-bold">Copy Link</div>
+                <div className="bg-slate-50 rounded-xl p-3 border border-slate-100">
+                    <div className="h-2.5 w-20 rounded bg-slate-200 mb-2" />
+                    <div className="h-8 w-full rounded-lg bg-white border border-slate-200 flex items-center px-3">
+                        <div className="h-2 flex-1 rounded bg-slate-100" />
+                        <div className="ml-2 px-3 py-1 bg-slate-100 rounded-md text-[9px] text-slate-500 font-bold">Copy Link</div>
                     </div>
                 </div>
             </div>
@@ -75,16 +75,16 @@ function MockupQRScan() {
     return (
         <IPhoneFrame>
             <div className="px-4 py-4 flex flex-col items-center">
-                <div className="text-[10px] font-bold text-gray-500 mb-3 tracking-wider">Camera</div>
-                <div className="relative w-full aspect-square bg-black rounded-2xl overflow-hidden flex items-center justify-center mb-2">
+                <div className="text-[10px] font-bold text-slate-400 mb-3 tracking-wider uppercase">Camera</div>
+                <div className="relative w-full aspect-square bg-slate-900 rounded-2xl overflow-hidden flex items-center justify-center mb-2">
                     <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/40" />
-                    <div className="absolute top-6 left-6 w-8 h-8 border-t-2 border-l-2 border-white rounded-tl-md" />
-                    <div className="absolute top-6 right-6 w-8 h-8 border-t-2 border-r-2 border-white rounded-tr-md" />
-                    <div className="absolute bottom-6 left-6 w-8 h-8 border-b-2 border-l-2 border-white rounded-bl-md" />
-                    <div className="absolute bottom-6 right-6 w-8 h-8 border-b-2 border-r-2 border-white rounded-br-md" />
+                    <div className="absolute top-6 left-6 w-8 h-8 border-t-2 border-l-2 border-white/60 rounded-tl-md" />
+                    <div className="absolute top-6 right-6 w-8 h-8 border-t-2 border-r-2 border-white/60 rounded-tr-md" />
+                    <div className="absolute bottom-6 left-6 w-8 h-8 border-b-2 border-l-2 border-white/60 rounded-bl-md" />
+                    <div className="absolute bottom-6 right-6 w-8 h-8 border-b-2 border-r-2 border-white/60 rounded-br-md" />
                     <div className="w-16 h-16 bg-white/90 rounded grid grid-cols-4 gap-0.5 p-1">
                         {Array.from({ length: 16 }).map((_, i) => (
-                            <div key={i} className={`rounded-[1px] ${[0, 1, 4, 2, 5, 8, 10, 14, 15, 11].includes(i) ? "bg-gray-900" : "bg-white"}`} />
+                            <div key={i} className={`rounded-[1px] ${[0, 1, 4, 2, 5, 8, 10, 14, 15, 11].includes(i) ? "bg-slate-900" : "bg-white"}`} />
                         ))}
                     </div>
                 </div>
@@ -97,13 +97,13 @@ function MockupSafariCopy() {
     return (
         <IPhoneFrame>
             <div className="px-3 py-3">
-                <div className="bg-[#F2F2F7] rounded-xl px-3 py-2 flex items-center gap-2 mb-3">
-                    <div className="w-3 h-3 rounded-full bg-[#28C840] flex-shrink-0" />
-                    <p className="text-[8px] text-gray-600 truncate font-medium">hanlanoc.com/visit/30bea…</p>
+                <div className="bg-slate-100 rounded-xl px-3 py-2 flex items-center gap-2 mb-3">
+                    <div className="w-3 h-3 rounded-full bg-emerald-500 flex-shrink-0" />
+                    <p className="text-[8px] text-slate-600 truncate font-medium">hanlanoc.com/visit/30bea…</p>
                 </div>
-                <div className="bg-[#1C1C1E] rounded-xl overflow-hidden border border-white/10 shadow-xl">
-                    <div className="px-4 py-2.5 border-b border-white/10">
-                        <p className="text-white text-[9px] font-semibold text-center">hanlanoc.com/visit/...</p>
+                <div className="bg-white rounded-xl overflow-hidden border border-slate-200 shadow-lg">
+                    <div className="px-4 py-2.5 border-b border-slate-100">
+                        <p className="text-slate-900 text-[9px] font-semibold text-center">hanlanoc.com/visit/...</p>
                     </div>
                 </div>
             </div>
@@ -116,11 +116,11 @@ function MockupIGEditProfile() {
         <IPhoneFrame>
             <div className="px-4 pb-4">
                 <div className="flex items-center justify-between py-2 mb-2">
-                    <div className="text-[10px] font-black text-gray-900 tracking-tight">Edit Profile</div>
+                    <div className="text-[10px] font-black text-slate-900 tracking-tight">Edit Profile</div>
                 </div>
-                <div className="relative border-b-2 border-[#87A96B] py-2 mt-1">
-                    <p className="text-[7px] font-black uppercase tracking-widest text-[#87A96B]">Website / Links</p>
-                    <p className="text-[9px] text-gray-900 mt-0.5 font-medium truncate">hanlanoc.com/visit/30bea…</p>
+                <div className="relative border-b-2 border-emerald-500/30 py-2 mt-1">
+                    <p className="text-[7px] font-black uppercase tracking-widest text-emerald-600">Website / Links</p>
+                    <p className="text-[9px] text-slate-900 mt-0.5 font-medium truncate">hanlanoc.com/visit/30bea…</p>
                 </div>
             </div>
         </IPhoneFrame>
@@ -132,14 +132,14 @@ function MockupIGLinkSaved() {
         <IPhoneFrame>
             <div className="px-4 pb-4">
                 <div className="flex items-center justify-between py-2 mb-3">
-                    <div className="text-[10px] font-black text-gray-900 tracking-tight">Edit Profile</div>
+                    <div className="text-[10px] font-black text-slate-900 tracking-tight">Edit Profile</div>
                     <div className="relative">
-                        <div className="text-[10px] font-black text-blue-500 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200">Done</div>
+                        <div className="text-[10px] font-black text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200">Done</div>
                     </div>
                 </div>
-                <div className="mt-3 flex items-center gap-1.5 justify-center bg-[#87A96B]/10 rounded-xl p-2">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#87A96B]" />
-                    <p className="text-[9px] text-[#87A96B] font-bold">Saved — syncing live</p>
+                <div className="mt-3 flex items-center gap-1.5 justify-center bg-emerald-50 rounded-xl p-2">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                    <p className="text-[9px] text-emerald-600 font-bold">Saved — syncing live</p>
                 </div>
             </div>
         </IPhoneFrame>
@@ -151,9 +151,9 @@ function MockupFinalURL() {
         <BrowserFrame url="ads.google.com/aw/ads/edit">
             <div className="space-y-3">
                 <div className="relative">
-                    <p className="text-[8px] font-black uppercase tracking-widest text-[#C5A059] mb-1">Final URL ★</p>
-                    <div className="h-9 bg-white rounded-xl border-2 border-[#C5A059]/60 px-3 flex items-center shadow-[0_0_0_3px_rgba(197,160,89,0.15)]">
-                        <p className="text-[8px] text-gray-700 font-mono truncate">hanlanoc.com/visit/30beae42?utm_source=google</p>
+                    <p className="text-[8px] font-black uppercase tracking-widest text-emerald-600 mb-1">Final URL ★</p>
+                    <div className="h-9 bg-white rounded-xl border-2 border-emerald-500/40 px-3 flex items-center shadow-[0_0_0_3px_rgba(16,185,129,0.1)]">
+                        <p className="text-[8px] text-slate-700 font-mono truncate">hanlanoc.com/visit/30beae42?utm_source=google</p>
                     </div>
                 </div>
             </div>
@@ -165,12 +165,12 @@ function MockupGoogleSave() {
     return (
         <BrowserFrame url="ads.google.com/aw/ads/edit">
             <div className="space-y-2">
-                <div className="flex justify-end gap-2 mt-3 pt-3 border-t border-black/5">
-                    <div className="px-5 py-2 bg-blue-500 rounded-lg text-[8px] text-white font-black shadow-md">Save</div>
+                <div className="flex justify-end gap-2 mt-3 pt-3 border-t border-slate-100">
+                    <div className="px-5 py-2 bg-blue-600 rounded-lg text-[8px] text-white font-black shadow-md">Save</div>
                 </div>
-                <div className="mt-2 flex items-center gap-1.5 justify-center bg-[#87A96B]/10 rounded-xl p-2.5">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#87A96B]" />
-                    <p className="text-[9px] text-[#87A96B] font-bold">Saved — syncing live</p>
+                <div className="mt-2 flex items-center gap-1.5 justify-center bg-emerald-50 rounded-xl p-2.5">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                    <p className="text-[9px] text-emerald-600 font-bold">Saved — syncing live</p>
                 </div>
             </div>
         </BrowserFrame>
@@ -182,17 +182,17 @@ function StepCard({ number, title, desc, children, delay = 0, icon }: {
 }) {
     return (
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay }}
-            className="bg-white rounded-2xl border border-black/5 shadow-[0_2px_14px_rgba(0,0,0,0.03)] p-6 mb-4">
+            className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 mb-4">
             <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-11 h-11 rounded-full bg-[#F9FAFB] border border-black/5 flex items-center justify-center">
-                    <span className="text-[11px] font-black tracking-widest text-[#C5A059]">{number}</span>
+                <div className="flex-shrink-0 w-11 h-11 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center">
+                    <span className="text-[11px] font-black tracking-widest text-emerald-600">{number}</span>
                 </div>
                 <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                        {icon && <span className="text-gray-400">{icon}</span>}
-                        <h4 className="text-sm font-bold text-gray-900 leading-snug">{title}</h4>
+                        {icon && <span className="text-slate-400">{icon}</span>}
+                        <h4 className="text-sm font-bold text-slate-900 leading-snug">{title}</h4>
                     </div>
-                    <p className="text-[13px] text-gray-500 leading-relaxed">{desc}</p>
+                    <p className="text-[13px] text-slate-500 leading-relaxed">{desc}</p>
                     {children}
                 </div>
             </div>
@@ -215,7 +215,6 @@ export default function ApiIntegrationPage() {
 
     const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
-    // Hook must be called at the top level
     const loginWithGoogle = useGoogleLogin({
         scope: "https://www.googleapis.com/auth/adwords",
         onSuccess: async (tokenResponse) => {
@@ -308,47 +307,46 @@ export default function ApiIntegrationPage() {
     };
 
     if (loading) return (
-        <div className="min-h-screen bg-[#F9FAFB] flex items-center justify-center">
+        <div className="min-h-screen bg-slate-50 flex items-center justify-center">
             <div className="flex flex-col items-center gap-4">
-                <RefreshCw className="w-8 h-8 text-[#C5A059] animate-spin" />
-                <p className="text-gray-400 font-medium text-sm">Initializing Enterprise Data Stream...</p>
+                <RefreshCw className="w-8 h-8 text-emerald-500 animate-spin" />
+                <p className="text-slate-400 font-medium text-sm">Initializing Enterprise Data Stream...</p>
             </div>
         </div>
     );
 
     if (error) return (
-        <div className="min-h-screen bg-[#F9FAFB] flex items-center justify-center p-6 text-center">
-            <div className="max-w-md bg-white p-10 rounded-[32px] border border-black/5 shadow-xl">
+        <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 text-center">
+            <div className="max-w-md bg-white p-10 rounded-[32px] border border-slate-200 shadow-xl">
                 <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-                <h3 className="text-lg font-bold text-gray-900 mb-2">Sync Error</h3>
-                <p className="text-sm text-gray-500 mb-8">{error}</p>
-                <button onClick={() => window.location.reload()} className="w-full py-4 bg-black text-white rounded-2xl text-[10px] font-black uppercase tracking-widest">Retry Connection</button>
+                <h3 className="text-lg font-bold text-slate-900 mb-2">Sync Error</h3>
+                <p className="text-sm text-slate-500 mb-8">{error}</p>
+                <button onClick={() => window.location.reload()} className="w-full py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-800 transition-colors">Retry Connection</button>
             </div>
         </div>
     );
-
 
     const isGoogleConnected = adConnections.some(c => c.platform === 'google');
     const instagramUrl = clinicId ? `https://hanlanoc.com/visit/${clinicId}?utm_source=instagram` : "";
 
     return (
-        <div className="min-h-screen bg-[#F9FAFB] font-sans relative overflow-x-hidden p-6 md:p-12">
+        <div className="min-h-screen bg-slate-50 font-sans relative overflow-x-hidden p-6 md:p-12">
             <div className="max-w-5xl mx-auto relative z-10">
-                <Link to="/admin" className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-gray-400 hover:text-gray-900 transition-colors mb-12 group">
+                <Link to="/admin" className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors mb-12 group">
                     <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back to Intelligence
                 </Link>
 
                 {adConnections.length === 0 && setupMode === "choice" && (
                     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="grid md:grid-cols-2 gap-8 mb-16">
-                        <button onClick={() => setSetupMode("automatic")} className="group bg-white p-10 rounded-[40px] border border-black/5 shadow-xl hover:shadow-2xl transition-all text-left">
-                            <Zap className="w-12 h-12 text-[#C5A059] mb-8" />
-                            <h3 className="text-2xl font-display font-bold text-gray-900 mb-4 uppercase tracking-tight">Automatic Setup</h3>
-                            <p className="text-gray-500 leading-relaxed font-medium">Connect your Google Ads account in one click for real-time ROI tracking.</p>
+                        <button onClick={() => setSetupMode("automatic")} className="group bg-white p-10 rounded-[40px] border border-slate-200 shadow-sm hover:shadow-md transition-all text-left">
+                            <Zap className="w-12 h-12 text-emerald-500 mb-8" />
+                            <h3 className="text-2xl font-display font-bold text-slate-900 mb-4 uppercase tracking-tight">Automatic Setup</h3>
+                            <p className="text-slate-500 leading-relaxed font-medium">Connect your Google Ads account in one click for real-time ROI tracking.</p>
                         </button>
-                        <button onClick={() => setSetupMode("manual")} className="group bg-white p-10 rounded-[40px] border border-black/5 shadow-xl hover:shadow-2xl transition-all text-left">
-                            <LinkIcon className="w-12 h-12 text-gray-400 mb-8" />
-                            <h3 className="text-2xl font-display font-bold text-gray-900 mb-4 uppercase tracking-tight">Manual Tracking</h3>
-                            <p className="text-gray-500 leading-relaxed font-medium">Generate custom tracking links for Instagram, TikTok, and more.</p>
+                        <button onClick={() => setSetupMode("manual")} className="group bg-white p-10 rounded-[40px] border border-slate-200 shadow-sm hover:shadow-md transition-all text-left">
+                            <LinkIcon className="w-12 h-12 text-slate-400 mb-8" />
+                            <h3 className="text-2xl font-display font-bold text-slate-900 mb-4 uppercase tracking-tight">Manual Tracking</h3>
+                            <p className="text-slate-500 leading-relaxed font-medium">Generate custom tracking links for Instagram, TikTok, and more.</p>
                         </button>
                     </motion.div>
                 )}
@@ -356,19 +354,19 @@ export default function ApiIntegrationPage() {
                 {(adConnections.length > 0 || setupMode === "automatic") && (
                     <div className="space-y-12">
                         {adConnections.length === 0 && (
-                            <button onClick={() => setSetupMode("choice")} className="text-xs font-bold text-gray-400 hover:text-gray-900 underline underline-offset-4 mb-4">← Back to choice</button>
+                            <button onClick={() => setSetupMode("choice")} className="text-xs font-bold text-slate-400 hover:text-slate-900 underline underline-offset-4 mb-4">← Back to choice</button>
                         )}
                         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                             {/* Google Ads Card */}
-                            <div className={`p-8 rounded-[32px] transition-all border ${isGoogleConnected ? 'bg-white border-[#87A96B]/20 shadow-lg' : 'bg-white border-black/5 hover:border-black/10'}`}>
+                            <div className={`p-8 rounded-[32px] transition-all border ${isGoogleConnected ? 'bg-white border-emerald-500/20 shadow-lg' : 'bg-white border-slate-200 hover:border-slate-300 shadow-sm'}`}>
                                 <div className="flex justify-between items-start mb-6">
-                                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${isGoogleConnected ? 'bg-[#87A96B]/10 text-[#87A96B]' : 'bg-blue-50 text-blue-600'}`}>
+                                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${isGoogleConnected ? 'bg-emerald-50 text-emerald-500' : 'bg-blue-50 text-blue-600'}`}>
                                         <Globe className="w-6 h-6" />
                                     </div>
-                                    {isGoogleConnected && <span className="px-2.5 py-1 bg-[#87A96B]/10 text-[#87A96B] rounded-full text-[8px] font-black uppercase tracking-widest">Active</span>}
+                                    {isGoogleConnected && <span className="px-2.5 py-1 bg-emerald-50 text-emerald-500 rounded-full text-[8px] font-black uppercase tracking-widest">Active</span>}
                                 </div>
-                                <h3 className="text-sm font-bold text-gray-900 mb-1">Google Ads</h3>
-                                <p className="text-[10px] text-gray-400 mb-6 font-medium">Real-time API Sync</p>
+                                <h3 className="text-sm font-bold text-slate-900 mb-1">Google Ads</h3>
+                                <p className="text-[10px] text-slate-400 mb-6 font-medium">Real-time API Sync</p>
 
                                 {isGoogleConnected ? (
                                     <button onClick={() => handleDisconnect(adConnections.find(c => c.platform === 'google')?.id)} disabled={!!disconnectingId} className="w-full py-3 bg-red-50 text-red-500 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-red-100 transition-colors">
@@ -377,7 +375,7 @@ export default function ApiIntegrationPage() {
                                 ) : !googleClientId ? (
                                     <div className="bg-amber-50 px-3 py-2 rounded-xl flex items-center gap-2">
                                         <AlertTriangle className="w-3 h-3 text-amber-600" />
-                                        <span className="text-[8px] font-bold text-amber-700 uppercase tracking-tighter transition-colors">Setup Required</span>
+                                        <span className="text-[8px] font-bold text-amber-700 uppercase tracking-tighter transition-colors">Setup Failed</span>
                                     </div>
                                 ) : (
                                     <button onClick={() => loginWithGoogle()} disabled={isGoogleConnecting} className="w-full py-3 bg-blue-600 text-white rounded-xl text-[9px] font-black uppercase tracking-widest shadow-md hover:bg-blue-700 transition-colors">
@@ -386,102 +384,61 @@ export default function ApiIntegrationPage() {
                                 )}
                             </div>
 
-                            <h3 className="text-sm font-bold text-gray-900 mb-1">Instagram Ads</h3>
-                            <p className="text-[10px] text-gray-400 mb-6 font-medium">Tracking: utm_source=ig</p>
-                            <button onClick={() => {
-                                setManualTab("instagram");
-                                setSetupMode("manual");
-                            }} className="w-full py-3 bg-gray-50 text-gray-400 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-gray-100 transition-colors">Generate Link</button>
-                        </div>
+                            {/* Instagram Ads Card */}
+                            <div className="p-8 rounded-[32px] bg-white border border-slate-200 hover:border-slate-300 transition-all shadow-sm">
+                                <div className="flex justify-between items-start mb-6">
+                                    <div className="w-12 h-12 rounded-xl bg-slate-50 text-slate-400 flex items-center justify-center">
+                                        <Smartphone className="w-6 h-6" />
+                                    </div>
+                                </div>
+                                <h3 className="text-sm font-bold text-slate-900 mb-1">Instagram Ads</h3>
+                                <p className="text-[10px] text-slate-400 mb-6 font-medium">Tracking: utm_source=ig</p>
+                                <button onClick={() => {
+                                    setManualTab("instagram");
+                                    setSetupMode("manual");
+                                }} className="w-full py-3 bg-slate-50 text-slate-400 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-slate-100 transition-colors">Generate Link</button>
+                            </div>
 
-                        {/* Facebook Ads Card */}
-                        <div className="p-8 rounded-[32px] bg-white border border-black/5 hover:border-black/10 transition-all">
-                            <div className="flex justify-between items-start mb-6">
-                                <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
-                                    <Share2 className="w-6 h-6" />
+                            {/* Facebook Ads Card */}
+                            <div className="p-8 rounded-[32px] bg-white border border-slate-200 hover:border-slate-300 transition-all shadow-sm">
+                                <div className="flex justify-between items-start mb-6">
+                                    <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                                        <Share2 className="w-6 h-6" />
+                                    </div>
+                                </div>
+                                <h3 className="text-sm font-bold text-slate-900 mb-1">Facebook Ads</h3>
+                                <p className="text-[10px] text-slate-400 mb-6 font-medium">Tracking: utm_source=fb</p>
+                                <button onClick={() => {
+                                    setManualTab("instagram"); 
+                                    setSetupMode("manual");
+                                }} className="w-full py-3 bg-slate-50 text-slate-400 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-slate-100 transition-colors">Generate Link</button>
+                            </div>
+
+                            {/* Direct Website Card */}
+                            <div className="p-8 rounded-[32px] bg-white border border-emerald-500/20 shadow-lg transition-all">
+                                <div className="flex justify-between items-start mb-6">
+                                    <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-500 flex items-center justify-center">
+                                        <Monitor className="w-6 h-6" />
+                                    </div>
+                                    <span className="px-2.5 py-1 bg-emerald-50 text-emerald-500 rounded-full text-[8px] font-black uppercase tracking-widest">Active</span>
+                                </div>
+                                <h3 className="text-sm font-bold text-slate-900 mb-1">Direct Traffic</h3>
+                                <p className="text-[10px] text-slate-400 mb-6 font-medium">Native Website Tracking</p>
+                                <div className="flex items-center gap-1.5 px-3 py-2 bg-emerald-50 rounded-xl border border-emerald-100">
+                                    <Shield className="w-3 h-3 text-emerald-500" />
+                                    <span className="text-[8px] font-bold text-emerald-500 uppercase tracking-widest">Protected Stream</span>
                                 </div>
                             </div>
-                            <h3 className="text-sm font-bold text-gray-900 mb-1">Facebook Ads</h3>
-                            <p className="text-[10px] text-gray-400 mb-6 font-medium">Tracking: utm_source=fb</p>
-                            <button onClick={() => {
-                                setManualTab("instagram"); // Reuse IG logic for now
-                                setSetupMode("manual");
-                            }} className="w-full py-3 bg-gray-50 text-gray-400 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-gray-100 transition-colors">Generate Link</button>
                         </div>
-
-                        {/* Direct Website Card */}
-                        <div className="p-8 rounded-[32px] bg-white border border-[#87A96B]/20 shadow-lg transition-all">
-                            <div className="flex justify-between items-start mb-6">
-                                <div className="w-12 h-12 rounded-xl bg-green-50 text-[#87A96B] flex items-center justify-center">
-                                    <Monitor className="w-6 h-6" />
-                                </div>
-                                <span className="px-2.5 py-1 bg-[#87A96B]/10 text-[#87A96B] rounded-full text-[8px] font-black uppercase tracking-widest">Active</span>
-                            </div>
-                            <h3 className="text-sm font-bold text-gray-900 mb-1">Direct Traffic</h3>
-                            <p className="text-[10px] text-gray-400 mb-6 font-medium">Native Website Tracking</p>
-                            <div className="flex items-center gap-1.5 px-3 py-2 bg-[#87A96B]/5 rounded-xl border border-[#87A96B]/10">
-                                <Shield className="w-3 h-3 text-[#87A96B]" />
-                                <span className="text-[8px] font-bold text-[#87A96B] uppercase tracking-widest">Protected Stream</span>
-                            </div>
-                        </div>
-
-                        {/* Organic & Referrals Card */}
-                        <div className="p-8 rounded-[32px] bg-white border border-[#87A96B]/20 shadow-lg transition-all">
-                            <div className="flex justify-between items-start mb-6">
-                                <div className="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
-                                    <Share2 className="w-6 h-6" />
-                                </div>
-                                <span className="px-2.5 py-1 bg-[#87A96B]/10 text-[#87A96B] rounded-full text-[8px] font-black uppercase tracking-widest">Active</span>
-                            </div>
-                            <h3 className="text-sm font-bold text-gray-900 mb-1">Others</h3>
-                            <p className="text-[10px] text-gray-400 mb-6 font-medium">Organic Attribution Engine</p>
-                            <div className="flex items-center gap-1.5 px-3 py-2 bg-amber-50 rounded-xl border border-amber-100">
-                                <Zap className="w-3 h-3 text-amber-600" />
-                                <span className="text-[8px] font-bold text-amber-600 uppercase tracking-widest">AI Correlation</span>
-                            </div>
-                        </div>
-
-                        {/* WhatsApp Business API Card */}
-                        <div className="p-8 rounded-[32px] bg-white border border-[#87A96B]/20 shadow-lg transition-all">
-                            <div className="flex justify-between items-start mb-6">
-                                <div className="w-12 h-12 rounded-xl bg-[#25D366]/10 text-[#25D366] flex items-center justify-center">
-                                    <MessageCircle className="w-6 h-6" />
-                                </div>
-                                <span className="px-2.5 py-1 bg-[#87A96B]/10 text-[#87A96B] rounded-full text-[8px] font-black uppercase tracking-widest">Active</span>
-                            </div>
-                            <h3 className="text-sm font-bold text-gray-900 mb-1">WhatsApp Business</h3>
-                            <p className="text-[10px] text-gray-400 mb-6 font-medium">Omnichannel Inbox Sync</p>
-                            <div className="flex items-center gap-1.5 px-3 py-2 bg-gray-50 rounded-xl border border-gray-100">
-                                <Shield className="w-3 h-3 text-gray-400" />
-                                <span className="text-[8px] font-bold text-gray-400 uppercase tracking-widest">Webhook Connected</span>
-                            </div>
-                        </div>
-
-                        {/* SMS (Twilio) Card */}
-                        <div className="p-8 rounded-[32px] bg-white border border-[#87A96B]/20 shadow-lg transition-all">
-                            <div className="flex justify-between items-start mb-6">
-                                <div className="w-12 h-12 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center">
-                                    <MessageSquare className="w-6 h-6" />
-                                </div>
-                                <span className="px-2.5 py-1 bg-[#87A96B]/10 text-[#87A96B] rounded-full text-[8px] font-black uppercase tracking-widest">Active</span>
-                            </div>
-                            <h3 className="text-sm font-bold text-gray-900 mb-1">SMS (Twilio)</h3>
-                            <p className="text-[10px] text-gray-400 mb-6 font-medium">Omnichannel Inbox Sync</p>
-                            <div className="flex items-center gap-1.5 px-3 py-2 bg-gray-50 rounded-xl border border-gray-100">
-                                <Shield className="w-3 h-3 text-gray-400" />
-                                <span className="text-[8px] font-bold text-gray-400 uppercase tracking-widest">Webhook Connected</span>
-                            </div>
-                        </div>
-
                     </div>
                 )}
 
                 {adConnections.length === 0 && setupMode === "manual" && (
                     <div className="space-y-12">
-                        <button onClick={() => setSetupMode("choice")} className="text-xs font-bold text-gray-400 hover:text-gray-900 underline underline-offset-4 mb-4">← Back to choice</button>
-                        <div className="flex bg-white border border-black/5 rounded-[32px] p-2 max-w-md mx-auto mb-12 shadow-xl">
+                        <button onClick={() => setSetupMode("choice")} className="text-xs font-bold text-slate-400 hover:text-slate-900 underline underline-offset-4 mb-4">← Back to choice</button>
+                        <div className="flex bg-white border border-slate-200 rounded-[32px] p-2 max-w-md mx-auto mb-12 shadow-sm">
                             {([{ key: "instagram", label: "📱 Instagram" }, { key: "google", label: "💻 Google" }] as const).map(tab => (
-                                <button key={tab.key} onClick={() => setManualTab(tab.key)} className={`flex-1 py-4 rounded-[24px] text-[10px] font-black uppercase tracking-widest transition-all ${manualTab === tab.key ? "bg-[#F9FAFB] shadow-inner text-gray-900" : "text-gray-400 hover:bg-black/[0.02]"}`}>
+                                <button key={tab.key} onClick={() => setManualTab(tab.key)} className={`flex-1 py-4 rounded-[24px] text-[10px] font-black uppercase tracking-widest transition-all ${manualTab === tab.key ? "bg-slate-50 shadow-inner text-slate-900" : "text-slate-400 hover:bg-slate-50/50"}`}>
                                     {tab.label}
                                 </button>
                             ))}
@@ -491,9 +448,9 @@ export default function ApiIntegrationPage() {
                             {manualTab === "instagram" ? (
                                 <motion.div key="ig" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="grid md:grid-cols-5 gap-8">
                                     <div className="md:col-span-2">
-                                        <div className="bg-white rounded-[40px] border border-black/5 p-10 flex flex-col items-center">
+                                         <div className="bg-white rounded-[40px] border border-slate-200 p-10 flex flex-col items-center shadow-sm">
                                             {instagramUrl && <QRCodeSVG value={instagramUrl} size={180} className="mb-8" />}
-                                            <button onClick={() => handleCopy("instagram", "instagram")} className="w-full py-4 bg-[#C5A059]/10 text-[#C5A059] rounded-2xl text-[10px] font-black uppercase tracking-widest">{copiedPlatform === "instagram" ? "Copied!" : "Copy Link"}</button>
+                                            <button onClick={() => handleCopy("instagram", "instagram")} className="w-full py-4 bg-emerald-50 text-emerald-600 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-100 transition-colors">{copiedPlatform === "instagram" ? "Copied!" : "Copy Link"}</button>
                                         </div>
                                     </div>
                                     <div className="md:col-span-3 space-y-4">

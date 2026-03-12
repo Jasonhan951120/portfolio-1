@@ -151,14 +151,14 @@
   border-radius: 8px;
   font-size: 12px;
   font-weight: 600;
-  background: #111827;
+  background: #10B981;
   color: #fff;
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .btn-primary-crisp:hover {
-  background: #1F2937;
+  background: #059669;
 }
 
 /* ─── Legacy classes (kept for compatibility) ─── */
@@ -190,7 +190,7 @@
 }
 
 .btn-premium {
-  background: #111827;
+  background: #10B981;
   color: #fff;
   padding: 8px 16px;
   border-radius: 8px;
@@ -218,7 +218,7 @@
 }
 
 .btn-primary {
-  background: #111827;
+  background: #10B981;
   color: #fff;
   padding: 10px 20px;
   border-radius: 8px;

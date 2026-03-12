@@ -95,9 +95,9 @@ export default function PortfolioPage({ clinic }: { clinic: any }) {
             <Navbar clinic={clinic} />
 
             {/* Dynamic Hero */}
-            <section className="pt-40 pb-20 bg-primary text-white relative overflow-hidden">
+            <section className="pt-40 pb-20 bg-slate-50 text-slate-900 relative overflow-hidden">
                 <div className="container mx-auto px-8 relative z-10">
-                    <Link to="/specialists" className="inline-flex items-center gap-2 text-white/40 hover:text-accent transition-colors mb-12 uppercase text-[10px] font-black tracking-widest">
+                    <Link to="/specialists" className="inline-flex items-center gap-2 text-slate-400 hover:text-emerald-500 transition-colors mb-12 uppercase text-[10px] font-black tracking-widest">
                         <ArrowLeft className="w-4 h-4" /> Return to Clinical Team
                     </Link>
 
@@ -108,22 +108,22 @@ export default function PortfolioPage({ clinic }: { clinic: any }) {
                             transition={{ duration: 0.8 }}
                         >
                             <div className="inline-flex items-center gap-3 mb-8">
-                                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-accent-readable">Case Study No. 4022</span>
-                                <div className="w-12 h-[1px] bg-white/20" />
+                                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-600">Case Study No. 4022</span>
+                                <div className="w-12 h-[1px] bg-slate-200" />
                             </div>
                             <h1 className="text-6xl md:text-[100px] font-display font-bold leading-[0.85] uppercase tracking-tighter mb-10 italic">
                                 {data.tagline.split(' ').map((word, i) => (
-                                    <span key={i} className={i === 2 ? "text-accent" : ""}>{word} </span>
+                                    <span key={i} className={i === 2 ? "text-emerald-500" : ""}>{word} </span>
                                 ))}
                             </h1>
-                            <p className="text-2xl text-white/60 font-medium font-sans">
-                                Clinical Mastery by <span className="text-white underline decoration-accent/50 underline-offset-8">{data.doctor}</span>
+                             <p className="text-2xl text-slate-400 font-medium font-sans">
+                                Clinical Mastery by <span className="text-slate-900 underline decoration-emerald-500/50 underline-offset-8">{data.doctor}</span>
                             </p>
                         </motion.div>
                     </div>
                 </div>
                 {/* Background Texture */}
-                <div className="absolute inset-0 opacity-5 bg-[repeating-linear-gradient(45deg,#fff,#fff_1px,transparent_1px,transparent_20px)]" />
+                 <div className="absolute inset-0 opacity-5 bg-[repeating-linear-gradient(45deg,#000,#000_1px,transparent_1px,transparent_20px)]" />
             </section>
 
             {/* Main Evidence Section */}
@@ -138,7 +138,7 @@ export default function PortfolioPage({ clinic }: { clinic: any }) {
                                     beforeImage={data.bestCase.before}
                                     afterImage={data.bestCase.after}
                                 />
-                                <div className="absolute -top-10 -left-10 w-32 h-32 bg-accent/10 rounded-full blur-3xl" />
+                                 <div className="absolute -top-10 -left-10 w-32 h-32 bg-emerald-50 rounded-full blur-3xl" />
                             </div>
 
                             <div className="mt-16 grid grid-cols-3 gap-8">
@@ -162,8 +162,8 @@ export default function PortfolioPage({ clinic }: { clinic: any }) {
                                 </p>
 
                                 {/* Play Button */}
-                                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                    <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-xl border border-white/30 flex items-center justify-center text-white scale-90 group-hover:scale-100 transition-transform">
+                                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                    <div className="w-16 h-16 rounded-full bg-emerald-500/10 backdrop-blur-xl border border-emerald-500/20 flex items-center justify-center text-emerald-500 scale-90 group-hover:scale-100 transition-transform">
                                         <Play className="w-6 h-6 fill-current" />
                                     </div>
                                 </div>
@@ -178,11 +178,11 @@ export default function PortfolioPage({ clinic }: { clinic: any }) {
 
                         {/* Testimonial Quote */}
                         <div className="space-y-12 max-w-xl">
-                            <div className="w-12 h-12 rounded-full bg-accent flex items-center justify-center text-black">
+                             <div className="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-500">
                                 <Waves className="w-6 h-6 animate-pulse" />
                             </div>
-                            <blockquote className="text-4xl md:text-6xl font-display font-medium text-black leading-tight tracking-tighter italic">
-                                "The precision was <span className="text-primary underline decoration-accent underline-offset-8">absolute.</span> I felt like my smile was being hand-crafted."
+                            <blockquote className="text-4xl md:text-6xl font-display font-medium text-slate-900 leading-tight tracking-tighter italic">
+                                "The precision was <span className="text-emerald-500 underline decoration-slate-200 underline-offset-8">absolute.</span> I felt like my smile was being hand-crafted."
                             </blockquote>
                             <div className="pt-8 border-t border-black/5 flex items-center gap-6">
                                 <div>
@@ -190,9 +190,9 @@ export default function PortfolioPage({ clinic }: { clinic: any }) {
                                     <p className="text-[10px] font-black text-muted uppercase tracking-widest mt-1 italic">London Smile Elite Member</p>
                                 </div>
                                 <div className="w-[1px] h-12 bg-black/10" />
-                                <div className="flex gap-2">
-                                    <ShieldCheck className="w-5 h-5 text-accent-readable" />
-                                    <span className="text-[10px] font-black uppercase tracking-widest">Results Verified</span>
+                                 <div className="flex gap-2">
+                                    <ShieldCheck className="w-5 h-5 text-emerald-500" />
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-900">Results Verified</span>
                                 </div>
                             </div>
                         </div>
@@ -203,17 +203,17 @@ export default function PortfolioPage({ clinic }: { clinic: any }) {
             {/* Action Hub */}
             <section className="py-32">
                 <div className="container mx-auto px-8 max-w-5xl">
-                    <div className="bg-primary rounded-[60px] p-20 text-center relative overflow-hidden group">
+                     <div className="bg-slate-900 rounded-[60px] p-20 text-center relative overflow-hidden group">
                         <div className="relative z-10">
                             <h2 className="text-5xl md:text-8xl font-display font-bold text-white mb-12 uppercase tracking-tighter leading-[0.85]">
                                 Start your <br />
-                                <span className="text-accent italic">Success</span> Story.
+                                <span className="text-emerald-400 italic">Success</span> Story.
                             </h2>
                             <div className="flex flex-col md:flex-row justify-center items-center gap-6">
-                                <button className="btn-yellow text-lg group-hover:scale-110 transition-transform">
+                                 <button className="bg-emerald-500 hover:bg-emerald-600 text-white px-10 py-5 rounded-2xl font-black uppercase tracking-widest text-sm transition-transform hover:scale-105 active:scale-95 shadow-xl">
                                     Consult with {data.doctor.split(' ')[1]}
                                 </button>
-                                <Link to="/contact" className="text-white text-sm font-bold uppercase tracking-widest border-b border-white/20 hover:border-accent transition-colors pb-1">
+                                <Link to="/contact" className="text-white/60 text-sm font-bold uppercase tracking-widest border-b border-white/20 hover:border-emerald-400 hover:text-white transition-colors pb-1">
                                     Explore Treatment Finance
                                 </Link>
                             </div>

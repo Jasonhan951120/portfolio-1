@@ -40,9 +40,9 @@ export const SubscriptionGuard: React.FC<{ children: React.ReactNode }> = ({ chi
 
     if (authLoading || subscriptionLoading) {
         return (
-            <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center gap-4">
-                <Loader2 className="w-8 h-8 text-white/20 animate-spin" />
-                <p className="text-white/40 text-xs font-bold uppercase tracking-widest">Verifying Subscription...</p>
+            <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center gap-4">
+                <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
+                <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">Verifying Subscription...</p>
             </div>
         );
     }

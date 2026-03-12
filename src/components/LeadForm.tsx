@@ -153,10 +153,10 @@ export default function LeadForm({ clinic }: { clinic: any }) {
   };
 
   return (
-    <section id="lead-form" className="min-h-screen bg-[#121212] text-white flex flex-col justify-center py-20 overflow-hidden font-sans">
+    <section id="lead-form" className="min-h-screen bg-slate-50 text-slate-900 flex flex-col justify-center py-20 overflow-hidden font-sans">
       <div className="container mx-auto px-6 max-w-2xl relative">
         {/* Progress Bar - Minimalist */}
-        <div className="absolute top-0 left-6 right-6 h-1 bg-white/5 rounded-full overflow-hidden">
+        <div className="absolute top-0 left-6 right-6 h-1 bg-slate-200 rounded-full overflow-hidden">
           <motion.div
             className="h-full bg-accent"
             initial={{ width: 0 }}
@@ -175,13 +175,13 @@ export default function LeadForm({ clinic }: { clinic: any }) {
               <div className="w-20 h-20 bg-[#2AF598]/10 rounded-[24px] flex items-center justify-center mx-auto mb-8">
                 <CheckCircle2 className="w-10 h-10 text-[#2AF598]" />
               </div>
-              <h2 className="text-3xl font-bold text-white mb-4 tracking-tight">상담 예약이 접수되었습니다.</h2>
+              <h2 className="text-3xl font-bold text-slate-900 mb-4 tracking-tight">상담 예약이 접수되었습니다.</h2>
               <p className="text-[#A0A0A0] font-medium max-w-sm mx-auto mb-10 leading-relaxed">
                 {clinicName}의 전문 상담 실장이 24시간 이내에 안내 전화를 드릴 예정입니다. 잠시만 기다려 주세요.
               </p>
               <button
                 onClick={() => { setStatus("idle"); setStep(0); setFormData({ name: "", email: "", phone: "", service: "General Inquiry", notes: "" }); }}
-                className="text-xs font-bold uppercase tracking-widest text-white/30 hover:text-[#2AF598] transition-colors"
+                className="text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-emerald-500 transition-colors"
               >
                 닫기
               </button>
@@ -199,7 +199,7 @@ export default function LeadForm({ clinic }: { clinic: any }) {
                   <Star className="w-4 h-4 text-accent fill-accent" />
                   <span className="text-[10px] font-black uppercase tracking-[0.2em] text-accent">Clinical Luxury Step {step + 1}</span>
                 </div>
-                <h3 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight leading-tight">
+                <h3 className="text-3xl md:text-4xl font-bold text-slate-900 mb-3 tracking-tight leading-tight">
                   {QUESTIONS[step].question}
                 </h3>
                 <p className="text-sm text-[#A0A0A0] font-medium">
@@ -217,7 +217,7 @@ export default function LeadForm({ clinic }: { clinic: any }) {
                       data-hj-suppress
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       onKeyDown={(e) => e.key === "Enter" && isStepValid() && nextStep()}
-                      className="w-full bg-[#1E1E1E] border-[1.5px] border-white/5 rounded-[12px] px-6 py-5 text-xl font-bold text-white focus:outline-none focus:border-[#2AF598]/30 transition-all placeholder:text-white/5"
+                      className="w-full bg-white border-[1.5px] border-slate-200 rounded-[12px] px-6 py-5 text-xl font-bold text-slate-900 focus:outline-none focus:border-emerald-500/30 transition-all placeholder:text-slate-300"
                       placeholder={QUESTIONS[step].placeholder}
                     />
                   </div>
@@ -230,8 +230,8 @@ export default function LeadForm({ clinic }: { clinic: any }) {
                       autoFocus
                       value={formData.phone}
                       data-hj-suppress
-                      onChange={(e) => handlePhoneChange(e.target.value)}
-                      className="w-full bg-[#1E1E1E] border-[1.5px] border-white/5 rounded-[12px] px-6 py-5 text-xl font-bold text-white focus:outline-none focus:border-[#2AF598]/30 transition-all placeholder:text-white/10"
+                       onChange={(e) => handlePhoneChange(e.target.value)}
+                      className="w-full bg-white border-[1.5px] border-slate-200 rounded-[12px] px-6 py-5 text-xl font-bold text-slate-900 focus:outline-none focus:border-emerald-500/30 transition-all placeholder:text-slate-300"
                       placeholder="휴대폰 번호 (예: 010-1234-5678)"
                     />
                     <div className="flex items-center gap-2 text-[10px] text-[#A0A0A0] font-medium px-2">
@@ -246,9 +246,9 @@ export default function LeadForm({ clinic }: { clinic: any }) {
                       <button
                         key={opt}
                         onClick={() => { setFormData({ ...formData, service: opt }); setTimeout(nextStep, 200); }}
-                        className={`p-5 rounded-[12px] text-left text-sm font-bold transition-all border-[1.5px] ${formData.service === opt
-                          ? "bg-[#2AF598]/10 text-[#2AF598] border-[#2AF598]/30"
-                          : "bg-[#1E1E1E] border-white/5 text-white/40 hover:border-white/10 hover:text-white"
+                         className={`p-5 rounded-[12px] text-left text-sm font-bold transition-all border-[1.5px] ${formData.service === opt
+                          ? "bg-emerald-50 text-emerald-600 border-emerald-200"
+                          : "bg-white border-slate-200 text-slate-400 hover:border-slate-300 hover:text-slate-900"
                           }`}
                       >
                         {opt}
@@ -263,16 +263,16 @@ export default function LeadForm({ clinic }: { clinic: any }) {
                     rows={4}
                     value={formData.notes}
                     data-hj-suppress
-                    onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                    className="w-full bg-[#1E1E1E] border-[1.5px] border-white/5 rounded-[12px] px-6 py-5 text-lg font-bold text-white focus:outline-none focus:border-[#2AF598]/30 transition-all placeholder:text-white/5 resize-none"
+                     onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                    className="w-full bg-white border-[1.5px] border-slate-200 rounded-[12px] px-6 py-5 text-lg font-bold text-slate-900 focus:outline-none focus:border-emerald-500/30 transition-all placeholder:text-slate-300 resize-none"
                     placeholder={QUESTIONS[step].placeholder}
                   />
                 )}
               </div>
 
               <div className="flex items-center justify-between gap-4">
-                {step > 0 ? (
-                  <button onClick={prevStep} className="p-4 text-white/20 hover:text-white transition-colors rounded-xl bg-white/5">
+                 {step > 0 ? (
+                  <button onClick={prevStep} className="p-4 text-slate-400 hover:text-slate-900 transition-colors rounded-xl bg-slate-100">
                     <ArrowLeft className="w-5 h-5" />
                   </button>
                 ) : <div />}

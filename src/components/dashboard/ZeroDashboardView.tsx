@@ -196,7 +196,7 @@ function HotLeadCard({
                             transition-all duration-300 flex items-center justify-center gap-3 text-xs
                             ${sent
                                 ? 'bg-emerald-500 text-white cursor-default shadow-lg shadow-emerald-200'
-                                : 'bg-slate-900 text-white border border-transparent hover:bg-slate-800 shadow-sm'
+                                : 'bg-emerald-500 text-white border border-transparent hover:bg-emerald-600 shadow-sm'
                             }
                         `}
                     >
