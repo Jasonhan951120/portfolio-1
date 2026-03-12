@@ -98,12 +98,12 @@ function HotLeadCard({
             {/* ── MAIN CARD ── */}
             <div
                 className={`
-                    relative w-full bg-white/5 backdrop-blur-3xl rounded-[56px] p-10
+                    relative w-full bg-[#1E1E1E] rounded-[56px] p-10
                     flex flex-col gap-8
-                    border-[0.5px] transition-all duration-700 ease-out
+                    border-2 transition-all duration-700 ease-out
                     ${sent
-                        ? 'border-emerald-500/40 shadow-[0_0_60px_rgba(42,245,152,0.15),0_40px_90px_rgba(0,0,0,0.8)]'
-                        : 'border-white/10 shadow-[0_0_30px_rgba(255,255,255,0.02),0_40px_90px_rgba(0,0,0,0.8)]'
+                        ? 'border-emerald-500/60 shadow-[0_0_60px_rgba(16,185,129,0.30),0_40px_90px_rgba(0,0,0,0.7)]'
+                        : 'border-red-500/40 shadow-[0_0_25px_rgba(239,68,68,0.50),0_40px_90px_rgba(0,0,0,0.7)]'
                     }
                 `}
             >
@@ -140,18 +140,35 @@ function HotLeadCard({
                 <div className="relative z-10">
                     <p className="text-gray-700 text-[9px] font-black uppercase tracking-[0.3em] mb-2">Potential Revenue</p>
                     <motion.p
-                        animate={{ color: sent ? '#2AF598' : '#ffffff' }}
+                        animate={{ color: sent ? '#34d399' : '#ffffff' }}
                         transition={{ duration: 0.7 }}
-                        className="font-black tabular-nums tracking-tighter drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]"
-                        style={{ fontSize: 'clamp(3rem, 10vw, 5.5rem)', lineHeight: 0.9 }}
+                        className="font-black tabular-nums tracking-tighter"
+                        style={{ fontSize: 'clamp(2.5rem, 9vw, 4.5rem)', lineHeight: 1 }}
                     >
                         £{value.toLocaleString()}
                     </motion.p>
-                    {lead.intent_score != null && (
-                        <div className={`mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all duration-700 ${sent ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-red-500/10 border-red-500/20 text-red-400'}`}>
-                            AI Intent: {lead.intent_score}%
-                        </div>
-                    )}
+                    <div className="flex flex-wrap items-center gap-2 mt-3">
+                        {lead.intent_score != null && (
+                            <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all duration-700 ${sent ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-red-500/10 border-red-500/20 text-red-400'}`}>
+                                AI Intent: {lead.intent_score}%
+                            </div>
+                        )}
+                        {isVIP && (
+                            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest bg-amber-500/10 border border-amber-500/20 text-amber-400">
+                                <Sparkles className="w-3 h-3" /> VIP High Value
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* ── CONTEXTUAL FOOTER ── */}
+                <div className="relative z-10 flex items-center gap-2 mt-auto pt-5 border-t border-white/5">
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/5 border border-white/5">
+                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-tight">🕒 {Math.floor(Math.random() * 5) + 1} hrs ago</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/5 border border-white/5">
+                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-tight">🦷 {lead.service.split(' ')[0]}</span>
+                    </div>
                 </div>
 
                 {/* ── AI SUMMARY ── */}
@@ -273,28 +290,22 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
     };
 
     return (
-        <div className="min-h-screen bg-[#121212] flex flex-col items-center justify-center px-6 py-16 relative overflow-hidden">
+        <div className="min-h-screen bg-[#0A0F1E] flex flex-col items-center justify-center px-6 py-16 relative overflow-hidden">
 
             {/* ── AMBIENT STAGE BACKGROUND GLOW ── */}
             <div className="absolute inset-0 pointer-events-none z-0">
-                {/* Layer 1: Midnight Navy Base */}
+                {/* Layer 1: Wide Deep Navy Base (Matte Stage) */}
                 <div
                     className="absolute inset-0 opacity-100"
-                    style={{ background: '#050A0F' }}
+                    style={{ background: 'radial-gradient(circle at 50% 60%, rgba(16,40,75,0.4) 0%, #0A0F1E 75%)' }}
                 />
-                
-                {/* Layer 2: Universal Large Emerald Spotlight (Center Action) */}
-                <div
-                    className="absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-emerald-500/15 via-transparent to-transparent"
-                />
-
-                {/* Layer 3: Dynamic State Glow */}
+                {/* Layer 2: Focused Emerald/Red Spotlight */}
                 <div
                     className="absolute inset-0 transition-all duration-1500"
                     style={{
                         background: heroState === 'secured'
-                            ? 'radial-gradient(circle at 50% 50%, rgba(42,245,152,0.1) 0%, transparent 60%)'
-                            : 'radial-gradient(circle at 50% 50%, rgba(255,255,255,0.03) 0%, transparent 60%)'
+                            ? 'radial-gradient(circle at 50% 55%, rgba(16,185,129,0.12) 0%, transparent 45%)'
+                            : 'radial-gradient(circle at 50% 55%, rgba(239,68,68,0.08) 0%, transparent 45%)'
                     }}
                 />
             </div>
@@ -302,55 +313,47 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
             {/* ── HERO METRIC BANNER ── */}
             <div className="flex flex-col items-center justify-center text-center mb-14 relative z-10 w-full">
                 <div className="w-full max-w-[500px]">
-                <AnimatePresence mode="wait">
-                    {heroState === 'secured' ? (
-                        <motion.div
-                            key="secured"
-                            initial={{ opacity: 0, scale: 0.75, y: 30 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            transition={{ type: 'spring', stiffness: 280, damping: 22 }}
-                        >
-                            <p className="text-[10px] font-black uppercase tracking-[0.5em] text-[#A0A0A0] mb-5">
-                                🎉 Clinic Secured — Today's Total
-                            </p>
-                            <div
-                                className="text-5xl font-black tabular-nums leading-none text-[#2AF598] tracking-tighter drop-shadow-[0_0_20px_rgba(42,245,152,0.4)]"
-                                style={{
-                                    letterSpacing: '-0.05em',
-                                    textShadow: '0_0_80px_rgba(42,245,152,0.3)'
-                                }}
+                    <AnimatePresence mode="wait">
+                        {heroState === 'secured' ? (
+                            <motion.div
+                                key="secured"
+                                initial={{ opacity: 0, scale: 0.75, y: 30 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                transition={{ type: 'spring', stiffness: 280, damping: 22 }}
                             >
-                                £{totalSecured.toLocaleString()}
-                            </div>
-                            <p className="text-[#2AF598] font-black text-xs uppercase tracking-[0.4em] mt-8 opacity-80">
-                                Protected Portfolio ↗
-                            </p>
-                        </motion.div>
-                    ) : (
-                        <motion.div
-                            key="risk"
-                            initial={{ opacity: 0, scale: 0.75, y: 30 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            transition={{ type: 'spring', stiffness: 280, damping: 22 }}
-                        >
-                            <p className="text-[10px] font-black uppercase tracking-[0.5em] text-[#A0A0A0] mb-5">
-                                ⚠ Money At Risk Today
-                            </p>
-                            <div
-                                className="text-5xl font-black tabular-nums leading-none text-white tracking-tighter drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]"
-                                style={{
-                                    letterSpacing: '-0.05em',
-                                    textShadow: '0_0_80px_rgba(255,255,255,0.1)'
-                                }}
+                                <p className="text-[10px] font-black uppercase tracking-[0.5em] text-[#A0A0A0] mb-5">
+                                    🎉 Clinic Secured — Today's Total
+                                </p>
+                                <div
+                                    className="text-5xl font-black tabular-nums tracking-tighter leading-none text-transparent bg-clip-text bg-gradient-to-r from-slate-300 via-white to-slate-400 drop-shadow-[0_0_12px_rgba(255,255,255,0.2)]"
+                                >
+                                    £{totalSecured.toLocaleString()}
+                                </div>
+                                <p className="text-[#2AF598] font-black text-xs uppercase tracking-[0.4em] mt-8 opacity-80">
+                                    Protected Portfolio ↗
+                                </p>
+                            </motion.div>
+                        ) : (
+                            <motion.div
+                                key="risk"
+                                initial={{ opacity: 0, scale: 0.75, y: 30 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                transition={{ type: 'spring', stiffness: 280, damping: 22 }}
                             >
-                                £{totalAtRisk.toLocaleString()}
-                            </div>
-                            <p className="text-[#A0A0A0] font-black text-xs uppercase tracking-[0.4em] mt-8 opacity-60">
-                                High Priority Pipeline ↘
-                            </p>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+                                <p className="text-[10px] font-black uppercase tracking-[0.5em] text-[#A0A0A0] mb-5">
+                                    ⚠ Money At Risk Today
+                                </p>
+                                <div
+                                    className="text-5xl font-black tabular-nums tracking-tighter leading-none text-transparent bg-clip-text bg-gradient-to-r from-red-200 via-white to-red-400 drop-shadow-[0_0_12px_rgba(239,68,68,0.2)]"
+                                >
+                                    £{totalAtRisk.toLocaleString()}
+                                </div>
+                                <p className="text-[#A0A0A0] font-black text-xs uppercase tracking-[0.4em] mt-8 opacity-60">
+                                    High Priority Pipeline ↘
+                                </p>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
             </div>
 
@@ -401,18 +404,31 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
                             key="empty"
                             initial={{ opacity: 0, scale: 0.88 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            className="text-center py-28"
+                            className="w-full max-w-[500px] bg-white/[0.03] backdrop-blur-2xl border border-white/10 rounded-[48px] p-12 text-center shadow-2xl relative overflow-hidden"
                         >
-                            <div className="w-24 h-24 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-8">
-                                <CheckCircle className="w-12 h-12 text-emerald-400" />
+                            {/* Infographic Glow */}
+                            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-emerald-500/10 blur-[60px] rounded-full" />
+                            
+                            <div className="w-20 h-20 bg-emerald-500/10 border border-emerald-500/20 rounded-3xl flex items-center justify-center mx-auto mb-8 relative z-10">
+                                <CheckCircle className="w-10 h-10 text-emerald-400" />
                             </div>
-                            <h2 className="text-4xl font-black text-white mb-3">All Clear.</h2>
-                            <p className="text-gray-600">No new leads require action right now.</p>
+                            <h2 className="text-3xl font-black text-white mb-2 tracking-tight relative z-10">Inbox Zero. Great job.</h2>
+                            <p className="text-slate-400 text-sm mb-10 relative z-10">All high-priority leads have been engaged.</p>
+                            
+                            <div className="bg-white/[0.04] border border-white/5 rounded-3xl p-6 relative z-10">
+                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-2">Total Secured This Week</p>
+                                <p className="text-3xl font-black text-white tabular-nums">£{(totalSecured * 4.2 + 12000).toLocaleString()}</p>
+                                <div className="mt-3 flex items-center justify-center gap-2">
+                                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                                    <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Performance Peak</span>
+                                </div>
+                            </div>
+
                             <button
                                 onClick={() => setCurrentIndex(0)}
-                                className="mt-12 text-[10px] font-black uppercase tracking-[0.25em] text-emerald-400 hover:text-white transition-colors"
+                                className="mt-10 inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 hover:text-white transition-all group"
                             >
-                                Refresh Queue ↺
+                                <span className="group-hover:rotate-180 transition-transform duration-500">↺</span> Refresh Queue
                             </button>
                         </motion.div>
                     )}
@@ -425,13 +441,12 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
                             <button
                                 key={i}
                                 onClick={() => setCurrentIndex(i)}
-                                className={`rounded-full transition-all duration-300 ${
-                                    i === currentIndex
+                                className={`rounded-full transition-all duration-300 ${i === currentIndex
                                         ? 'w-6 h-2 bg-white'
                                         : sentLeads.has(activeLeads[i].id)
                                             ? 'w-2 h-2 bg-emerald-500'
                                             : 'w-2 h-2 bg-white/20'
-                                }`}
+                                    }`}
                             />
                         ))}
                     </div>

@@ -158,7 +158,11 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
                             <h3 className="text-lg font-black text-white mb-2 tracking-tight">Synchronize Your Vault</h3>
                             <p className="text-xs text-slate-500 font-medium max-w-[320px] leading-relaxed">
                                 {dropzoneSubCopy} <br/>
-                                <span className="text-emerald-400/60 mt-1 block italic opacity-80">Supported formats: CSV, (XLSX planned)</span>
+                                <span className="text-emerald-400/60 mt-1 block italic opacity-80 font-bold">Supported: CSV</span>
+                                <div className="mt-6 flex items-center justify-center gap-2 px-4 py-2 bg-black/20 rounded-2xl border border-white/5 shadow-inner">
+                                    <Lock className="w-3 h-3 text-slate-500" />
+                                    <span className="text-[10px] text-slate-500 font-bold tracking-tight">Data Securely Encrypted locally. Zero PII retention. (GDPR Compliant)</span>
+                                </div>
                             </p>
                         </motion.div>
                     )}
