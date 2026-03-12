@@ -220,8 +220,8 @@ export default function AdminLogin() {
                 <div className="space-y-4">
                     <button
                         onClick={handleGoogleLogin}
-                        disabled={loading}
-                        className="w-full bg-white text-black hover:bg-zinc-200 border border-white font-black py-4 px-6 rounded-2xl flex items-center justify-center gap-3 transition-all active:scale-[0.98] disabled:opacity-70 shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+                        disabled={loading || !agreed}
+                        className="w-full bg-white text-black hover:bg-zinc-200 border border-white font-black py-4 px-6 rounded-2xl flex items-center justify-center gap-3 transition-all active:scale-[0.98] disabled:opacity-30 disabled:grayscale shadow-[0_0_20px_rgba(255,255,255,0.1)]"
                     >
                         <img src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5" />
                         Continue with Google

@@ -92,6 +92,11 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
         e.preventDefault();
         setIsHovering(false);
 
+        if (!agreed) {
+            alert("Please agree to the Data Processing Agreement (DPA) before uploading patient data.");
+            return;
+        }
+
         const file = e.dataTransfer.files[0];
         if (file && (file.type === "text/csv" || file.name.endsWith('.csv') || file.name.endsWith('.xlsx') || file.name.endsWith('.xls'))) {
             // In a real app we'd handle excel using xlsx library, but for now we accept it contextually
