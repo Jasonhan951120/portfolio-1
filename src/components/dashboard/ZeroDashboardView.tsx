@@ -98,12 +98,12 @@ function HotLeadCard({
             {/* ── MAIN CARD ── */}
             <div
                 className={`
-                    relative w-full bg-[#1E1E1E] rounded-[56px] p-10
+                    relative w-full bg-white/5 backdrop-blur-3xl rounded-[56px] p-10
                     flex flex-col gap-8
-                    border-2 transition-all duration-700 ease-out
+                    border-[0.5px] transition-all duration-700 ease-out
                     ${sent
-                        ? 'border-emerald-500/60 shadow-[0_0_60px_rgba(16,185,129,0.30),0_40px_90px_rgba(0,0,0,0.7)]'
-                        : 'border-red-500/40 shadow-[0_0_25px_rgba(239,68,68,0.50),0_40px_90px_rgba(0,0,0,0.7)]'
+                        ? 'border-emerald-500/40 shadow-[0_0_60px_rgba(42,245,152,0.15),0_40px_90px_rgba(0,0,0,0.8)]'
+                        : 'border-white/10 shadow-[0_0_30px_rgba(255,255,255,0.02),0_40px_90px_rgba(0,0,0,0.8)]'
                     }
                 `}
             >
@@ -140,10 +140,10 @@ function HotLeadCard({
                 <div className="relative z-10">
                     <p className="text-gray-700 text-[9px] font-black uppercase tracking-[0.3em] mb-2">Potential Revenue</p>
                     <motion.p
-                        animate={{ color: sent ? '#34d399' : '#ffffff' }}
+                        animate={{ color: sent ? '#2AF598' : '#ffffff' }}
                         transition={{ duration: 0.7 }}
-                        className="font-black tabular-nums tracking-tighter"
-                        style={{ fontSize: 'clamp(2.5rem, 9vw, 4.5rem)', lineHeight: 1 }}
+                        className="font-black tabular-nums tracking-tighter drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]"
+                        style={{ fontSize: 'clamp(3rem, 10vw, 5.5rem)', lineHeight: 0.9 }}
                     >
                         £{value.toLocaleString()}
                     </motion.p>
@@ -277,23 +277,24 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
 
             {/* ── AMBIENT STAGE BACKGROUND GLOW ── */}
             <div className="absolute inset-0 pointer-events-none z-0">
-                {/* Layer 1: Wide Deep Navy Base (The Stage) */}
+                {/* Layer 1: Midnight Navy Base */}
                 <div
                     className="absolute inset-0 opacity-100"
-                    style={{ background: '#0A0F1E' }}
+                    style={{ background: '#050A0F' }}
                 />
-                {/* Layer 2: Intense Radial Spotlight (Center Authority) */}
+                
+                {/* Layer 2: Universal Large Emerald Spotlight (Center Action) */}
                 <div
-                    className="absolute inset-0 opacity-60"
-                    style={{ background: 'radial-gradient(ellipse at center, rgba(16,185,129,0.15) 0%, rgba(10,15,30,0) 70%)' }}
+                    className="absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-emerald-500/15 via-transparent to-transparent"
                 />
-                {/* Layer 2: Focused Emerald/Red Spotlight */}
+
+                {/* Layer 3: Dynamic State Glow */}
                 <div
                     className="absolute inset-0 transition-all duration-1500"
                     style={{
                         background: heroState === 'secured'
-                            ? 'radial-gradient(circle at 50% 55%, rgba(16,185,129,0.12) 0%, transparent 45%)'
-                            : 'radial-gradient(circle at 50% 55%, rgba(239,68,68,0.08) 0%, transparent 45%)'
+                            ? 'radial-gradient(circle at 50% 50%, rgba(42,245,152,0.1) 0%, transparent 60%)'
+                            : 'radial-gradient(circle at 50% 50%, rgba(255,255,255,0.03) 0%, transparent 60%)'
                     }}
                 />
             </div>
@@ -313,12 +314,11 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
                                 🎉 Clinic Secured — Today's Total
                             </p>
                             <div
-                                className="font-black tabular-nums leading-none text-[#2AF598] tracking-tighter"
+                                className="font-black tabular-nums leading-none text-[#2AF598] tracking-tighter drop-shadow-[0_0_20px_rgba(42,245,152,0.4)]"
                                 style={{
-                                    fontSize: 'clamp(5.5rem, 18vw, 10rem)',
-                                    letterSpacing: '-0.04em',
-                                    filter: 'drop-shadow(0 0 15px rgba(42,245,152,0.4))',
-                                    textShadow: '0 0 60px rgba(42,245,152,0.2)'
+                                    fontSize: 'clamp(5.5rem, 20vw, 11rem)',
+                                    letterSpacing: '-0.05em',
+                                    textShadow: '0_0_80px_rgba(42,245,152,0.3)'
                                 }}
                             >
                                 £{totalSecured.toLocaleString()}
@@ -338,12 +338,11 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
                                 ⚠ Money At Risk Today
                             </p>
                             <div
-                                className="font-black tabular-nums leading-none text-[#2AF598] tracking-tighter"
+                                className="font-black tabular-nums leading-none text-white tracking-tighter drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]"
                                 style={{
-                                    fontSize: 'clamp(5.5rem, 18vw, 10rem)',
-                                    letterSpacing: '-0.04em',
-                                    filter: 'drop-shadow(0 0 15px rgba(42,245,152,0.4))',
-                                    textShadow: '0 0 60px rgba(42,245,152,0.2)'
+                                    fontSize: 'clamp(5.5rem, 20vw, 11rem)',
+                                    letterSpacing: '-0.05em',
+                                    textShadow: '0_0_80px_rgba(255,255,255,0.1)'
                                 }}
                             >
                                 £{totalAtRisk.toLocaleString()}

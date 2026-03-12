@@ -136,9 +136,9 @@ export default function AdminLogin() {
     }
 
     return (
-        <div className="min-h-screen bg-[#0f1115] flex items-center justify-center p-6 relative overflow-hidden">
+        <div className="min-h-screen bg-[#050A0F] flex items-center justify-center p-6 relative overflow-hidden">
             {/* Decorative Blur */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#2AF598]/10 rounded-full blur-[120px] pointer-events-none" />
 
             <div className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 p-10 rounded-[32px] shadow-2xl relative z-10 text-center">
                 <div className="w-16 h-16 bg-cyan-400/20 rounded-2xl flex items-center justify-center mx-auto mb-8 border border-cyan-400/30">

@@ -512,9 +512,9 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
         }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
         className={`rounded-2xl p-4 relative group focus:outline-none transition-all border
-          ${isDragging ? 'border-white/30 cursor-grabbing backdrop-blur-3xl shadow-2xl' :
-            isOverdue ? 'border-red-500/50 hover:border-red-500 cursor-grab bg-white/[0.04] backdrop-blur-xl' :
-              'border-white/10 hover:border-white/20 cursor-grab hover:bg-white/[0.08] bg-white/[0.03] backdrop-blur-xl shadow-lg'
+          ${isDragging ? 'border-white/20 cursor-grabbing backdrop-blur-3xl shadow-2xl' :
+            isOverdue ? 'border-[#FF3B30]/30 hover:border-[#FF3B30] cursor-grab bg-white/[0.02] backdrop-blur-3xl' :
+              'border-white/5 hover:border-white/20 cursor-grab hover:bg-white/[0.05] bg-white/[0.02] backdrop-blur-3xl'
           }`}
       >
         {/* Drag Handle Area */}
@@ -663,7 +663,7 @@ function KanbanColumn({
   }, [columnId, columnLeads]);
 
   return (
-    <div className={`w-[290px] shrink-0 flex flex-col h-[calc(100vh-280px)] pr-4 mr-4 last:border-r-0 last:mr-0 last:pr-0 transition-all duration-500`}>
+    <div className={`w-[300px] shrink-0 flex flex-col h-[calc(100vh-220px)] pr-6 mr-2 last:mr-0 last:pr-0 transition-all duration-500`}>
       <div className="flex flex-col mb-6 px-1">
         <div className="flex justify-between items-center mb-1">
           <h3 className="text-label flex items-center gap-2">
@@ -672,10 +672,10 @@ function KanbanColumn({
           </h3>
         </div>
         {/* Pipeline Value Header (Apple-Style Numbers, Tight Tracking) */}
-        <span className="text-metric text-2xl mb-1">
+        <span className="text-xl font-black tabular-nums tracking-tighter text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]">
           £{columnLeads.reduce((sum, l) => sum + (SERVICE_CONVERSION_VALUES[l.service] ?? 1000), 0).toLocaleString()}
         </span>
-        <div className="h-[1px] w-full bg-gradient-to-r from-white/10 to-transparent mt-3"></div>
+        <div className="h-[1px] w-full bg-gradient-to-r from-white/5 to-transparent mt-3"></div>
       </div>
 
       {/* Droppable Column Area */}
@@ -2238,36 +2238,48 @@ export default function AdminDashboard() {
   );
 
   return (
-    <div className="min-h-screen bg-[#0A0F1E] text-white font-sans selection:bg-emerald-500/30">
+    <div className="min-h-screen bg-[#050A0F] text-white font-sans selection:bg-[#2AF598]/30">
       {session === null ? (
-        <div className="flex items-center justify-center h-screen bg-[#0A0F1E]">
-          <RefreshCw className="w-6 h-6 text-emerald-500 animate-spin" strokeWidth={1.5} />
+        <div className="flex items-center justify-center h-screen bg-[#050A0F]">
+          <RefreshCw className="w-6 h-6 text-[#2AF598] animate-spin" strokeWidth={1.5} />
         </div>
       ) : (
         <>
           {/* ── CLINICAL LUXURY HERO HEADER ── */}
-          <header className="sticky top-0 z-50 bg-[#0A0F1E]/80 backdrop-blur-3xl border-b border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
-            <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between gap-6">
+          <header className="sticky top-0 z-50 bg-[#050A0F]/80 backdrop-blur-3xl border-b border-white/5 shadow-[0_4px_30px_rgba(0,0,0,0.8)]">
+            <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-6">
 
-              {/* Left: Money At Risk */}
+              {/* Left: Authority Overlay */}
               <div className="flex items-center gap-3">
-                <span className="text-[9px] font-black uppercase tracking-[0.35em] text-red-400/80">⚠ Money At Risk Today</span>
-                <span className="text-xl font-black tabular-nums text-white">£{totalAtRisk.toLocaleString()}</span>
+                <div className="flex flex-col">
+                  <span className="text-[8px] font-black uppercase tracking-[0.4em] text-white/40 mb-1">Portfolio Authority</span>
+                  <div className="flex items-center gap-3">
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#2AF598]">Clinic Secured</span>
+                    <span className="text-xl font-black tabular-nums text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">
+                      £{totalAtRisk.toLocaleString()}
+                    </span>
+                  </div>
+                </div>
               </div>
 
-              {/* Centre: 3-Tab Nav (Glass Capsule) */}
-              <div className="flex bg-white/5 backdrop-blur-xl p-1 rounded-2xl border border-white/10 shadow-[inset_0_0_20px_rgba(255,255,255,0.02)]">
+              <div className="flex bg-white/[0.03] backdrop-blur-2xl p-1 rounded-[20px] border border-white/10 shadow-[inner_0_0_20px_rgba(255,255,255,0.02)]">
                 {(['action', 'pipeline', 'vault'] as const).map(tab => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.25em] transition-all duration-300 ${
+                    className={`px-8 py-2.5 rounded-[16px] text-[10px] font-black uppercase tracking-[0.3em] transition-all duration-500 relative overflow-hidden group ${
                       activeTab === tab
-                        ? 'bg-[#10B981] text-white shadow-[0_0_20px_rgba(16,185,129,0.5),inset_0_0_10px_rgba(255,255,255,0.2)]'
-                        : 'text-white/40 hover:text-white hover:bg-white/5'
+                        ? 'bg-[#2AF598] text-[#050A0F] shadow-[0_0_30px_rgba(42,245,152,0.4)]'
+                        : 'text-white/40 hover:text-white'
                     }`}
                   >
-                    {tab}
+                    <span className="relative z-10">{tab}</span>
+                    {activeTab !== tab && (
+                      <motion.div 
+                        className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity"
+                        initial={false}
+                      />
+                    )}
                   </button>
                 ))}
               </div>
@@ -2366,7 +2378,7 @@ export default function AdminDashboard() {
                     <p className="text-gray-500 font-medium">Drop your PMS export to unlock hidden revenue instantly.</p>
                   </div>
 
-                  <div className="bg-[#1A1A2E] rounded-[44px] p-2 border border-white/10 shadow-2xl">
+                  <div className="bg-white/5 backdrop-blur-3xl rounded-[44px] p-2 border border-white/10 shadow-2xl">
                     <CSVImportZone
                       clinicId={profile?.clinic_id || ''}
                       specialty={profile?.specialty}
