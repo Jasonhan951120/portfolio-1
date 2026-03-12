@@ -314,9 +314,8 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
                                 🎉 Clinic Secured — Today's Total
                             </p>
                             <div
-                                className="font-black tabular-nums leading-none text-[#2AF598] tracking-tighter drop-shadow-[0_0_20px_rgba(42,245,152,0.4)]"
+                                className="text-5xl font-black tabular-nums leading-none text-[#2AF598] tracking-tighter drop-shadow-[0_0_20px_rgba(42,245,152,0.4)]"
                                 style={{
-                                    fontSize: 'clamp(5.5rem, 20vw, 11rem)',
                                     letterSpacing: '-0.05em',
                                     textShadow: '0_0_80px_rgba(42,245,152,0.3)'
                                 }}
@@ -338,9 +337,8 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
                                 ⚠ Money At Risk Today
                             </p>
                             <div
-                                className="font-black tabular-nums leading-none text-white tracking-tighter drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]"
+                                className="text-5xl font-black tabular-nums leading-none text-white tracking-tighter drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]"
                                 style={{
-                                    fontSize: 'clamp(5.5rem, 20vw, 11rem)',
                                     letterSpacing: '-0.05em',
                                     textShadow: '0_0_80px_rgba(255,255,255,0.1)'
                                 }}
