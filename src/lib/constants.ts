@@ -20,12 +20,12 @@ export const DONUT_SEGMENTS = [
 ];
 
 export const STATUS_COLORS: Record<string, string> = {
-    "New Lead": "text-[#C5A059] border-[#C5A059]/40 bg-[#C5A059]/10",
-    "Booked": "text-purple-400 border-purple-400/40 bg-purple-400/10",
-    "Proposal Sent": "text-yellow-400 border-yellow-400/40 bg-yellow-400/10",
-    "Visited": "text-blue-400 border-blue-400/40 bg-blue-400/10",
-    "Treated": "text-[#87A96B] border-[#87A96B]/40 bg-[#87A96B]/10",
-    "Closed Won": "text-[#87A96B] border-[#87A96B]/40 bg-[#87A96B]/10 shadow-[0_0_15px_rgba(135,169,107,0.3)]",
-    "Abandoned": "text-gray-400 border-black/10 bg-black/5",
-    "Future Pipeline": "text-blue-400 border-blue-400/40 bg-blue-400/10",
+    "New Lead": "text-emerald-600 border-emerald-200 bg-emerald-50/50",
+    "Booked": "text-indigo-600 border-indigo-200 bg-indigo-50/50",
+    "Proposal Sent": "text-amber-600 border-amber-200 bg-amber-50/50",
+    "Visited": "text-blue-600 border-blue-200 bg-blue-50/50",
+    "Treated": "text-emerald-700 border-emerald-300 bg-emerald-100",
+    "Closed Won": "text-emerald-700 border-emerald-300 bg-emerald-100 shadow-sm",
+    "Abandoned": "text-slate-400 border-slate-200 bg-slate-50",
+    "Future Pipeline": "text-slate-600 border-slate-200 bg-slate-100/50",
 };

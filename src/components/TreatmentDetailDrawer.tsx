@@ -66,24 +66,24 @@ export const TreatmentDetailDrawer: React.FC<TreatmentDetailDrawerProps> = ({
                         animate={{ x: 0, opacity: 1 }}
                         exit={{ x: '100%', opacity: 0.5 }}
                         transition={{ type: 'spring', damping: 20, stiffness: 300 }}
-                        className="fixed top-0 right-0 h-screen w-full max-w-[500px] bg-[#0A0F1E]/80 backdrop-blur-2xl shadow-2xl z-[6001] flex flex-col rounded-l-[3rem] overflow-hidden border-l border-white/10"
+                        className="fixed top-0 right-0 h-screen w-full max-w-[500px] bg-white shadow-2xl z-[6001] flex flex-col rounded-l-[3rem] overflow-hidden border-l border-slate-200"
                     >
                         {/* Header */}
-                        <div className="p-8 pb-4 flex justify-between items-start border-b border-white/[0.05]">
+                        <div className="p-8 pb-4 flex justify-between items-start border-b border-slate-50">
                             <div className="flex-1">
-                                <h2 className="text-white text-3xl font-black tracking-tight mb-1">
+                                <h2 className="text-slate-900 text-3xl font-black tracking-tight mb-1 uppercase">
                                     {formData?.service_name}
                                 </h2>
                                 <div className="flex items-baseline gap-2">
-                                    <span className="text-slate-500 text-[10px] font-black uppercase tracking-widest">Revenue Impact</span>
-                                    <span className="tabular-nums font-black text-3xl tracking-tighter text-emerald-400">
+                                    <span className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Revenue Impact</span>
+                                    <span className="tabular-nums font-black text-3xl tracking-tighter text-emerald-500">
                                         £{formData?.price.toLocaleString()}
                                     </span>
                                 </div>
                             </div>
                             <button
                                 onClick={onClose}
-                                className="p-2 bg-white/5 hover:bg-white/10 rounded-xl border border-white/10 transition-colors"
+                                className="p-2 bg-slate-50 hover:bg-slate-100 rounded-xl border border-slate-200 transition-colors"
                                 aria-label="Close drawer"
                             >
                                 <X className="w-5 h-5 text-slate-400" />
@@ -93,7 +93,7 @@ export const TreatmentDetailDrawer: React.FC<TreatmentDetailDrawerProps> = ({
                         {/* Scrollable Content */}
                         <div className="flex-1 overflow-y-auto px-8 custom-scrollbar py-8">
                             {/* Asset Image HERO */}
-                            <div className="relative w-full h-64 rounded-[32px] overflow-hidden mb-8 ring-1 ring-white/10 shadow-2xl bg-black/20">
+                            <div className="relative w-full h-64 rounded-[32px] overflow-hidden mb-8 ring-1 ring-slate-200 shadow-sm bg-slate-50">
                                 {hasImage ? (
                                     <img
                                         src={formData?.image_url!}
@@ -104,12 +104,12 @@ export const TreatmentDetailDrawer: React.FC<TreatmentDetailDrawerProps> = ({
                                 ) : (
                                     <div
                                         className="w-full h-full flex flex-col items-center justify-center gap-4"
-                                        style={{ background: 'radial-gradient(circle at center, rgba(16,185,129,0.1) 0%, transparent 70%)' }}
+                                        style={{ background: 'radial-gradient(circle at center, rgba(16,185,129,0.05) 0%, transparent 70%)' }}
                                     >
-                                        <div className="w-16 h-16 rounded-3xl bg-white/[0.03] border border-white/10 flex items-center justify-center">
-                                            <Stethoscope strokeWidth={1.5} className="text-slate-500 opacity-50 w-8 h-8" />
+                                        <div className="w-16 h-16 rounded-3xl bg-white border border-slate-200 flex items-center justify-center shadow-sm">
+                                            <Stethoscope strokeWidth={2} className="text-slate-300 w-8 h-8" />
                                         </div>
-                                        <span className="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em]">Clinical Asset Pending</span>
+                                        <span className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">Clinical Asset Pending</span>
                                     </div>
                                 )}
                             </div>
@@ -118,49 +118,49 @@ export const TreatmentDetailDrawer: React.FC<TreatmentDetailDrawerProps> = ({
                             <div className="space-y-8 pb-32">
                                 {/* Marketing Hook */}
                                 <div>
-                                    <label className="flex items-center gap-2 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">
-                                        <Sparkles className="w-3 h-3 text-emerald-400" /> Marketing Hook (Benefit)
+                                    <label className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">
+                                        <Sparkles className="w-3 h-3 text-emerald-500" /> Marketing Hook
                                     </label>
                                     <textarea
                                         value={formData?.benefit_text || ''}
                                         onChange={(e) => setFormData(f => f ? { ...f, benefit_text: e.target.value } : null)}
                                         placeholder="E.g., Transform your smile with robotic precision..."
-                                        className="w-full h-24 bg-white/[0.03] border border-white/10 rounded-2xl p-5 text-sm font-medium text-white/80 placeholder:text-white/20 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500/50 outline-none transition-all resize-none shadow-inner"
+                                        className="w-full h-24 bg-slate-50 border border-slate-200 rounded-2xl p-5 text-sm font-bold text-slate-900 placeholder:text-slate-300 focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none transition-all resize-none shadow-sm"
                                     />
                                 </div>
  
                                 {/* Description */}
                                 <div>
-                                    <label className="flex items-center gap-2 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">
-                                        <Info className="w-3 h-3 text-emerald-400" /> Clinical Description
+                                    <label className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">
+                                        <Info className="w-3 h-3 text-emerald-500" /> Clinical Details
                                     </label>
                                     <textarea
                                         value={formData?.description || ''}
                                         onChange={(e) => setFormData(f => f ? { ...f, description: e.target.value } : null)}
-                                        placeholder="Detailed clinical explanation of the treatment..."
-                                        className="w-full h-40 bg-white/[0.03] border border-white/10 rounded-2xl p-5 text-sm font-medium text-white/80 placeholder:text-white/20 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500/50 outline-none transition-all resize-none shadow-inner"
+                                        placeholder="Detailed clinical explanation..."
+                                        className="w-full h-40 bg-slate-50 border border-slate-200 rounded-2xl p-5 text-sm font-bold text-slate-900 placeholder:text-slate-300 focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none transition-all resize-none shadow-sm"
                                     />
                                 </div>
  
-                                {/* Pricing Helper (Read Only in this view for aesthetic) */}
-                                <div className="p-6 bg-white/[0.02] rounded-[24px] border border-white/[0.05] flex items-center gap-4">
-                                    <div className="w-12 h-12 bg-white/[0.03] rounded-xl border border-white/10 flex items-center justify-center">
-                                        <CreditCard className="w-6 h-6 text-slate-500" />
+                                {/* Pricing Helper */}
+                                <div className="p-6 bg-emerald-50/50 rounded-[32px] border border-emerald-100 flex items-center gap-4">
+                                    <div className="w-12 h-12 bg-white rounded-xl border border-emerald-100 flex items-center justify-center shadow-sm">
+                                        <CreditCard className="w-6 h-6 text-emerald-500" />
                                     </div>
                                     <div>
-                                        <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Value-Driven Pricing</p>
-                                        <p className="text-sm font-bold text-white/90">Base Price: £{formData?.price.toLocaleString()}</p>
+                                        <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-1">Impact Analysis</p>
+                                        <p className="text-sm font-black text-slate-900 uppercase">Base Price: £{formData?.price.toLocaleString()}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
  
                         {/* Sticky Action Footer */}
-                        <div className="absolute bottom-0 left-0 right-0 p-8 pt-4 bg-[#0A0F1E]/90 backdrop-blur-xl border-t border-white/[0.05]">
+                        <div className="absolute bottom-0 left-0 right-0 p-8 pt-4 bg-white/80 backdrop-blur-xl border-t border-slate-100">
                             <button
                                 onClick={handleSave}
                                 disabled={isSaving}
-                                className="w-full group relative overflow-hidden bg-emerald-500 text-white py-5 rounded-2xl font-black uppercase tracking-[0.2em] text-[11px] transition-all hover:bg-emerald-400 disabled:opacity-50"
+                                className="w-full relative overflow-hidden bg-slate-900 text-white py-5 rounded-2xl font-black uppercase tracking-[0.2em] text-[11px] transition-all hover:bg-slate-800 disabled:opacity-50 shadow-sm"
                             >
                                 <div className="relative z-10 flex items-center justify-center gap-3">
                                     {isSaving ? (
@@ -173,11 +173,8 @@ export const TreatmentDetailDrawer: React.FC<TreatmentDetailDrawerProps> = ({
                                     ) : (
                                         <Save className="w-4 h-4" />
                                     )}
-                                    {isSaving ? 'Syncing...' : 'Confirm Changes'}
+                                    {isSaving ? 'Syncing...' : 'Save Clinical Asset'}
                                 </div>
- 
-                                {/* Neon Glow Hover Effect */}
-                                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-r from-white/10 to-transparent blur-xl" />
                             </button>
                         </div>
                     </motion.div>

@@ -58,20 +58,20 @@ export const DashboardKPIs: React.FC<DashboardKPIsProps> = ({
                         hidden: { y: 20, opacity: 0 },
                         visible: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 300, damping: 24 } }
                     }}
-                    className={`relative bg-[#0A0F1E] rounded-2xl p-6 border border-slate-800 shadow-[0_8px_30px_rgb(0,0,0,0.04)] ${kpi.glow}`}
+                    className={`relative bg-white rounded-3xl p-6 border border-slate-200 shadow-sm ${kpi.glow}`}
                 >
                     <div className="flex justify-between items-start mb-4">
-                        <span className="text-slate-400 font-medium text-[11px] uppercase tracking-widest">{kpi.title}</span>
-                        <kpi.icon strokeWidth={1.5} className={`w-5 h-5 ${kpi.alert ? 'text-rose-400' : 'text-slate-500'}`} />
+                        <span className="text-slate-400 font-black text-[10px] uppercase tracking-[0.2em]">{kpi.title}</span>
+                        <kpi.icon strokeWidth={2.5} className={`w-5 h-5 ${kpi.alert ? 'text-rose-500' : 'text-slate-300'}`} />
                     </div>
 
                     {/* [CEO 인사이트] tabular-nums로 숫자가 바뀔 때 흔들림 방지 */}
-                    <div className={`text-4xl font-black tabular-nums tracking-tighter ${kpi.alert ? 'text-rose-500 animate-pulse' : 'text-white'}`}>
+                    <div className={`text-4xl font-black tabular-nums tracking-tighter ${kpi.alert ? 'text-rose-600 animate-pulse' : 'text-slate-900'}`}>
                         {kpi.value}
                     </div>
 
                     {/* [CEO 인사이트] 얇고 세련된 그라데이션 진행률 바 */}
-                    <div className="mt-5 w-full bg-slate-800 rounded-full h-1 overflow-hidden">
+                    <div className="mt-5 w-full bg-slate-100 rounded-full h-1 overflow-hidden">
                         <motion.div
                             initial={{ width: 0 }}
                             animate={{ width: kpi.progress }}
