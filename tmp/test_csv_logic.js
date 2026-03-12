@@ -6,14 +6,15 @@ const SERVICE_CONVERSION_VALUES = {
     "Premium Service": 1500
 };
 
-const clinicId = "test-clinic-id";
-
-// Simulation of the hardened logic from CSVImportZone.tsx
 const processData = (data) => {
+    let successCount = 0;
+    let failedCount = 0;
+    let skippedCount = 0;
+
     const results = data.map((row, index) => {
         // Validation: Skip completely empty or malformed rows early
         if (!row || Object.values(row).every(v => !v || String(v).trim() === '')) {
-            console.log(`Row ${index}: Skipped empty row`);
+            skippedCount++;
             return null;
         }
 
@@ -37,6 +38,8 @@ const processData = (data) => {
 
         const validStatuses = ["New Lead", "Booked", "Visited", "Treated", "Sale Closed"];
         const status = validStatuses.includes(statusRaw) ? statusRaw : "New Lead";
+        
+        successCount++;
 
         return {
             name: pseudonym,
@@ -46,7 +49,7 @@ const processData = (data) => {
         };
     }).filter(Boolean);
     
-    return results;
+    return { results, successCount, failedCount, skippedCount };
 };
 
 // Test Data based on dirty_leads.csv
@@ -55,12 +58,17 @@ const testData = [
     {"Patient Name": "", "Treatment Type": "Invisalign", "Value": "invalid", "Status": "Booked"},
     {"Patient Name": "Jane Smith", "Treatment Type": undefined, "Value": "NULL", "Status": "Treated"},
     {"Patient Name": "Special & Characters", "Treatment Type": "Veneers", "Value": "1,234.56#", "Status": "New Lead"},
-    {}, // Empty row
+    {}, // Empty row (Should be skipped)
     {"Patient Name": "Missing Value Row", "Treatment Type": undefined, "Value": undefined, "Status": undefined},
     {"Patient Name": "Valid Record", "Treatment Type": "Implants", "Value": "2000", "Status": "New Lead"}
 ];
 
-const results = processData(testData);
+const { results, successCount, skippedCount } = processData(testData);
 console.log("--- TEST RESULTS ---");
 console.log(JSON.stringify(results, null, 2));
-console.log(`Total Success: ${results.length}`);
+console.log(`Successfully parsed: ${successCount}`);
+console.log(`Skipped: ${skippedCount}`);
+
+if (skippedCount > 0) {
+    console.log(`TOAST LOGIC: [${skippedCount}] rows were skipped due to formatting errors`);
+}

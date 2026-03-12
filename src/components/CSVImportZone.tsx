@@ -14,7 +14,7 @@ interface CSVImportZoneProps {
 export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImportZoneProps) {
     const [isHovering, setIsHovering] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
-    const [result, setResult] = useState<{ success: number; failed: number } | null>(null);
+    const [result, setResult] = useState<{ success: number; failed: number; skipped: number } | null>(null);
     const [agreed, setAgreed] = useState(false);
 
     const processData = async (data: any[]) => {
@@ -22,10 +22,12 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
         setResult(null);
         let successCount = 0;
         let failCount = 0;
+        let skippedCount = 0;
 
         const inserts = data.map((row, index) => {
             // Validation: Skip completely empty or malformed rows early
             if (!row || Object.values(row).every(v => !v || String(v).trim() === '')) {
+                skippedCount++;
                 return null;
             }
 
@@ -85,7 +87,7 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
             }
         }
 
-        setResult({ success: successCount, failed: failCount });
+        setResult({ success: successCount, failed: failCount, skipped: skippedCount });
         setIsProcessing(false);
 
         if (successCount > 0) {
@@ -170,6 +172,20 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
                                         <CheckCircle2 className="w-6 h-6 text-[#00FFA3]" />
                                     </div>
                                     <p className="text-sm font-bold text-gray-900 dark:text-white">Successfully Imported {result.success} Records</p>
+                                    
+                                    {result.skipped > 0 && (
+                                        <motion.div 
+                                            initial={{ opacity: 0, scale: 0.9 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            className="mt-3 px-4 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center gap-2"
+                                        >
+                                            <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                                            <p className="text-[10px] font-black uppercase tracking-widest text-amber-500">
+                                                {result.skipped} rows skipped (formatting error)
+                                            </p>
+                                        </motion.div>
+                                    )}
+
                                     <button onClick={() => setResult(null)} className="mt-4 text-xs font-bold text-[#00FFA3] hover:text-[#00FFA3]/80 underline underline-offset-4">Import Another</button>
                                 </>
                             ) : (
@@ -178,6 +194,11 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
                                         <XCircle className="w-6 h-6 text-red-500" />
                                     </div>
                                     <p className="text-sm font-bold text-gray-900 dark:text-white">Import Failed</p>
+                                    {result.skipped > 0 && (
+                                        <p className="text-[10px] font-bold text-red-400 uppercase tracking-widest mt-2">
+                                            {result.skipped} invalid rows detected
+                                        </p>
+                                    )}
                                     <button onClick={() => setResult(null)} className="mt-4 text-xs font-bold text-gray-500 hover:text-white underline underline-offset-4">Try Again</button>
                                 </>
                             )}
