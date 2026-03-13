@@ -1349,7 +1349,7 @@ export default function AdminDashboard() {
       setLeads(finalLeads);
       if (!append && data) {
         try {
-          localStorage.setItem(`leads_cache_${profile.clinic_id}`, JSON.stringify(data.slice(0, 50)));
+          sessionStorage.setItem(`leads_cache_${profile.clinic_id}`, JSON.stringify(data.slice(0, 50)));
         } catch (e) { }
       }
       if (count !== null && data && data.length >= count) {
@@ -1367,8 +1367,8 @@ export default function AdminDashboard() {
   useEffect(() => {
     if (!profile?.clinic_id) return;
 
-    // 1. Instant Initial Load from Cache
-    const cachedLeadsStr = localStorage.getItem(`leads_cache_${profile.clinic_id}`);
+    // 1. Instant Initial Load from Cache (Zero-Trace Protocol: sessionStorage only)
+    const cachedLeadsStr = sessionStorage.getItem(`leads_cache_${profile.clinic_id}`);
     if (cachedLeadsStr && leads.length === 0) {
       try {
         setLeads(JSON.parse(cachedLeadsStr));
@@ -1392,19 +1392,19 @@ export default function AdminDashboard() {
             setLeads(prev => {
               if (prev.some(l => l.id === payload.new.id)) return prev; // Prevent duplicate if added optimistically
               const newLeads = [payload.new as ConsultationRequest, ...prev];
-              localStorage.setItem(`leads_cache_${profile.clinic_id}`, JSON.stringify(newLeads.slice(0, 50)));
+              sessionStorage.setItem(`leads_cache_${profile.clinic_id}`, JSON.stringify(newLeads.slice(0, 50)));
               return newLeads;
             });
           } else if (payload.eventType === 'UPDATE') {
             setLeads(prev => {
               const updated = prev.map(l => l.id === payload.new.id ? { ...l, ...payload.new } : l);
-              localStorage.setItem(`leads_cache_${profile.clinic_id}`, JSON.stringify(updated.slice(0, 50)));
+              sessionStorage.setItem(`leads_cache_${profile.clinic_id}`, JSON.stringify(updated.slice(0, 50)));
               return updated;
             });
           } else if (payload.eventType === 'DELETE') {
             setLeads(prev => {
               const filtered = prev.filter(l => l.id !== payload.old.id);
-              localStorage.setItem(`leads_cache_${profile.clinic_id}`, JSON.stringify(filtered.slice(0, 50)));
+              sessionStorage.setItem(`leads_cache_${profile.clinic_id}`, JSON.stringify(filtered.slice(0, 50)));
               return filtered;
             });
           }

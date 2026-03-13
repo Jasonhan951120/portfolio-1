@@ -93,8 +93,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, []);
 
     const signOut = async () => {
-        localStorage.removeItem("demo_mode");
-        localStorage.removeItem("invite_token");
+        // Zero-Trace Protocol: Explicitly clear all client-side storage
+        localStorage.clear();
+        sessionStorage.clear();
         await supabase.auth.signOut();
     };
 
