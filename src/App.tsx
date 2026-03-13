@@ -36,7 +36,7 @@ import { ChevronDown, Phone } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "./lib/supabase";
 import VerifyUI from "./components/VerifyUI";
-
+import SecurityComplianceCenter from "./pages/SecurityComplianceCenter";
 
 function LandingPage({ clinic }: { clinic: any }) {
   const { scrollYProgress } = useScroll();
@@ -224,6 +224,7 @@ export default function App() {
             <Route path="/admin/dashboard" element={<ProtectedRoute><SubscriptionGuard><AdminDashboard /></SubscriptionGuard></ProtectedRoute>} />
             <Route path="/admin/campaign-setup" element={<ProtectedRoute><SubscriptionGuard><CampaignSetupPage /></SubscriptionGuard></ProtectedRoute>} />
             <Route path="/admin/integrations" element={<ProtectedRoute><SubscriptionGuard><ApiIntegrationPage /></SubscriptionGuard></ProtectedRoute>} />
+            <Route path="/admin/security" element={<ProtectedRoute><SubscriptionGuard><SecurityComplianceCenter /></SubscriptionGuard></ProtectedRoute>} />
             <Route path="/admin/onboarding" element={<ProtectedRoute><SubscriptionGuard><AdminOnboarding /></SubscriptionGuard></ProtectedRoute>} />
             <Route path="/login" element={<AdminLogin />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
