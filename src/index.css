@@ -27,7 +27,7 @@
   }
 
   body {
-    @apply bg-slate-50 text-slate-900 font-sans antialiased !important;
+    @apply bg-slate-50 text-slate-900 font-sans antialiased;
     background-color: #F8FAFC !important;
     background: #F8FAFC !important;
     color: #0F172A !important;
