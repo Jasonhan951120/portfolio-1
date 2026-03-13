@@ -26,13 +26,13 @@ export function RevenueMetrics({ systemGeneratedRevenue, marketingROAS, revenueA
                     <div className="p-3 bg-emerald-50 rounded-2xl border border-emerald-100">
                         <TrendingUp className="w-6 h-6 text-emerald-500" strokeWidth={1.5} />
                     </div>
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">System Generated Revenue</span>
+                    <span className="metric-label-muted text-emerald-600/60">System Generated Revenue</span>
                 </div>
 
                 <div className="flex items-baseline gap-2">
                     <AnimatedNumber
                         value={systemGeneratedRevenue}
-                        className="text-5xl lg:text-6xl font-display font-black text-slate-900 tracking-tighter"
+                        className="text-5xl lg:text-6xl metric-authority"
                         prefix="£"
                     />
                 </div>
@@ -54,13 +54,13 @@ export function RevenueMetrics({ systemGeneratedRevenue, marketingROAS, revenueA
                     <div className="p-3 bg-amber-50 rounded-2xl border border-amber-100">
                         <BarChart3 className="w-6 h-6 text-amber-500" strokeWidth={1.5} />
                     </div>
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Marketing ROAS (Meta/Google)</span>
+                    <span className="metric-label-muted text-amber-600/60">Marketing ROAS (Meta/Google)</span>
                 </div>
 
                 <div className="flex items-baseline gap-2">
                     <AnimatedNumber
                         value={marketingROAS}
-                        className="text-5xl lg:text-6xl font-display font-black text-slate-900 tracking-tighter"
+                        className="text-5xl lg:text-6xl metric-authority"
                         prefix=""
                         suffix="x"
                     />
@@ -86,13 +86,13 @@ export function RevenueMetrics({ systemGeneratedRevenue, marketingROAS, revenueA
                     <div className="p-3 bg-red-50 rounded-2xl border border-red-100">
                         <Ghost className="w-6 h-6 text-red-500" strokeWidth={1.5} />
                     </div>
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Revenue at Risk</span>
+                    <span className="metric-label-muted text-red-600/60">Revenue at Risk</span>
                 </div>
 
                 <div className="flex items-baseline gap-2">
                     <AnimatedNumber
                         value={revenueAtRisk}
-                        className="text-5xl lg:text-6xl font-display font-black text-slate-900 tracking-tighter"
+                        className="text-5xl lg:text-6xl metric-authority !text-rose-600"
                         prefix="£"
                     />
                     <AlertCircle className="w-5 h-5 text-red-500 mb-3 animate-pulse" />

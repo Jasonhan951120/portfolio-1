@@ -79,16 +79,16 @@ export const DashboardKPIs: React.FC<DashboardKPIsProps> = ({
                         visible: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 300, damping: 24 } }
                     }}
                     whileHover={{ y: -4, scale: 1.01 }}
-                    className={`relative bg-white rounded-3xl p-6 border-[0.5px] border-slate-200 shadow-luxury transition-all duration-300 hover:shadow-luxury-hover active:scale-[0.98] ${kpi.glow}`}
+                    className={`relative bg-white rounded-3xl p-6 border-[0.5px] border-slate-200/60 shadow-luxury transition-all duration-300 hover:shadow-luxury-hover active:scale-[0.98] ${kpi.glow}`}
                 >
                     <div className="flex justify-between items-start mb-4">
-                        <span className="text-slate-400 font-bold text-[9px] uppercase tracking-[0.25em]">{kpi.title}</span>
+                        <span className="metric-label-muted">{kpi.title}</span>
                         <div className={`p-2 rounded-xl bg-slate-50 border border-slate-100 ${kpi.alert ? 'text-rose-500' : 'text-emerald-500'}`}>
                             <kpi.icon strokeWidth={2.5} className="w-4 h-4" />
                         </div>
                     </div>
 
-                    <div className={`text-4xl font-black tabular-nums tracking-tighter ${kpi.alert ? 'text-rose-600' : 'text-slate-900'}`}>
+                    <div className={`text-4xl metric-authority ${kpi.alert ? 'text-rose-600' : 'text-slate-900'}`}>
                         <CountUp to={kpi.value} prefix={kpi.prefix} suffix={kpi.suffix} />
                     </div>
 

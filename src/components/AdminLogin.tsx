@@ -31,7 +31,7 @@ export default function AdminLogin() {
 
         // Developer Bypass: Enable demo mode via URL parameter
         if (params.get("demo") === "true") {
-            localStorage.setItem("demo_mode", "true");
+            sessionStorage.setItem("demo_mode", "true");
             window.location.href = "/admin";
             return;
         }
@@ -39,8 +39,8 @@ export default function AdminLogin() {
         const token = params.get("invite");
         if (token) {
             setInviteToken(token);
-            // Store token in local storage so it survives the OAuth redirect flow
-            localStorage.setItem('invite_token', token);
+            // Store token in session storage so it survives the OAuth redirect flow without disk residue
+            sessionStorage.setItem('invite_token', token);
         }
 
         supabase.auth.getSession().then(async ({ data: { session } }) => {
@@ -62,7 +62,7 @@ export default function AdminLogin() {
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
             if (session) {
                 // If we have an invite token, process it before redirecting
-                const storedToken = localStorage.getItem('invite_token');
+                const storedToken = sessionStorage.getItem('invite_token');
 
                 if (storedToken && !processingInvite) {
                     console.log("Session detected, processing stored invitation token:", storedToken);
@@ -85,7 +85,7 @@ export default function AdminLogin() {
 
                         console.log("Invite processed successfully:", data);
                         // Clear the token so we don't process it again
-                        localStorage.removeItem('invite_token');
+                        sessionStorage.removeItem('invite_token');
                         setInviteToken(null);
 
                         // Force a profile refresh in AuthContext so it picks up the new clinic_id from the DB
@@ -159,15 +159,15 @@ export default function AdminLogin() {
             {/* Decorative Blur */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none" />
 
-            <div className="w-full max-w-md bg-white border border-slate-200 p-10 rounded-[44px] shadow-sm relative z-10 text-center">
+            <div className="w-full max-w-md bg-white border border-slate-200/60 p-10 rounded-[44px] shadow-luxury relative z-10 text-center">
                 <div className="w-16 h-16 bg-emerald-50 rounded-3xl flex items-center justify-center mx-auto mb-8 border border-emerald-100">
                     <Lock className="w-8 h-8 text-emerald-500" />
                 </div>
 
-                <h1 className="text-3xl font-display font-black text-slate-900 mb-2 tracking-tight uppercase">
+                <h1 className="text-3xl font-display font-black text-slate-900 mb-2 tracking-tighter uppercase">
                     {inviteToken ? "Join the Team" : "Clinic Portal"}
                 </h1>
-                <p className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-10">
+                <p className="metric-label-muted mb-10">
                     {inviteToken ? "Sign in to accept your invitation." : "Sign in to manage your consultations."}
                 </p>
 

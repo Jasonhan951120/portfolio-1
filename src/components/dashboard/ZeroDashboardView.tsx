@@ -141,11 +141,11 @@ function HotLeadCard({
                 <div className="relative z-10">
                     <div className="flex justify-between items-start">
                         <div>
-                            <p className={`text-[9px] font-black uppercase tracking-[0.4em] mb-3 transition-colors duration-700 ${sent ? 'text-emerald-500' : 'text-slate-400'}`}>
+                            <p className={`metric-label-muted mb-3 transition-colors duration-700 ${sent ? 'text-emerald-500' : 'text-slate-400'}`}>
                                 {sent ? '✓ Revenue Secured' : '⚡ Priority Action'}
                             </p>
-                            <h3 className="text-[1.8rem] font-black text-slate-900 tracking-tight leading-none uppercase">{lead.name}</h3>
-                            <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.3em] mt-2">{lead.service}</p>
+                            <h3 className="text-2xl font-black text-slate-900 tracking-tighter leading-none uppercase">{lead.name}</h3>
+                            <p className="metric-label-muted mt-2">{lead.service}</p>
                         </div>
                         {isVIP && (
                             <div className="p-3 bg-emerald-50 border border-emerald-100 rounded-2xl flex-shrink-0">
@@ -157,11 +157,11 @@ function HotLeadCard({
 
                 {/* ── POTENTIAL VALUE ── */}
                 <div className="relative z-10">
-                    <p className="text-slate-400 text-[9px] font-black uppercase tracking-[0.3em] mb-2">Estimated Value</p>
+                    <p className="metric-label-muted mb-2">Estimated Value</p>
                     <motion.p
                         animate={{ color: sent ? '#10b981' : '#0F172A' }}
                         transition={{ duration: 0.7 }}
-                        className="font-black tabular-nums tracking-tighter text-slate-900"
+                        className="metric-authority"
                         style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', lineHeight: 1 }}
                     >
                         £{value.toLocaleString()}
@@ -331,15 +331,15 @@ export function ZeroDashboardView({
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
                             >
-                                <p className="text-[10px] font-black uppercase tracking-[0.5em] text-emerald-600 mb-5">
+                                <p className="metric-label-muted text-emerald-600 mb-5">
                                     🎉 Portfolio Secured — Today
                                 </p>
-                                <div className="text-5xl font-black tabular-nums tracking-tighter text-slate-900 leading-none">
+                                <div className="text-5xl metric-authority leading-none">
                                     £{totalSecured.toLocaleString()}
                                 </div>
                                 <div className="flex items-center gap-2 mt-8">
                                     <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-500">All Priority Cases Handled</span>
+                                    <span className="metric-label-muted text-emerald-500">All Priority Cases Handled</span>
                                 </div>
                             </motion.div>
                         ) : (
@@ -348,15 +348,15 @@ export function ZeroDashboardView({
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
                             >
-                                <p className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-400 mb-5">
+                                <p className="metric-label-muted mb-5">
                                     ⚠ Identified Revenue Opportunities
                                 </p>
-                                <div className="text-5xl font-black tabular-nums tracking-tighter text-slate-900 leading-none">
+                                <div className="text-5xl metric-authority leading-none">
                                     £{totalAtRisk.toLocaleString()}
                                 </div>
                                 <div className="flex items-center gap-2 mt-8">
                                     <div className="w-2 h-2 rounded-full bg-emerald-500 scale-75" />
-                                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400">Action Required: {activeLeads.length} High-Intent Patients</span>
+                                    <span className="metric-label-muted">Action Required: {activeLeads.length} High-Intent Patients</span>
                                 </div>
                             </motion.div>
                         )}
@@ -453,8 +453,8 @@ export function ZeroDashboardView({
                             <p className="text-slate-400 text-sm mb-10 relative z-10">All high-priority patients have been contacted.</p>
                             
                             <div className="bg-slate-50 border border-slate-100 rounded-3xl p-6 relative z-10">
-                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2">Total Secured Today</p>
-                                <p className="text-3xl font-black text-slate-900 tabular-nums">£{(totalSecured || 12450).toLocaleString()}</p>
+                                <p className="metric-label-muted mb-2">Total Secured Today</p>
+                                <p className="text-3xl metric-authority">£{(totalSecured || 12450).toLocaleString()}</p>
                                 <div className="mt-3 flex items-center justify-center gap-2">
                                     <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                                     <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Efficiency Peak</span>

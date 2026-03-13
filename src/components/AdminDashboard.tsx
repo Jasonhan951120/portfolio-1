@@ -458,6 +458,7 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
         layout
         whileHover={{ scale: 1.02, y: -4 }}
         whileTap={{ scale: 0.98 }}
+        transition={{ type: "spring", stiffness: 400, damping: 30 }}
         className={`h-full rounded-3xl p-4 relative group transition-all bg-white border-[0.5px] border-slate-200/60 shadow-luxury hover:shadow-luxury-hover active:scale-[0.98]
           ${isDragging ? 'opacity-50' : ''} ${isOverdue ? 'border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.1)]' : ''}`}
       >
@@ -466,9 +467,9 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
           <div className="flex justify-between items-start mb-2">
             <div>
               <h4 className="font-bold text-[13px] text-slate-900 truncate w-40">{lead.name}</h4>
-              <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">{timeAgo(lead.created_at)}</p>
+              <p className="metric-label-muted mt-0.5">{timeAgo(lead.created_at)}</p>
             </div>
-            <span className="text-[14px] font-black text-slate-900 tabular-nums tracking-tighter">£{(lead.potential_value || 1000).toLocaleString()}</span>
+            <span className="text-[14px] metric-authority">£{(lead.potential_value || 1000).toLocaleString()}</span>
           </div>
           <div className="flex gap-1 mb-3">
             <span className="text-[8px] font-black px-1.5 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 uppercase">AI {lead.intent_score || 0}%</span>
@@ -482,15 +483,15 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
                   const message = encodeURIComponent(`Hello ${lead.name}, this is the reception team at ${clinicName}. We received your inquiry regarding ${lead.service}. Would you be available for a brief consultation this week?`);
                   window.open(`https://wa.me/${lead.phone.replace(/[^0-9]/g, '')}?text=${message}`, '_blank');
                 }}
-                className="p-1.5 text-emerald-500 hover:bg-emerald-50 rounded-lg transition-colors active:scale-90 flex items-center gap-1.5 px-2"
+                className="p-1.5 text-emerald-500 hover:bg-emerald-50 rounded-lg transition-colors btn-tactile flex items-center gap-1.5 px-2"
                 title="Send WhatsApp"
               >
                 <MessageCircle className="w-3.5 h-3.5" />
                 <span className="text-[9px] font-bold uppercase tracking-tighter">WhatsApp</span>
               </button>
             )}
-            <button onClick={() => onOpenPTMode(lead)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors active:scale-90"><Monitor className="w-3.5 h-3.5" /></button>
-            <button onClick={() => setSelectedLead(lead)} className="p-1.5 text-slate-400 hover:bg-slate-50 rounded-lg transition-colors active:scale-90"><FileText className="w-3.5 h-3.5" /></button>
+            <button onClick={() => onOpenPTMode(lead)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors btn-tactile"><Monitor className="w-3.5 h-3.5" /></button>
+            <button onClick={() => setSelectedLead(lead)} className="p-1.5 text-slate-400 hover:bg-slate-50 rounded-lg transition-colors btn-tactile"><FileText className="w-3.5 h-3.5" /></button>
           </div>
         </div>
       </motion.div>
@@ -520,11 +521,11 @@ function KanbanColumn({
   return (
     <div className="w-[290px] shrink-0 flex flex-col h-[calc(100vh-280px)] pr-4 mr-4 last:mr-0 last:pr-0 transition-all duration-500">
       <div className="flex flex-col mb-6 px-1">
-        <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1 flex items-center justify-between">
+        <h3 className="metric-label-muted mb-1 flex items-center justify-between">
           {columnId}
           <span className="opacity-40">{columnLeads.length}</span>
         </h3>
-        <span className="text-xl font-bold text-slate-900 tabular-nums tracking-tighter">
+        <span className="text-xl metric-authority">
           £{columnLeads.reduce((sum, l) => sum + (SERVICE_CONVERSION_VALUES[l.service] || 1000), 0).toLocaleString()}
         </span>
         <div className="h-[2px] w-full bg-slate-100 mt-3 rounded-full" />
@@ -557,10 +558,10 @@ function KanbanColumn({
               )}
             />
           ) : (
-            <div className="h-48 rounded-[40px] flex flex-col items-center justify-center border-[0.5px] border-slate-200/60 bg-white shadow-luxury relative overflow-hidden group">
+            <div className="h-64 rounded-[44px] flex flex-col items-center justify-center border-[0.5px] border-slate-200/60 bg-white shadow-luxury relative overflow-hidden group">
               {/* Ascending dynamic trend line (opacity-10 watermark) */}
-              <div className="absolute inset-0 opacity-10 pointer-events-none">
-                <svg className="w-full h-full text-slate-400" viewBox="0 0 400 200" fill="none">
+              <div className="absolute inset-0 opacity-10 pointer-events-none flex items-end justify-center">
+                <svg className="w-full h-40 text-slate-400" viewBox="0 0 400 200" fill="none">
                   <motion.path 
                     initial={{ pathLength: 0, opacity: 0 }}
                     animate={{ pathLength: 1, opacity: 1 }}
@@ -575,8 +576,16 @@ function KanbanColumn({
               <div className="w-14 h-14 mb-4 rounded-2xl bg-slate-50 border-[0.5px] border-slate-200/60 flex items-center justify-center group-hover:scale-110 transition-transform relative z-10 shadow-sm">
                 <Sparkles className="w-7 h-7 text-emerald-500 animate-pulse" />
               </div>
-              <h4 className="text-[12px] font-black text-slate-900 uppercase tracking-widest px-8 text-center leading-relaxed relative z-10">Your pipeline is primed.</h4>
-              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tight mt-1 relative z-10">Ready to secure new leads.</p>
+              <h4 className="text-[14px] metric-authority uppercase px-8 text-center leading-relaxed relative z-10">Your pipeline is primed.</h4>
+              <p className="metric-label-muted mt-2 relative z-10 text-center max-w-[200px] normal-case">Upload data to unlock hidden revenue.</p>
+              
+              <motion.button 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="mt-6 relative z-10 px-6 py-2.5 bg-emerald-500 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-emerald-500/20 ring-4 ring-emerald-500/10 animate-pulse"
+              >
+                Upload CSV
+              </motion.button>
             </div>
           )}
         </SortableContext>
