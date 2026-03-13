@@ -52,7 +52,7 @@ export function MarketingTab({
                         {/* Live Traffic Source Panel — Real-time via Supabase Realtime */}
                         <LiveTrafficPanel clinicId={profile?.clinic_id ?? undefined} />
 
-                        <div className="bg-white border border-[rgba(0,0,0,0.04)] rounded-[40px] p-8 shadow-[0_1px_2px_rgba(0,0,0,0.02),_0_8px_24px_-4px_rgba(0,0,0,0.04)]">
+                        <div className="bg-white border-[0.5px] border-slate-200/60 rounded-2xl p-8 shadow-[0_2px_8px_rgba(0,0,0,0.02),_0_12px_32px_rgba(0,0,0,0.04)]">
                             <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-6">Connected Platforms</h4>
                             <div className="space-y-4">
                                 {marketingConnections.map(conn => (
@@ -84,7 +84,7 @@ export function MarketingTab({
 
                     {/* Right: Detailed ROI Analytics */}
                     <div className="lg:col-span-8">
-                        <div className="bg-white border border-[rgba(0,0,0,0.04)] rounded-[40px] p-10 h-full relative overflow-hidden shadow-[0_1px_2px_rgba(0,0,0,0.02),_0_8px_24px_-4px_rgba(0,0,0,0.04)]">
+                        <div className="bg-white border-[0.5px] border-slate-200/60 rounded-2xl p-10 h-full relative overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.02),_0_12px_32px_rgba(0,0,0,0.04)]">
                             <div className="absolute top-0 right-0 w-64 h-64 bg-[#87A96B]/5 blur-[80px] rounded-full -mr-10 -mt-10" />
                             <div className="relative z-10">
                                 <div className="flex justify-between items-start mb-12">

@@ -140,7 +140,7 @@ export function LeadsTab({
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
-                                className="p-6 bg-red-50/80 rounded-2xl border border-red-100/50 flex flex-col gap-4 relative overflow-hidden group hover:bg-red-50 transition-colors shadow-[0_2px_8px_rgba(239,68,68,0.02),_0_12px_32px_rgba(239,68,68,0.04)]"
+                                className="p-6 bg-red-50/80 rounded-2xl border-[0.5px] border-red-100/50 flex flex-col gap-4 relative overflow-hidden group hover:bg-red-50 transition-colors shadow-[0_2px_8px_rgba(239,68,68,0.02),_0_12px_32px_rgba(239,68,68,0.04)]"
                             >
                                 <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                                     <TrendingUp className="w-32 h-32 text-red-500 rotate-180" />
@@ -181,7 +181,7 @@ export function LeadsTab({
                     {/* Smart Waitlist CTA */}
                     <button
                         onClick={() => setIsWaitlistOpen(true)}
-                        className="w-full card-light p-8 text-left group hover:bg-gray-900 transition-all duration-500"
+                        className="w-full bg-white border-[0.5px] border-slate-200/60 rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.02),_0_12px_32px_rgba(0,0,0,0.04)] p-8 text-left group hover:bg-gray-900 transition-all duration-500"
                     >
                         <div className="flex justify-between items-start mb-6">
                             <div className="w-12 h-12 bg-blue-50 group-hover:bg-white/10 rounded-2xl flex items-center justify-center transition-colors">
@@ -196,7 +196,7 @@ export function LeadsTab({
                     </button>
 
                     {/* Quick Insights Activity */}
-                    <div className="card-light p-8">
+                    <div className="bg-white border-[0.5px] border-slate-200/60 rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.02),_0_12px_32px_rgba(0,0,0,0.04)] p-8">
                         <div className="flex items-center gap-3 mb-6">
                             <TrendingUp className="w-4 h-4 text-[#87A96B]" />
                             <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Today's Focus</h4>

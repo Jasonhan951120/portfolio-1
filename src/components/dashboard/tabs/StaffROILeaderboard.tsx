@@ -93,7 +93,7 @@ export const StaffROILeaderboard: React.FC<StaffROILeaderboardProps> = ({ clinic
     }
 
     return (
-        <div className="bg-white rounded-[44px] p-8 border border-slate-200 shadow-sm relative overflow-hidden group">
+        <div className="bg-white rounded-2xl p-8 border-[0.5px] border-slate-200/60 shadow-[0_2px_8px_rgba(0,0,0,0.02),_0_12px_32px_rgba(0,0,0,0.04)] relative overflow-hidden group">
             {/* Background Glow */}
             <div className="absolute -top-24 -right-24 w-64 h-64 bg-emerald-500/5 blur-[100px] rounded-full group-hover:bg-emerald-500/10 transition-colors duration-1000" />
 

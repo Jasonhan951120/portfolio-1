@@ -16,7 +16,7 @@ export default function DailyInsight({ metrics }: DailyInsightProps) {
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-[32px] p-8 border border-gray-100 shadow-sm relative overflow-hidden group"
+            className="bg-white rounded-2xl p-8 border-[0.5px] border-slate-200/60 shadow-[0_2px_8px_rgba(0,0,0,0.02),_0_12px_32px_rgba(0,0,0,0.04)] relative overflow-hidden group"
         >
             <div className="absolute top-0 right-0 w-32 h-32 bg-[#87A96B]/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-[#87A96B]/10 transition-colors duration-500" />
 
@@ -33,9 +33,9 @@ export default function DailyInsight({ metrics }: DailyInsightProps) {
             <div className="space-y-6">
                 <p className="text-gray-600 text-[15px] leading-relaxed font-medium">
                     Your <span className="text-[#87A96B] font-bold">{metrics.topPlatform} Ads</span> are performing exceptionally well.
-                    With a spend of <span className="text-gray-900 font-bold">£{metrics.spend}</span> yesterday, you generated
-                    <span className="text-gray-900 font-bold"> {metrics.leads} high-intent leads</span>.
-                    The estimated ROI stands at <span className="text-[#87A96B] font-bold">{metrics.roi}x</span>.
+                    With a spend of <span className="text-gray-900 font-bold tabular-nums tracking-tighter">£{metrics.spend}</span> yesterday, you generated
+                    <span className="text-gray-900 font-bold tabular-nums tracking-tighter"> {metrics.leads} high-intent leads</span>.
+                    The estimated ROI stands at <span className="text-[#87A96B] font-bold tabular-nums tracking-tighter">{metrics.roi}x</span>.
                 </p>
 
                 <div className="grid grid-cols-2 gap-4">
