@@ -16,11 +16,11 @@ export function AnimatedNumber({ value, className, prefix = "", suffix = "" }: A
 
     useEffect(() => {
         const controls = animate(count, value, {
-            duration: 2,
+            duration: 1.5,
             ease: [0.33, 1, 0.68, 1], // Custom slot-machine style easing
         });
         return controls.stop;
     }, [value, count]);
 
-    return <motion.span className={className}>{rounded}</motion.span>;
+    return <motion.span className={`tabular-nums ${className}`}>{rounded}</motion.span>;
 }

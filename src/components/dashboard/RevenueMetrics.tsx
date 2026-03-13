@@ -18,7 +18,7 @@ export function RevenueMetrics({ systemGeneratedRevenue, marketingROAS, revenueA
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 whileHover={{ y: -4, scale: 1.01 }}
-                className="bg-white border-[0.5px] border-slate-200 rounded-[32px] p-8 relative overflow-hidden group shadow-luxury hover:shadow-luxury-hover transition-all duration-300 active:scale-[0.98]"
+                className="bg-white border-[0.5px] border-slate-200/60 rounded-[40px] p-8 relative overflow-hidden group shadow-luxury hover:shadow-luxury-hover transition-all duration-300 active:scale-[0.98]"
             >
                 <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-[60px] rounded-full -mr-16 -mt-16 group-hover:bg-emerald-500/10 transition-all duration-700" />
 

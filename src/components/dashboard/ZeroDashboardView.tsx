@@ -122,7 +122,7 @@ function HotLeadCard({
                     border transition-all duration-700 ease-out
                     ${sent
                         ? 'border-emerald-500/20 shadow-[0_20px_40px_rgba(16,185,129,0.1)]'
-                        : 'border-slate-200 shadow-[0_20px_40px_rgba(0,0,0,0.05)]'
+                        : 'border-slate-200/60 shadow-luxury'
                     }
                 `}
             >
@@ -323,7 +323,7 @@ export function ZeroDashboardView({
             <div className="w-full max-w-7xl grid grid-cols-12 gap-8 relative z-10">
                 
                 {/* 1. HERO METRIC (Span 8) */}
-                <div className="col-span-12 lg:col-span-8 bg-white rounded-[44px] p-10 border border-slate-200 shadow-sm flex flex-col justify-center">
+                <div className="col-span-12 lg:col-span-8 bg-white rounded-[44px] p-10 border border-slate-200/60 shadow-luxury flex flex-col justify-center">
                     <AnimatePresence mode="wait">
                         {heroState === 'secured' ? (
                             <motion.div
@@ -383,7 +383,7 @@ export function ZeroDashboardView({
                 
                 {/* 3. QUICK ACTIONS / NEWS (Span 4) */}
                 <div className="hidden lg:flex lg:col-span-4 flex-col gap-8">
-                    <div className="bg-white rounded-[44px] p-8 border border-slate-200 shadow-sm grow">
+                    <div className="bg-white rounded-[44px] p-8 border border-slate-200/60 shadow-luxury grow">
                         <h5 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-6">Patient Pipeline</h5>
                         <div className="space-y-6">
                             {[1, 2, 3].map(i => (

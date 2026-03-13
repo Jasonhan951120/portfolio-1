@@ -453,12 +453,11 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
   const isOverdue = (lead.status === "New Lead") && (Date.now() - created) > 86400000;
 
   return (
-    <div ref={setNodeRef} style={style} className="mb-4 outline-none px-1 h-[148px] transition-luxury">
+    <div ref={setNodeRef} style={style} className="mb-4 outline-none px-1 h-[148px]">
       <motion.div
         layout
         whileHover={{ scale: 1.02, y: -4 }}
-        whileTap={{ scale: 0.98 }}
-        className={`h-full rounded-3xl p-4 relative group transition-all bg-white border-[0.5px] border-slate-200/60 shadow-luxury hover:shadow-luxury-hover active:scale-[0.98]
+        className={`h-full rounded-2xl p-4 relative group transition-all bg-white border-[0.5px] border-slate-200 shadow-luxury hover:shadow-luxury-hover hover:border-emerald-500/30 active:scale-[0.98]
           ${isDragging ? 'opacity-50' : ''} ${isOverdue ? 'border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.1)]' : ''}`}
       >
         <div {...attributes} {...listeners} className="absolute inset-0 z-0 cursor-grab" />
@@ -557,26 +556,19 @@ function KanbanColumn({
               )}
             />
           ) : (
-            <div className="h-48 rounded-[40px] flex flex-col items-center justify-center border-[0.5px] border-slate-200/60 bg-white shadow-luxury relative overflow-hidden group">
-              {/* Ascending dynamic trend line (opacity-10 watermark) */}
-              <div className="absolute inset-0 opacity-10 pointer-events-none">
-                <svg className="w-full h-full text-slate-400" viewBox="0 0 400 200" fill="none">
-                  <motion.path 
-                    initial={{ pathLength: 0, opacity: 0 }}
-                    animate={{ pathLength: 1, opacity: 1 }}
-                    transition={{ duration: 2, ease: "easeOut" }}
-                    d="M0 180 C 100 170, 150 150, 200 100 C 250 50, 300 30, 400 20" 
-                    stroke="currentColor" 
-                    strokeWidth="3" 
-                  />
+            <div className="h-48 rounded-[32px] flex flex-col items-center justify-center border-[0.5px] border-slate-200 bg-white shadow-luxury relative overflow-hidden group">
+              {/* Ascending dashed-line chart illustration (opacity-20) */}
+              <div className="absolute inset-0 opacity-20 pointer-events-none">
+                <svg className="w-full h-full text-slate-300" viewBox="0 0 400 200" fill="none">
+                  <path d="M0 180 Q100 160 200 100 T400 20" stroke="currentColor" strokeWidth="2" strokeDasharray="6 6" />
                 </svg>
               </div>
               
-              <div className="w-14 h-14 mb-4 rounded-2xl bg-slate-50 border-[0.5px] border-slate-200/60 flex items-center justify-center group-hover:scale-110 transition-transform relative z-10 shadow-sm">
-                <Sparkles className="w-7 h-7 text-emerald-500 animate-pulse" />
+              <div className="w-12 h-12 mb-3 rounded-2xl bg-white border-[0.5px] border-slate-200 flex items-center justify-center group-hover:scale-110 transition-transform relative z-10 shadow-sm">
+                <Sparkles className="w-6 h-6 text-emerald-500 animate-pulse" />
               </div>
-              <h4 className="text-[12px] font-black text-slate-900 uppercase tracking-widest px-8 text-center leading-relaxed relative z-10">Your pipeline is primed.</h4>
-              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tight mt-1 relative z-10">Ready to secure new leads.</p>
+              <h4 className="text-[11px] font-black text-slate-900 uppercase tracking-widest px-8 text-center leading-relaxed relative z-10">Your pipeline is primed.</h4>
+              <p className="text-[9px] text-slate-400 font-bold uppercase tracking-tight mt-1 relative z-10">Upload data to unlock hidden revenue.</p>
             </div>
           )}
         </SortableContext>
@@ -2148,15 +2140,15 @@ export default function AdminDashboard() {
                         if (tab === 'vault') setShowOnboardingTooltip(false);
                       }}
                       className={`px-8 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.25em] transition-all duration-300 relative z-10 ${activeTab === tab
-                          ? 'text-emerald-700'
+                          ? 'text-emerald-600'
                           : 'text-slate-400 hover:text-slate-600'
                         }`}
                     >
                       {activeTab === tab && (
                         <motion.div
                           layoutId="activeTab"
-                          className="absolute inset-0 bg-white rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] z-[-1]"
-                          transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                          className="absolute inset-0 bg-white rounded-xl shadow-sm z-[-1]"
+                          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                         />
                       )}
                       {tab}
