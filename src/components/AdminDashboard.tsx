@@ -452,11 +452,11 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
   const isOverdue = (lead.status === "New Lead") && (Date.now() - created) > 86400000;
 
   return (
-    <div ref={setNodeRef} style={style} className="mb-3 outline-none px-1 h-[148px]">
+    <div ref={setNodeRef} style={style} className="mb-4 outline-none px-1 h-[148px]">
       <motion.div
         layout
-        whileHover={{ scale: 1.02, y: -2 }}
-        className={`h-full rounded-2xl p-4 relative group transition-all bg-white border border-slate-200 shadow-sm hover:shadow-md hover:border-emerald-500/30
+        whileHover={{ scale: 1.02, y: -4 }}
+        className={`h-full rounded-2xl p-4 relative group transition-all bg-white border-[0.5px] border-slate-200 shadow-luxury hover:shadow-luxury-hover hover:border-emerald-500/30 active:scale-[0.98]
           ${isDragging ? 'opacity-50' : ''} ${isOverdue ? 'border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.1)]' : ''}`}
       >
         <div {...attributes} {...listeners} className="absolute inset-0 z-0 cursor-grab" />
@@ -473,8 +473,8 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
             <span className="text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-slate-50 text-slate-500 border border-slate-100 uppercase">{lead.service}</span>
           </div>
           <div className="pt-3 border-t border-slate-100 flex justify-end gap-2 pointer-events-auto opacity-0 group-hover:opacity-100 transition-all">
-            <button onClick={() => onOpenPTMode(lead)} className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"><Monitor className="w-3.5 h-3.5" /></button>
-            <button onClick={() => setSelectedLead(lead)} className="p-1.5 text-slate-400 hover:bg-slate-50 rounded-lg transition-colors"><FileText className="w-3.5 h-3.5" /></button>
+            <button onClick={() => onOpenPTMode(lead)} className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors active:scale-90"><Monitor className="w-3.5 h-3.5" /></button>
+            <button onClick={() => setSelectedLead(lead)} className="p-1.5 text-slate-400 hover:bg-slate-50 rounded-lg transition-colors active:scale-90"><FileText className="w-3.5 h-3.5" /></button>
           </div>
         </div>
       </motion.div>
@@ -541,12 +541,19 @@ function KanbanColumn({
               )}
             />
           ) : (
-            <div className="h-48 rounded-[32px] flex flex-col items-center justify-center border border-dashed border-slate-200 bg-white shadow-sm group">
-              <div className="w-12 h-12 mb-3 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center group-hover:scale-110 transition-transform">
-                <Zap className="w-6 h-6 text-emerald-500" />
+            <div className="h-48 rounded-[32px] flex flex-col items-center justify-center border-[0.5px] border-slate-200 bg-white shadow-luxury relative overflow-hidden group">
+              {/* Ascending dashed-line chart illustration (opacity-20) */}
+              <div className="absolute inset-0 opacity-20 pointer-events-none">
+                <svg className="w-full h-full text-slate-300" viewBox="0 0 400 200" fill="none">
+                  <path d="M0 180 Q100 160 200 100 T400 20" stroke="currentColor" strokeWidth="2" strokeDasharray="6 6" />
+                </svg>
               </div>
-              <h4 className="text-[10px] font-black text-slate-900 uppercase tracking-widest px-8 text-center leading-relaxed">Secure Pipeline Ready</h4>
-              <p className="text-[9px] text-slate-400 font-bold uppercase tracking-tight mt-1">Upload data to reveal revenue</p>
+              
+              <div className="w-12 h-12 mb-3 rounded-2xl bg-white border-[0.5px] border-slate-200 flex items-center justify-center group-hover:scale-110 transition-transform relative z-10 shadow-sm">
+                <Sparkles className="w-6 h-6 text-emerald-500 animate-pulse" />
+              </div>
+              <h4 className="text-[11px] font-black text-slate-900 uppercase tracking-widest px-8 text-center leading-relaxed relative z-10">Your pipeline is primed.</h4>
+              <p className="text-[9px] text-slate-400 font-bold uppercase tracking-tight mt-1 relative z-10">Upload data to unlock hidden revenue.</p>
             </div>
           )}
         </SortableContext>
@@ -2104,7 +2111,7 @@ export default function AdminDashboard() {
               </div>
 
               {/* Centre: 3-Tab Nav (Medical Capsule) */}
-              <div className="flex bg-slate-100 p-1 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden group">
+              <div className="flex bg-slate-100/50 p-1 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden group">
                 {(['action', 'pipeline', 'vault'] as const).map(tab => (
                   <div key={tab} className="relative">
                     <button
@@ -2113,10 +2120,17 @@ export default function AdminDashboard() {
                         if (tab === 'vault') setShowOnboardingTooltip(false);
                       }}
                       className={`px-8 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.25em] transition-all duration-300 relative z-10 ${activeTab === tab
-                          ? 'bg-white text-emerald-600 shadow-sm'
-                          : 'text-slate-400 hover:text-slate-600 hover:bg-white/50'
+                          ? 'text-emerald-600'
+                          : 'text-slate-400 hover:text-slate-600'
                         }`}
                     >
+                      {activeTab === tab && (
+                        <motion.div
+                          layoutId="activeTab"
+                          className="absolute inset-0 bg-white rounded-xl shadow-sm z-[-1]"
+                          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                        />
+                      )}
                       {tab}
                       {tab === 'vault' && showOnboardingTooltip && (
                         <span className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full animate-pulse shadow-sm" />

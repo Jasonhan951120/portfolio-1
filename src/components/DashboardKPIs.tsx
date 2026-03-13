@@ -1,6 +1,24 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { TrendingUp, AlertCircle, PoundSterling } from 'lucide-react';
+import React, { useEffect } from 'react';
+import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
+import { TrendingUp, AlertCircle, PoundSterling, Sparkles } from 'lucide-react';
+
+const CountUp = ({ to, prefix = "", suffix = "" }: { to: number; prefix?: string; suffix?: string }) => {
+    const count = useMotionValue(0);
+    const rounded = useTransform(count, (latest) => Math.round(latest).toLocaleString());
+
+    useEffect(() => {
+        const controls = animate(count, to, { duration: 1.5, ease: "easeOut" });
+        return controls.stop;
+    }, [count, to]);
+
+    return (
+        <React.Fragment>
+            {prefix}
+            <motion.span>{rounded}</motion.span>
+            {suffix}
+        </React.Fragment>
+    );
+};
 
 interface DashboardKPIsProps {
     pipelineValue: number;
@@ -13,30 +31,32 @@ export const DashboardKPIs: React.FC<DashboardKPIsProps> = ({
     marketingROAS,
     revenueAtRisk
 }) => {
-    // KPI 카드 데이터 (상태별 Glow 컬러 지정)
     const kpis = [
         {
             title: "Today's Pipeline",
-            value: `£${pipelineValue.toLocaleString()}`,
+            value: pipelineValue,
+            prefix: "£",
             icon: PoundSterling,
-            color: "from-blue-500 to-cyan-400",
-            glow: "shadow-[0_0_20px_rgba(0,210,255,0.15)]",
-            progress: "75%" // Placeholder percentage or calculate based on goal
+            color: "from-emerald-400 to-emerald-600",
+            glow: "shadow-luxury",
+            progress: "75%"
         },
         {
             title: "Marketing ROAS",
-            value: `${marketingROAS.toFixed(1)}x`,
+            value: marketingROAS,
+            suffix: "x",
             icon: TrendingUp,
-            color: "from-emerald-400 to-sage-500",
-            glow: "shadow-[0_0_20px_rgba(42,245,152,0.15)]",
+            color: "from-blue-400 to-indigo-600",
+            glow: "shadow-luxury",
             progress: "60%"
         },
         {
             title: "Revenue at Risk",
-            value: `£${revenueAtRisk.toLocaleString()}`,
+            value: revenueAtRisk,
+            prefix: "£",
             icon: AlertCircle,
-            color: "from-rose-500 to-red-400",
-            glow: "shadow-[0_0_20px_rgba(244,63,94,0.15)]",
+            color: "from-rose-400 to-rose-600",
+            glow: "shadow-luxury",
             alert: true,
             progress: "15%"
         }
@@ -58,19 +78,20 @@ export const DashboardKPIs: React.FC<DashboardKPIsProps> = ({
                         hidden: { y: 20, opacity: 0 },
                         visible: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 300, damping: 24 } }
                     }}
-                    className={`relative bg-white rounded-3xl p-6 border border-slate-200 shadow-sm ${kpi.glow}`}
+                    whileHover={{ y: -4, scale: 1.01 }}
+                    className={`relative bg-white rounded-3xl p-6 border-[0.5px] border-slate-200 shadow-luxury transition-all duration-300 hover:shadow-luxury-hover active:scale-[0.98] ${kpi.glow}`}
                 >
                     <div className="flex justify-between items-start mb-4">
-                        <span className="text-slate-400 font-black text-[10px] uppercase tracking-[0.2em]">{kpi.title}</span>
-                        <kpi.icon strokeWidth={2.5} className={`w-5 h-5 ${kpi.alert ? 'text-rose-500' : 'text-slate-300'}`} />
+                        <span className="text-slate-400 font-bold text-[9px] uppercase tracking-[0.25em]">{kpi.title}</span>
+                        <div className={`p-2 rounded-xl bg-slate-50 border border-slate-100 ${kpi.alert ? 'text-rose-500' : 'text-emerald-500'}`}>
+                            <kpi.icon strokeWidth={2.5} className="w-4 h-4" />
+                        </div>
                     </div>
 
-                    {/* [CEO 인사이트] tabular-nums로 숫자가 바뀔 때 흔들림 방지 */}
-                    <div className={`text-4xl font-black tabular-nums tracking-tighter ${kpi.alert ? 'text-rose-600 animate-pulse' : 'text-slate-900'}`}>
-                        {kpi.value}
+                    <div className={`text-4xl font-black tabular-nums tracking-tighter ${kpi.alert ? 'text-rose-600' : 'text-slate-900'}`}>
+                        <CountUp to={kpi.value} prefix={kpi.prefix} suffix={kpi.suffix} />
                     </div>
 
-                    {/* [CEO 인사이트] 얇고 세련된 그라데이션 진행률 바 */}
                     <div className="mt-5 w-full bg-slate-100 rounded-full h-1 overflow-hidden">
                         <motion.div
                             initial={{ width: 0 }}

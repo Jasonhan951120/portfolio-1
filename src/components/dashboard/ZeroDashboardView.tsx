@@ -2,7 +2,23 @@ import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useSpring } from 'framer-motion';
 import { ConsultationRequest } from '../../lib/supabase';
 import { SERVICE_CONVERSION_VALUES } from '../../lib/constants';
-import { MessageCircle, CheckCircle, Sparkles, X, Send, SkipForward } from 'lucide-react';
+import {
+    CheckCircle,
+    ArrowRight,
+    RefreshCw,
+    Zap,
+    TrendingUp,
+    Clock,
+    Users,
+    Sparkles,
+    ChevronRight,
+    Target,
+    Activity,
+    Lock,
+    ArrowUpRight,
+    BarChart3,
+    MessageCircle, X, Send, SkipForward
+} from 'lucide-react';
 import { CSVImportZone } from '../CSVImportZone';
 import confetti from 'canvas-confetti';
 import { SecureHistoryToast } from './SecureHistoryToast';
