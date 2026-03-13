@@ -324,7 +324,7 @@ export function ZeroDashboardView({
             <div className="w-full max-w-7xl grid grid-cols-12 gap-8 relative z-10">
                 
                 {/* 1. HERO METRIC (Span 8) */}
-                <div className="col-span-12 lg:col-span-8 bg-white rounded-2xl p-10 border border-slate-200/60 shadow-[0_2px_8px_rgba(0,0,0,0.02),_0_12px_32px_rgba(0,0,0,0.04)] flex flex-col justify-center">
+                <div className="col-span-12 lg:col-span-8 bg-white rounded-2xl p-10 border-[0.5px] border-slate-200/60 shadow-[0_2px_8px_rgba(0,0,0,0.02),_0_12px_32px_rgba(0,0,0,0.04)] flex flex-col justify-center">
                     <AnimatePresence mode="wait">
                         {heroState === 'secured' ? (
                             <motion.div
@@ -384,7 +384,7 @@ export function ZeroDashboardView({
                 
                 {/* 3. QUICK ACTIONS / NEWS (Span 4) */}
                 <div className="hidden lg:flex lg:col-span-4 flex-col gap-8">
-                    <div className="bg-white rounded-2xl p-8 border border-slate-200/60 shadow-[0_2px_8px_rgba(0,0,0,0.02),_0_12px_32px_rgba(0,0,0,0.04)] grow">
+                    <div className="bg-white rounded-2xl p-8 border-[0.5px] border-slate-200/60 shadow-[0_2px_8px_rgba(0,0,0,0.02),_0_12px_32px_rgba(0,0,0,0.04)] grow">
                         <h5 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-6">Patient Pipeline</h5>
                         <div className="space-y-6">
                             {[1, 2, 3].map(i => (
