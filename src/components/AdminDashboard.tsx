@@ -2142,8 +2142,8 @@ export default function AdminDashboard() {
               <div className="flex items-center gap-3">
                 <div className="h-6 w-[2px] bg-emerald-500 rounded-full" />
                 <div className="flex flex-col">
-                  <span className="text-[9px] font-black uppercase tracking-[0.4em] text-slate-400">Clinic Secured</span>
-                  <span className="text-lg font-black tabular-nums text-slate-900 tracking-tighter">£{totalAtRisk.toLocaleString()}</span>
+                  <span className="text-[10px] font-medium text-slate-400">Clinic Secured</span>
+                  <span className="text-2xl font-black tabular-nums text-slate-900 tracking-tighter">£{totalAtRisk.toLocaleString()}</span>
                 </div>
               </div>
 
@@ -2320,24 +2320,24 @@ export default function AdminDashboard() {
       )}
 
       {/* Legal & Security Footer */}
-      <footer className="mt-20 pb-12 px-6 border-t border-slate-200 bg-white/50 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+      <footer className="mt-20 py-8 px-6 border-t border-slate-200 bg-white/50 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center">
               <Shield className="w-5 h-5 text-emerald-500" />
             </div>
             <div>
-              <p className="text-[10px] font-black text-slate-900 uppercase tracking-[0.2em]">Enterprise Guard</p>
-              <p className="text-[10px] text-emerald-600 font-bold">Bank-Grade Protection Active</p>
+              <p className="text-[10px] font-black text-slate-900 uppercase tracking-widest">Enterprise Guard</p>
+              <p className="text-[10px] text-slate-400 font-medium">Compliance Protocol Active</p>
             </div>
           </div>
 
-          <div className="max-w-3xl text-center md:text-right">
+          <div className="max-w-2xl text-center md:text-right">
             <p className="text-[10px] text-slate-400 leading-relaxed font-medium">
-              Hanlan OC operates on a strict <span className="text-slate-900 font-bold uppercase tracking-tighter">"Privacy-First, Zero-Retention"</span> architecture compliant with UK GDPR. 
-              By using Hanlan OC, the Clinic acknowledges and agrees that it acts as the sole <span className="text-slate-900">"Data Controller"</span> with full legal liability for patient data under the UK GDPR. 
-              Hanlan OC acts strictly as a <span className="text-slate-900">"Data Processor"</span> providing a local visualization tool. 
-              Your continued use of the service constitutes explicit acceptance of our standard <span className="text-emerald-600 font-bold uppercase tracking-tighter">Data Processing Agreement (DPA)</span>.
+              Hanlan OC operates on a strict <span className="text-slate-500 font-bold uppercase tracking-tight">"Privacy-First, Zero-Retention"</span> architecture compliant with UK GDPR. 
+              By using Hanlan OC, the Clinic acknowledges and agrees that it acts as the sole <span className="text-slate-500">"Data Controller"</span> with full legal liability for patient data under the UK GDPR. 
+              Hanlan OC acts strictly as a <span className="text-slate-500">"Data Processor"</span> providing a local visualization tool. 
+              Your continued use of the service constitutes explicit acceptance of our standard <span className="text-slate-500 font-bold uppercase tracking-tight">Data Processing Agreement (DPA)</span>.
             </p>
           </div>
         </div>

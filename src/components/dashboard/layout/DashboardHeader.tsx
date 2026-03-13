@@ -44,9 +44,15 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                             <ArrowLeft className="w-3 h-3" strokeWidth={2} /> Back to Site
                         </Link>
                         {isAdmin && (
-                            <span className="flex items-center gap-1.5 px-2 py-0.5 bg-emerald-500/10 text-emerald-600 rounded-full text-[9px] font-black uppercase tracking-widest border border-emerald-500/20">
-                                <ShieldCheck className="w-2.5 h-2.5" /> High-Level Admin
-                            </span>
+                            <div className="flex items-center gap-3">
+                                <span className="flex items-center gap-1.5 px-2 py-0.5 bg-emerald-500/10 text-emerald-600 rounded-full text-[9px] font-black uppercase tracking-widest border border-emerald-500/20">
+                                    <ShieldCheck className="w-2.5 h-2.5" /> High-Level Admin
+                                </span>
+                                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-50 border border-slate-200/60 shadow-sm">
+                                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                                    <span className="text-[10px] font-medium text-slate-500">Bank-Grade Protection Active</span>
+                                </div>
+                            </div>
                         )}
                     </div>
 

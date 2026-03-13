@@ -140,7 +140,7 @@ export function LeadsTab({
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
-                                className="p-6 bg-red-50/80 rounded-[32px] border border-red-100/50 flex flex-col gap-4 relative overflow-hidden group hover:bg-red-50 transition-colors shadow-[0_8px_30px_rgb(239,68,68,0.05)]"
+                                className="p-6 bg-red-50/80 rounded-2xl border border-red-100/50 flex flex-col gap-4 relative overflow-hidden group hover:bg-red-50 transition-colors shadow-[0_2px_8px_rgba(239,68,68,0.02),_0_12px_32px_rgba(239,68,68,0.04)]"
                             >
                                 <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                                     <TrendingUp className="w-32 h-32 text-red-500 rotate-180" />
@@ -169,7 +169,7 @@ export function LeadsTab({
                     </AnimatePresence>
 
                     {/* Revenue Potential Card */}
-                    <div className="bg-white border border-[rgba(0,0,0,0.04)] rounded-[40px] p-10 shadow-[0_1px_2px_rgba(0,0,0,0.02),_0_8px_24px_-4px_rgba(0,0,0,0.04)]">
+                    <div className="bg-white border border-slate-200/60 rounded-2xl p-10 shadow-[0_2px_8px_rgba(0,0,0,0.02),_0_12px_32px_rgba(0,0,0,0.04)]">
                         <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-8">Revenue Distribution</h3>
                         <DonutChart
                             segments={DONUT_SEGMENTS}

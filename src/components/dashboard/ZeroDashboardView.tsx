@@ -120,9 +120,10 @@ function HotLeadCard({
                     relative w-full bg-white rounded-[44px] p-8
                     flex flex-col gap-6
                     border transition-all duration-700 ease-out
+                    rounded-2xl
                     ${sent
                         ? 'border-emerald-500/20 shadow-[0_20px_40px_rgba(16,185,129,0.1)]'
-                        : 'border-slate-200/60 shadow-luxury'
+                        : 'border-slate-200/60 shadow-[0_2px_8px_rgba(0,0,0,0.02),_0_12px_32px_rgba(0,0,0,0.04)]'
                     }
                 `}
             >
@@ -141,11 +142,11 @@ function HotLeadCard({
                 <div className="relative z-10">
                     <div className="flex justify-between items-start">
                         <div>
-                            <p className={`metric-label-muted mb-3 transition-colors duration-700 ${sent ? 'text-emerald-500' : 'text-slate-400'}`}>
+                            <p className={`text-xs font-medium mb-3 transition-colors duration-700 ${sent ? 'text-emerald-500' : 'text-slate-400'}`}>
                                 {sent ? '✓ Revenue Secured' : '⚡ Priority Action'}
                             </p>
                             <h3 className="text-2xl font-black text-slate-900 tracking-tighter leading-none uppercase">{lead.name}</h3>
-                            <p className="metric-label-muted mt-2">{lead.service}</p>
+                            <p className="text-xs text-slate-400 font-medium mt-2">{lead.service}</p>
                         </div>
                         {isVIP && (
                             <div className="p-3 bg-emerald-50 border border-emerald-100 rounded-2xl flex-shrink-0">
@@ -157,12 +158,12 @@ function HotLeadCard({
 
                 {/* ── POTENTIAL VALUE ── */}
                 <div className="relative z-10">
-                    <p className="metric-label-muted mb-2">Estimated Value</p>
+                    <p className="text-xs text-slate-400 font-medium mb-2">Estimated Value</p>
                     <motion.p
                         animate={{ color: sent ? '#10b981' : '#0F172A' }}
                         transition={{ duration: 0.7 }}
-                        className="metric-authority"
-                        style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', lineHeight: 1 }}
+                        className="text-5xl font-black text-slate-900 tracking-tighter tabular-nums"
+                        style={{ lineHeight: 1 }}
                     >
                         £{value.toLocaleString()}
                     </motion.p>
@@ -323,7 +324,7 @@ export function ZeroDashboardView({
             <div className="w-full max-w-7xl grid grid-cols-12 gap-8 relative z-10">
                 
                 {/* 1. HERO METRIC (Span 8) */}
-                <div className="col-span-12 lg:col-span-8 bg-white rounded-[44px] p-10 border border-slate-200/60 shadow-luxury flex flex-col justify-center">
+                <div className="col-span-12 lg:col-span-8 bg-white rounded-2xl p-10 border border-slate-200/60 shadow-[0_2px_8px_rgba(0,0,0,0.02),_0_12px_32px_rgba(0,0,0,0.04)] flex flex-col justify-center">
                     <AnimatePresence mode="wait">
                         {heroState === 'secured' ? (
                             <motion.div
@@ -331,15 +332,15 @@ export function ZeroDashboardView({
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
                             >
-                                <p className="metric-label-muted text-emerald-600 mb-5">
+                                <p className="text-xs text-emerald-600 font-medium mb-5">
                                     🎉 Portfolio Secured — Today
                                 </p>
-                                <div className="text-5xl metric-authority leading-none">
+                                <div className="text-5xl font-black text-emerald-600 tracking-tighter tabular-nums leading-none">
                                     £{totalSecured.toLocaleString()}
                                 </div>
                                 <div className="flex items-center gap-2 mt-8">
                                     <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                                    <span className="metric-label-muted text-emerald-500">All Priority Cases Handled</span>
+                                    <span className="text-xs text-emerald-500 font-medium">All Priority Cases Handled</span>
                                 </div>
                             </motion.div>
                         ) : (
@@ -348,15 +349,15 @@ export function ZeroDashboardView({
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
                             >
-                                <p className="metric-label-muted mb-5">
+                                <p className="text-xs text-slate-400 font-medium mb-5">
                                     ⚠ Identified Revenue Opportunities
                                 </p>
-                                <div className="text-5xl metric-authority leading-none">
+                                <div className="text-5xl font-black text-slate-900 tracking-tighter tabular-nums leading-none">
                                     £{totalAtRisk.toLocaleString()}
                                 </div>
                                 <div className="flex items-center gap-2 mt-8">
                                     <div className="w-2 h-2 rounded-full bg-emerald-500 scale-75" />
-                                    <span className="metric-label-muted">Action Required: {activeLeads.length} High-Intent Patients</span>
+                                    <span className="text-xs text-slate-400 font-medium">Action Required: {activeLeads.length} High-Intent Patients</span>
                                 </div>
                             </motion.div>
                         )}
@@ -364,7 +365,7 @@ export function ZeroDashboardView({
                 </div>
 
                 {/* 2. SECONDARY STAT: ENGAGEMENT (Span 4) */}
-                <div className="col-span-12 lg:col-span-4 bg-emerald-500 rounded-[44px] p-10 flex flex-col justify-between text-white shadow-lg shadow-emerald-200">
+                <div className="col-span-12 lg:col-span-4 bg-emerald-500 rounded-2xl p-10 flex flex-col justify-between text-white shadow-lg shadow-emerald-200">
                     <div className="flex justify-between items-start">
                         <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center">
                             <CheckCircle className="w-6 h-6 text-white" />
@@ -383,7 +384,7 @@ export function ZeroDashboardView({
                 
                 {/* 3. QUICK ACTIONS / NEWS (Span 4) */}
                 <div className="hidden lg:flex lg:col-span-4 flex-col gap-8">
-                    <div className="bg-white rounded-[44px] p-8 border border-slate-200/60 shadow-luxury grow">
+                    <div className="bg-white rounded-2xl p-8 border border-slate-200/60 shadow-[0_2px_8px_rgba(0,0,0,0.02),_0_12px_32px_rgba(0,0,0,0.04)] grow">
                         <h5 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-6">Patient Pipeline</h5>
                         <div className="space-y-6">
                             {[1, 2, 3].map(i => (
@@ -398,7 +399,7 @@ export function ZeroDashboardView({
                         </div>
                     </div>
                     
-                    <div className="bg-slate-900 rounded-[44px] p-8 text-white flex items-center justify-between">
+                    <div className="bg-slate-900 rounded-2xl p-8 text-white flex items-center justify-between">
                         <div>
                             <p className="text-[9px] font-black uppercase tracking-widest text-slate-500 mb-1">Clinic Focus</p>
                             <h6 className="text-lg font-bold">Implant High Intensity</h6>
@@ -419,7 +420,7 @@ export function ZeroDashboardView({
                             {/* Ghost stack cards behind */}
                             {activeLeads.length > 1 && (
                                 <motion.div
-                                    className="absolute inset-x-0 h-full bg-white border border-slate-100 rounded-[44px] -z-10 shadow-sm"
+                                    className="absolute inset-x-0 h-full bg-white border border-slate-100 rounded-2xl -z-10 shadow-sm"
                                     initial={false}
                                     animate={{ scale: 0.96, y: 12, opacity: 0.6 }}
                                     transition={{ type: "spring", stiffness: 300, damping: 25 }}
@@ -427,7 +428,7 @@ export function ZeroDashboardView({
                             )}
                             {activeLeads.length > 2 && (
                                 <motion.div
-                                    className="absolute inset-x-0 h-full bg-white border border-slate-100 rounded-[44px] -z-20 shadow-sm"
+                                    className="absolute inset-x-0 h-full bg-white border border-slate-100 rounded-2xl -z-20 shadow-sm"
                                     initial={false}
                                     animate={{ scale: 0.92, y: 24, opacity: 0.3 }}
                                     transition={{ type: "spring", stiffness: 300, damping: 25 }}
@@ -444,7 +445,7 @@ export function ZeroDashboardView({
                             key="empty"
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            className="w-full bg-white border border-slate-200 rounded-[44px] p-12 text-center shadow-sm relative overflow-hidden"
+                            className="w-full bg-white border border-slate-200 rounded-2xl p-12 text-center shadow-[0_2px_8px_rgba(0,0,0,0.02),_0_12px_32px_rgba(0,0,0,0.04)] relative overflow-hidden"
                         >
                             <div className="w-20 h-20 bg-emerald-50 border border-emerald-100 rounded-3xl flex items-center justify-center mx-auto mb-8 relative z-10">
                                 <CheckCircle className="w-10 h-10 text-emerald-500" />
