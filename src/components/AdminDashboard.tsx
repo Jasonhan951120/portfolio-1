@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { Link, useNavigate } from "react-router-dom";
 import { supabase, type ConsultationRequest, type Profile, type Invitation } from "../lib/supabase";
+import { DEMO_LEADS } from "../lib/demoData";
 import { useAuth } from "../contexts/AuthContext";
 import { trackEvent } from "../lib/analytics";
 import { generateDailyBriefing } from "../lib/ai-assistant-service";
@@ -473,7 +474,21 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
             <span className="text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-slate-50 text-slate-500 border border-slate-100 uppercase">{lead.service}</span>
           </div>
           <div className="pt-3 border-t border-slate-100 flex justify-end gap-2 pointer-events-auto opacity-0 group-hover:opacity-100 transition-all">
-            <button onClick={() => onOpenPTMode(lead)} className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors active:scale-90"><Monitor className="w-3.5 h-3.5" /></button>
+            {lead.phone && (
+              <button 
+                onClick={() => {
+                  const clinicName = clinicData?.name || "Hanlan OC";
+                  const message = encodeURIComponent(`Hello ${lead.name}, this is the reception team at ${clinicName}. We received your inquiry regarding ${lead.service}. Would you be available for a brief consultation this week?`);
+                  window.open(`https://wa.me/${lead.phone.replace(/[^0-9]/g, '')}?text=${message}`, '_blank');
+                }}
+                className="p-1.5 text-emerald-500 hover:bg-emerald-50 rounded-lg transition-colors active:scale-90 flex items-center gap-1.5 px-2"
+                title="Send WhatsApp"
+              >
+                <MessageCircle className="w-3.5 h-3.5" />
+                <span className="text-[9px] font-bold uppercase tracking-tighter">WhatsApp</span>
+              </button>
+            )}
+            <button onClick={() => onOpenPTMode(lead)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors active:scale-90"><Monitor className="w-3.5 h-3.5" /></button>
             <button onClick={() => setSelectedLead(lead)} className="p-1.5 text-slate-400 hover:bg-slate-50 rounded-lg transition-colors active:scale-90"><FileText className="w-3.5 h-3.5" /></button>
           </div>
         </div>
@@ -1318,7 +1333,12 @@ export default function AdminDashboard() {
     if (error) {
       console.error("Error fetching leads:", error);
     } else {
-      setLeads(data || []);
+      let finalLeads = data || [];
+      // Demo Injection: If no real leads from DB, inject the high-ticket portfolio
+      if (finalLeads.length === 0) {
+        finalLeads = DEMO_LEADS as ConsultationRequest[];
+      }
+      setLeads(finalLeads);
       if (!append && data) {
         try {
           localStorage.setItem(`leads_cache_${profile.clinic_id}`, JSON.stringify(data.slice(0, 50)));
