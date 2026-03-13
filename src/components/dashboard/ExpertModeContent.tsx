@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { 
   TrendingUp, BarChart2, Users, Settings, 
   Target, Zap, Shield, PieChart, Database, Sparkles,
@@ -190,6 +191,17 @@ export function ExpertModeContent() {
             <Zap className="w-4 h-4 text-gray-600 group-hover:text-[#00FFA3]" />
           </button>
           
+          <Link 
+            to="/admin/security"
+            className="w-full p-4 bg-emerald-500/10 hover:bg-emerald-500/20 rounded-2xl flex items-center justify-between group transition-all border border-emerald-500/20"
+          >
+            <div className="flex items-center gap-3">
+              <Shield className="w-5 h-5 text-emerald-400" />
+              <span className="text-sm font-bold text-emerald-400">🛡️ Security & Compliance</span>
+            </div>
+            <Zap className="w-4 h-4 text-emerald-400 animate-pulse" />
+          </Link>
+
           <button className="w-full p-4 bg-white/5 hover:bg-white/10 rounded-2xl flex items-center justify-between group transition-all">
             <div className="flex items-center gap-3">
               <Settings className="w-5 h-5 text-gray-400" />
