@@ -45,6 +45,8 @@ import { ZeroDashboardView } from "./dashboard/ZeroDashboardView";
 import { ExpertModeDrawer } from "./dashboard/ExpertModeDrawer";
 import { PMSLogDrawer } from "./dashboard/backoffice/PMSLogDrawer";
 import { ClinicMetaModal } from "./dashboard/backoffice/ClinicMetaModal";
+import { useDashboardStore } from "../store/useDashboardStore";
+import { SlotNumber } from "./SlotNumber";
 
 // Onboarding Tooltip Component (Medical Precision)
 const OnboardingTooltip = ({ message, onClose }: { message: string; onClose: () => void }) => (
@@ -478,7 +480,7 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
           ${isDragging ? 'opacity-50' : ''} 
           ${isOverdue ? 'border-red-500/30' : ''}
           ${showVIPPulse ? 'ring-2 ring-red-400 animate-pulse' : ''}
-          ${!isMatchingFocus && focusMode !== "All" ? 'grayscale opacity-40 scale-[0.98]' : 'scale-100'}
+          ${!isMatchingFocus && focusMode !== "All" ? 'grayscale opacity-50 scale-[0.9] translate-y-4' : 'ring-2 ring-emerald-400/50 shadow-[0_0_20px_rgba(16,185,129,0.1)]'}
         `}
       >
         <div {...attributes} {...listeners} className="absolute inset-0 z-0 cursor-grab" />
@@ -699,7 +701,15 @@ export default function AdminDashboard() {
   const [multiBranchMode, setMultiBranchMode] = useState(false);
   const [selectedBranch, setSelectedBranch] = useState(BRANCHES[0]);
   const [isBranchDropdownOpen, setIsBranchDropdownOpen] = useState(false);
-  const [leads, setLeads] = useState<ConsultationRequest[]>([]);
+  const { 
+    leads, 
+    activeCategory: focusMode, 
+    setLeads, 
+    setActiveCategory: setFocusMode, 
+    getStats 
+  } = useDashboardStore();
+  
+  const { totalRevenue, unsecuredPipeline, pipelineValue: kpiPipelineValue } = getStats();
   const [performedTreatments, setPerformedTreatments] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [isBroadcasting, setIsBroadcasting] = useState(false);
@@ -750,7 +760,6 @@ export default function AdminDashboard() {
   const [editingTreatment, setEditingTreatment] = useState<any | null>(null);
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [focusMode, setFocusMode] = useState<string>("All");
 
   // Toast Notification State
 
@@ -2194,9 +2203,11 @@ export default function AdminDashboard() {
                   <span className="text-[10px] font-medium text-slate-400">
                     {focusMode === "All" ? "Unsecured Pipeline" : `Unsecured ${focusMode} Pipeline`}
                   </span>
-                  <span className="text-2xl font-black tabular-nums text-slate-900 tracking-tighter">
-                    £{totalAtRisk.toLocaleString()}
-                  </span>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-2xl font-black tabular-nums text-slate-900 tracking-tighter">
+                      <SlotNumber value={unsecuredPipeline} prefix="£" />
+                    </span>
+                  </div>
                 </div>
               </div>
 

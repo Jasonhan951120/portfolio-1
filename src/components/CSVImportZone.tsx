@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { UploadCloud, CheckCircle2, XCircle, Loader2, Lock, ShieldCheck } from 'lucide-react';
 import Papa from 'papaparse';
 import { supabase } from '../lib/supabase';
+import { useDashboardStore } from '../store/useDashboardStore';
 import { SERVICE_CONVERSION_VALUES } from '../lib/constants';
 import { categorizeTreatment } from '../lib/utils/treatmentMapping';
 import { SmartMappingModal } from './dashboard/backoffice/SmartMappingModal';
