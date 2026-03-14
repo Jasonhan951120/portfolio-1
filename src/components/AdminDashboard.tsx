@@ -137,6 +137,42 @@ const STATUS_COLORS: Record<string, string> = {
   "Future Pipeline": "text-slate-600 border-slate-200 bg-slate-100/50",
 };
 
+// Premium Onboarding Empty State (Apple-grade)
+const OnboardingEmptyState = ({ onInjectSample }: { onInjectSample: () => void }) => (
+  <motion.div 
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    className="flex flex-col items-center justify-center py-32 space-y-8 text-center"
+  >
+    <div className="relative group">
+       <div className="absolute -inset-4 bg-emerald-500/5 rounded-full blur-2xl group-hover:bg-emerald-500/10 transition-all duration-700" />
+       <div className="relative w-24 h-24 bg-white rounded-[32px] border border-slate-200 shadow-2xl flex items-center justify-center">
+          <FileText className="w-10 h-10 text-slate-300" strokeWidth={1.5} />
+       </div>
+    </div>
+    
+    <div className="space-y-3 max-w-md">
+      <h2 className="text-2xl font-black text-slate-800 tracking-tight italic">아직 업로드된 환자 데이터가 없습니다.</h2>
+      <p className="text-slate-400 text-sm font-medium leading-relaxed">
+        CSV 파일을 업로드하여 AI 매출 분석을 시작하거나, <br />
+        샘플 데이터를 통해 대시보드의 강력함을 미리 체험해 보세요.
+      </p>
+    </div>
+
+    <button
+      onClick={onInjectSample}
+      className="group relative px-8 py-4 bg-emerald-500 rounded-3xl overflow-hidden transition-all hover:scale-[1.02] active:scale-[0.98] shadow-[0_20px_40px_rgba(16,185,129,0.2)]"
+    >
+      <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+      <div className="absolute -inset-1 bg-emerald-400/30 blur-xl opacity-0 group-hover:opacity-100 animate-pulse transition-opacity" />
+      <span className="relative flex items-center gap-3 text-white font-black uppercase tracking-widest text-xs">
+         <Sparkles className="w-4 h-4" />
+         ✨ 샘플 데이터로 대시보드 미리보기
+      </span>
+    </button>
+  </motion.div>
+);
+
 // Static staff list removed. Using dynamic list from teamMembers and leads instead.
 
 export interface OmniMessage {
@@ -703,9 +739,12 @@ export default function AdminDashboard() {
   const [isBranchDropdownOpen, setIsBranchDropdownOpen] = useState(false);
   const { 
     leads, 
-    activeCategory: focusMode, 
+    activeCategory, 
+    activeTab,
     setLeads, 
-    setActiveCategory: setFocusMode, 
+    setActiveCategory, 
+    setActiveTab,
+    injectSampleData,
     getStats 
   } = useDashboardStore();
   
@@ -717,7 +756,6 @@ export default function AdminDashboard() {
   const [selectedLead, setSelectedLead] = useState<ConsultationRequest | null>(null);
   const [isRecording, setIsRecording] = useState(false);
   const [dictationText, setDictationText] = useState("");
-  const [activeTab, setActiveTab] = useState<"action" | "pipeline" | "vault">("action");
   const [isExpertModeOpen, setIsExpertModeOpen] = useState(false);
   const [analyticsMonth, setAnalyticsMonth] = useState<number>(new Date().getMonth());
   const [analyticsYear, setAnalyticsYear] = useState<number>(new Date().getFullYear());
@@ -2174,7 +2212,7 @@ export default function AdminDashboard() {
 
   // Loss Aversion Metric (for header banner)
   const totalAtRisk = useMemo(() =>
-    leads
+    (leads ?? [])
       .filter(l => {
         if (l.status !== 'New Lead') return false;
         const baseline = l.importedAt || new Date(l.created_at).getTime();
@@ -2265,7 +2303,7 @@ export default function AdminDashboard() {
 
               {/* Right: Expert Mode + Profile (Tactile Interaction) */}
               <div className="flex items-center gap-4">
-                {activeTab === 'vault' && (
+                {activeTab === 'VAULT' && (
                   <motion.div
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -2337,44 +2375,56 @@ export default function AdminDashboard() {
                   exit={{ opacity: 0 }}
                   className="space-y-0"
                 >
-                  {/* Default Action View within Pipeline */}
-                  <ZeroDashboardView
-                    leads={leads}
-                    clinicId={profile?.clinic_id || ''}
-                    specialty={profile?.specialty}
-                    onStatusChange={updateStatus}
-                    onImportComplete={fetchLeads}
-                  />
+                  {/* Default Action View within Pipeline (Conditional Empty State) */}
+                  {leads?.length === 0 ? (
+                    <OnboardingEmptyState onInjectSample={() => {
+                        const { injectSampleData } = useDashboardStore.getState();
+                        injectSampleData();
+                        trackEvent('onboarding_sample_data_clicked');
+                    }} />
+                  ) : (
+                    <>
+                      <ZeroDashboardView
+                        leads={leads ?? []}
+                        clinicId={profile?.clinic_id || ''}
+                        specialty={profile?.specialty}
+                        onStatusChange={updateStatus}
+                        onImportComplete={fetchLeads}
+                      />
 
-                  {/* Kanban Board within Pipeline */}
-                  <motion.div
-                    className="max-w-7xl mx-auto px-6 py-10 space-y-8"
-                  >
-                    <div className="flex justify-between items-end">
-                      <h2 className="text-3xl font-bold text-slate-900 tracking-tight">Lead Flow Board</h2>
-                      <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">{leads.length} total leads</p>
-                    </div>
+                      {/* Kanban Board within Pipeline */}
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="max-w-7xl mx-auto px-6 py-10 space-y-8"
+                      >
+                        <div className="flex justify-between items-end">
+                          <h2 className="text-3xl font-bold text-slate-900 tracking-tight italic uppercase">Lead Flow Board</h2>
+                          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">{(leads ?? []).length} total leads</p>
+                        </div>
 
-                    <div className="flex overflow-x-auto pb-10 gap-4 custom-scrollbar">
-                      {KANBAN_COLUMNS.map(col => (
-                        <KanbanColumn
-                          key={col}
-                          columnId={col}
-                          columnLeads={leads.filter(l => l.status === col)}
-                          setDepositModal={() => { }}
-                          setSelectedLead={setSelectedLead}
-                          updateStatus={updateStatus}
-                          STAFF_LIST={dynamicStaffList}
-                          updateAssignedTo={updateAssignedTo}
-                          timeAgo={timeAgo}
-                          clinic={profile}
-                          onOpenPTMode={() => { }}
-                          selectedDate={selectedDate}
-                          focusMode={activeCategory}
-                        />
-                      ))}
-                    </div>
-                  </motion.div>
+                        <div className="flex overflow-x-auto pb-10 gap-4 custom-scrollbar">
+                          {KANBAN_COLUMNS.map(col => (
+                            <KanbanColumn
+                              key={col}
+                              columnId={col}
+                              columnLeads={(leads ?? []).filter(l => l.status === col)}
+                              setDepositModal={() => { }}
+                              setSelectedLead={setSelectedLead}
+                              updateStatus={updateStatus}
+                              STAFF_LIST={dynamicStaffList}
+                              updateAssignedTo={updateAssignedTo}
+                              timeAgo={timeAgo}
+                              clinic={profile}
+                              onOpenPTMode={() => { }}
+                              selectedDate={selectedDate}
+                              focusMode={activeCategory}
+                            />
+                          ))}
+                        </div>
+                      </motion.div>
+                    </>
+                  )}
                 </motion.div>
               )}
 

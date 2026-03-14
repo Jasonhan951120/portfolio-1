@@ -9,6 +9,7 @@ interface DashboardState {
   setActiveCategory: (category: string) => void;
   setActiveTab: (tab: 'PIPELINE' | 'VAULT' | 'SECURITY') => void;
   updateLead: (id: string, updates: Partial<ConsultationRequest>) => void;
+  injectSampleData: () => void;
   
   // Derived selectors (implemented as functions or used via compute)
   getFilteredLeads: () => ConsultationRequest[];
@@ -35,22 +36,26 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
     leads: state.leads.map((l) => l.id === id ? { ...l, ...updates } : l)
   })),
 
+  injectSampleData: () => {
+    const { DEMO_LEADS } = require('../lib/demoData');
+    set({ leads: DEMO_LEADS as ConsultationRequest[] });
+  },
+
   getFilteredLeads: () => {
     const { leads, activeCategory } = get();
     if (activeCategory === 'All') return leads;
-    return leads.filter((l) => l.category === activeCategory || l.service === activeCategory);
+    return (leads ?? []).filter((l) => l.category === activeCategory || l.service === activeCategory);
   },
 
   getStats: () => {
     const filteredLeads = get().getFilteredLeads();
     
-    const totalRevenue = filteredLeads.reduce((sum, l) => {
-      // Logic from AdminDashboard.tsx for value
-      const value = l.potential_value || 1000; // Placeholder logic, will refine
+    const totalRevenue = (filteredLeads ?? []).reduce((sum, l) => {
+      const value = l.potential_value || 1000;
       return sum + value;
     }, 0);
 
-    const unsecuredPipeline = filteredLeads
+    const unsecuredPipeline = (filteredLeads ?? [])
       .filter(l => {
         if (l.status !== 'New Lead') return false;
         const baseline = l.importedAt || new Date(l.created_at).getTime();
@@ -58,7 +63,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
       })
       .reduce((sum, l) => sum + (l.potential_value || 1000), 0);
 
-    const pipelineValue = filteredLeads.reduce((sum, l) => {
+    const pipelineValue = (filteredLeads ?? []).reduce((sum, l) => {
       if (l.status === "Abandoned" || l.status === "Sale Closed") return sum;
       return sum + (l.potential_value || 1000);
     }, 0);

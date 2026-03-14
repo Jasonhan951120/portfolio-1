@@ -26,8 +26,8 @@ export function KanbanColumn({ id, title, leads, onLeadClick }: KanbanColumnProp
                 ref={setNodeRef}
                 className="flex-grow bg-gray-50/50 rounded-[32px] p-3 border border-dashed border-gray-200 min-h-[500px] space-y-3"
             >
-                <SortableContext items={leads.map(l => l.id)} strategy={verticalListSortingStrategy}>
-                    {leads.map((lead) => (
+                <SortableContext items={(leads ?? []).map(l => l.id)} strategy={verticalListSortingStrategy}>
+                    {(leads ?? []).map((lead) => (
                         <KanbanCard
                             key={lead.id}
                             lead={lead}
