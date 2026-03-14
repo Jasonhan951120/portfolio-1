@@ -47,6 +47,8 @@ import { PMSLogDrawer } from "./dashboard/backoffice/PMSLogDrawer";
 import { ClinicMetaModal } from "./dashboard/backoffice/ClinicMetaModal";
 import { useDashboardStore } from "../store/useDashboardStore";
 import { SlotNumber } from "./SlotNumber";
+import { AICaseNotePopover } from "./dashboard/AICaseNotePopover";
+import { AuditTrailModal } from "./dashboard/AuditTrailModal";
 
 // Onboarding Tooltip Component (Medical Precision)
 const OnboardingTooltip = ({ message, onClose }: { message: string; onClose: () => void }) => (
@@ -114,8 +116,7 @@ function useDebounce<T>(value: T, delay: number): T {
   return debouncedValue;
 }
 
-function timeAgo(dateStr: string): string {
-
+function timeAgo(dateStr: string, region: 'UK' | 'US' = 'UK'): string {
   const diff = Date.now() - new Date(dateStr).getTime();
   const mins = Math.floor(diff / 60000);
   if (mins < 1) return "Just now";
@@ -124,7 +125,7 @@ function timeAgo(dateStr: string): string {
   if (hrs < 24) return `${hrs}h ago`;
   const days = Math.floor(hrs / 24);
   if (days < 7) return `${days}d ago`;
-  return new Date(dateStr).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+  return new Date(dateStr).toLocaleDateString(region === 'UK' ? "en-GB" : "en-US", { day: "numeric", month: "short" });
 }
 
 
@@ -136,6 +137,36 @@ const STATUS_COLORS: Record<string, string> = {
   "Abandoned": "text-slate-400 border-slate-200 bg-slate-50",
   "Future Pipeline": "text-slate-600 border-slate-200 bg-slate-100/50",
 };
+
+// Enterprise Guard Footer Badge (Universal)
+const SecurityBadge = ({ region }: { region: 'UK' | 'US' }) => (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.9 }}
+    animate={{ opacity: 1, scale: 1 }}
+    key={region}
+    className="flex items-center gap-4 bg-slate-800/50 border border-slate-700/50 px-4 py-2 rounded-2xl backdrop-blur-md"
+  >
+    <div className="flex items-center gap-2">
+      <ShieldCheck className="w-4 h-4 text-emerald-400" />
+      <div className="flex flex-col">
+        <span className="text-[9px] font-black text-white uppercase tracking-widest leading-none">
+          {region === 'UK' ? "UK GDPR Compliant" : "HIPAA Compliant"}
+        </span>
+        <span className="text-[8px] text-slate-400 font-medium whitespace-nowrap">Global Privacy Standards</span>
+      </div>
+    </div>
+    <div className="w-px h-6 bg-slate-700/50" />
+    <div className="flex items-center gap-2">
+      <Globe className="w-4 h-4 text-blue-400" />
+      <div className="flex flex-col">
+        <span className="text-[9px] font-black text-white uppercase tracking-widest leading-none">
+          {region === 'UK' ? "Europe Digital Standards" : "Certified Secure Protocol"}
+        </span>
+        <span className="text-[8px] text-slate-400 font-medium whitespace-nowrap">Enterprise Grade Architecture</span>
+      </div>
+    </div>
+  </motion.div>
+);
 
 // Premium Onboarding Empty State (Apple-grade)
 const OnboardingEmptyState = ({ onInjectSample }: { onInjectSample: () => void }) => (
@@ -268,7 +299,10 @@ function DonutChart({ segments, total, totalValue }: { segments: DonutSegment[];
           </div>
           <div className="w-8 h-px bg-slate-100 my-0.5" />
           <div className="flex flex-col items-center">
-            <span className="text-[15px] font-bold text-emerald-600 leading-none" data-hj-suppress>£{(totalValue / 1000).toFixed(1)}k</span>
+            <span className="text-[15px] font-bold text-emerald-600 leading-none" data-hj-suppress>
+              {useDashboardStore.getState().region === 'UK' ? '£' : '$'}
+              {(totalValue / 1000).toFixed(1)}k
+            </span>
             <span className="text-[9px] text-slate-500 uppercase tracking-widest font-bold">Value</span>
           </div>
         </div>
@@ -457,7 +491,8 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
   clinic: clinicData,
   onAddToWaitlist,
   onOpenPTMode,
-  focusMode
+  focusMode,
+  onOpenAudit
 }: {
   id: string;
   lead: ConsultationRequest;
@@ -471,7 +506,9 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
   onAddToWaitlist?: (id: string) => void;
   onOpenPTMode: (lead: ConsultationRequest) => void;
   focusMode: string;
+  onOpenAudit: (lead: ConsultationRequest) => void;
 }) {
+  const [isCaseNoteVisible, setIsCaseNoteVisible] = useState(false);
   const [timeLeft, setTimeLeft] = useState<number>(15 * 60);
 
   const baseline = useMemo(() => lead.importedAt || new Date(lead.created_at).getTime(), [lead.importedAt, lead.created_at]);
@@ -531,9 +568,12 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
                   </span>
                 )}
               </div>
-              <p className="metric-label-muted">{timeAgo(lead.created_at)}</p>
+              <p className="metric-label-muted">{timeAgo(lead.created_at, useDashboardStore.getState().region)}</p>
             </div>
-            <span className="text-[14px] metric-authority">£{(lead.potential_value || 1000).toLocaleString()}</span>
+            <span className="text-[14px] metric-authority">
+              {useDashboardStore.getState().region === 'UK' ? '£' : '$'}
+              {(lead.potential_value || 1000).toLocaleString()}
+            </span>
           </div>
           <div className="flex gap-1 mb-3">
             <span className="text-[8px] font-black px-1.5 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 uppercase">AI {lead.intent_score || 0}%</span>
@@ -554,8 +594,25 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
                 <span className="text-[9px] font-bold uppercase tracking-tighter">WhatsApp</span>
               </button>
             )}
-            <button onClick={() => onOpenPTMode(lead)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors btn-tactile"><Monitor className="w-3.5 h-3.5" /></button>
-            <button onClick={() => setSelectedLead(lead)} className="p-1.5 text-slate-400 hover:bg-slate-50 rounded-lg transition-colors btn-tactile"><FileText className="w-3.5 h-3.5" /></button>
+            <button 
+              onClick={() => onOpenAudit(lead)} 
+              className="p-1.5 text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 hover:scale-110 rounded-lg transition-all btn-tactile"
+              title="Security & Audit Trail"
+            >
+              <Monitor className="w-3.5 h-3.5" />
+            </button>
+            <div className="relative group/popover">
+              <button 
+                onMouseEnter={() => setIsCaseNoteVisible(true)}
+                onMouseLeave={() => setIsCaseNoteVisible(false)}
+                onClick={() => setIsCaseNoteVisible(!isCaseNoteVisible)}
+                className="p-1.5 text-slate-400 hover:text-indigo-500 hover:bg-indigo-50 hover:scale-110 rounded-lg transition-all btn-tactile"
+                title="AI Value Reasoning"
+              >
+                <FileText className="w-3.5 h-3.5" />
+              </button>
+              <AICaseNotePopover lead={lead} isVisible={isCaseNoteVisible} />
+            </div>
           </div>
         </div>
       </motion.div>
@@ -580,7 +637,8 @@ function KanbanColumn({
   clinic,
   onAddToWaitlist,
   onOpenPTMode,
-  focusMode
+  focusMode,
+  onOpenAudit
 }: any) {
   const { setNodeRef } = useDroppable({ id: columnId });
 
@@ -603,7 +661,8 @@ function KanbanColumn({
           <span className="opacity-40">{columnLeads.length}</span>
         </h3>
         <span className="text-xl metric-authority">
-          £{columnLeads.reduce((sum, l) => sum + (SERVICE_CONVERSION_VALUES[l.service] || 1000), 0).toLocaleString()}
+          {useDashboardStore.getState().region === 'UK' ? '£' : '$'}
+          {columnLeads.reduce((sum, l) => sum + (SERVICE_CONVERSION_VALUES[l.service] || 1000), 0).toLocaleString()}
         </span>
         <div className="h-[2px] w-full bg-slate-100 mt-3 rounded-full" />
       </div>
@@ -630,6 +689,7 @@ function KanbanColumn({
                     clinic={clinic}
                     onAddToWaitlist={onAddToWaitlist}
                     onOpenPTMode={onOpenPTMode}
+                    onOpenAudit={onOpenAudit}
                     focusMode={focusMode}
                   />
                 </div>
@@ -734,9 +794,6 @@ function Toast({ message, type, onClose }: { message: string, type: 'success' | 
 export default function AdminDashboard() {
   const navigate = useNavigate();
   const { session, profile, isAdmin, signOut, loading: authLoading } = useAuth();
-  const [multiBranchMode, setMultiBranchMode] = useState(false);
-  const [selectedBranch, setSelectedBranch] = useState(BRANCHES[0]);
-  const [isBranchDropdownOpen, setIsBranchDropdownOpen] = useState(false);
   const { 
     leads, 
     activeCategory, 
@@ -747,7 +804,9 @@ export default function AdminDashboard() {
     injectSampleData,
     getDynamicCategories,
     getEngineLogs,
-    getStats 
+    getStats,
+    region,
+    setRegion
   } = useDashboardStore();
   
   const { totalRevenue, unsecuredPipeline, pipelineValue: kpiPipelineValue } = getStats();
@@ -800,6 +859,9 @@ export default function AdminDashboard() {
   const [editingTreatment, setEditingTreatment] = useState<any | null>(null);
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
+  // AI \u0026 Audit State
+  const [activeAuditLead, setActiveAuditLead] = useState<ConsultationRequest | null>(null);
 
   // Auto-selection of highest revenue category upon data load
   useEffect(() => {
@@ -2418,7 +2480,8 @@ export default function AdminDashboard() {
                                   >
                                     <span>{cat.name}</span>
                                     <span className="text-[9px] font-medium text-slate-300 group-hover:text-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity">
-                                      £{cat.value.toLocaleString()}
+                                      {useDashboardStore.getState().region === 'UK' ? '£' : '$'}
+                                      {cat.value.toLocaleString()}
                                     </span>
                                   </button>
                                 ))}
@@ -2490,12 +2553,18 @@ export default function AdminDashboard() {
                               timeAgo={timeAgo}
                               clinic={profile}
                               onOpenPTMode={() => { }}
+                              onOpenAudit={(lead) => setActiveAuditLead(lead)}
                               selectedDate={selectedDate}
                               focusMode={activeCategory}
                             />
                           ))}
                         </div>
                       </motion.div>
+                      <AuditTrailModal 
+                        isOpen={!!activeAuditLead} 
+                        lead={activeAuditLead} 
+                        onClose={() => setActiveAuditLead(null)} 
+                      />
                     </>
                   )}
                 </motion.div>
@@ -2521,7 +2590,10 @@ export default function AdminDashboard() {
                     <CSVImportZone
                       clinicId={profile?.clinic_id || ''}
                       specialty={profile?.specialty}
-                      onImportComplete={fetchLeads}
+                      onImportComplete={() => {
+                        fetchLeads();
+                        setActiveTab('PIPELINE');
+                      }}
                     />
                   </div>
                 </motion.div>
@@ -2600,25 +2672,48 @@ export default function AdminDashboard() {
         </>
       )}
 
-      {/* Legal & Security Footer */}
-      <footer className="mt-20 py-10 px-6 border-t border-slate-200 bg-white/50 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-8 md:gap-4">
-          <div className="flex items-center gap-3 min-w-[200px]">
-            <div className="w-10 h-10 rounded-xl bg-emerald-50 border-[0.5px] border-emerald-100 flex items-center justify-center shrink-0">
-              <Shield className="w-5 h-5 text-emerald-500" strokeWidth={1.5} />
+      {/* Enterprise Guard Footer */}
+      <footer className="mt-24 py-16 px-8 bg-slate-900 border-t border-slate-800">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-wrap items-center justify-between gap-10">
+            {/* Brand \u0026 Security Status */}
+            <div className="flex items-center gap-5">
+              <div className="w-14 h-14 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center shadow-2xl relative group">
+                <div className="absolute inset-0 bg-emerald-500/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                <Shield className="w-7 h-7 text-emerald-400 relative z-10" strokeWidth={1.5} />
+              </div>
+              <div>
+                <h3 className="text-sm font-black text-white uppercase tracking-[0.3em]">Enterprise Guard</h3>
+                <div className="flex items-center gap-2 mt-1">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <p className="text-[10px] text-slate-400 font-bold tracking-widest uppercase">Zero-Trace Persistence Active</p>
+                </div>
+              </div>
             </div>
-            <div>
-              <p className="text-[10px] font-black text-slate-900 uppercase tracking-[0.2em]">Enterprise Guard</p>
-              <p className="text-[10px] text-slate-400 font-medium tracking-tight">Zero-Retention Protocol Active</p>
+
+            {/* Compliance Badges (Dynamic) */}
+            <AnimatePresence mode="wait">
+              <SecurityBadge region={region} />
+            </AnimatePresence>
+
+            {/* Legal Links */}
+            <div className="flex flex-wrap gap-x-8 gap-y-4">
+              {["Terms & Conditions", "Privacy Policy", "Data Protection Policy"].map(link => (
+                <button key={link} className="text-[10px] font-bold text-slate-500 hover:text-white uppercase tracking-widest transition-colors">
+                  {link}
+                </button>
+              ))}
             </div>
           </div>
 
-          <div className="flex-1 min-w-[280px] md:text-right">
-            <p className="text-[10px] md:text-xs text-slate-400 leading-relaxed font-medium break-words">
-              Hanlan OC operates on a <span className="text-slate-500 font-bold uppercase tracking-tight">"Privacy-First"</span> global architecture compliant with <span className="text-slate-800 font-bold">UK GDPR & International Privacy Standards</span>. 
-              The Clinic acts as the sole <span className="text-slate-500 font-semibold">"Data Controller"</span>. 
-              Hanlan OC is a transient <span className="text-slate-500 font-semibold">"Data Processor"</span>. 
-              © 2026 Hanlan OC. <span className="block md:inline mt-1 md:mt-0 italic">Secure. Private. Authoritative.</span>
+          <div className="mt-12 pt-8 border-t border-slate-800/50 flex flex-col md:flex-row justify-between gap-6">
+            <p className="text-[10px] md:text-xs text-slate-500 leading-relaxed font-medium max-w-2xl italic">
+              Hanlan OC operates on a <span className="text-slate-300 font-bold">Privacy-First</span> global architecture. 
+              Data is processed in transit with zero local retention. 
+              The Clinic remains the sole <span className="text-white font-black">Data Controller</span>.
+            </p>
+            <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">
+              © 2026 Hanlan OC. All Rights Reserved.
             </p>
           </div>
         </div>

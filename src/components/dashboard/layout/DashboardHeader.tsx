@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Building, Check, ShieldCheck, MapPin, ChevronDown, Settings } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useDashboardStore } from "../../../store/useDashboardStore";
 
 interface DashboardHeaderProps {
     clinic: any;
@@ -89,6 +90,34 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                             {opt}
                         </button>
                     ))}
+                </div>
+
+                {/* Region Toggle */}
+                <div className="flex items-center gap-1 bg-slate-900/40 p-1 rounded-xl border border-slate-700/50 backdrop-blur-md shadow-lg">
+                    <button
+                        onClick={() => useDashboardStore.getState().setRegion('UK')}
+                        className={`px-2 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
+                            useDashboardStore(state => state.region) === 'UK' 
+                            ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" 
+                            : "text-slate-500 hover:text-slate-300"
+                        }`}
+                        title="UK Region (GBP/Metric)"
+                    >
+                        <span className="text-xs">🇬🇧</span>
+                        <span className="text-[9px] font-black uppercase tracking-tighter">UK</span>
+                    </button>
+                    <button
+                        onClick={() => useDashboardStore.getState().setRegion('US')}
+                        className={`px-2 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
+                            useDashboardStore(state => state.region) === 'US' 
+                            ? "bg-blue-500/20 text-blue-400 border border-blue-500/30" 
+                            : "text-slate-500 hover:text-slate-300"
+                        }`}
+                        title="US Region (USD/Imperial)"
+                    >
+                        <span className="text-xs">🇺🇸</span>
+                        <span className="text-[9px] font-black uppercase tracking-tighter">US</span>
+                    </button>
                 </div>
 
                 {/* Settings Button */}

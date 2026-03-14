@@ -10,10 +10,13 @@ interface DashboardState {
   setActiveTab: (tab: 'PIPELINE' | 'VAULT' | 'SECURITY') => void;
   updateLead: (id: string, updates: Partial<ConsultationRequest>) => void;
   injectSampleData: () => void;
+  region: 'UK' | 'US';
+  setRegion: (region: 'UK' | 'US') => void;
   
   // Derived selectors (implemented as functions or used via compute)
   getFilteredLeads: () => ConsultationRequest[];
   getDynamicCategories: () => { name: string, value: number }[];
+  getEngineLogs: () => { name: string, value: number }[];
   getStats: () => {
     totalRevenue: number;
     unsecuredPipeline: number;
@@ -25,6 +28,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
   leads: [],
   activeCategory: 'All',
   activeTab: 'PIPELINE',
+  region: 'UK',
   
   setLeads: (leads) => set((state) => ({ 
     leads: typeof leads === 'function' ? leads(state.leads) : leads 
@@ -32,6 +36,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
   
   setActiveCategory: (category) => set({ activeCategory: category }),
   setActiveTab: (tab) => set({ activeTab: tab }),
+  setRegion: (region) => set({ region }),
   
   updateLead: (id, updates) => set((state) => ({
     leads: state.leads.map((l) => l.id === id ? { ...l, ...updates } : l)
@@ -59,8 +64,11 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
 
   getEngineLogs: () => {
     const categories = get().getDynamicCategories();
+    const top3Categories = categories.slice(0, 3).map(c => c.name);
+    
     console.group("🚀 HANLAN AI REVENUE ENGINE: CATEGORY ANALYSIS");
     console.log("Analyzing current pipeline data...");
+    console.log("분석된 상위 3개 카테고리:", top3Categories);
     console.table(categories.map(c => ({ 
       'Category': c.name, 
       'Total Potential Revenue': `£${c.value.toLocaleString()}`,
