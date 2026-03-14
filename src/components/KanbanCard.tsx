@@ -2,7 +2,9 @@ import React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { motion } from 'framer-motion';
-import { MessageSquare, Clock, ArrowRight } from 'lucide-react';
+import { MessageSquare, Clock, ArrowRight, Video, FileText } from 'lucide-react';
+import { VirtualConsultModal } from './dashboard/backoffice/VirtualConsultModal';
+import { AINotesPopover } from './dashboard/backoffice/AINotesPopover';
 import { ConsultationRequest } from '../lib/supabase';
 import { STATUS_COLORS, SERVICE_CONVERSION_VALUES } from '../lib/constants';
 
@@ -12,6 +14,10 @@ interface KanbanCardProps {
 }
 
 export function KanbanCard({ lead, onClick }: KanbanCardProps) {
+    const [isModalOpen, setIsModalOpen] = React.useState(false);
+    const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
+    const [anchorRect, setAnchorRect] = React.useState<DOMRect | null>(null);
+
     const {
         attributes,
         listeners,
@@ -79,6 +85,29 @@ export function KanbanCard({ lead, onClick }: KanbanCardProps) {
                         £{value.toLocaleString()}
                     </span>
                 </div>
+                <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1 bg-slate-50/80 p-1.5 rounded-xl border border-slate-100/50">
+                        <button 
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setIsModalOpen(true);
+                            }}
+                            className="w-8 h-8 rounded-lg bg-white hover:bg-cyan-50 border border-slate-200/60 hover:border-cyan-200 flex items-center justify-center transition-all group/laptop active:scale-90"
+                        >
+                            <Video className="w-3.5 h-3.5 text-slate-400 group-hover/laptop:text-cyan-500 transition-colors" />
+                        </button>
+                        <button 
+                            onMouseEnter={(e) => {
+                                setAnchorRect(e.currentTarget.getBoundingClientRect());
+                                setIsPopoverOpen(true);
+                            }}
+                            onMouseLeave={() => setIsPopoverOpen(false)}
+                            className="w-8 h-8 rounded-lg bg-white hover:bg-[#87A96B]/10 border border-slate-200/60 hover:border-[#87A96B]/30 flex items-center justify-center transition-all group/doc active:scale-90"
+                        >
+                            <FileText className="w-3.5 h-3.5 text-slate-400 group-hover/doc:text-[#87A96B] transition-colors" />
+                        </button>
+                    </div>
+                </div>
                 <div className="flex items-center gap-1.5">
                     <Clock className="w-3 h-3 text-gray-300" />
                     <span className="text-[8px] text-gray-400 font-bold uppercase tracking-tighter">
@@ -86,6 +115,22 @@ export function KanbanCard({ lead, onClick }: KanbanCardProps) {
                     </span>
                 </div>
             </div>
+
+            <VirtualConsultModal 
+                isOpen={isModalOpen} 
+                onClose={() => setIsModalOpen(false)} 
+                leadName={lead.name}
+                hasAppointment={lead.potential_value >= 2000} // Deterministic mock
+                appointmentTime="14:30"
+            />
+
+            <AINotesPopover 
+                isOpen={isPopoverOpen} 
+                onClose={() => setIsPopoverOpen(false)} 
+                anchorRect={anchorRect}
+                insight={lead.potential_value >= 1500 ? "임플란트 2개 필요, 예산 고민 중" : "일반 검진 및 스케일링 권장"}
+                treatmentPlan={lead.potential_value >= 1500 ? ["Full Arch Scan", "Implant Consultation", "Quote Preparation"] : ["Standard Scaling", "X-Ray Analysis"]}
+            />
 
             {/* Hover visual cue */}
             <div className="absolute bottom-0 right-0 p-2 opacity-0 group-hover:opacity-100 transition-opacity">
