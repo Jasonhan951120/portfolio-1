@@ -2197,19 +2197,32 @@ export default function AdminDashboard() {
             <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between gap-6">
 
               {/* Left: Authority Metric Overlay (Dynamic Focus) */}
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <div className="h-6 w-[2px] bg-blue-500 rounded-full" />
-                <div className="flex flex-col">
-                  <span className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">
-                    Secured Revenue
-                  </span>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-2xl font-black tabular-nums text-slate-900 tracking-tighter">
-                      <SlotNumber value={totalRevenue} prefix="£" />
+              <div className="flex items-center gap-6">
+                <div className="flex items-center gap-3">
+                  <div className="h-6 w-[2px] bg-red-400 rounded-full" />
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-medium text-slate-400 uppercase tracking-widest leading-none mb-1">
+                      Unsecured
                     </span>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-xl font-black tabular-nums text-slate-900 tracking-tighter">
+                        <SlotNumber value={unsecuredPipeline} prefix="£" />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <div className="h-6 w-[2px] bg-emerald-500 rounded-full" />
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-medium text-slate-400 uppercase tracking-widest leading-none mb-1">
+                      Secured
+                    </span>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-xl font-black tabular-nums text-slate-900 tracking-tighter">
+                        <SlotNumber value={totalRevenue} prefix="£" />
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
