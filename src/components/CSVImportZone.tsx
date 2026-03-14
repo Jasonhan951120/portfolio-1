@@ -94,7 +94,8 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
                 is_vip,
                 category,
                 utm_source: "PMS_IMPORT_SMART_MAPPED",
-                created_at: new Date().toISOString()
+                created_at: new Date().toISOString(),
+                imported_at: Date.now()
             };
         }).filter(Boolean);
 

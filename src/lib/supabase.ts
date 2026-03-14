@@ -69,6 +69,7 @@ export type ConsultationRequest = {
     ai_summary?: string | null;
     is_vip?: boolean;
     category?: string;
+    imported_at?: number;
 };
 
 export type Resource = {

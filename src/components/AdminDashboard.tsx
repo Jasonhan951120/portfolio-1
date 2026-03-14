@@ -436,11 +436,12 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
 }) {
   const [timeLeft, setTimeLeft] = useState<number>(15 * 60);
 
-  const created = useMemo(() => new Date(lead.created_at).getTime(), [lead.created_at]);
+  const baseline = useMemo(() => lead.imported_at || new Date(lead.created_at).getTime(), [lead.imported_at, lead.created_at]);
   const isVIP = lead.is_vip || (lead.potential_value || 0) >= 1500;
   const isNewLead = lead.status === "New Lead";
-  const minutesInNew = Math.floor((Date.now() - created) / 60000);
-  const showVIPPulse = isVIP && isNewLead && minutesInNew >= 15;
+  const minutesInNew = Math.floor((Date.now() - baseline) / 60000);
+  const isExpiring = isNewLead && minutesInNew >= 15;
+  const showVIPPulse = isExpiring; // All expiring leads get the pulse warning
 
   const isMatchingFocus = useMemo(() => {
     if (focusMode === "All") return true;
@@ -450,11 +451,11 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
 
   useEffect(() => {
     const now = Date.now();
-    const diffSec = Math.floor((created + 15 * 60 * 1000 - now) / 1000);
+    const diffSec = Math.floor((baseline + 15 * 60 * 1000 - now) / 1000);
     setTimeLeft(Math.max(0, diffSec));
     const interval = setInterval(() => setTimeLeft(prev => Math.max(0, prev - 1)), 1000);
     return () => clearInterval(interval);
-  }, [created]);
+  }, [baseline]);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
 
@@ -464,7 +465,7 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
     zIndex: isDragging ? 50 : 1,
   };
 
-  const isOverdue = (lead.status === "New Lead") && (Date.now() - created) > 86400000;
+  const isOverdue = (lead.status === "New Lead") && (Date.now() - baseline) > 86400000;
 
   return (
     <div ref={setNodeRef} style={style} className="mb-4 outline-none px-1 h-[148px] transition-luxury">
@@ -2165,7 +2166,11 @@ export default function AdminDashboard() {
   // Loss Aversion Metric (for header banner)
   const totalAtRisk = useMemo(() =>
     leads
-      .filter(l => l.status === 'New Lead')
+      .filter(l => {
+        if (l.status !== 'New Lead') return false;
+        const baseline = l.imported_at || new Date(l.created_at).getTime();
+        return (Date.now() - baseline) >= 15 * 60000;
+      })
       .reduce((sum, l) => sum + (l.potential_value || SERVICE_CONVERSION_VALUES[l.service] || 1000), 0),
     [leads]
   );
@@ -2187,7 +2192,7 @@ export default function AdminDashboard() {
                 <div className="h-6 w-[2px] bg-emerald-500 rounded-full" />
                 <div className="flex flex-col">
                   <span className="text-[10px] font-medium text-slate-400">
-                    {focusMode === "All" ? "Today's Pipeline" : `Today's ${focusMode} Pipeline`}
+                    {focusMode === "All" ? "Unsecured Pipeline" : `Unsecured ${focusMode} Pipeline`}
                   </span>
                   <span className="text-2xl font-black tabular-nums text-slate-900 tracking-tighter">
                     £{totalAtRisk.toLocaleString()}
