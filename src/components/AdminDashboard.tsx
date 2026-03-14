@@ -2227,30 +2227,14 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              {/* Centre Focus Mode Toggle (Luxury Polish) */}
-              <div className="flex bg-slate-50 border-[0.5px] border-slate-200/60 p-1 rounded-2xl shadow-[inner_0_2px_4px_rgba(0,0,0,0.02)]">
-                {["All", "Implants", "Orthodontics", "Cosmetic"].map(mode => (
-                  <button
-                    key={mode}
-                    onClick={() => setFocusMode(mode)}
-                    className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${focusMode === mode
-                      ? "bg-slate-900 text-white shadow-lg scale-[1.05]"
-                      : "text-slate-400 hover:text-slate-600"
-                      }`}
-                  >
-                    {mode}
-                  </button>
-                ))}
-              </div>
-
-              {/* Centre: 3-Tab Nav (Medical Capsule) */}
+              {/* ── TIER 1: GLOBAL NAVIGATION (Apple-grade) ── */}
               <div className="flex bg-slate-100/50 p-1 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden group">
-                {(['action', 'pipeline', 'vault'] as const).map(tab => (
+                {(['PIPELINE', 'VAULT', 'SECURITY'] as const).map(tab => (
                   <div key={tab} className="relative">
                     <button
                       onClick={() => {
                         setActiveTab(tab);
-                        if (tab === 'vault') setShowOnboardingTooltip(false);
+                        if (tab === 'VAULT') setShowOnboardingTooltip(false);
                       }}
                       className={`px-8 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.25em] transition-all duration-300 relative z-10 ${activeTab === tab
                           ? 'text-emerald-700'
@@ -2259,17 +2243,17 @@ export default function AdminDashboard() {
                     >
                       {activeTab === tab && (
                         <motion.div
-                          layoutId="activeTab"
+                          layoutId="activeTabGlobal"
                           className="absolute inset-0 bg-white rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] z-[-1]"
                           transition={{ type: "spring", stiffness: 400, damping: 30 }}
                         />
                       )}
                       {tab}
-                      {tab === 'vault' && showOnboardingTooltip && (
+                      {tab === 'VAULT' && showOnboardingTooltip && (
                         <span className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full animate-pulse shadow-sm" />
                       )}
                     </button>
-                    {tab === 'vault' && showOnboardingTooltip && (
+                    {tab === 'VAULT' && showOnboardingTooltip && (
                        <OnboardingTooltip 
                          message="Step 1: Upload your patient list to reveal potential revenue." 
                          onClose={() => setShowOnboardingTooltip(false)} 
@@ -2309,19 +2293,51 @@ export default function AdminDashboard() {
             </div>
           </header>
 
+          {/* ── TIER 2: CONTEXTUAL SUB-HEADER (Apple-grade) ── */}
+          <AnimatePresence>
+            {activeTab === 'PIPELINE' && (
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                className="bg-white border-b border-slate-200/60 sticky top-[65px] z-40"
+              >
+                <div className="max-w-7xl mx-auto px-6 py-2 flex items-center justify-center">
+                  <div className="flex bg-slate-50 border-[0.5px] border-slate-200/60 p-1 rounded-2xl shadow-[inner_0_2px_4px_rgba(0,0,0,0.02)]">
+                    {["All", "Implants", "Orthodontics", "Cosmetic"].map(mode => (
+                      <button
+                        key={mode}
+                        onClick={() => setActiveCategory(mode)}
+                        className={`px-5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeCategory === mode
+                          ? "bg-slate-900 text-white shadow-lg scale-[1.05]"
+                          : "text-slate-400 hover:text-slate-600"
+                          }`}
+                      >
+                        {mode}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           {/* ── MAIN CONTENT ── */}
           <main className={`transition-all duration-700 ease-in-out ${isExpertModeOpen ? 'blur-md scale-[0.98] opacity-60' : 'blur-0 scale-100 opacity-100'}`}>
             <AnimatePresence mode="wait">
 
-              {/* ACTION TAB */}
-              {activeTab === 'action' && (
+              {/* PIPELINE VIEW (Two Sub-modes: Action & Board) */}
+              {activeTab === 'PIPELINE' && (
                 <motion.div
-                  key="action"
-                  initial={{ opacity: 0, y: 24 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -24 }}
-                  transition={{ duration: 0.3 }}
+                  key="pipeline-view"
+                  layout
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="space-y-0"
                 >
+                  {/* Default Action View within Pipeline */}
                   <ZeroDashboardView
                     leads={leads}
                     clinicId={profile?.clinic_id || ''}
@@ -2329,67 +2345,98 @@ export default function AdminDashboard() {
                     onStatusChange={updateStatus}
                     onImportComplete={fetchLeads}
                   />
+
+                  {/* Kanban Board within Pipeline */}
+                  <motion.div
+                    className="max-w-7xl mx-auto px-6 py-10 space-y-8"
+                  >
+                    <div className="flex justify-between items-end">
+                      <h2 className="text-3xl font-bold text-slate-900 tracking-tight">Lead Flow Board</h2>
+                      <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">{leads.length} total leads</p>
+                    </div>
+
+                    <div className="flex overflow-x-auto pb-10 gap-4 custom-scrollbar">
+                      {KANBAN_COLUMNS.map(col => (
+                        <KanbanColumn
+                          key={col}
+                          columnId={col}
+                          columnLeads={leads.filter(l => l.status === col)}
+                          setDepositModal={() => { }}
+                          setSelectedLead={setSelectedLead}
+                          updateStatus={updateStatus}
+                          STAFF_LIST={dynamicStaffList}
+                          updateAssignedTo={updateAssignedTo}
+                          timeAgo={timeAgo}
+                          clinic={profile}
+                          onOpenPTMode={() => { }}
+                          selectedDate={selectedDate}
+                          focusMode={activeCategory}
+                        />
+                      ))}
+                    </div>
+                  </motion.div>
                 </motion.div>
               )}
 
-              {/* PIPELINE TAB */}
-              {activeTab === 'pipeline' && (
+              {/* VAULT VIEW */}
+              {activeTab === 'VAULT' && (
                 <motion.div
-                  key="pipeline"
-                  initial={{ opacity: 0, y: 24 }}
+                  key="vault-view"
+                  layout
+                  initial={{ opacity: 0, y: 40 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -24 }}
-                  transition={{ duration: 0.3 }}
-                  className="max-w-7xl mx-auto px-6 py-10 space-y-8"
-                >
-                  <div className="flex justify-between items-end">
-                    <h2 className="text-3xl font-bold text-slate-900 tracking-tight">Lead Flow</h2>
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">{leads.length} total leads</p>
-                  </div>
-
-                  <div className="flex overflow-x-auto pb-10 gap-4 custom-scrollbar">
-                    {KANBAN_COLUMNS.map(col => (
-                      <KanbanColumn
-                        key={col}
-                        columnId={col}
-                        columnLeads={leads.filter(l => l.status === col)}
-                        setDepositModal={() => { }}
-                        setSelectedLead={setSelectedLead}
-                        updateStatus={updateStatus}
-                        STAFF_LIST={dynamicStaffList}
-                        updateAssignedTo={updateAssignedTo}
-                        timeAgo={timeAgo}
-                        clinic={profile}
-                        onOpenPTMode={() => { }}
-                        selectedDate={selectedDate}
-                        focusMode={focusMode}
-                      />
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-
-              {/* VAULT TAB */}
-              {activeTab === 'vault' && (
-                <motion.div
-                  key="vault"
-                  initial={{ opacity: 0, y: 24 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -24 }}
-                  transition={{ duration: 0.3 }}
-                  className="max-w-2xl mx-auto px-6 py-20 space-y-10"
+                  exit={{ opacity: 0, y: 40 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                  className="max-w-4xl mx-auto px-6 py-20 space-y-10"
                 >
                   <div className="text-center space-y-4">
                     <h2 className="text-3xl font-bold text-slate-900 tracking-tighter uppercase italic">The Clinical Vault</h2>
                     <p className="text-slate-400 font-bold uppercase tracking-[0.2em] text-[10px]">Authoritative Data Processing Engine ↗</p>
                   </div>
 
-                  <div className="bg-white rounded-[44px] p-2 border border-slate-200 shadow-xl">
+                  <div className="bg-white rounded-[44px] p-2 border border-slate-200 shadow-2xl">
                     <CSVImportZone
                       clinicId={profile?.clinic_id || ''}
                       specialty={profile?.specialty}
                       onImportComplete={fetchLeads}
                     />
+                  </div>
+                </motion.div>
+              )}
+
+              {/* SECURITY VIEW */}
+              {activeTab === 'SECURITY' && (
+                <motion.div
+                  key="security-view"
+                  layout
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="max-w-4xl mx-auto px-6 py-20"
+                >
+                  <div className="bg-white rounded-[44px] p-12 border border-slate-200 shadow-2xl space-y-8">
+                     <div className="flex items-center gap-6">
+                        <div className="w-16 h-16 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center">
+                           <ShieldCheck className="w-8 h-8 text-emerald-500" />
+                        </div>
+                        <div>
+                           <h2 className="text-3xl font-black text-slate-900 uppercase tracking-tight">Security & Governance</h2>
+                           <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">UK GDPR Zero-Retention Protocol</p>
+                        </div>
+                     </div>
+                     
+                     <div className="grid grid-cols-2 gap-6">
+                        <div className="p-6 bg-slate-50 rounded-3xl space-y-3">
+                           <Zap className="w-5 h-5 text-emerald-500" />
+                           <h3 className="font-bold text-slate-900 text-sm">Real-time Encryption</h3>
+                           <p className="text-xs text-slate-500 leading-relaxed">All PII is encrypted at rest and in transit using AES-256 standards.</p>
+                        </div>
+                        <div className="p-6 bg-slate-50 rounded-3xl space-y-3">
+                           <Monitor className="w-5 h-5 text-emerald-500" />
+                           <h3 className="font-bold text-slate-900 text-sm">Automated Scrubbing</h3>
+                           <p className="text-xs text-slate-500 leading-relaxed">Session data is automatically purged upon browser closure (Zero-Trace).</p>
+                        </div>
+                     </div>
                   </div>
                 </motion.div>
               )}

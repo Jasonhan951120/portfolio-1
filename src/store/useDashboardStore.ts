@@ -4,8 +4,10 @@ import { ConsultationRequest } from '../lib/supabase';
 interface DashboardState {
   leads: ConsultationRequest[];
   activeCategory: string;
+  activeTab: 'PIPELINE' | 'VAULT' | 'SECURITY';
   setLeads: (leads: ConsultationRequest[] | ((prev: ConsultationRequest[]) => ConsultationRequest[])) => void;
   setActiveCategory: (category: string) => void;
+  setActiveTab: (tab: 'PIPELINE' | 'VAULT' | 'SECURITY') => void;
   updateLead: (id: string, updates: Partial<ConsultationRequest>) => void;
   
   // Derived selectors (implemented as functions or used via compute)
@@ -20,12 +22,14 @@ interface DashboardState {
 export const useDashboardStore = create<DashboardState>((set, get) => ({
   leads: [],
   activeCategory: 'All',
+  activeTab: 'PIPELINE',
   
   setLeads: (leads) => set((state) => ({ 
     leads: typeof leads === 'function' ? leads(state.leads) : leads 
   })),
   
   setActiveCategory: (category) => set({ activeCategory: category }),
+  setActiveTab: (tab) => set({ activeTab: tab }),
   
   updateLead: (id, updates) => set((state) => ({
     leads: state.leads.map((l) => l.id === id ? { ...l, ...updates } : l)
