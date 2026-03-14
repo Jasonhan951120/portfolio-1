@@ -799,6 +799,18 @@ export default function AdminDashboard() {
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
+  // Auto-selection of highest revenue category upon data load
+  useEffect(() => {
+    if (leads && leads.length > 0 && activeTab === 'PIPELINE' && activeCategory === 'All') {
+      const cats = getDynamicCategories();
+      if (cats.length > 0) {
+        setActiveCategory(cats[0].name);
+      }
+    }
+  }, [leads?.length, activeTab]);
+
+  const [isMoreDropdownOpen, setIsMoreDropdownOpen] = useState(false);
+
   // Toast Notification State
 
   useEffect(() => {
@@ -2342,19 +2354,78 @@ export default function AdminDashboard() {
                 className="bg-white border-b border-slate-200/60 sticky top-[65px] z-40"
               >
                 <div className="max-w-7xl mx-auto px-6 py-2 flex items-center justify-center">
-                  <div className="flex bg-slate-50 border-[0.5px] border-slate-200/60 p-1 rounded-2xl shadow-[inner_0_2px_4px_rgba(0,0,0,0.02)]">
-                    {["All", "Implants", "Orthodontics", "Cosmetic"].map(mode => (
+                  <div className="flex items-center bg-slate-50 border-[0.5px] border-slate-200/60 p-1 rounded-2xl shadow-[inner_0_2px_4px_rgba(0,0,0,0.02)] relative">
+                    <button
+                      onClick={() => setActiveCategory('All')}
+                      className={`px-5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeCategory === 'All'
+                        ? "bg-white text-slate-900 shadow-sm border border-slate-200"
+                        : "text-slate-400 hover:text-slate-600"
+                        }`}
+                    >
+                      All
+                    </button>
+
+                    <div className="w-[1px] h-4 bg-slate-200 mx-2" />
+
+                    {getDynamicCategories().slice(0, 3).map(cat => (
                       <button
-                        key={mode}
-                        onClick={() => setActiveCategory(mode)}
-                        className={`px-5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeCategory === mode
+                        key={cat.name}
+                        onClick={() => setActiveCategory(cat.name)}
+                        className={`px-5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap ${activeCategory === cat.name
                           ? "bg-slate-900 text-white shadow-lg scale-[1.05]"
                           : "text-slate-400 hover:text-slate-600"
                           }`}
                       >
-                        {mode}
+                        {cat.name}
                       </button>
                     ))}
+
+                    {getDynamicCategories().length > 3 && (
+                      <div className="relative ml-2">
+                        <button
+                          onClick={() => setIsMoreDropdownOpen(!isMoreDropdownOpen)}
+                          className={`flex items-center gap-2 px-5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${getDynamicCategories().slice(3).some(c => c.name === activeCategory)
+                            ? "bg-slate-900 text-white shadow-lg"
+                            : "text-slate-400 hover:text-slate-600"
+                            }`}
+                        >
+                          [ + More ]
+                          <ChevronDown className={`w-3 h-3 transition-transform ${isMoreDropdownOpen ? 'rotate-180' : ''}`} />
+                        </button>
+
+                        <AnimatePresence>
+                          {isMoreDropdownOpen && (
+                            <motion.div
+                              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                              animate={{ opacity: 1, scale: 1, y: 0 }}
+                              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                              className="absolute top-full mt-2 right-0 w-64 bg-white border border-slate-200 rounded-[24px] shadow-2xl p-2 z-[60] overflow-hidden"
+                            >
+                              <div className="max-h-60 overflow-y-auto custom-scrollbar">
+                                {getDynamicCategories().slice(3).map(cat => (
+                                  <button
+                                    key={cat.name}
+                                    onClick={() => {
+                                      setActiveCategory(cat.name);
+                                      setIsMoreDropdownOpen(false);
+                                    }}
+                                    className={`w-full text-left px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-between group ${activeCategory === cat.name
+                                      ? "bg-slate-50 text-emerald-600"
+                                      : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+                                      }`}
+                                  >
+                                    <span>{cat.name}</span>
+                                    <span className="text-[9px] font-medium text-slate-300 group-hover:text-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                                      £{cat.value.toLocaleString()}
+                                    </span>
+                                  </button>
+                                ))}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    )}
                   </div>
                 </div>
               </motion.div>

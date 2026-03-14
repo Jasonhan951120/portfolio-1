@@ -13,6 +13,7 @@ interface DashboardState {
   
   // Derived selectors (implemented as functions or used via compute)
   getFilteredLeads: () => ConsultationRequest[];
+  getDynamicCategories: () => { name: string, value: number }[];
   getStats: () => {
     totalRevenue: number;
     unsecuredPipeline: number;
@@ -39,6 +40,21 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
   injectSampleData: () => {
     const { DEMO_LEADS } = require('../lib/demoData');
     set({ leads: DEMO_LEADS as ConsultationRequest[] });
+  },
+
+  getDynamicCategories: () => {
+    const { leads } = get();
+    if (!leads || leads.length === 0) return [];
+    
+    const categories: Record<string, number> = {};
+    leads.forEach(lead => {
+      const cat = lead.service || lead.category || 'Other';
+      categories[cat] = (categories[cat] || 0) + (lead.potential_value || 1000);
+    });
+    
+    return Object.entries(categories)
+      .map(([name, value]) => ({ name, value }))
+      .sort((a, b) => b.value - a.value);
   },
 
   getFilteredLeads: () => {
