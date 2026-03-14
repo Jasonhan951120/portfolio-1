@@ -4,6 +4,7 @@ import { UploadCloud, CheckCircle2, XCircle, Loader2, Lock, ShieldCheck } from '
 import Papa from 'papaparse';
 import { supabase } from '../lib/supabase';
 import { SERVICE_CONVERSION_VALUES } from '../lib/constants';
+import { categorizeTreatment } from '../lib/utils/treatmentMapping';
 
 interface CSVImportZoneProps {
     clinicId: string;
@@ -49,6 +50,12 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
             const potentialValue = parseFloat(rawVal) || 1000;
             const statusRaw = row['Status'] || row['Lead Status'] || 'New Lead';
 
+            // VIP Logic: Potential Value >= £1500
+            const is_vip = potentialValue >= 1500;
+
+            // Semantic Treatment Mapping
+            const category = categorizeTreatment(serviceRaw, potentialValue);
+
             // Generate pseudonym for privacy (Side-car architecture requirement)
             const randomID = Math.floor(Math.random() * 9000) + 1000;
             const pseudonym = `Patient #${randomID}`;
@@ -73,6 +80,8 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
                 service,
                 status,
                 potential_value: potentialValue,
+                is_vip,
+                category,
                 utm_source: "PMS_IMPORT_HARDENED",
                 created_at: new Date().toISOString()
             };

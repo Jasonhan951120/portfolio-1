@@ -13,6 +13,8 @@ interface DashboardHeaderProps {
     setIsBranchDropdownOpen: (open: boolean) => void;
     branches: string[];
     onOpenSettings?: () => void;
+    focusMode: string;
+    setFocusMode: (mode: string) => void;
 }
 
 export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
@@ -25,10 +27,14 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
     setIsBranchDropdownOpen,
     branches,
     onOpenSettings,
+    focusMode,
+    setFocusMode,
 }) => {
+    const focusOptions = ["All", "Implants", "Orthodontics", "Cosmetic"];
+
     return (
         <div className="flex items-center gap-6 relative">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 flex-1">
                 {/* Clinic Logo Placeholder */}
                 <div className="w-14 h-14 rounded-full bg-black/5 border border-black/10 flex items-center justify-center overflow-hidden shadow-[inner_0_2px_4px_rgba(0,0,0,0.02)]">
                     {clinic?.logo_url ? (
@@ -69,6 +75,22 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             </div>
 
             <div className="flex items-center gap-3">
+                {/* Focus Mode Selector */}
+                <div className="flex items-center gap-2 bg-slate-50 border-[0.5px] border-slate-200/60 p-1 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+                    {focusOptions.map(opt => (
+                        <button
+                            key={opt}
+                            onClick={() => setFocusMode(opt)}
+                            className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${focusMode === opt
+                                ? "bg-slate-900 text-white shadow-lg scale-[1.05]"
+                                : "text-slate-400 hover:text-slate-600 hover:bg-slate-100/50"
+                                }`}
+                        >
+                            {opt}
+                        </button>
+                    ))}
+                </div>
+
                 {/* Settings Button */}
                 <button
                     onClick={onOpenSettings}

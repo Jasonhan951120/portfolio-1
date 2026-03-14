@@ -85,7 +85,13 @@ function SalesROIDashboard() {
   );
 }
 
-export function ExpertModeContent() {
+export function ExpertModeContent({ 
+  onOpenPMSLogs, 
+  onOpenClinicMeta 
+}: { 
+  onOpenPMSLogs?: () => void; 
+  onOpenClinicMeta?: () => void; 
+}) {
   const [selectedTone, setSelectedTone] = React.useState('Professional');
 
   return (
@@ -183,7 +189,10 @@ export function ExpertModeContent() {
         </div>
         
         <div className="space-y-2">
-          <button className="w-full p-4 bg-white/5 hover:bg-white/10 rounded-2xl flex items-center justify-between group transition-all">
+          <button 
+            onClick={onOpenPMSLogs}
+            className="w-full p-4 bg-white/5 hover:bg-white/10 rounded-2xl flex items-center justify-between group transition-all"
+          >
             <div className="flex items-center gap-3">
               <Database className="w-5 h-5 text-gray-400" />
               <span className="text-sm font-bold">PMS Sync Logs</span>
@@ -202,7 +211,10 @@ export function ExpertModeContent() {
             <Zap className="w-4 h-4 text-emerald-400 animate-pulse" />
           </Link>
 
-          <button className="w-full p-4 bg-white/5 hover:bg-white/10 rounded-2xl flex items-center justify-between group transition-all">
+          <button 
+            onClick={onOpenClinicMeta}
+            className="w-full p-4 bg-white/5 hover:bg-white/10 rounded-2xl flex items-center justify-between group transition-all"
+          >
             <div className="flex items-center gap-3">
               <Settings className="w-5 h-5 text-gray-400" />
               <span className="text-sm font-bold">Clinic Meta Data</span>

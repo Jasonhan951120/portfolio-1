@@ -43,6 +43,8 @@ import { DashboardHeader } from "./dashboard/layout/DashboardHeader";
 import { SettingsDrawer } from "./dashboard/SettingsDrawer";
 import { ZeroDashboardView } from "./dashboard/ZeroDashboardView";
 import { ExpertModeDrawer } from "./dashboard/ExpertModeDrawer";
+import { PMSLogDrawer } from "./dashboard/backoffice/PMSLogDrawer";
+import { ClinicMetaModal } from "./dashboard/backoffice/ClinicMetaModal";
 
 // Onboarding Tooltip Component (Medical Precision)
 const OnboardingTooltip = ({ message, onClose }: { message: string; onClose: () => void }) => (
@@ -416,7 +418,8 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
   timeAgo,
   clinic: clinicData,
   onAddToWaitlist,
-  onOpenPTMode
+  onOpenPTMode,
+  focusMode
 }: {
   id: string;
   lead: ConsultationRequest;
@@ -429,10 +432,21 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
   clinic: any;
   onAddToWaitlist?: (id: string) => void;
   onOpenPTMode: (lead: ConsultationRequest) => void;
+  focusMode: string;
 }) {
   const [timeLeft, setTimeLeft] = useState<number>(15 * 60);
 
   const created = useMemo(() => new Date(lead.created_at).getTime(), [lead.created_at]);
+  const isVIP = lead.is_vip || (lead.potential_value || 0) >= 1500;
+  const isNewLead = lead.status === "New Lead";
+  const minutesInNew = Math.floor((Date.now() - created) / 60000);
+  const showVIPPulse = isVIP && isNewLead && minutesInNew >= 15;
+
+  const isMatchingFocus = useMemo(() => {
+    if (focusMode === "All") return true;
+    const category = lead.category || "";
+    return category.toLowerCase() === focusMode.toLowerCase();
+  }, [focusMode, lead.category]);
 
   useEffect(() => {
     const now = Date.now();
@@ -460,14 +474,25 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
         whileTap={{ scale: 0.98 }}
         transition={{ type: "spring", stiffness: 400, damping: 30 }}
         className={`h-full rounded-3xl p-4 relative group transition-all bg-white border-[0.5px] border-slate-200/60 shadow-luxury hover:shadow-luxury-hover active:scale-[0.98]
-          ${isDragging ? 'opacity-50' : ''} ${isOverdue ? 'border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.1)]' : ''}`}
+          ${isDragging ? 'opacity-50' : ''} 
+          ${isOverdue ? 'border-red-500/30' : ''}
+          ${showVIPPulse ? 'ring-2 ring-red-400 animate-pulse' : ''}
+          ${!isMatchingFocus && focusMode !== "All" ? 'grayscale opacity-40 scale-[0.98]' : 'scale-100'}
+        `}
       >
         <div {...attributes} {...listeners} className="absolute inset-0 z-0 cursor-grab" />
         <div className="relative z-10 pointer-events-none">
           <div className="flex justify-between items-start mb-2">
             <div>
-              <h4 className="font-bold text-[13px] text-slate-900 truncate w-40">{lead.name}</h4>
-              <p className="metric-label-muted mt-0.5">{timeAgo(lead.created_at)}</p>
+              <div className="flex items-center gap-1.5 mb-0.5">
+                <h4 className="font-bold text-[13px] text-slate-900 truncate w-32">{lead.name}</h4>
+                {isVIP && (
+                  <span className="text-[8px] font-black px-1.5 py-0.5 rounded-md bg-amber-100 text-amber-700 border border-amber-200 animate-bounce">
+                    VIP
+                  </span>
+                )}
+              </div>
+              <p className="metric-label-muted">{timeAgo(lead.created_at)}</p>
             </div>
             <span className="text-[14px] metric-authority">£{(lead.potential_value || 1000).toLocaleString()}</span>
           </div>
@@ -500,7 +525,8 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
 }, (prev, next) => 
   prev.lead.id === next.lead.id && 
   prev.lead.status === next.lead.status && 
-  prev.lead.intent_score === next.lead.intent_score
+  prev.lead.intent_score === next.lead.intent_score &&
+  prev.focusMode === next.focusMode
 );
 
 function KanbanColumn({
@@ -514,9 +540,21 @@ function KanbanColumn({
   timeAgo,
   clinic,
   onAddToWaitlist,
-  onOpenPTMode
+  onOpenPTMode,
+  focusMode
 }: any) {
   const { setNodeRef } = useDroppable({ id: columnId });
+
+  const sortedLeads = useMemo(() => {
+    if (focusMode === "All") return columnLeads;
+    return [...columnLeads].sort((a: any, b: any) => {
+      const aMatches = (a.category || "").toLowerCase() === focusMode.toLowerCase();
+      const bMatches = (b.category || "").toLowerCase() === focusMode.toLowerCase();
+      if (aMatches && !bMatches) return -1;
+      if (!aMatches && bMatches) return 1;
+      return 0;
+    });
+  }, [columnLeads, focusMode]);
 
   return (
     <div className="w-[290px] shrink-0 flex flex-col h-[calc(100vh-280px)] pr-4 mr-4 last:mr-0 last:pr-0 transition-all duration-500">
@@ -532,18 +570,18 @@ function KanbanColumn({
       </div>
 
       <div className="flex-1 overflow-hidden" ref={setNodeRef}>
-        <SortableContext items={columnLeads.map(l => l.id)}>
-          {columnLeads.length > 0 ? (
+        <SortableContext items={sortedLeads.map((l: any) => l.id)}>
+          {sortedLeads.length > 0 ? (
             <List<{}>
-              rowCount={columnLeads.length}
+              rowCount={sortedLeads.length}
               rowHeight={160}
               rowProps={{}}
               className="custom-scrollbar-mini"
               rowComponent={({ index, style, ariaAttributes }: { index: number; style: React.CSSProperties; ariaAttributes: any }) => (
                 <div style={style} {...ariaAttributes}>
                   <SortableLeadCard
-                    id={columnLeads[index].id}
-                    lead={columnLeads[index]}
+                    id={sortedLeads[index].id}
+                    lead={sortedLeads[index]}
                     setDepositModal={setDepositModal}
                     setSelectedLead={setSelectedLead}
                     updateStatus={updateStatus}
@@ -553,6 +591,7 @@ function KanbanColumn({
                     clinic={clinic}
                     onAddToWaitlist={onAddToWaitlist}
                     onOpenPTMode={onOpenPTMode}
+                    focusMode={focusMode}
                   />
                 </div>
               )}
@@ -710,6 +749,7 @@ export default function AdminDashboard() {
   const [editingTreatment, setEditingTreatment] = useState<any | null>(null);
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [focusMode, setFocusMode] = useState<string>("All");
 
   // Toast Notification State
 
@@ -759,6 +799,10 @@ export default function AdminDashboard() {
     beforeImage: string;
     afterImage: string;
   } | null>(null);
+
+  // Backoffice Overlays State
+  const [isPMSLogDrawerOpen, setIsPMSLogDrawerOpen] = useState(false);
+  const [isClinicMetaModalOpen, setIsClinicMetaModalOpen] = useState(false);
 
   // 🔴 LIVE Traffic State — powered by Supabase Realtime
   const [trafficStats, setTrafficStats] = useState({
@@ -2138,13 +2182,33 @@ export default function AdminDashboard() {
           <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm">
             <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between gap-6">
 
-              {/* Left: Authority Metric Overlay */}
+              {/* Left: Authority Metric Overlay (Dynamic Focus) */}
               <div className="flex items-center gap-3">
                 <div className="h-6 w-[2px] bg-emerald-500 rounded-full" />
                 <div className="flex flex-col">
-                  <span className="text-[10px] font-medium text-slate-400">Clinic Secured</span>
-                  <span className="text-2xl font-black tabular-nums text-slate-900 tracking-tighter">£{totalAtRisk.toLocaleString()}</span>
+                  <span className="text-[10px] font-medium text-slate-400">
+                    {focusMode === "All" ? "Today's Pipeline" : `Today's ${focusMode} Pipeline`}
+                  </span>
+                  <span className="text-2xl font-black tabular-nums text-slate-900 tracking-tighter">
+                    £{totalAtRisk.toLocaleString()}
+                  </span>
                 </div>
+              </div>
+
+              {/* Centre Focus Mode Toggle (Luxury Polish) */}
+              <div className="flex bg-slate-50 border-[0.5px] border-slate-200/60 p-1 rounded-2xl shadow-[inner_0_2px_4px_rgba(0,0,0,0.02)]">
+                {["All", "Implants", "Orthodontics", "Cosmetic"].map(mode => (
+                  <button
+                    key={mode}
+                    onClick={() => setFocusMode(mode)}
+                    className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${focusMode === mode
+                      ? "bg-slate-900 text-white shadow-lg scale-[1.05]"
+                      : "text-slate-400 hover:text-slate-600"
+                      }`}
+                  >
+                    {mode}
+                  </button>
+                ))}
               </div>
 
               {/* Centre: 3-Tab Nav (Medical Capsule) */}
@@ -2266,6 +2330,7 @@ export default function AdminDashboard() {
                         clinic={profile}
                         onOpenPTMode={() => { }}
                         selectedDate={selectedDate}
+                        focusMode={focusMode}
                       />
                     ))}
                   </div>
@@ -2304,6 +2369,20 @@ export default function AdminDashboard() {
           <ExpertModeDrawer
             isOpen={isExpertModeOpen}
             onClose={() => setIsExpertModeOpen(false)}
+            onOpenPMSLogs={() => setIsPMSLogDrawerOpen(true)}
+            onOpenClinicMeta={() => setIsClinicMetaModalOpen(true)}
+          />
+
+          {/* ── BACKOFFICE OVERLAYS ── */}
+          <PMSLogDrawer 
+            isOpen={isPMSLogDrawerOpen}
+            onClose={() => setIsPMSLogDrawerOpen(false)}
+          />
+
+          <ClinicMetaModal
+            isOpen={isClinicMetaModalOpen}
+            onClose={() => setIsClinicMetaModalOpen(false)}
+            clinic={clinic}
           />
 
           {/* ── TOAST ── */}

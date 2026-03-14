@@ -67,6 +67,8 @@ export type ConsultationRequest = {
     fbclid?: string | null;
     recovered_by_ai?: boolean;
     ai_summary?: string | null;
+    is_vip?: boolean;
+    category?: string;
 };
 
 export type Resource = {
