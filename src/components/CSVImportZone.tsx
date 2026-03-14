@@ -5,6 +5,8 @@ import Papa from 'papaparse';
 import { supabase } from '../lib/supabase';
 import { SERVICE_CONVERSION_VALUES } from '../lib/constants';
 import { categorizeTreatment } from '../lib/utils/treatmentMapping';
+import { SmartMappingModal } from './dashboard/backoffice/SmartMappingModal';
+import { getAutoMappings, ColumnMapping, ColumnType } from '../lib/utils/csvHeuristics';
 
 interface CSVImportZoneProps {
     clinicId: string;
@@ -19,7 +21,13 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
     const [agreed, setAgreed] = useState(false);
     const [isScrubbing, setIsScrubbing] = useState(false);
 
-    const processData = async (data: any[]) => {
+    // Smart Mapping State
+    const [isMappingModalOpen, setIsMappingModalOpen] = useState(false);
+    const [pendingData, setPendingData] = useState<any[]>([]);
+    const [pendingHeaders, setPendingHeaders] = useState<string[]>([]);
+    const [initialMappings, setInitialMappings] = useState<ColumnMapping[]>([]);
+
+    const processData = async (data: any[], mappings: ColumnMapping[]) => {
         setIsScrubbing(true);
         // Step 1: Show "labels turning into stars" effect for 1.5s
         await new Promise(r => setTimeout(r, 1500));
@@ -38,17 +46,20 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
                 return null;
             }
 
-            // PII SCRUBBER: Strict blocklist for PMS export headers
-            // We EXPLICITLY ignore: 'Name', 'First Name', 'Last Name', 'Phone', 'Mobile', 'Email', 'DOB', 'Birth Date', 'Address', 'Postcode'
+            // Find values using mappings
+            const getValue = (type: ColumnType) => {
+                const mapping = mappings.find(m => m.type === type);
+                return mapping ? row[mapping.header] : undefined;
+            };
 
-            const serviceRaw = row['TreatmentType'] || row['Treatment Type'] || row['Service'] || row['Treatment'] || 'General Consultation';
+            const serviceRaw = getValue('service') || getValue('unknown') || 'General Consultation';
             
             // Defensive parsing for legacy currency formats (e.g., £5,000.00 or NULL)
-            let rawVal = String(row['Potential Value'] || row['Value'] || '0');
+            let rawVal = String(getValue('potentialValue') || '0');
             rawVal = rawVal.replace(/[^0-9.]/g, ''); // Strip currency symbols and letters
             
             const potentialValue = parseFloat(rawVal) || 1000;
-            const statusRaw = row['Status'] || row['Lead Status'] || 'New Lead';
+            const statusRaw = getValue('status') || 'New Lead';
 
             // VIP Logic: Potential Value >= £1500
             const is_vip = potentialValue >= 1500;
@@ -58,7 +69,7 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
 
             // Generate pseudonym for privacy (Side-car architecture requirement)
             const randomID = Math.floor(Math.random() * 9000) + 1000;
-            const pseudonym = `Patient #${randomID}`;
+            const pseudonym = String(getValue('patientName') || `Patient #${randomID}`);
 
             // Try to find a matched service using fuzzy match or fallback
             const sRawStr = String(serviceRaw).toLowerCase();
@@ -76,13 +87,13 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
                 clinic_id: clinicId,
                 name: pseudonym, // Local Scrubber Active
                 email: "privacy.protected@hanlan.private", // Dropped
-                phone: "SCRUBBED_PII", // Dropped
+                phone: String(getValue('phone') || "SCRUBBED_PII"), // Dropped
                 service,
                 status,
                 potential_value: potentialValue,
                 is_vip,
                 category,
-                utm_source: "PMS_IMPORT_HARDENED",
+                utm_source: "PMS_IMPORT_SMART_MAPPED",
                 created_at: new Date().toISOString()
             };
         }).filter(Boolean);
@@ -138,7 +149,27 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
                     header: true,
                     skipEmptyLines: true,
                     complete: (results) => {
-                        processData(results.data);
+                        const headers = results.meta.fields || [];
+                        const data = results.data;
+
+                        // Check for saved template
+                        const savedTemplateRaw = localStorage.getItem('hanlan_csv_template');
+                        if (savedTemplateRaw) {
+                            const template = JSON.parse(savedTemplateRaw);
+                            // If headers match exactly
+                            if (JSON.stringify(template.headers) === JSON.stringify(headers)) {
+                                console.log("Saved template detected. Auto-mapping applied.");
+                                processData(data, template.mappings);
+                                return;
+                            }
+                        }
+
+                        // No template or mismatch, show modal
+                        const autoMappings = getAutoMappings(headers, data);
+                        setPendingData(data);
+                        setPendingHeaders(headers);
+                        setInitialMappings(autoMappings);
+                        setIsMappingModalOpen(true);
                     },
                     error: (error: any) => {
                         console.error("CSV Parse Error:", error);
@@ -316,6 +347,24 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
                     </p>
                 </div>
             </motion.div>
+
+            <SmartMappingModal
+                isOpen={isMappingModalOpen}
+                onClose={() => setIsMappingModalOpen(false)}
+                headers={pendingHeaders}
+                data={pendingData.slice(0, 3)}
+                initialMappings={initialMappings}
+                onConfirm={(confirmedMappings, saveTemplate) => {
+                    setIsMappingModalOpen(false);
+                    if (saveTemplate) {
+                        localStorage.setItem('hanlan_csv_template', JSON.stringify({
+                            headers: pendingHeaders,
+                            mappings: confirmedMappings
+                        }));
+                    }
+                    processData(pendingData, confirmedMappings);
+                }}
+            />
         </div>
     );
 }
