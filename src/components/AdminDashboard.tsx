@@ -2544,7 +2544,7 @@ export default function AdminDashboard() {
                         </div>
                         <div>
                            <h2 className="text-3xl font-black text-slate-900 uppercase tracking-tight">Security & Governance</h2>
-                           <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">UK GDPR Zero-Retention Protocol</p>
+                           <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">UK GDPR & Global Data Privacy Standards</p>
                         </div>
                      </div>
                      
@@ -2601,10 +2601,10 @@ export default function AdminDashboard() {
       )}
 
       {/* Legal & Security Footer */}
-      <footer className="mt-20 py-8 px-6 border-t border-slate-200 bg-white/50 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-50 border-[0.5px] border-emerald-100 flex items-center justify-center">
+      <footer className="mt-20 py-10 px-6 border-t border-slate-200 bg-white/50 backdrop-blur-md">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-8 md:gap-4">
+          <div className="flex items-center gap-3 min-w-[200px]">
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 border-[0.5px] border-emerald-100 flex items-center justify-center shrink-0">
               <Shield className="w-5 h-5 text-emerald-500" strokeWidth={1.5} />
             </div>
             <div>
@@ -2613,12 +2613,12 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          <div className="max-w-2xl text-center md:text-right">
-            <p className="text-[10px] text-slate-400 leading-relaxed font-medium">
-              Hanlan OC operates on a strict <span className="text-slate-500 font-bold uppercase tracking-tight">"Privacy-First, Zero-Retention"</span> architecture compliant with UK GDPR. 
-              By using Hanlan OC, the Clinic acknowledges and agrees that it acts as the sole <span className="text-slate-500">"Data Controller"</span> with full legal liability for patient data. 
-              Hanlan OC acts strictly as a <span className="text-slate-500">"Data Processor"</span> providing a transient visualization tool. 
-              © 2026 Hanlan OC. All rights reserved.
+          <div className="flex-1 min-w-[280px] md:text-right">
+            <p className="text-[10px] md:text-xs text-slate-400 leading-relaxed font-medium break-words">
+              Hanlan OC operates on a <span className="text-slate-500 font-bold uppercase tracking-tight">"Privacy-First"</span> global architecture compliant with <span className="text-slate-800 font-bold">UK GDPR & International Privacy Standards</span>. 
+              The Clinic acts as the sole <span className="text-slate-500 font-semibold">"Data Controller"</span>. 
+              Hanlan OC is a transient <span className="text-slate-500 font-semibold">"Data Processor"</span>. 
+              © 2026 Hanlan OC. <span className="block md:inline mt-1 md:mt-0 italic">Secure. Private. Authoritative.</span>
             </p>
           </div>
         </div>

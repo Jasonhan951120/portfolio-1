@@ -201,8 +201,10 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
                 onDragOver={(e) => { e.preventDefault(); setIsHovering(true); }}
                 onDragLeave={() => setIsHovering(false)}
                 onDrop={onDrop}
-                className={`relative overflow-hidden rounded-[44px] border border-dashed transition-all duration-500 p-12 flex flex-col items-center justify-center min-h-[220px]
-          ${isHovering ? 'border-emerald-400/60 bg-emerald-400/5 scale-[1.01] shadow-[0_20px_60px_rgba(16,185,129,0.1)]' : 'border-white/10 bg-white/[0.02] backdrop-blur-xl shadow-2xl hover:bg-white/[0.05] hover:border-white/20'}
+                className={`group relative overflow-hidden rounded-[44px] border transition-all duration-500 p-12 flex flex-col items-center justify-center min-h-[240px]
+          ${isHovering && agreed ? 'border-emerald-400 bg-emerald-400/10 scale-[1.01] shadow-[0_20px_60px_rgba(16,185,129,0.2)]' : 
+            agreed ? 'border-solid border-emerald-400/60 bg-emerald-400/5 ring-4 ring-emerald-400/10 shadow-[0_0_40px_rgba(16,185,129,0.1)]' : 
+            'border-dashed border-slate-300 bg-white/[0.01] hover:bg-white/[0.03] opacity-60'}
         `}
             >
                 <AnimatePresence mode="wait">
@@ -294,34 +296,36 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
                         </motion.div>
                     ) : (
                         <motion.div key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center text-center pointer-events-none">
-                            <div className="w-20 h-20 mb-6 rounded-3xl bg-white/[0.03] border border-white/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-500 relative">
-                                <div className="absolute inset-0 bg-emerald-400/10 blur-[20px] rounded-full opacity-50" />
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={`relative z-10 transition-colors duration-300 ${isHovering ? 'text-emerald-400' : 'text-white/40'}`}>
+                            <div className={`w-20 h-20 mb-6 rounded-3xl border flex items-center justify-center transition-all duration-500 relative ${agreed ? 'bg-emerald-500/10 border-emerald-500/30 group-hover:scale-110 group-hover:-translate-y-1' : 'bg-slate-100/50 border-slate-200'}`}>
+                                {agreed && <div className="absolute inset-0 bg-emerald-400/20 blur-[20px] rounded-full animate-pulse" />}
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={`relative z-10 transition-colors duration-300 ${agreed ? 'text-emerald-500' : 'text-slate-300'}`}>
                                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
                                     <path d="m9 12 2 2 4-4" />
                                 </svg>
                             </div>
-                            <h3 className="text-lg font-black text-white mb-2 tracking-tight">Synchronize Your Vault</h3>
+                            <h3 className={`text-lg font-black mb-2 tracking-tight transition-colors ${agreed ? 'text-slate-900' : 'text-slate-400'}`}>
+                                {agreed ? "준비 완료: 여기에 CSV 파일을 놓아주세요" : "보관 승인 대기 중"}
+                            </h3>
                             <div className="px-8 pb-4">
                                 <div
-                                    className="flex items-start gap-3 p-4 bg-white/5 border border-white/10 rounded-2xl cursor-pointer hover:bg-white/10 transition-all text-left pointer-events-auto"
+                                    className={`flex items-start gap-3 p-4 border rounded-2xl cursor-pointer transition-all text-left pointer-events-auto ${agreed ? 'bg-emerald-50/50 border-emerald-100' : 'bg-slate-50 border-slate-100 hover:bg-slate-100'}`}
                                     onClick={(e) => { e.stopPropagation(); setAgreed(!agreed); }}
                                 >
                                     <input
                                         type="checkbox"
                                         checked={agreed}
                                         onChange={(e) => setAgreed(e.target.checked)}
-                                        className="w-4 h-4 mt-0.5 rounded border-white/20 bg-transparent text-emerald-500 focus:ring-emerald-500/50"
+                                        className="w-4 h-4 mt-0.5 rounded border-slate-300 text-emerald-500 focus:ring-emerald-500/50"
                                     />
-                                    <p className="text-[10px] text-white/50 leading-relaxed font-bold uppercase tracking-tight">
-                                        I agree to the <span className="text-emerald-400">DPA & Data Controller Terms</span>. I confirm I have the right to process this patient data.
+                                    <p className={`text-[10px] leading-relaxed font-bold uppercase tracking-tight transition-colors ${agreed ? 'text-emerald-700' : 'text-slate-400'}`}>
+                                        {agreed ? "데이터 처리 방침(DPA)에 동의함" : "약관에 동의해 주세요 (DPA & Data Controller Terms)"}
                                     </p>
                                 </div>
                             </div>
-                            <p className="text-xs text-slate-500 font-medium max-w-[320px] leading-relaxed">
-                                {dropzoneSubCopy} <br />
-                                <span className={`mt-1 block italic font-bold transition-colors ${agreed ? 'text-emerald-400' : 'text-slate-600'}`}>
-                                    {agreed ? 'Authorized ready for drop' : 'Consent Required to proceed'}
+                            <p className="text-xs text-slate-400 font-medium max-w-[320px] leading-relaxed">
+                                {agreed ? dropzoneSubCopy : "서비스 이용을 위해 위 약관에 동의가 필요합니다."} <br />
+                                <span className={`mt-1 block italic font-bold transition-colors ${agreed ? 'text-emerald-400' : 'text-slate-300'}`}>
+                                    {agreed ? 'Authorized: ready for drop' : 'Consent Required to proceed'}
                                 </span>
                             </p>
                         </motion.div>
