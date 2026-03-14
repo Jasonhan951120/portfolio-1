@@ -57,6 +57,19 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
       .sort((a, b) => b.value - a.value);
   },
 
+  getEngineLogs: () => {
+    const categories = get().getDynamicCategories();
+    console.group("🚀 HANLAN AI REVENUE ENGINE: CATEGORY ANALYSIS");
+    console.log("Analyzing current pipeline data...");
+    console.table(categories.map(c => ({ 
+      'Category': c.name, 
+      'Total Potential Revenue': `£${c.value.toLocaleString()}`,
+      'Rank': categories.indexOf(c) + 1
+    })));
+    console.groupEnd();
+    return categories;
+  },
+
   getFilteredLeads: () => {
     const { leads, activeCategory } = get();
     if (activeCategory === 'All') return leads;

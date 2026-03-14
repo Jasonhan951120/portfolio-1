@@ -746,6 +746,7 @@ export default function AdminDashboard() {
     setActiveTab,
     injectSampleData,
     getDynamicCategories,
+    getEngineLogs,
     getStats 
   } = useDashboardStore();
   
@@ -802,9 +803,9 @@ export default function AdminDashboard() {
 
   // Auto-selection of highest revenue category upon data load
   useEffect(() => {
-    if (leads && leads.length > 0 && activeTab === 'PIPELINE' && activeCategory === 'All') {
-      const cats = getDynamicCategories?.() ?? [];
-      if (cats.length > 0) {
+    if (leads && leads.length > 0 && activeTab === 'PIPELINE') {
+      const cats = getEngineLogs?.() ?? [];
+      if (cats.length > 0 && (activeCategory === 'All' || !cats.some(c => c.name === activeCategory))) {
         setActiveCategory(cats[0].name);
       }
     }
@@ -2368,7 +2369,7 @@ export default function AdminDashboard() {
 
                     <div className="w-[1px] h-4 bg-slate-200 mx-2" />
 
-                    {(getDynamicCategories?.() ?? []).slice(0, 3).map(cat => (
+                    {(getEngineLogs?.() ?? []).slice(0, 3).map(cat => (
                       <button
                         key={cat.name}
                         onClick={() => setActiveCategory(cat.name)}
@@ -2381,11 +2382,11 @@ export default function AdminDashboard() {
                       </button>
                     ))}
 
-                    {(getDynamicCategories?.() ?? []).length > 3 && (
+                    {(getEngineLogs?.() ?? []).length > 3 && (
                       <div className="relative ml-2">
                         <button
                           onClick={() => setIsMoreDropdownOpen(!isMoreDropdownOpen)}
-                          className={`flex items-center gap-2 px-5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${(getDynamicCategories?.() ?? []).slice(3).some(c => c.name === activeCategory)
+                          className={`flex items-center gap-2 px-5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${(getEngineLogs?.() ?? []).slice(3).some(c => c.name === activeCategory)
                             ? "bg-slate-900 text-white shadow-lg"
                             : "text-slate-400 hover:text-slate-600"
                             }`}
@@ -2403,7 +2404,7 @@ export default function AdminDashboard() {
                               className="absolute top-full mt-2 right-0 w-64 bg-white border border-slate-200 rounded-[24px] shadow-2xl p-2 z-[60] overflow-hidden"
                             >
                               <div className="max-h-60 overflow-y-auto custom-scrollbar">
-                                {(getDynamicCategories?.() ?? []).slice(3).map(cat => (
+                                {(getEngineLogs?.() ?? []).slice(3).map(cat => (
                                   <button
                                     key={cat.name}
                                     onClick={() => {
