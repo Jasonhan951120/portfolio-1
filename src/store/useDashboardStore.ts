@@ -4,7 +4,7 @@ import { ConsultationRequest } from '../lib/supabase';
 interface DashboardState {
   leads: ConsultationRequest[];
   activeCategory: string;
-  setLeads: (leads: ConsultationRequest[]) => void;
+  setLeads: (leads: ConsultationRequest[] | ((prev: ConsultationRequest[]) => ConsultationRequest[])) => void;
   setActiveCategory: (category: string) => void;
   updateLead: (id: string, updates: Partial<ConsultationRequest>) => void;
   
@@ -21,7 +21,9 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
   leads: [],
   activeCategory: 'All',
   
-  setLeads: (leads) => set({ leads }),
+  setLeads: (leads) => set((state) => ({ 
+    leads: typeof leads === 'function' ? leads(state.leads) : leads 
+  })),
   
   setActiveCategory: (category) => set({ activeCategory: category }),
   
@@ -47,7 +49,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
     const unsecuredPipeline = filteredLeads
       .filter(l => {
         if (l.status !== 'New Lead') return false;
-        const baseline = l.imported_at || new Date(l.created_at).getTime();
+        const baseline = l.importedAt || new Date(l.created_at).getTime();
         return (Date.now() - baseline) >= 15 * 60000;
       })
       .reduce((sum, l) => sum + (l.potential_value || 1000), 0);

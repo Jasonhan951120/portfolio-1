@@ -438,7 +438,7 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
 }) {
   const [timeLeft, setTimeLeft] = useState<number>(15 * 60);
 
-  const baseline = useMemo(() => lead.imported_at || new Date(lead.created_at).getTime(), [lead.imported_at, lead.created_at]);
+  const baseline = useMemo(() => lead.importedAt || new Date(lead.created_at).getTime(), [lead.importedAt, lead.created_at]);
   const isVIP = lead.is_vip || (lead.potential_value || 0) >= 1500;
   const isNewLead = lead.status === "New Lead";
   const minutesInNew = Math.floor((Date.now() - baseline) / 60000);
@@ -2177,7 +2177,7 @@ export default function AdminDashboard() {
     leads
       .filter(l => {
         if (l.status !== 'New Lead') return false;
-        const baseline = l.imported_at || new Date(l.created_at).getTime();
+        const baseline = l.importedAt || new Date(l.created_at).getTime();
         return (Date.now() - baseline) >= 15 * 60000;
       })
       .reduce((sum, l) => sum + (l.potential_value || SERVICE_CONVERSION_VALUES[l.service] || 1000), 0),

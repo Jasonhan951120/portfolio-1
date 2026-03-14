@@ -68,7 +68,7 @@ export default function AdminLogin() {
                     console.log("Session detected, processing stored invitation token:", storedToken);
                     setProcessingInvite(true);
                     try {
-                        console.log("Invoking accept-invite for user:", session.user.email);
+                        // Invoking accept-invite for user
                         const { data, error } = await supabase.functions.invoke('accept-invite', {
                             body: {
                                 token: storedToken,
