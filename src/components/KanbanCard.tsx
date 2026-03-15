@@ -4,7 +4,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { motion } from 'framer-motion';
 import { MessageSquare, Clock, ArrowRight, Video, FileText } from 'lucide-react';
 import { VirtualConsultModal } from './dashboard/backoffice/VirtualConsultModal';
-import { AINotesPopover } from './dashboard/backoffice/AINotesPopover';
+import { AI_InsightCard } from './dashboard/backoffice/AI_InsightCard';
 import { ConsultationRequest } from '../lib/supabase';
 import { STATUS_COLORS, SERVICE_CONVERSION_VALUES } from '../lib/constants';
 
@@ -124,13 +124,15 @@ export function KanbanCard({ lead, onClick }: KanbanCardProps) {
                 appointmentTime="14:30"
             />
 
-            <AINotesPopover 
+            <AI_InsightCard 
                 isOpen={isPopoverOpen} 
                 onClose={() => setIsPopoverOpen(false)} 
                 anchorRect={anchorRect}
-                insight={lead.potential_value >= 1500 ? "임플란트 2개 필요, 예산 고민 중" : "일반 검진 및 스케일링 권장"}
-                treatmentPlan={lead.potential_value >= 1500 ? ["Full Arch Scan", "Implant Consultation", "Quote Preparation"] : ["Standard Scaling", "X-Ray Analysis"]}
+                insight={lead.potential_value >= 1500 ? "Advanced clinical potential identified via procedural interest patterns." : "Standard diagnostic evaluation recommended."}
+                treatmentPlan={lead.potential_value >= 1500 ? ["Comprehensive Digital Scan", "Specialist Consultation", "Premium Quote Matrix"] : ["Baseline Diagnostic Imaging", "Clinical Assessment"]}
+                potentialValue={value}
             />
+
 
             {/* Hover visual cue */}
             <div className="absolute bottom-0 right-0 p-2 opacity-0 group-hover:opacity-100 transition-opacity">
