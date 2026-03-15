@@ -10,8 +10,8 @@ interface AICaseNotePopoverProps {
 }
 
 /**
- * AICaseNotePopover - A premium Glassmorphism UI for AI-generated clinical notes.
- * Featuring dynamic collision detection and Apple-grade typography.
+ * AICaseNotePopover - A premium, structured "AI Insight Card" for clinical notes.
+ * Enforces Zero-Friction positioning and Apple-standard information hierarchy.
  */
 export const AICaseNotePopover: React.FC<AICaseNotePopoverProps> = ({ lead, isVisible, anchorRect }) => {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -20,29 +20,30 @@ export const AICaseNotePopover: React.FC<AICaseNotePopoverProps> = ({ lead, isVi
   useLayoutEffect(() => {
     if (isVisible && anchorRect && cardRef.current) {
       const cardWidth = 320;
-      const cardHeight = cardRef.current.offsetHeight || 300;
-      const padding = 20;
+      const cardHeight = cardRef.current.offsetHeight || 340;
+      const padding = 24;
+      const gap = 12;
 
-      // Default: Position above the button
-      let top = anchorRect.top - cardHeight - 12;
+      // Primary: Position above the trigger button
+      let top = anchorRect.top - cardHeight - gap;
       let left = anchorRect.left - (cardWidth / 2) + (anchorRect.width / 2);
 
-      // Collision Detection: Bottom (if top is too high, move below)
+      // Collision Detection: Top Viewport Edge (Flip to Bottom)
       if (top < padding) {
-        top = anchorRect.bottom + 12;
+        top = anchorRect.bottom + gap;
       }
 
-      // Collision Detection: Right Edge
+      // Collision Detection: Right Viewport Edge
       if (left + cardWidth + padding > window.innerWidth) {
         left = window.innerWidth - cardWidth - padding;
       }
 
-      // Collision Detection: Left Edge
+      // Collision Detection: Left Viewport Edge
       if (left < padding) {
         left = padding;
       }
 
-      // Final safety check for bottom
+      // Collision Detection: Bottom Viewport Edge
       if (top + cardHeight + padding > window.innerHeight) {
         top = window.innerHeight - cardHeight - padding;
       }
@@ -56,76 +57,79 @@ export const AICaseNotePopover: React.FC<AICaseNotePopoverProps> = ({ lead, isVi
   return (
     <AnimatePresence>
       {isVisible && (
-        <>
-          {/* Use fixed for the absolute positioning to break out of any relative parent containers */}
-          <motion.div
-            ref={cardRef}
-            initial={{ opacity: 0, scale: 0.95, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 10 }}
-            transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            style={anchorRect ? {
-              position: 'fixed',
-              top: position.top,
-              left: position.left,
-              zIndex: 1000,
-            } : {}}
-            className={`${!anchorRect ? 'absolute bottom-full mb-3 right-0' : ''} w-80 p-6 bg-slate-900/90 backdrop-blur-xl border border-slate-700/50 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] pointer-events-none`}
-          >
-            <div className="flex items-center gap-2 mb-4">
-              <div className="p-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-                <Sparkles className="w-4 h-4 text-emerald-400" />
+        <motion.div
+          ref={cardRef}
+          initial={{ opacity: 0, scale: 0.98, y: 10 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.98, y: 10 }}
+          transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
+          style={anchorRect ? {
+            position: 'fixed',
+            top: position.top,
+            left: position.left,
+            zIndex: 1000,
+          } : {
+            position: 'absolute',
+            bottom: '100%',
+            right: 0,
+            marginBottom: '12px',
+          }}
+          className="w-80 p-6 bg-slate-900/85 backdrop-blur-xl border border-slate-700/50 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.4)] pointer-events-none overflow-hidden"
+        >
+          {/* Header */}
+          <div className="flex items-center gap-2 mb-6">
+            <div className="p-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+              <Sparkles className="w-4 h-4 text-emerald-400" />
+            </div>
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-500">
+              AI CLINICAL INTEL
+            </span>
+          </div>
+
+          {/* Structured Data: Chunks */}
+          <div className="space-y-6">
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2 text-slate-500 mb-1">
+                <BarChart3 className="w-4 h-4" />
+                <span className="text-[10px] uppercase font-black tracking-widest leading-none">Market Valuation</span>
               </div>
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-500">
-                AI CLINICAL INTEL
-              </span>
+              <span className="text-3xl font-bold text-emerald-400 tracking-tight">£{value.toLocaleString()}</span>
             </div>
 
-            <div className="space-y-4">
-              <div className="flex flex-col">
-                <div className="flex items-center gap-2 text-slate-500 mb-1">
-                  <BarChart3 className="w-3.5 h-3.5" />
-                  <span className="text-[9px] font-black uppercase tracking-widest">Procedural Value</span>
-                </div>
-                <span className="text-2xl font-bold text-slate-50 tracking-tight">£{value.toLocaleString()}</span>
+            <div className="pt-6 border-t border-white/[0.05]">
+              <div className="flex items-center gap-2 text-slate-400 mb-3">
+                <Search className="w-4 h-4" />
+                <span className="text-[10px] uppercase font-black tracking-widest leading-none">Reasoning</span>
               </div>
-
-              <div className="flex flex-col pt-4 border-t border-white/[0.05]">
-                <div className="flex items-center gap-2 text-slate-400 mb-2">
-                  <Search className="w-3.5 h-3.5" />
-                  <span className="text-[9px] font-black uppercase tracking-widest leading-none">Behavioral Evidence</span>
-                </div>
-                <p className="text-[12px] leading-relaxed text-slate-300 font-medium">
-                  {lead.service?.toLowerCase().includes("implant") 
-                    ? "Patient exhibited high-intent recursive engagement with restorative clinical cases." 
-                    : "Data-driven velocity indicates significant conversion probability based on digital body language."}
-                </p>
-                <ul className="mt-3 space-y-1.5">
-                  <li className="flex items-center gap-2">
-                    <div className="w-1 h-1 rounded-full bg-emerald-500" />
-                    <span className="text-[11px] text-slate-400">3+ Multi-session analysis</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <div className="w-1 h-1 rounded-full bg-slate-700" />
-                    <span className="text-[11px] text-slate-400">Competitive benchmarking verified</span>
-                  </li>
-                </ul>
-              </div>
+              <ul className="space-y-3">
+                <li className="flex items-start gap-3">
+                  <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-emerald-500/50 shadow-[0_0_8px_rgba(16,185,129,0.3)] shrink-0" />
+                  <span className="text-[12px] text-slate-200 font-medium leading-relaxed">
+                    Recursive engagement on <span className="text-white">implant clinical modules</span>.
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-slate-700 shrink-0" />
+                  <span className="text-[12px] text-slate-400 font-medium leading-relaxed">
+                    High-intent velocity benchmarked at <span className="text-slate-300">92nd percentile</span>.
+                  </span>
+                </li>
+              </ul>
             </div>
-            
-            <div className="mt-5 pt-3 border-t border-white/[0.05] flex items-center justify-between">
-               <div className="flex items-center gap-2">
-                  <Stethoscope className="w-3 h-3 text-slate-600" />
-                  <span className="text-[9px] font-bold text-slate-600 uppercase tracking-tighter">Clinical Luxury Governance</span>
-               </div>
-               <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/50 animate-pulse" />
-            </div>
-
-            {!anchorRect && (
-              <div className="absolute top-full right-6 w-3 h-3 bg-slate-900 border-r border-b border-slate-700 rotate-45 -translate-y-[6px]" />
-            )}
-          </motion.div>
-        </>
+          </div>
+          
+          {/* Governance Footer */}
+          <div className="mt-6 pt-4 border-t border-white/[0.05] flex items-center justify-between">
+             <div className="flex items-center gap-2">
+                <Stethoscope className="w-4 h-4 text-slate-600" />
+                <span className="text-[9px] font-black text-slate-600 uppercase tracking-widest">Clinical Luxury</span>
+             </div>
+             <div className="flex items-center gap-1.5">
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/40 animate-pulse" />
+                <span className="text-[8px] font-black text-emerald-500/20 uppercase">Secure</span>
+             </div>
+          </div>
+        </motion.div>
       )}
     </AnimatePresence>
   );
