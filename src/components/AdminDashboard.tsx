@@ -515,6 +515,7 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
   onOpenAudit: (lead: ConsultationRequest) => void;
 }) {
   const [isCaseNoteVisible, setIsCaseNoteVisible] = useState(false);
+  const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
   const [timeLeft, setTimeLeft] = useState<number>(15 * 60);
 
   const baseline = useMemo(() => lead.importedAt || new Date(lead.created_at).getTime(), [lead.importedAt, lead.created_at]);
@@ -609,16 +610,39 @@ const SortableLeadCard = React.memo(function SortableLeadCard({
             </button>
             <div className="relative group/popover">
               <button 
-                onMouseEnter={() => setIsCaseNoteVisible(true)}
+                onMouseEnter={(e) => {
+                  setAnchorRect(e.currentTarget.getBoundingClientRect());
+                  setIsCaseNoteVisible(true);
+                }}
                 onMouseLeave={() => setIsCaseNoteVisible(false)}
-                onClick={() => setIsCaseNoteVisible(!isCaseNoteVisible)}
+                onClick={(e) => {
+                  setAnchorRect(e.currentTarget.getBoundingClientRect());
+                  setIsCaseNoteVisible(!isCaseNoteVisible);
+                }}
                 className="p-1.5 text-slate-400 hover:text-indigo-500 hover:bg-indigo-50 hover:scale-110 rounded-lg transition-all btn-tactile"
                 title="AI Value Reasoning"
               >
                 <FileText className="w-3.5 h-3.5" />
               </button>
-              <AICaseNotePopover lead={lead} isVisible={isCaseNoteVisible} />
+              <AICaseNotePopover lead={lead} isVisible={isCaseNoteVisible} anchorRect={anchorRect} />
             </div>
+            
+            {/* Real-time Audit Validation Trigger (Oliver Smith Only) */}
+            {lead.id === "demo-3" && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const priorities = ["High", "Medium", "Urgent", "Strategic"];
+                  const nextPriority = priorities[Math.floor(Math.random() * priorities.length)];
+                  const { addAuditLog, updateLead } = useDashboardStore.getState();
+                  updateLead(lead.id, { category: nextPriority });
+                  addAuditLog(lead.id, `Updated Patient Priority to ${nextPriority}`, "Manual Input (Simulation)");
+                }}
+                className="p-1 px-2.5 bg-slate-900 text-white text-[9px] font-black uppercase tracking-widest rounded-lg hover:bg-emerald-600 transition-all shadow-lg active:scale-95"
+              >
+                Change Priority
+              </button>
+            )}
           </div>
         </div>
       </motion.div>

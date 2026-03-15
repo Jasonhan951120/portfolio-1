@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useLayoutEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, ClipboardList, ChevronRight, Stethoscope, Search, BarChart3 } from 'lucide-react';
+import { Sparkles, ClipboardList, ChevronRight, Stethoscope, Search, BarChart3, Target } from 'lucide-react';
 
 interface AI_InsightCardProps {
     isOpen: boolean;
@@ -12,8 +12,8 @@ interface AI_InsightCardProps {
 }
 
 /**
- * AI_InsightCard - A premium Glassmorphism UI for Explainable AI (XAI).
- * Follows "Clinical Business English" and "Aesthetic-Usability Effect" principles.
+ * AI_InsightCard - A premium, Apple-inspired Glassmorphism UI for Explainable AI (XAI).
+ * Features structured data visualization and dynamic collision detection.
  */
 export function AI_InsightCard({ 
     isOpen, 
@@ -21,17 +21,49 @@ export function AI_InsightCard({
     anchorRect, 
     insight, 
     treatmentPlan,
-    potentialValue = 12000 // Default based on clinical elite specs
+    potentialValue = 12000
 }: AI_InsightCardProps) {
-    if (!anchorRect) return null;
+    const cardRef = useRef<HTMLDivElement>(null);
+    const [position, setPosition] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
 
-    // Position the popover next to the card
-    const style: React.CSSProperties = {
-        position: 'fixed',
-        top: Math.max(20, anchorRect.top - 40), // Adjust to show well
-        left: anchorRect.right + 16,
-        zIndex: 1000,
-    };
+    useLayoutEffect(() => {
+        if (isOpen && anchorRect && cardRef.current) {
+            const cardWidth = 340;
+            const cardHeight = cardRef.current.offsetHeight || 450;
+            const padding = 20;
+
+            let top = anchorRect.top - 20; // Default: aligned with anchor top
+            let left = anchorRect.right + 16; // Default: right of anchor
+
+            // Collision Detection: Right Edge
+            if (left + cardWidth + padding > window.innerWidth) {
+                left = anchorRect.left - cardWidth - 16;
+            }
+
+            // Collision Detection: Bottom Edge
+            if (top + cardHeight + padding > window.innerHeight) {
+                top = window.innerHeight - cardHeight - padding;
+            }
+
+            // Collision Detection: Top Edge
+            if (top < padding) {
+                top = padding;
+            }
+
+            // If we still collision on the left after flipping
+            if (left < padding) {
+                left = padding;
+                // If it's overlapping the anchor, move it below
+                if (anchorRect.left < left + cardWidth && anchorRect.right > left) {
+                    top = anchorRect.bottom + 16;
+                }
+            }
+
+            setPosition({ top, left });
+        }
+    }, [isOpen, anchorRect]);
+
+    if (!anchorRect) return null;
 
     return (
         <AnimatePresence>
@@ -44,83 +76,107 @@ export function AI_InsightCard({
                     />
 
                     <motion.div
-                        initial={{ opacity: 0, x: -20, scale: 0.95 }}
-                        animate={{ opacity: 1, x: 0, scale: 1 }}
-                        exit={{ opacity: 0, x: -20, scale: 0.95 }}
-                        transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                        style={style}
-                        className="w-[340px] bg-slate-900/80 backdrop-blur-md rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.4)] border border-slate-700/50 overflow-hidden pointer-events-auto"
+                        ref={cardRef}
+                        initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                        transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
+                        style={{
+                            position: 'fixed',
+                            top: position.top,
+                            left: position.left,
+                            zIndex: 1000,
+                        }}
+                        className="w-[340px] bg-slate-900/85 backdrop-blur-xl rounded-[2.5rem] shadow-[0_20px_60px_rgba(0,0,0,0.5)] border border-slate-700/40 overflow-hidden pointer-events-auto"
                     >
-                        {/* Header: AI Status */}
-                        <div className="px-6 pt-6 pb-2 flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                                <div className="p-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-                                    <Sparkles className="w-4 h-4 text-emerald-400" />
+                        {/* Header: Identity */}
+                        <div className="px-8 pt-8 pb-4 flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.1)]">
+                                    <Sparkles className="w-5 h-5 text-emerald-400" />
                                 </div>
-                                <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">
-                                    XAI Reasoning Engine
+                                <span className="text-[11px] font-black text-emerald-400 uppercase tracking-[0.2em]">
+                                    AI INSIGHTS
                                 </span>
                             </div>
-                            <div className="px-2 py-0.5 rounded-full bg-slate-800 border border-slate-700">
-                                <span className="text-[8px] font-black text-slate-400 uppercase">Live Intel</span>
+                            <div className="px-3 py-1 rounded-full bg-slate-800/80 border border-slate-700/50">
+                                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-tight">Verified Intel</span>
                             </div>
                         </div>
 
-                        {/* Value Proposition Section */}
-                        <div className="px-6 py-4 space-y-2">
-                            <div className="flex items-center gap-2 text-slate-400 mb-1">
-                                <BarChart3 className="w-3.5 h-3.5" />
-                                <span className="text-[10px] uppercase font-bold tracking-tight">Data-driven Outlook</span>
+                        {/* Structured Metric: Potential Value (Apple text standard) */}
+                        <div className="px-8 py-6 space-y-1">
+                            <div className="flex items-center gap-2 text-slate-500 mb-1">
+                                <BarChart3 className="w-4 h-4" />
+                                <span className="text-[10px] uppercase font-black tracking-widest">Market Valuation</span>
                             </div>
-                            <p className="text-sm font-medium text-slate-200 leading-relaxed">
-                                Data-driven outlook indicates a <span className="text-emerald-400 font-bold">£{potentialValue.toLocaleString()}</span> pipeline potential, validated by the patient's high-intent digital footprint.
-                            </p>
+                            <div className="flex items-baseline gap-2">
+                                <span className="text-4xl font-bold text-slate-50 tracking-tight">£{potentialValue.toLocaleString()}</span>
+                                <span className="text-sm font-bold text-emerald-400/80">Potential</span>
+                            </div>
                         </div>
 
-                        {/* Evidence/Reasoning Section (Digital Footprint) */}
-                        <div className="px-6 py-4 bg-slate-800/50 border-y border-slate-800/50">
-                            <div className="flex items-center gap-2 text-slate-400 mb-2">
-                                <Search className="w-3.5 h-3.5" />
-                                <span className="text-[10px] uppercase font-bold tracking-tight">Reasoning / Digital Footprint</span>
+                        {/* Information Architecture: Digital Footprint (Bullets) */}
+                        <div className="px-8 py-6 bg-white/[0.03] border-y border-white/[0.05]">
+                            <div className="flex items-center gap-2 text-slate-400 mb-4">
+                                <Search className="w-4 h-4" />
+                                <span className="text-[10px] uppercase font-black tracking-widest leading-none">Digital Footprint Analysis</span>
                             </div>
-                            <p className="text-[11px] text-slate-400 leading-relaxed italic">
-                                Evidence: Patient exhibited digital body language consistent with high-value conversion, including 3+ prolonged sessions on the advanced implant procedure pages.
-                            </p>
+                            <ul className="space-y-3">
+                                <li className="flex gap-3">
+                                    <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.6)] shrink-0" />
+                                    <span className="text-[13px] text-slate-300 font-medium leading-snug">
+                                        3+ prolonged sessions on <span className="text-white">advanced implant procedures</span>.
+                                    </span>
+                                </li>
+                                <li className="flex gap-3">
+                                    <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-slate-600 shrink-0" />
+                                    <span className="text-[13px] text-slate-400 font-medium leading-snug">
+                                        Active engagement with <span className="text-slate-300">Smile Makeover</span> portfolio.
+                                    </span>
+                                </li>
+                                <li className="flex gap-3">
+                                    <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-slate-600 shrink-0" />
+                                    <span className="text-[13px] text-slate-400 font-medium leading-snug">
+                                        Referral source: <span className="text-slate-300">High-intent clinical search</span>.
+                                    </span>
+                                </li>
+                            </ul>
                         </div>
 
-                        {/* Proposed Clinical Steps */}
-                        <div className="px-6 py-5 space-y-4">
+                        {/* Strategic Plan Section */}
+                        <div className="px-8 py-8 space-y-5">
                             <div className="flex items-center gap-2">
-                                <div className="p-1.5 rounded-lg bg-slate-800 border border-slate-700">
-                                    <ClipboardList className="w-4 h-4 text-slate-400" />
+                                <div className="p-2 rounded-xl bg-slate-800/80 border border-slate-700/50">
+                                    <Target className="w-4 h-4 text-slate-400" />
                                 </div>
-                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Strategic Conversion Plan</span>
+                                <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Strategic Conversion Plan</span>
                             </div>
 
-                            <ul className="space-y-2.5">
+                            <ul className="space-y-3">
                                 {treatmentPlan.map((item, idx) => (
-                                    <li key={idx} className="flex items-start gap-3 group/item">
-                                        <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-emerald-500/50 group-hover/item:bg-emerald-400 transition-colors shadow-[0_0_8px_rgba(16,185,129,0.4)]" />
-                                        <span className="text-[11px] text-slate-300 font-medium group-hover:text-white transition-colors">
+                                    <li key={idx} className="flex items-center gap-3">
+                                        <div className="w-1 h-1 rounded-full bg-slate-700" />
+                                        <span className="text-[13px] text-slate-200 font-medium">
                                             {item}
                                         </span>
                                     </li>
                                 ))}
                             </ul>
 
-                            <button className="w-full mt-2 py-3 bg-white/5 hover:bg-white/10 active:scale-[0.98] rounded-2xl border border-white/5 flex items-center justify-center gap-2 transition-all group/btn">
-                                <span className="text-[10px] font-bold text-slate-300 group-hover/btn:text-white uppercase tracking-widest">Execute Full Audit</span>
-                                <ChevronRight className="w-3.5 h-3.5 text-slate-500 group-hover/btn:text-white" />
+                            <button className="w-full mt-4 py-4 bg-white/5 hover:bg-white/10 active:scale-[0.98] rounded-[1.5rem] border border-white/10 flex items-center justify-center gap-3 transition-all group/btn">
+                                <span className="text-[11px] font-black text-slate-200 group-hover/btn:text-white uppercase tracking-[0.15em]">Execute Full Audit</span>
+                                <ChevronRight className="w-4 h-4 text-slate-500 group-hover/btn:text-white" />
                             </button>
                         </div>
 
                         {/* Footer Governance */}
-                        <div className="px-6 py-3 bg-slate-900/90 flex items-center justify-between border-t border-slate-800">
+                        <div className="px-8 py-4 bg-black/20 flex items-center justify-between border-t border-white/[0.05]">
                             <div className="flex items-center gap-2">
-                                <Stethoscope className="w-3 h-3 text-slate-500" />
-                                <span className="text-[9px] font-bold text-slate-500 uppercase tracking-tighter">Clinical Luxury Governance</span>
+                                <Stethoscope className="w-3.5 h-3.5 text-slate-600" />
+                                <span className="text-[10px] font-bold text-slate-600 uppercase tracking-tighter">Clinical Luxury Governance</span>
                             </div>
-                            <span className="text-[8px] font-black text-emerald-500/40 uppercase">Encrypted</span>
+                            <span className="text-[9px] font-black text-emerald-500/30 uppercase">AES-256 Encrypted</span>
                         </div>
                     </motion.div>
                 </>
