@@ -16,6 +16,7 @@ interface AI_InsightCardProps {
  * Features advanced collision detection (Zero-Clipped Positioning) and 
  * structured information architecture (Cognitive Load Chunking).
  */
+// Elite AI Insight Card - Premium Glassmorphism Logic
 export function AI_InsightCard({ 
     isOpen, 
     onClose, 
@@ -89,8 +90,7 @@ export function AI_InsightCard({
                         exit={{ opacity: 0, scale: 0.98, y: 10 }}
                         transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
                         style={{
-                            position: 'fied' as any, // TypeScript workaround for 'fixed'
-                            position: 'fixed',
+                            position: 'fixed' as any,
                             top: position.top,
                             left: position.left,
                             zIndex: 1000,

@@ -16,6 +16,10 @@ interface DashboardState {
   googleProfile: { name: string, rating: number, reviewCount: number } | null;
   setGoogleConnected: (isConnected: boolean, profile?: { name: string, rating: number, reviewCount: number }) => void;
   
+  // Security & Audit State
+  auditLogs: Record<string, any[]>;
+  addAuditLog: (leadId: string, action: string, method: string) => void;
+  
   // Derived selectors (implemented as functions or used via compute)
   getFilteredLeads: () => ConsultationRequest[];
   getDynamicCategories: () => { name: string, value: number }[];
@@ -34,6 +38,25 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
   region: 'UK',
   isGoogleConnected: false,
   googleProfile: null,
+  auditLogs: {
+    "demo-3": [
+      {
+        time: "[14 Mar 2026, 09:12:05 AM EST]",
+        action: "User: System - Action: System login and profile creation - Method: Automated Protocol",
+        type: 'security'
+      },
+      {
+        time: "[14 Mar 2026, 11:45:22 AM EST]",
+        action: "User: System - Action: Patient clinical data synced from EXACT API - Method: API Integration",
+        type: 'system'
+      },
+      {
+        time: "[15 Mar 2026, 02:20:11 PM EST]",
+        action: "User: Hanlan AI - Action: AI Potential Value & Insights successfully calculated - Method: Neural Engine",
+        type: 'ai'
+      }
+    ]
+  },
   
   setLeads: (leads) => set((state) => ({ 
     leads: typeof leads === 'function' ? leads(state.leads) : leads 
@@ -51,6 +74,23 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
   injectSampleData: () => {
     const { DEMO_LEADS } = require('../lib/demoData');
     set({ leads: DEMO_LEADS as ConsultationRequest[] });
+  },
+
+  addAuditLog: (leadId, action, method) => {
+    const { formatAuditTimestamp } = require('../lib/utils/formatters');
+    const timestamp = formatAuditTimestamp(new Date());
+    const logEntry = {
+      time: timestamp,
+      action: `User: Dr. Hanlan - Action: ${action} - Method: ${method}`,
+      type: 'user'
+    };
+    
+    set((state) => ({
+      auditLogs: {
+        ...state.auditLogs,
+        [leadId]: [logEntry, ...(state.auditLogs[leadId] || [])]
+      }
+    }));
   },
 
   getDynamicCategories: () => {

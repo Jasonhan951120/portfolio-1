@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ShieldCheck, X, Clock, Database, BrainCircuit, CheckCircle2 } from 'lucide-react';
 import { ConsultationRequest } from '../../lib/supabase';
 import { sanitizeString } from '../../lib/utils/formatters';
+import { useDashboardStore } from '../../store/useDashboardStore';
 
 interface AuditTrailModalProps {
   lead: ConsultationRequest | null;
@@ -13,12 +14,20 @@ interface AuditTrailModalProps {
 export const AuditTrailModal: React.FC<AuditTrailModalProps> = ({ lead, isOpen, onClose }) => {
   if (!lead) return null;
 
-  const logs = [
-    { time: "Just now", action: "Access logged for GP verification", icon: ShieldCheck, type: 'security' },
-    { time: new Date(Date.now() - 3600000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }), action: "AI recalculated potential value", icon: BrainCircuit, type: 'ai' },
-    { time: new Date(Date.now() - 86400000).toLocaleString([], { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }), action: "Data synced from EXACT API", icon: Database, type: 'system' },
-    { time: new Date(lead.created_at).toLocaleString([], { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }), action: "Lead created via Website Widget", icon: CheckCircle2, type: 'init' },
+  const auditLogs = useDashboardStore(state => state.auditLogs);
+  const leadLogs = auditLogs[lead.id] || [
+    { time: "Just now", action: "User: System - Action: Access logged for GP verification - Method: Automated Protocol", icon: ShieldCheck, type: 'security' },
+    { time: new Date(Date.now() - 3600000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }), action: "User: Hanlan AI - Action: AI recalculated potential value - Method: Neural Engine", icon: BrainCircuit, type: 'ai' },
   ];
+
+  const getLogIcon = (type: string) => {
+    switch (type) {
+      case 'security': return ShieldCheck;
+      case 'ai': return BrainCircuit;
+      case 'system': return Database;
+      default: return CheckCircle2;
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -63,11 +72,13 @@ export const AuditTrailModal: React.FC<AuditTrailModalProps> = ({ lead, isOpen, 
             {/* Content */}
             <div className="p-8 max-h-[60vh] overflow-y-auto custom-scrollbar">
               <div className="relative border-l border-slate-100 ml-3 space-y-8">
-                {logs.map((log, idx) => (
-                  <div key={idx} className="relative pl-8 group">
-                    <div className="absolute -left-[16.5px] top-0 p-1 bg-white border border-slate-100 rounded-full group-hover:border-emerald-200 group-hover:bg-emerald-50 transition-colors shadow-sm">
-                      <log.icon className={`w-3 h-3 ${idx === 0 ? 'text-emerald-500' : 'text-slate-400 group-hover:text-emerald-600'}`} />
-                    </div>
+                {leadLogs.map((log, idx) => {
+                  const Icon = log.icon || getLogIcon(log.type);
+                  return (
+                    <div key={idx} className="relative pl-8 group">
+                      <div className="absolute -left-[16.5px] top-0 p-1 bg-white border border-slate-100 rounded-full group-hover:border-emerald-200 group-hover:bg-emerald-50 transition-colors shadow-sm">
+                        <Icon className={`w-3 h-3 ${idx === 0 ? 'text-emerald-500' : 'text-slate-400 group-hover:text-emerald-600'}`} />
+                      </div>
                     <div className="flex flex-col">
                       <span className="text-[10px] tabular-nums text-slate-400 font-bold uppercase tracking-widest mb-1 leading-none">
                         {log.time}
@@ -77,7 +88,8 @@ export const AuditTrailModal: React.FC<AuditTrailModalProps> = ({ lead, isOpen, 
                       </span>
                     </div>
                   </div>
-                ))}
+                );
+              })}
               </div>
             </div>
 
