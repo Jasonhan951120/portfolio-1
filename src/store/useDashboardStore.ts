@@ -12,6 +12,9 @@ interface DashboardState {
   injectSampleData: () => void;
   region: 'UK' | 'US';
   setRegion: (region: 'UK' | 'US') => void;
+  isGoogleConnected: boolean;
+  googleProfile: { name: string, rating: number, reviewCount: number } | null;
+  setGoogleConnected: (isConnected: boolean, profile?: { name: string, rating: number, reviewCount: number }) => void;
   
   // Derived selectors (implemented as functions or used via compute)
   getFilteredLeads: () => ConsultationRequest[];
@@ -29,6 +32,8 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
   activeCategory: 'All',
   activeTab: 'PIPELINE',
   region: 'UK',
+  isGoogleConnected: false,
+  googleProfile: null,
   
   setLeads: (leads) => set((state) => ({ 
     leads: typeof leads === 'function' ? leads(state.leads) : leads 
@@ -37,6 +42,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
   setActiveCategory: (category) => set({ activeCategory: category }),
   setActiveTab: (tab) => set({ activeTab: tab }),
   setRegion: (region) => set({ region }),
+  setGoogleConnected: (isConnected, profile) => set({ isGoogleConnected: isConnected, googleProfile: profile || null }),
   
   updateLead: (id, updates) => set((state) => ({
     leads: state.leads.map((l) => l.id === id ? { ...l, ...updates } : l)

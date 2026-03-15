@@ -49,6 +49,8 @@ import { useDashboardStore } from "../store/useDashboardStore";
 import { SlotNumber } from "./SlotNumber";
 import { AICaseNotePopover } from "./dashboard/AICaseNotePopover";
 import { AuditTrailModal } from "./dashboard/AuditTrailModal";
+import { GoogleOnboardingModal } from "./dashboard/GoogleOnboardingModal";
+import { ReviewCorrelationWidget } from "./dashboard/ReviewCorrelationWidget";
 
 // Onboarding Tooltip Component (Medical Precision)
 const OnboardingTooltip = ({ message, onClose }: { message: string; onClose: () => void }) => (
@@ -864,8 +866,20 @@ export default function AdminDashboard() {
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
-  // AI \u0026 Audit State
+  // AI & Audit State
   const [activeAuditLead, setActiveAuditLead] = useState<ConsultationRequest | null>(null);
+  const [isGoogleModalOpen, setIsGoogleModalOpen] = useState(false);
+  const isGoogleConnected = useDashboardStore(state => state.isGoogleConnected);
+
+  // Auto-trigger Google Onboarding Modal
+  useEffect(() => {
+    if (!isGoogleConnected && activeTab === 'PIPELINE') {
+      const timer = setTimeout(() => {
+        setIsGoogleModalOpen(true);
+      }, 3000); // 3 second delay for better UX
+      return () => clearTimeout(timer);
+    }
+  }, [isGoogleConnected, activeTab]);
 
   // Auto-selection of highest revenue category upon data load
   useEffect(() => {
@@ -2536,9 +2550,14 @@ export default function AdminDashboard() {
                       <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="max-w-7xl mx-auto px-6 py-10 space-y-8"
+                        className="max-w-7xl mx-auto px-6 py-10 space-y-12"
                       >
-                        <div className="flex justify-between items-end">
+                        {/* New Reputation ROI Intelligence */}
+                        <div className="grid grid-cols-1 gap-8">
+                             <ReviewCorrelationWidget />
+                        </div>
+
+                        <div className="flex justify-between items-end border-t border-slate-100 pt-12">
                           <h2 className="text-3xl font-bold text-slate-900 tracking-tight italic uppercase">Lead Flow Board</h2>
                           <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">{(leads ?? []).length} total leads</p>
                         </div>
@@ -2564,11 +2583,6 @@ export default function AdminDashboard() {
                           ))}
                         </div>
                       </motion.div>
-                      <AuditTrailModal 
-                        isOpen={!!activeAuditLead} 
-                        lead={activeAuditLead} 
-                        onClose={() => setActiveAuditLead(null)} 
-                      />
                     </>
                   )}
                 </motion.div>
@@ -2641,6 +2655,17 @@ export default function AdminDashboard() {
               )}
 
             </AnimatePresence>
+
+            <AuditTrailModal 
+              isOpen={!!activeAuditLead} 
+              lead={activeAuditLead} 
+              onClose={() => setActiveAuditLead(null)} 
+            />
+
+            <GoogleOnboardingModal 
+              isOpen={isGoogleModalOpen}
+              onClose={() => setIsGoogleModalOpen(false)}
+            />
           </main>
 
           {/* ── EXPERT MODE DRAWER ── */}
@@ -2680,7 +2705,7 @@ export default function AdminDashboard() {
       <footer className="mt-24 py-16 px-8 bg-slate-900 border-t border-slate-800">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-wrap items-center justify-between gap-10">
-            {/* Brand \u0026 Security Status */}
+            {/* Brand & Security Status */}
             <div className="flex items-center gap-5">
               <div className="w-14 h-14 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center shadow-2xl relative group">
                 <div className="absolute inset-0 bg-emerald-500/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />

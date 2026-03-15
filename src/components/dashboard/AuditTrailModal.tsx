@@ -28,7 +28,7 @@ export const AuditTrailModal: React.FC<AuditTrailModalProps> = ({ lead, isOpen, 
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+            className="absolute inset-0 bg-slate-900/40 backdrop-blur-md"
           />
           
           <motion.div
@@ -43,7 +43,7 @@ export const AuditTrailModal: React.FC<AuditTrailModalProps> = ({ lead, isOpen, 
               <div className="flex justify-between items-start mb-1">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <h3 className="text-sm font-black uppercase tracking-widest text-slate-800">Security \u0026 Audit Trail</h3>
+                  <h3 className="text-sm font-black uppercase tracking-widest text-slate-800">Security & Audit Trail</h3>
                 </div>
                 <button 
                   onClick={onClose}
@@ -53,7 +53,7 @@ export const AuditTrailModal: React.FC<AuditTrailModalProps> = ({ lead, isOpen, 
                 </button>
               </div>
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
-                Protected by UK GDPR \u0026 Global Data Privacy Standards
+                Protected by UK GDPR & Global Data Privacy Standards
               </p>
             </div>
 
@@ -69,7 +69,7 @@ export const AuditTrailModal: React.FC<AuditTrailModalProps> = ({ lead, isOpen, 
                       <span className="text-[10px] tabular-nums text-slate-400 font-bold uppercase tracking-widest mb-1 leading-none">
                         {log.time}
                       </span>
-                      <span className="text-xs font-black text-slate-700 leading-tight">
+                      <span className="text-sm font-black text-slate-800 leading-tight">
                         {log.action}
                       </span>
                     </div>
