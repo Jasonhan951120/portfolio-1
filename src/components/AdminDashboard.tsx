@@ -58,14 +58,15 @@ const OnboardingTooltip = ({ message, onClose }: { message: string; onClose: () 
     className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-64 p-5 bg-white border border-emerald-500/20 rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.08)] z-[60]"
   >
     <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-t border-l border-emerald-500/20 rotate-45" />
-    <p className="text-[11px] font-bold text-slate-900 leading-relaxed mb-3">
+    <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-t border-l border-emerald-500/20 rotate-45" />
+    <p className="text-sm font-semibold text-slate-800 leading-relaxed mb-4">
       {message}
     </p>
     <button 
       onClick={onClose}
-      className="w-full py-2 bg-emerald-500/5 hover:bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-[9px] font-black uppercase tracking-widest text-emerald-600 transition-all"
+      className="w-full py-3 bg-emerald-500 hover:bg-emerald-600 rounded-2xl text-[10px] font-black uppercase tracking-widest text-white shadow-lg shadow-emerald-500/20 transition-all"
     >
-      Got it
+      Acknowledge Analysis
     </button>
   </motion.div>
 );
@@ -141,28 +142,32 @@ const STATUS_COLORS: Record<string, string> = {
 // Enterprise Guard Footer Badge (Universal)
 const SecurityBadge = ({ region }: { region: 'UK' | 'US' }) => (
   <motion.div
-    initial={{ opacity: 0, scale: 0.9 }}
-    animate={{ opacity: 1, scale: 1 }}
+    initial={{ opacity: 0, y: 10 }}
+    animate={{ opacity: 1, y: 0 }}
     key={region}
-    className="flex items-center gap-4 bg-slate-800/50 border border-slate-700/50 px-4 py-2 rounded-2xl backdrop-blur-md"
+    className="flex flex-wrap items-center gap-6 bg-white/50 border border-slate-200/60 p-5 rounded-[32px] backdrop-blur-xl shadow-sm"
   >
-    <div className="flex items-center gap-2">
-      <ShieldCheck className="w-4 h-4 text-emerald-400" />
+    <div className="flex items-center gap-3">
+      <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
+        <ShieldCheck className="w-5 h-5 text-emerald-600" />
+      </div>
       <div className="flex flex-col">
-        <span className="text-[9px] font-black text-white uppercase tracking-widest leading-none">
-          {region === 'UK' ? "UK GDPR Compliant" : "HIPAA Compliant"}
+        <span className="text-[10px] font-black text-slate-800 uppercase tracking-widest leading-none mb-1">
+          {region === 'UK' ? "UK GDPR Compliant" : "US HIPAA Certified"}
         </span>
-        <span className="text-[8px] text-slate-400 font-medium whitespace-nowrap">Global Privacy Standards</span>
+        <span className="text-[9px] text-slate-500 font-semibold whitespace-nowrap uppercase tracking-tighter">Zero-EMR Data Protection</span>
       </div>
     </div>
-    <div className="w-px h-6 bg-slate-700/50" />
-    <div className="flex items-center gap-2">
-      <Globe className="w-4 h-4 text-blue-400" />
+    <div className="hidden md:block w-px h-8 bg-slate-200" />
+    <div className="flex items-center gap-3">
+      <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
+        <Globe className="w-5 h-5 text-blue-600" />
+      </div>
       <div className="flex flex-col">
-        <span className="text-[9px] font-black text-white uppercase tracking-widest leading-none">
-          {region === 'UK' ? "Europe Digital Standards" : "Certified Secure Protocol"}
+        <span className="text-[10px] font-black text-slate-800 uppercase tracking-widest leading-none mb-1">
+          {region === 'UK' ? "Europe Digital Standards" : "Certified Secure Stream"}
         </span>
-        <span className="text-[8px] text-slate-400 font-medium whitespace-nowrap">Enterprise Grade Architecture</span>
+        <span className="text-[9px] text-slate-500 font-semibold whitespace-nowrap uppercase tracking-tighter">Enterprise Grade Guard</span>
       </div>
     </div>
   </motion.div>
@@ -182,23 +187,22 @@ const OnboardingEmptyState = ({ onInjectSample }: { onInjectSample: () => void }
        </div>
     </div>
     
-    <div className="space-y-3 max-w-md">
-      <h2 className="text-2xl font-black text-slate-800 tracking-tight italic">아직 업로드된 환자 데이터가 없습니다.</h2>
-      <p className="text-slate-400 text-sm font-medium leading-relaxed">
-        CSV 파일을 업로드하여 AI 매출 분석을 시작하거나, <br />
-        샘플 데이터를 통해 대시보드의 강력함을 미리 체험해 보세요.
+    <div className="space-y-4 max-w-md">
+      <h2 className="text-3xl font-semibold text-slate-800 tracking-tight italic">Waiting for Patient Data Stream.</h2>
+      <p className="text-slate-500 text-sm font-medium leading-relaxed">
+        Upload your patient logs to activate AI revenue forecasting, or inject sample data to experience the full power of the Hanlan intelligence suite.
       </p>
     </div>
 
     <button
       onClick={onInjectSample}
-      className="group relative px-8 py-4 bg-emerald-500 rounded-3xl overflow-hidden transition-all hover:scale-[1.02] active:scale-[0.98] shadow-[0_20px_40px_rgba(16,185,129,0.2)]"
+      className="group relative px-10 py-5 bg-emerald-500 rounded-3xl overflow-hidden transition-all hover:scale-[1.02] active:scale-[0.98] shadow-[0_20px_40px_rgba(16,185,129,0.2)]"
     >
       <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity" />
       <div className="absolute -inset-1 bg-emerald-400/30 blur-xl opacity-0 group-hover:opacity-100 animate-pulse transition-opacity" />
-      <span className="relative flex items-center gap-3 text-white font-black uppercase tracking-widest text-xs">
-         <Sparkles className="w-4 h-4" />
-         ✨ 샘플 데이터로 대시보드 미리보기
+      <span className="relative flex items-center gap-3 text-white font-black uppercase tracking-widest text-[11px]">
+         <Sparkles className="w-5 h-5" />
+         Activate Intelligence Suite
       </span>
     </button>
   </motion.div>
@@ -339,29 +343,29 @@ function NotificationDropdown({ notifications, onClose, onDismiss }: { notificat
       className="absolute top-full right-0 mt-4 w-80 bg-white border border-slate-200 rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.08)] p-6 z-[100]"
     >
       <div className="flex justify-between items-center mb-6">
-        <h3 className="text-xs font-bold text-slate-900 uppercase tracking-widest">Recent Activity</h3>
-        <button onClick={onClose} className="p-1 hover:bg-slate-50 rounded-lg text-slate-400">
-          <X className="w-4 h-4" />
+        <h3 className="text-[10px] font-black text-slate-800 uppercase tracking-widest">Global Activity Stream</h3>
+        <button onClick={onClose} className="p-2 hover:bg-slate-50 rounded-xl text-slate-400 transition-colors">
+          <X className="w-5 h-5" />
         </button>
       </div>
-      <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+      <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
         {notifications.length === 0 ? (
-          <p className="text-[10px] text-slate-400 text-center py-8 italic">No new activity</p>
+          <p className="text-xs text-slate-400 text-center py-10 italic">System clear. No pending activity.</p>
         ) : (
           notifications.map((n) => (
-            <div key={n.id} className="relative p-4 bg-slate-50 border border-slate-100 rounded-2xl group transition-all hover:bg-slate-100/50">
+            <div key={n.id} className="relative p-5 bg-white border border-slate-100 rounded-2xl group transition-all hover:border-emerald-500/20 hover:shadow-sm">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   onDismiss(n.id);
                 }}
-                className="absolute top-3 right-3 p-1 rounded-md text-slate-300 hover:text-slate-900 hover:bg-white transition-colors"
+                className="absolute top-4 right-4 p-1.5 rounded-lg text-slate-300 hover:text-slate-800 hover:bg-slate-50 transition-colors"
                 title="Dismiss"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
-              <p className="text-[11px] text-slate-600 leading-relaxed mb-2 pr-6">{n.message}</p>
-              <span className="text-[8px] font-bold text-emerald-600 uppercase tracking-tighter">{n.time}</span>
+              <p className="text-sm font-medium text-slate-700 leading-relaxed mb-3 pr-8">{n.message}</p>
+              <span className="text-[9px] font-black text-emerald-600 uppercase tracking-widest">{n.time}</span>
             </div>
           ))
         )}
@@ -396,28 +400,28 @@ function WaitlistPanel({
           transition={{ type: "spring", damping: 25, stiffness: 200 }}
           className="fixed top-0 right-0 h-full w-[380px] bg-white border-l border-slate-200 shadow-[-20px_0_50px_rgba(0,0,0,0.05)] z-[101] p-10 overflow-y-auto custom-scrollbar"
         >
-          <div className="flex justify-between items-center mb-10">
+          <div className="flex justify-between items-center mb-12">
             <div>
-              <h2 className="text-2xl font-bold text-slate-900">Smart Waitlist</h2>
-              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Gap Filling Automation</p>
+              <h2 className="text-3xl font-semibold text-slate-800 tracking-tight">Smart Waitlist</h2>
+              <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.3em] mt-2">Neural Gap Filling Protocol</p>
             </div>
-            <button onClick={onClose} className="p-3 bg-slate-50 hover:bg-slate-100 rounded-2xl text-slate-900 transition-all">
-              <X className="w-6 h-6" />
+            <button onClick={onClose} className="p-4 bg-slate-50 hover:bg-slate-100 rounded-2xl text-slate-800 transition-all shadow-sm">
+              <X className="w-6 h-6" strokeWidth={2.5} />
             </button>
           </div>
 
-          <div className="space-y-6 mb-24">
-            <div className="p-6 bg-slate-50 border border-slate-200 rounded-3xl group transition-all">
-              <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-[0.2em] mb-3 leading-none">Intelligence Pack</p>
-              <h3 className="text-lg font-bold text-slate-900 mb-2 underline decoration-emerald-200 underline-offset-4">1-Click Gap Filler</h3>
-              <p className="text-xs text-slate-500 leading-relaxed mb-6">We found a 2:00 PM slot tomorrow. Notify all matching waitlist patients?</p>
+          <div className="space-y-8 mb-24">
+            <div className="p-8 bg-white border border-slate-200/60 rounded-[32px] group transition-all shadow-sm">
+              <p className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.3em] mb-4 leading-none">Automated Intelligence</p>
+              <h3 className="text-xl font-semibold text-slate-800 mb-3 underline decoration-emerald-200/50 underline-offset-8">Gap Analysis Tool</h3>
+              <p className="text-sm font-medium text-slate-500 leading-relaxed mb-8">System identified a scheduling conflict at 14:00 tomorrow. Broadcast availability to priority patients?</p>
               <button
                 onClick={onBroadcast}
                 disabled={isBroadcasting}
-                className="w-full py-4 bg-emerald-500 text-white font-black uppercase tracking-widest text-[11px] rounded-2xl hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-500/20 disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full py-5 bg-slate-900 text-white font-black uppercase tracking-[0.2em] text-[11px] rounded-2xl hover:bg-black transition-all shadow-xl shadow-black/10 disabled:opacity-50 flex items-center justify-center gap-3"
               >
-                {isBroadcasting ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-                {isBroadcasting ? "Broadcasting..." : "Broadcast Availability"}
+                {isBroadcasting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
+                {isBroadcasting ? "Processing Broadcast..." : "Broadcast Availability"}
               </button>
             </div>
 

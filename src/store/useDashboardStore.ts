@@ -68,10 +68,10 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
     
     console.group("🚀 HANLAN AI REVENUE ENGINE: CATEGORY ANALYSIS");
     console.log("Analyzing current pipeline data...");
-    console.log("분석된 상위 3개 카테고리:", top3Categories);
+    console.log("Top 3 Analyzed Categories:", top3Categories);
     console.table(categories.map(c => ({ 
       'Category': c.name, 
-      'Total Potential Revenue': `£${c.value.toLocaleString()}`,
+      'Total Potential Revenue': get().region === 'UK' ? `£${c.value.toLocaleString()}` : `$${c.value.toLocaleString()}`,
       'Rank': categories.indexOf(c) + 1
     })));
     console.groupEnd();
