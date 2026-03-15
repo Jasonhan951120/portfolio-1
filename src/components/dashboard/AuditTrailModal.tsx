@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShieldCheck, X, Clock, Database, BrainCircuit, CheckCircle2 } from 'lucide-react';
 import { ConsultationRequest } from '../../lib/supabase';
+import { sanitizeString } from '../../lib/utils/formatters';
 
 interface AuditTrailModalProps {
   lead: ConsultationRequest | null;
@@ -43,7 +44,9 @@ export const AuditTrailModal: React.FC<AuditTrailModalProps> = ({ lead, isOpen, 
               <div className="flex justify-between items-start mb-1">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <h3 className="text-sm font-black uppercase tracking-widest text-slate-800">Security & Audit Trail</h3>
+                  <h3 className="text-sm font-black uppercase tracking-widest text-slate-800">
+                    {sanitizeString("Security & Audit Trail")}
+                  </h3>
                 </div>
                 <button 
                   onClick={onClose}
@@ -52,8 +55,8 @@ export const AuditTrailModal: React.FC<AuditTrailModalProps> = ({ lead, isOpen, 
                   <X className="w-4 h-4" />
                 </button>
               </div>
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
-                Protected by UK GDPR & Global Data Privacy Standards
+              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">
+                {sanitizeString("Protected by UK GDPR & Global Data Privacy Standards")}
               </p>
             </div>
 
@@ -70,7 +73,7 @@ export const AuditTrailModal: React.FC<AuditTrailModalProps> = ({ lead, isOpen, 
                         {log.time}
                       </span>
                       <span className="text-sm font-black text-slate-800 leading-tight">
-                        {log.action}
+                        {sanitizeString(log.action)}
                       </span>
                     </div>
                   </div>
@@ -82,7 +85,9 @@ export const AuditTrailModal: React.FC<AuditTrailModalProps> = ({ lead, isOpen, 
             <div className="p-6 bg-slate-50/50 border-t border-slate-100 text-center">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 rounded-full">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
-                <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Audit Verified</span>
+                 <span className="text-sm font-black text-slate-800 uppercase tracking-widest">
+                  {sanitizeString("Audit Verified")}
+                </span>
               </div>
             </div>
           </motion.div>

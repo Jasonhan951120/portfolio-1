@@ -19,3 +19,17 @@ export const formatDate = (date: string | number | Date, region: 'UK' | 'US') =>
 export const getCurrencySymbol = (region: 'UK' | 'US') => {
   return region === 'UK' ? '£' : '$';
 };
+
+export const sanitizeString = (str: string) => {
+  if (!str) return str;
+  return str
+    .replace(/\\u0026/gi, '&')
+    .replace(/\\U0026/gi, '&')
+    .replace(/&amp;/gi, '&')
+    .replace(/\\u0027/gi, "'")
+    .replace(/\\U0027/gi, "'")
+    .replace(/&apos;/gi, "'")
+    .replace(/\\u0022/gi, '"')
+    .replace(/\\U0022/gi, '"')
+    .replace(/&quot;/gi, '"');
+};
