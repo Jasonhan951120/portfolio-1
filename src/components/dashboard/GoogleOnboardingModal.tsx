@@ -12,23 +12,17 @@ export const GoogleOnboardingModal: React.FC<GoogleOnboardingModalProps> = ({ is
     const [step, setStep] = useState<'invite' | 'connecting' | 'success'>('invite');
     const setGoogleConnected = useDashboardStore(state => state.setGoogleConnected);
 
-    const handleConnect = async () => {
-        setStep('connecting');
-        // Simulate OAuth handshaking
-        await new Promise(resolve => setTimeout(resolve, 2000));
+    const handleConnect = () => {
+        // Build the Google OAuth 2.0 URL
+        const clientId = 'YOUR_PLACEHOLDER_CLIENT_ID'; // Placeholder for now
+        const redirectUri = encodeURIComponent('https://www.hanlanoc.com/admin');
+        const scope = encodeURIComponent('email profile https://www.googleapis.com/auth/business.manage');
+        const responseType = 'token';
         
-        setGoogleConnected(true, {
-            name: "Hanlan Oral Clinic",
-            rating: 4.9,
-            reviewCount: 128
-        });
+        const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}`;
         
-        setStep('success');
-        
-        // Auto-close after showing success
-        setTimeout(() => {
-            onClose();
-        }, 2000);
+        // Redirect the user to the official Google login page
+        window.location.href = googleAuthUrl;
     };
 
     // Lock background scrolling when modal is open
