@@ -112,113 +112,116 @@ export const PatientCard = React.memo(function PatientCard({
   const isOverdue = (lead.status === "New Lead") && (Date.now() - baseline) > 86400000;
 
   return (
-    <div ref={setNodeRef} style={style} className="mb-4 outline-none px-1 h-[148px] transition-luxury">
+    <div ref={setNodeRef} style={style} className="mb-4 outline-none px-1 h-[180px] transition-all">
       <motion.div
         layout
         initial={{ opacity: 1, scale: 1 }}
-        whileHover={{ scale: 1.02, y: -4 }}
-        whileTap={{ scale: 0.98 }}
+        whileHover={{ scale: 1.01, y: -2 }}
+        whileTap={{ scale: 0.99 }}
         animate={isExiting ? { opacity: 0, scale: 0.8, x: 50, filter: "blur(4px)" } : {}}
         transition={{ type: "spring", stiffness: 400, damping: 30 }}
-        className={`h-full rounded-3xl p-4 relative group transition-all bg-white border-[0.5px] border-slate-200/60 shadow-luxury hover:shadow-luxury-hover active:scale-[0.98]
+        className={`h-full bg-white border border-slate-200/80 shadow-sm rounded-xl p-5 relative group transition-all duration-200 hover:shadow-md
           ${isDragging ? 'opacity-50' : ''} 
-          ${isOverdue ? 'border-red-500/30' : ''}
+          ${isOverdue ? 'ring-1 ring-red-200 border-red-200' : ''}
           ${showVIPPulse ? 'ring-2 ring-red-400 animate-pulse' : ''}
-          ${!isMatchingFocus && focusMode !== "All" ? 'grayscale opacity-50 scale-[0.9] translate-y-4' : 'ring-2 ring-emerald-400/50 shadow-[0_0_20px_rgba(16,185,129,0.1)]'}
+          ${!isMatchingFocus && focusMode !== "All" ? 'grayscale opacity-50 scale-[0.98]' : ''}
         `}
       >
         <div {...attributes} {...listeners} className="absolute inset-0 z-0 cursor-grab" />
-        <div className="relative z-10 pointer-events-none">
-          <div className="flex justify-between items-start mb-2">
-            <div>
-              <div className="flex items-center gap-1.5 mb-0.5">
-                <h4 className="font-bold text-[13px] text-slate-900 truncate w-32">{lead.name}</h4>
+        
+        <div className="relative z-10 flex flex-col h-full pointer-events-none">
+          {/* Top Section: Name & Time */}
+          <div className="flex justify-between items-start mb-4">
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center gap-2">
+                <h4 className="text-slate-900 font-bold tracking-tight text-[15px] truncate w-40">{lead.name}</h4>
                 {isVIP && (
-                  <span className="text-[8px] font-black px-1.5 py-0.5 rounded-md bg-amber-100 text-amber-700 border border-amber-200">
+                  <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-100 flex items-center gap-1">
                     VIP
                   </span>
                 )}
               </div>
-              <p className="text-[11px] font-semibold text-slate-600/80">{timeAgo(lead.created_at, region)}</p>
+              <span className="text-slate-500 font-medium text-xs">{timeAgo(lead.created_at, region)}</span>
             </div>
-            <span className="text-[14px] metric-authority">
-              {region === 'UK' ? '£' : '$'}
-              {(lead.potential_value || 1000).toLocaleString()}
-            </span>
-          </div>
-          <div className="flex flex-col gap-1 mb-3">
-            <div className="flex items-center gap-2">
-              <span className={`text-2xl font-black tabular-nums tracking-tighter ${lead.intent_score && lead.intent_score >= 80 ? 'text-emerald-600' : 'text-slate-900'}`}>
-                {lead.intent_score || 0}%
-              </span>
-              <span className="text-[10px] font-extrabold text-slate-600 uppercase tracking-widest opacity-70">AI Intent</span>
-              {lead.intent_score && lead.intent_score >= 80 && (
-                <span className="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 text-[10px] font-black uppercase tracking-tight shadow-sm border border-emerald-200/50">
-                  🔥 High Intent
-                </span>
-              )}
-            </div>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200 uppercase w-fit">{lead.service}</span>
-          </div>
-          <div className="pt-3 border-t border-slate-100 flex justify-end gap-2 pointer-events-auto opacity-0 group-hover:opacity-100 transition-all">
             
-            {/* Dynamic WhatsApp Button */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                if (hasPhone && whatsappUrl) {
-                  window.open(whatsappUrl, '_blank');
-                }
-              }}
-              disabled={!hasPhone}
-              className={`p-1.5 rounded-lg transition-all btn-tactile flex items-center gap-1.5 px-2 relative
-                ${hasPhone 
-                  ? 'text-[#25D366] hover:bg-[#25D366]/5 shadow-sm hover:shadow-[0_0_15px_rgba(37,211,102,0.4)]' 
-                  : 'text-slate-300 cursor-not-allowed opacity-50'
-                }
-                ${lead.intent_score && lead.intent_score >= 80 ? 'ring-2 ring-emerald-400 ring-offset-2 animate-pulse-gentle' : ''}
-              `}
-              title={hasPhone ? "Contact via WhatsApp" : "Phone number required"}
-            >
-              <MessageCircle className="w-3.5 h-3.5" />
-              <span className="text-[9px] font-bold uppercase tracking-tighter">WhatsApp</span>
-            </button>
-
-            <button 
-              onClick={() => onOpenAudit(lead)} 
-              className="p-1.5 text-slate-600 hover:text-emerald-500 hover:bg-emerald-50 hover:scale-110 rounded-lg transition-all btn-tactile"
-              title="Security & Audit Trail"
-            >
-              <Monitor className="w-3.5 h-3.5" />
-            </button>
-            <div className="relative group/popover">
-              <button 
-                onMouseEnter={(e) => {
-                  setAnchorRect(e.currentTarget.getBoundingClientRect());
-                  setIsCaseNoteVisible(true);
-                }}
-                onMouseLeave={() => setIsCaseNoteVisible(false)}
-                onClick={(e) => {
-                  setAnchorRect(e.currentTarget.getBoundingClientRect());
-                  setIsCaseNoteVisible(!isCaseNoteVisible);
-                }}
-                className="p-1.5 text-slate-600 hover:text-indigo-500 hover:bg-indigo-50 hover:scale-110 rounded-lg transition-all btn-tactile"
-                title="AI Value Reasoning"
+            <div className="flex items-center gap-2 pointer-events-auto">
+               <button 
+                onClick={() => onOpenAudit(lead)} 
+                className="p-1.5 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-all"
+                title="Security & Audit Trail"
               >
-                <FileText className="w-3.5 h-3.5" />
+                <Monitor className="w-4 h-4" />
               </button>
-              <AICaseNotePopover lead={lead} isVisible={isCaseNoteVisible} anchorRect={anchorRect} />
+              <div className="relative group/popover">
+                <button 
+                  onMouseEnter={(e) => {
+                    setAnchorRect(e.currentTarget.getBoundingClientRect());
+                    setIsCaseNoteVisible(true);
+                  }}
+                  onMouseLeave={() => setIsCaseNoteVisible(false)}
+                  className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all"
+                  title="AI Value Reasoning"
+                >
+                  <FileText className="w-4 h-4" />
+                </button>
+                <AICaseNotePopover lead={lead} isVisible={isCaseNoteVisible} anchorRect={anchorRect} />
+              </div>
             </div>
-            
-            {lead.status === "New Lead" && (
+          </div>
+
+          {/* Middle Section: AI Badge & Service */}
+          <div className="flex flex-wrap items-center gap-2 mb-auto">
+            <div className="bg-emerald-50 text-emerald-700 border border-emerald-100 font-bold px-2.5 py-1 rounded-md text-[11px] flex items-center gap-1.5 shadow-sm">
+              <Sparkles className="w-3.5 h-3.5 fill-emerald-700/20" />
+              {lead.intent_score || 0}% AI INTENT
+            </div>
+            <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider bg-slate-50 border border-slate-100 px-2 py-1 rounded-md">
+              {lead.service}
+            </span>
+            {lead.intent_score && lead.intent_score >= 80 && (
+              <span className="animate-pulse flex h-2 w-2 rounded-full bg-emerald-500" />
+            )}
+          </div>
+
+          {/* Bottom Section: Price & WhatsApp */}
+          <div className="pt-4 border-t border-slate-100 flex items-center justify-between mt-4">
+            <div className="flex flex-col -gap-1">
+              <span className="text-slate-900 font-bold tracking-tight text-lg">
+                {region === 'UK' ? '£' : '$'}
+                {(lead.potential_value || 1000).toLocaleString()}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2 pointer-events-auto">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (hasPhone && whatsappUrl) {
+                    window.open(whatsappUrl, '_blank');
+                  }
+                }}
+                disabled={!hasPhone}
+                className={`flex items-center gap-1.5 text-[13px] font-semibold px-3 py-1.5 rounded-lg transition-all
+                  ${hasPhone 
+                    ? 'text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-100/50' 
+                    : 'text-slate-300 bg-slate-50 border border-slate-100 cursor-not-allowed opacity-50'
+                  }
+                `}
+              >
+                <MessageCircle className="w-4 h-4" />
+                WhatsApp
+              </button>
+              
+              {lead.status === "New Lead" && (
                 <button
                   onClick={handleWaitlistClick}
-                  className="p-1.5 text-slate-600 hover:text-emerald-500 hover:bg-emerald-50 rounded-lg transition-all btn-tactile"
+                  className="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-all"
                   title="Move to Waitlist"
                 >
-                  <Users className="w-3.5 h-3.5" />
+                  <Users className="w-4 h-4" />
                 </button>
               )}
+            </div>
           </div>
         </div>
       </motion.div>
