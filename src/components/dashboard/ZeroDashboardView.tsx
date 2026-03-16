@@ -213,7 +213,7 @@ function HotLeadCard({
                             transition-all duration-300 flex items-center justify-center gap-3 text-xs
                             ${sent
                                 ? 'bg-emerald-500 text-white cursor-default shadow-lg shadow-emerald-200'
-                                : 'bg-emerald-500 text-white border border-transparent hover:bg-emerald-600 shadow-sm'
+                                : 'bg-emerald-500 text-white border border-transparent hover:bg-emerald-600 hover:shadow-[0_0_15px_rgba(37,211,102,0.4)] shadow-sm'
                             }
                         `}
                     >
@@ -552,14 +552,15 @@ export function ZeroDashboardView({
 
                             <div className="p-8 space-y-5">
                                 <div className="bg-[#25D366]/5 border border-[#25D366]/10 rounded-[28px] p-6 text-slate-600 text-sm leading-relaxed whitespace-pre-wrap">
-                                    {`Hi ${whatsappModalLead.name.split(' ')[0]} 👋\n\nI noticed you were interested in ${whatsappModalLead.service}.${whatsappModalLead.ai_summary ? `\n\n"${whatsappModalLead.ai_summary}"\n` : '\n'}\nWould you like me to send over our 0% finance options or book a quick chat?`}
+                                    {`Hi ${whatsappModalLead.name.split(' ')[0]}, we received your inquiry. Would you like to schedule a quick consultation with Dr. Hanlan?`}
                                 </div>
 
                                 <button
                                     id="open-whatsapp-btn"
                                     onClick={() => {
                                         const phone = whatsappModalLead.phone || '';
-                                        const text = encodeURIComponent(`Hi ${whatsappModalLead.name.split(' ')[0]} 👋, I noticed you were interested in ${whatsappModalLead.service}. Would you like to know more?`);
+                                        const firstName = whatsappModalLead.name.split(' ')[0];
+                                        const text = encodeURIComponent(`Hi ${firstName}, we received your inquiry. Would you like to schedule a quick consultation with Dr. Hanlan?`);
                                         window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
                                         setWhatsappModalLead(null);
                                         handleNext();
