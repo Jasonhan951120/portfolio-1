@@ -536,7 +536,7 @@ function KanbanColumn({
           {sortedLeads.length > 0 ? (
             <List<{}>
               rowCount={sortedLeads.length}
-              rowHeight={160}
+              rowHeight={210}
               rowProps={{}}
               className="custom-scrollbar-mini"
               rowComponent={({ index, style, ariaAttributes }: { index: number; style: React.CSSProperties; ariaAttributes: any }) => (

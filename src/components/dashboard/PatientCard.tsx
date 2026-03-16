@@ -112,7 +112,7 @@ export const PatientCard = React.memo(function PatientCard({
   const isOverdue = (lead.status === "New Lead") && (Date.now() - baseline) > 86400000;
 
   return (
-    <div ref={setNodeRef} style={style} className="mb-4 outline-none px-1 h-[180px] transition-all">
+    <div ref={setNodeRef} style={style} className="mb-4 outline-none px-1 h-[195px] transition-all">
       <motion.div
         layout
         initial={{ opacity: 1, scale: 1 }}
@@ -120,7 +120,7 @@ export const PatientCard = React.memo(function PatientCard({
         whileTap={{ scale: 0.99 }}
         animate={isExiting ? { opacity: 0, scale: 0.8, x: 50, filter: "blur(4px)" } : {}}
         transition={{ type: "spring", stiffness: 400, damping: 30 }}
-        className={`h-full bg-white border border-slate-200/80 shadow-sm rounded-xl p-5 relative group transition-all duration-200 hover:shadow-md
+        className={`relative flex flex-col gap-3 h-full bg-white border border-slate-200 shadow-sm rounded-xl p-5 overflow-hidden group transition-all duration-200 hover:shadow-md
           ${isDragging ? 'opacity-50' : ''} 
           ${isOverdue ? 'ring-1 ring-red-200 border-red-200' : ''}
           ${showVIPPulse ? 'ring-2 ring-red-400 animate-pulse' : ''}
@@ -129,25 +129,25 @@ export const PatientCard = React.memo(function PatientCard({
       >
         <div {...attributes} {...listeners} className="absolute inset-0 z-0 cursor-grab" />
         
-        <div className="relative z-10 flex flex-col h-full pointer-events-none">
-          {/* Top Section: Name & Time */}
-          <div className="flex justify-between items-start mb-4">
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center gap-2">
-                <h4 className="text-slate-900 font-bold tracking-tight text-[15px] truncate w-40">{lead.name}</h4>
+        <div className="relative z-10 flex flex-col h-full w-full pointer-events-none overflow-hidden">
+          {/* Top Section: Name & Metadata */}
+          <div className="flex justify-between items-start w-full mb-1">
+            <div className="flex flex-col gap-0.5 min-w-0 flex-1">
+              <div className="flex items-center gap-2 w-full">
+                <h4 className="text-slate-900 font-bold tracking-tight text-[15px] truncate flex-1 min-w-0">{lead.name}</h4>
                 {isVIP && (
-                  <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-100 flex items-center gap-1">
+                  <span className="shrink-0 text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-100 uppercase">
                     VIP
                   </span>
                 )}
               </div>
-              <span className="text-slate-500 font-medium text-xs">{timeAgo(lead.created_at, region)}</span>
+              <span className="text-slate-400 font-medium text-[10px] uppercase tracking-wider">{timeAgo(lead.created_at, region)}</span>
             </div>
             
-            <div className="flex items-center gap-2 pointer-events-auto">
+            <div className="flex items-center gap-1 shrink-0 ml-2 pointer-events-auto">
                <button 
                 onClick={() => onOpenAudit(lead)} 
-                className="p-1.5 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-all"
+                className="p-1 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded transition-all"
                 title="Security & Audit Trail"
               >
                 <Monitor className="w-4 h-4" />
@@ -159,7 +159,7 @@ export const PatientCard = React.memo(function PatientCard({
                     setIsCaseNoteVisible(true);
                   }}
                   onMouseLeave={() => setIsCaseNoteVisible(false)}
-                  className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all"
+                  className="p-1 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded transition-all"
                   title="AI Value Reasoning"
                 >
                   <FileText className="w-4 h-4" />
@@ -169,30 +169,27 @@ export const PatientCard = React.memo(function PatientCard({
             </div>
           </div>
 
-          {/* Middle Section: AI Badge & Service */}
-          <div className="flex flex-wrap items-center gap-2 mb-auto">
-            <div className="bg-emerald-50 text-emerald-700 border border-emerald-100 font-bold px-2.5 py-1 rounded-md text-[11px] flex items-center gap-1.5 shadow-sm">
-              <Sparkles className="w-3.5 h-3.5 fill-emerald-700/20" />
+          {/* Middle Section: AI Insight & Service Tag */}
+          <div className="flex flex-wrap items-center gap-2 my-1">
+            <div className="shrink-0 bg-emerald-50 text-emerald-700 border border-emerald-100 font-bold px-2 py-0.5 rounded text-[10px] flex items-center gap-1 shadow-sm">
+              <Sparkles className="w-3 h-3 fill-emerald-700/20" />
               {lead.intent_score || 0}% AI INTENT
             </div>
-            <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider bg-slate-50 border border-slate-100 px-2 py-1 rounded-md">
+            <span className="shrink-0 text-[10px] font-bold text-slate-500 uppercase tracking-widest bg-slate-50 border border-slate-100 px-2 py-0.5 rounded">
               {lead.service}
             </span>
-            {lead.intent_score && lead.intent_score >= 80 && (
-              <span className="animate-pulse flex h-2 w-2 rounded-full bg-emerald-500" />
-            )}
           </div>
 
-          {/* Bottom Section: Price & WhatsApp */}
-          <div className="pt-4 border-t border-slate-100 flex items-center justify-between mt-4">
-            <div className="flex flex-col -gap-1">
-              <span className="text-slate-900 font-bold tracking-tight text-lg">
+          {/* Fixed Footer: Price & WhatsApp */}
+          <div className="mt-auto pt-3 border-t border-slate-100 flex justify-between items-center w-full pointer-events-auto">
+            <div className="flex flex-col">
+              <span className="text-slate-900 font-bold tracking-tight text-lg leading-tight">
                 {region === 'UK' ? '£' : '$'}
                 {(lead.potential_value || 1000).toLocaleString()}
               </span>
             </div>
 
-            <div className="flex items-center gap-2 pointer-events-auto">
+            <div className="flex items-center gap-2">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -201,9 +198,9 @@ export const PatientCard = React.memo(function PatientCard({
                   }
                 }}
                 disabled={!hasPhone}
-                className={`flex items-center gap-1.5 text-[13px] font-semibold px-3 py-1.5 rounded-lg transition-all
+                className={`flex items-center gap-1.5 text-[13px] font-semibold px-3 py-1.5 rounded-lg transition-all shrink-0
                   ${hasPhone 
-                    ? 'text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-100/50' 
+                    ? 'text-emerald-600 bg-emerald-50 hover:bg-emerald-100 border border-emerald-100' 
                     : 'text-slate-300 bg-slate-50 border border-slate-100 cursor-not-allowed opacity-50'
                   }
                 `}
@@ -215,7 +212,7 @@ export const PatientCard = React.memo(function PatientCard({
               {lead.status === "New Lead" && (
                 <button
                   onClick={handleWaitlistClick}
-                  className="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-all"
+                  className="p-1.5 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded transition-all shrink-0"
                   title="Move to Waitlist"
                 >
                   <Users className="w-4 h-4" />
