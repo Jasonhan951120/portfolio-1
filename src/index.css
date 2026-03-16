@@ -22,6 +22,12 @@
   --shadow-luxury: 0 2px 8px rgba(0,0,0,0.02), 0 12px 32px rgba(0,0,0,0.04);
   --shadow-luxury-hover: 0 16px 48px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.01);
   --shadow-luxury-pulsed: 0 0 0 4px rgba(16, 185, 129, 0.05);
+
+  @keyframes pulse-gentle {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.85; transform: scale(1.02); }
+  }
+  --animate-pulse-gentle: pulse-gentle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 @layer base {

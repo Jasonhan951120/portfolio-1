@@ -139,16 +139,26 @@ export const PatientCard = React.memo(function PatientCard({
                   </span>
                 )}
               </div>
-              <p className="metric-label-muted">{timeAgo(lead.created_at, region)}</p>
+              <p className="text-[11px] font-semibold text-slate-600/80">{timeAgo(lead.created_at, region)}</p>
             </div>
             <span className="text-[14px] metric-authority">
               {region === 'UK' ? '£' : '$'}
               {(lead.potential_value || 1000).toLocaleString()}
             </span>
           </div>
-          <div className="flex gap-1 mb-3">
-            <span className="text-[8px] font-black px-1.5 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 uppercase">AI {lead.intent_score || 0}%</span>
-            <span className="text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-slate-50 text-slate-500 border border-slate-100 uppercase">{lead.service}</span>
+          <div className="flex flex-col gap-1 mb-3">
+            <div className="flex items-center gap-2">
+              <span className={`text-2xl font-black tabular-nums tracking-tighter ${lead.intent_score && lead.intent_score >= 80 ? 'text-emerald-600' : 'text-slate-900'}`}>
+                {lead.intent_score || 0}%
+              </span>
+              <span className="text-[10px] font-extrabold text-slate-600 uppercase tracking-widest opacity-70">AI Intent</span>
+              {lead.intent_score && lead.intent_score >= 80 && (
+                <span className="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 text-[10px] font-black uppercase tracking-tight shadow-sm border border-emerald-200/50">
+                  🔥 High Intent
+                </span>
+              )}
+            </div>
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200 uppercase w-fit">{lead.service}</span>
           </div>
           <div className="pt-3 border-t border-slate-100 flex justify-end gap-2 pointer-events-auto opacity-0 group-hover:opacity-100 transition-all">
             
@@ -161,11 +171,13 @@ export const PatientCard = React.memo(function PatientCard({
                 }
               }}
               disabled={!hasPhone}
-              className={`p-1.5 rounded-lg transition-all btn-tactile flex items-center gap-1.5 px-2
+              className={`p-1.5 rounded-lg transition-all btn-tactile flex items-center gap-1.5 px-2 relative
                 ${hasPhone 
                   ? 'text-[#25D366] hover:bg-[#25D366]/5 shadow-sm hover:shadow-[0_0_15px_rgba(37,211,102,0.4)]' 
                   : 'text-slate-300 cursor-not-allowed opacity-50'
-                }`}
+                }
+                ${lead.intent_score && lead.intent_score >= 80 ? 'ring-2 ring-emerald-400 ring-offset-2 animate-pulse-gentle' : ''}
+              `}
               title={hasPhone ? "Contact via WhatsApp" : "Phone number required"}
             >
               <MessageCircle className="w-3.5 h-3.5" />
@@ -174,7 +186,7 @@ export const PatientCard = React.memo(function PatientCard({
 
             <button 
               onClick={() => onOpenAudit(lead)} 
-              className="p-1.5 text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 hover:scale-110 rounded-lg transition-all btn-tactile"
+              className="p-1.5 text-slate-600 hover:text-emerald-500 hover:bg-emerald-50 hover:scale-110 rounded-lg transition-all btn-tactile"
               title="Security & Audit Trail"
             >
               <Monitor className="w-3.5 h-3.5" />
@@ -190,7 +202,7 @@ export const PatientCard = React.memo(function PatientCard({
                   setAnchorRect(e.currentTarget.getBoundingClientRect());
                   setIsCaseNoteVisible(!isCaseNoteVisible);
                 }}
-                className="p-1.5 text-slate-400 hover:text-indigo-500 hover:bg-indigo-50 hover:scale-110 rounded-lg transition-all btn-tactile"
+                className="p-1.5 text-slate-600 hover:text-indigo-500 hover:bg-indigo-50 hover:scale-110 rounded-lg transition-all btn-tactile"
                 title="AI Value Reasoning"
               >
                 <FileText className="w-3.5 h-3.5" />
@@ -201,7 +213,7 @@ export const PatientCard = React.memo(function PatientCard({
             {lead.status === "New Lead" && (
                 <button
                   onClick={handleWaitlistClick}
-                  className="p-1.5 text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 rounded-lg transition-all btn-tactile"
+                  className="p-1.5 text-slate-600 hover:text-emerald-500 hover:bg-emerald-50 rounded-lg transition-all btn-tactile"
                   title="Move to Waitlist"
                 >
                   <Users className="w-3.5 h-3.5" />

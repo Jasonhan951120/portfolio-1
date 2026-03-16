@@ -142,11 +142,11 @@ function HotLeadCard({
                 <div className="relative z-10">
                     <div className="flex justify-between items-start">
                         <div>
-                            <p className={`text-xs font-medium mb-3 transition-colors duration-700 ${sent ? 'text-emerald-500' : 'text-slate-400'}`}>
+                            <p className={`text-xs font-bold mb-3 transition-colors duration-700 ${sent ? 'text-emerald-500' : 'text-slate-600'}`}>
                                 {sent ? '✓ Revenue Secured' : '⚡ Priority Action'}
                             </p>
                             <h3 className="text-2xl font-black text-slate-900 tracking-tighter leading-none uppercase">{lead.name}</h3>
-                            <p className="text-xs text-slate-400 font-medium mt-2">{lead.service}</p>
+                            <p className="text-xs text-slate-700 font-bold mt-2">{lead.service}</p>
                         </div>
                         {isVIP && (
                             <div className="p-3 bg-emerald-50 border border-emerald-100 rounded-2xl flex-shrink-0">
@@ -158,7 +158,7 @@ function HotLeadCard({
 
                 {/* ── POTENTIAL VALUE ── */}
                 <div className="relative z-10">
-                    <p className="text-xs text-slate-400 font-medium mb-2">Estimated Value</p>
+                    <p className="text-xs text-slate-600 font-bold mb-2">Estimated Value</p>
                     <motion.p
                         animate={{ color: sent ? '#10b981' : '#0F172A' }}
                         transition={{ duration: 0.7 }}
@@ -184,10 +184,10 @@ function HotLeadCard({
                 {/* ── CONTEXTUAL FOOTER ── */}
                 <div className="relative z-10 flex items-center gap-2 mt-auto pt-6 border-t border-slate-100">
                     <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-slate-50 border border-slate-100">
-                        <span className="text-[10px] text-slate-500 font-black uppercase tracking-tight">🕒 {Math.floor(Math.random() * 5) + 1}h ago</span>
+                        <span className="text-[10px] text-slate-700 font-black uppercase tracking-tight">🕒 {Math.floor(Math.random() * 5) + 1}h ago</span>
                     </div>
                     <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-slate-50 border border-slate-100">
-                        <span className="text-[10px] text-slate-500 font-black uppercase tracking-tight">🦷 {lead.service.split(' ')[0]}</span>
+                        <span className="text-[10px] text-slate-700 font-black uppercase tracking-tight">🦷 {lead.service.split(' ')[0]}</span>
                     </div>
                 </div>
 
@@ -245,7 +245,7 @@ function HotLeadCard({
                     {!sent && (
                         <button
                             onClick={onSkip}
-                            className="w-full text-[9px] font-black uppercase tracking-[0.25em] text-slate-400 hover:text-slate-900 py-2 transition-colors flex items-center justify-center gap-2"
+                            className="w-full text-[9px] font-black uppercase tracking-[0.25em] text-slate-600 hover:text-slate-900 py-2 transition-colors flex items-center justify-center gap-2"
                         >
                             <SkipForward className="w-3 h-3" />
                             Next Patient
@@ -349,7 +349,7 @@ export function ZeroDashboardView({
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
                             >
-                                <p className="text-xs text-slate-400 font-medium mb-5">
+                                <p className="text-xs text-slate-600 font-bold mb-5">
                                     ⚠ Identified Revenue Opportunities
                                 </p>
                                 <div className="text-5xl font-black text-slate-900 tracking-tighter tabular-nums leading-none">
@@ -357,7 +357,7 @@ export function ZeroDashboardView({
                                 </div>
                                 <div className="flex items-center gap-2 mt-8">
                                     <div className="w-2 h-2 rounded-full bg-emerald-500 scale-75" />
-                                    <span className="text-xs text-slate-400 font-medium">Action Required: {activeLeads.length} High-Intent Patients</span>
+                                    <span className="text-xs text-slate-600 font-bold">Action Required: {activeLeads.length} High-Intent Patients</span>
                                 </div>
                             </motion.div>
                         )}
@@ -385,7 +385,7 @@ export function ZeroDashboardView({
                 {/* 3. QUICK ACTIONS / NEWS (Span 4) */}
                 <div className="hidden lg:flex lg:col-span-4 flex-col gap-8">
                     <div className="bg-white rounded-2xl p-8 border-[0.5px] border-slate-200/60 shadow-[0_2px_8px_rgba(0,0,0,0.02),_0_12px_32px_rgba(0,0,0,0.04)] grow">
-                        <h5 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-6">Patient Pipeline</h5>
+                        <h5 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-600 mb-6">Patient Pipeline</h5>
                         <div className="space-y-6">
                             {[1, 2, 3].map(i => (
                                 <div key={i} className="flex items-center gap-4 opacity-40 grayscale">
@@ -401,7 +401,7 @@ export function ZeroDashboardView({
                     
                     <div className="bg-slate-900 rounded-2xl p-8 text-white flex items-center justify-between">
                         <div>
-                            <p className="text-[9px] font-black uppercase tracking-widest text-slate-500 mb-1">Clinic Focus</p>
+                            <p className="text-[9px] font-black uppercase tracking-widest text-slate-700 mb-1">Clinic Focus</p>
                             <h6 className="text-lg font-bold">Implant High Intensity</h6>
                         </div>
                         <Sparkles className="w-8 h-8 text-emerald-400 opacity-50" />
@@ -451,7 +451,7 @@ export function ZeroDashboardView({
                                 <CheckCircle className="w-10 h-10 text-emerald-500" />
                             </div>
                             <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-tight relative z-10">Daily Targets Met.</h2>
-                            <p className="text-slate-400 text-sm mb-10 relative z-10">All high-priority patients have been contacted.</p>
+                            <p className="text-slate-600 text-sm font-bold mb-10 relative z-10">All high-priority patients have been contacted.</p>
                             
                             <div className="bg-slate-50 border border-slate-100 rounded-3xl p-6 relative z-10">
                                 <p className="metric-label-muted mb-2">Total Secured Today</p>
@@ -464,7 +464,7 @@ export function ZeroDashboardView({
 
                             <button
                                 onClick={() => setCurrentIndex(0)}
-                                className="mt-10 inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 hover:text-slate-900 transition-all group"
+                                className="mt-10 inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] text-slate-600 hover:text-slate-900 transition-all group"
                             >
                                 <span className="group-hover:rotate-180 transition-transform duration-500">↺</span> Refresh Patient Queue
                             </button>
@@ -500,7 +500,7 @@ export function ZeroDashboardView({
                             <Shield className="w-4 h-4 text-emerald-500" />
                         </div>
                         <div>
-                            <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">PII Scrubbed</p>
+                            <p className="text-[8px] font-black text-slate-600 uppercase tracking-widest">PII Scrubbed</p>
                             <p className="text-[10px] text-slate-900 font-bold">Secure Gateway</p>
                         </div>
                     </div>
@@ -538,7 +538,7 @@ export function ZeroDashboardView({
                                         <Send className="w-5 h-5 text-white" />
                                     </div>
                                     <div>
-                                        <p className="text-[9px] text-slate-400 font-black uppercase tracking-widest">Sending AI Draft To</p>
+                                        <p className="text-[9px] text-slate-600 font-black uppercase tracking-widest">Sending AI Draft To</p>
                                         <p className="text-slate-900 font-bold text-lg leading-tight">{whatsappModalLead.name}</p>
                                     </div>
                                 </div>
