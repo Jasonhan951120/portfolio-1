@@ -78,9 +78,33 @@ export function KanbanCard({ lead, onClick }: KanbanCardProps) {
 
             <div className="flex items-center justify-between pt-4 border-t border-gray-50">
                 <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 rounded-lg bg-gray-50 flex items-center justify-center">
-                        <MessageSquare className="w-3.5 h-3.5 text-gray-400" />
-                    </div>
+                    <button 
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            const phoneNum = lead.phone || "+447700900000"; // Fallback
+                            let message = "";
+                            const firstName = lead.name.split(' ')[0];
+                            switch (lead.status) {
+                                case "New Lead":
+                                    message = `Hi ${firstName}, we received your inquiry. Would you like to schedule a quick consultation with Dr. Hanlan?`;
+                                    break;
+                                case "Visited":
+                                    message = `Hi ${firstName}, it was great seeing you! Do you have any further questions regarding your treatment plan?`;
+                                    break;
+                                case "Treated":
+                                case "Closed Won":
+                                    message = `Hi ${firstName}, hope you are recovering well! If you loved your experience, we'd appreciate a quick Google review: https://g.page/r/hanlan-oc/review`;
+                                    break;
+                                default:
+                                    message = `Hi ${firstName}, checking in from Hanlan OC. How can we help you today?`;
+                            }
+                            const whatsappUrl = `https://wa.me/${phoneNum.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
+                            window.open(whatsappUrl, '_blank');
+                        }}
+                        className="w-7 h-7 rounded-lg bg-emerald-50 hover:bg-emerald-100 flex items-center justify-center border border-emerald-100 cursor-pointer transition-colors group/wa"
+                    >
+                        <MessageSquare className="w-3.5 h-3.5 text-emerald-600 group-hover/wa:scale-110 transition-transform" />
+                    </button>
                     <span className="text-[9px] font-black text-gray-900 tabular-nums tracking-tighter uppercase">
                         £{value.toLocaleString()}
                     </span>
