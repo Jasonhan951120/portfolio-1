@@ -77,7 +77,7 @@ export const PatientCard = React.memo(function PatientCard({
   };
 
   const getWhatsAppLink = () => {
-    if (!lead.phone) return null;
+    const phoneNum = lead.phone || "+447700900000"; // Fallback for prototype data
     
     let message = "";
     const firstName = lead.name.split(' ')[0];
@@ -97,10 +97,10 @@ export const PatientCard = React.memo(function PatientCard({
         message = `Hi ${firstName}, checking in from Hanlan OC. How can we help you today?`;
     }
     
-    return `https://wa.me/${lead.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
+    return `https://wa.me/${phoneNum.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
   };
 
-  const hasPhone = !!lead.phone;
+  const hasPhone = true; // Force enable for all pipeline stages
   const whatsappUrl = getWhatsAppLink();
 
   const style = {
