@@ -45,7 +45,8 @@ export type ConsultationRequest = {
     phone: string;
     service: string;
     notes: string | null;
-    status: "New Lead" | "Booked" | "Proposal Sent" | "Visited" | "Treated" | "Closed Won" | "Abandoned" | "Future Pipeline" | "Archived" | "Consultation Done" | "Sale Closed";
+    status: "New Lead" | "Booked" | "Proposal Sent" | "Visited" | "Treated" | "Closed Won" | "Abandoned" | "Future Pipeline" | "Archived" | "Consultation Done" | "Sale Closed" | "Waitlist";
+    waitlist_status?: 'none' | 'active' | 'notified' | 'accepted' | 'expired';
     created_at: string;
     updated_at?: string;
     first_contact_at?: string;

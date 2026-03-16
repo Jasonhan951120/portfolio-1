@@ -1223,16 +1223,21 @@ export default function AdminDashboard() {
   };
 
   const handleAddToWaitlist = async (leadId: string) => {
+    // Optimistic UI Update
+    setLeads(prev => prev.map(l => l.id === leadId ? { ...l, status: "Waitlist" as any } : l));
+
     const { error } = await supabase
       .from('consultation_requests')
-      .update({ waitlist_status: 'active' as any })
+      .update({ status: 'Waitlist', waitlist_status: 'active' })
       .eq('id', leadId);
 
     if (error) {
       console.error('Error adding to waitlist:', error);
       setToast({ message: "Failed to add to waitlist.", type: 'error' });
+      fetchLeads(); // Rollback
     } else {
-      setToast({ message: "Lead added to Priority Waitlist.", type: 'success' });
+      setToast({ message: "Lead moved to Vault (Waitlist).", type: 'success' });
+      fetchLeads(); // Refresh
     }
   };
 
@@ -1753,26 +1758,7 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleMoveToWaitlistStatus = async (leadId: string) => {
-    // Optimistic UI Update
-    setLeads(prev => prev.map(l => l.id === leadId ? { ...l, status: "Waitlisted" as any } : l));
-    setIsWaitlistOpen(true); // Auto-open panel to show result
-
-    const { error } = await supabase
-      .from("consultation_requests")
-      .update({ status: "Waitlisted" })
-      .eq("id", leadId);
-
-    if (error) {
-      console.error("Error moving to waitlist:", error);
-      alert(`Update failed: ${error.message}.`);
-      fetchLeads(); // Rollback
-      return;
-    }
-
-    // Refresh to ensure integrity
-    fetchLeads();
-  };
+  // Consolidated with handleAddToWaitlist
 
 
   const handleDragEnd = async (event: DragEndEvent) => {
@@ -2430,6 +2416,7 @@ export default function AdminDashboard() {
                               setDepositModal={() => { }}
                               setSelectedLead={setSelectedLead}
                               updateStatus={updateStatus}
+                              onAddToWaitlist={handleAddToWaitlist}
                               STAFF_LIST={dynamicStaffList}
                               updateAssignedTo={updateAssignedTo}
                               timeAgo={timeAgo}
@@ -2519,10 +2506,16 @@ export default function AdminDashboard() {
                     </div>
                   ) : (
                     <div className="space-y-10">
-                      {leads.filter(l => l.waitlist_status === 'active' || l.status === 'Archived').length > 0 ? (
+                      {leads.filter(l => {
+                        const status = (l.status || "").toLowerCase();
+                        return status === 'waitlist' || status === 'archived' || l.waitlist_status === 'active';
+                      }).length > 0 ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                           {leads
-                            .filter(l => l.waitlist_status === 'active' || l.status === 'Archived')
+                            .filter(l => {
+                              const status = (l.status || "").toLowerCase();
+                              return status === 'waitlist' || status === 'archived' || l.waitlist_status === 'active';
+                            })
                             .map((lead) => (
                               <div key={lead.id} className="h-[210px]">
                                 <PatientCard
@@ -2531,11 +2524,11 @@ export default function AdminDashboard() {
                                   setDepositModal={() => {}}
                                   setSelectedLead={setSelectedLead}
                                   updateStatus={updateStatus}
+                                  onAddToWaitlist={handleAddToWaitlist}
                                   STAFF_LIST={dynamicStaffList}
                                   updateAssignedTo={updateAssignedTo}
                                   timeAgo={timeAgo}
                                   clinic={profile}
-                                  onAddToWaitlist={() => {}}
                                   onOpenPTMode={() => {}}
                                   onOpenAudit={(l) => setActiveAuditLead(l)}
                                   focusMode="All"
