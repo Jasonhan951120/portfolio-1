@@ -739,6 +739,10 @@ export default function AdminDashboard() {
     }
   }, [isGoogleConnected, activeTab]);
 
+  // Vault States
+  const [vaultAgreed, setVaultAgreed] = useState(false);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+
   // Auto-selection of highest revenue category upon data load
   useEffect(() => {
     if (leads && leads.length > 0 && activeTab === 'PIPELINE') {
@@ -2472,23 +2476,132 @@ export default function AdminDashboard() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 40 }}
                   transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                  className="max-w-4xl mx-auto px-6 py-20 space-y-10"
+                  className="max-w-7xl mx-auto px-6 py-10 space-y-10"
                 >
-                  <div className="text-center space-y-4">
-                    <h2 className="text-3xl font-bold text-slate-900 tracking-tighter uppercase italic">The Clinical Vault</h2>
-                    <p className="text-slate-400 font-bold uppercase tracking-[0.2em] text-[10px]">Authoritative Data Processing Engine ↗</p>
+                  <div className="flex justify-between items-center mb-12">
+                    <div className="space-y-1">
+                      <h2 className="text-3xl font-bold text-slate-900 tracking-tighter uppercase italic">The Clinical Vault</h2>
+                      <p className="text-slate-400 font-bold uppercase tracking-[0.2em] text-[10px]">Authoritative Data Processing Engine ↗</p>
+                    </div>
+                    
+                    {vaultAgreed && (
+                      <button 
+                        onClick={() => setIsImportModalOpen(true)}
+                        className="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-lg shadow-sm hover:bg-slate-50 font-medium text-sm flex items-center gap-2 transition-all active:scale-[0.98]"
+                      >
+                        <Plus className="w-4 h-4" />
+                        Import Data
+                      </button>
+                    )}
                   </div>
 
-                  <div className="bg-white rounded-[44px] p-2 border border-slate-200 shadow-2xl">
-                    <CSVImportZone
-                      clinicId={profile?.clinic_id || ''}
-                      specialty={profile?.specialty}
-                      onImportComplete={() => {
-                        fetchLeads();
-                        setActiveTab('PIPELINE');
-                      }}
-                    />
-                  </div>
+                  {!vaultAgreed ? (
+                    <div className="max-w-2xl mx-auto bg-white rounded-[44px] p-12 border border-slate-200 shadow-2xl space-y-8 text-center">
+                       <div className="w-20 h-20 mx-auto rounded-3xl bg-emerald-50 border border-emerald-100 flex items-center justify-center">
+                          <ShieldCheck className="w-10 h-10 text-emerald-500" />
+                       </div>
+                       <div className="space-y-4">
+                          <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight">Access Control Protocol</h3>
+                          <p className="text-slate-500 text-sm leading-relaxed">To access the patient vault and archived leads, you must acknowledge the Data Processing Agreement (DPA). Your activity is audited for ISO 27001 compliance.</p>
+                       </div>
+                       <div 
+                         className="flex items-start gap-4 p-6 bg-slate-50 border border-slate-200 rounded-3xl cursor-pointer text-left hover:bg-slate-100 transition-all"
+                         onClick={() => setVaultAgreed(true)}
+                       >
+                          <div className={`w-5 h-5 rounded border-2 border-emerald-500 flex items-center justify-center ${vaultAgreed ? 'bg-emerald-500' : 'bg-transparent'}`}>
+                             {vaultAgreed && <Check className="w-3 h-3 text-white" />}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                             <p className="text-xs font-bold text-slate-900 uppercase">I agree to the DPA & Data Controller Terms</p>
+                             <p className="text-[10px] text-slate-400 font-medium mt-1">Acceptance logs your ID and IP for security auditing.</p>
+                          </div>
+                       </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-10">
+                      {leads.filter(l => l.waitlist_status === 'active' || l.status === 'Archived').length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                          {leads
+                            .filter(l => l.waitlist_status === 'active' || l.status === 'Archived')
+                            .map((lead) => (
+                              <div key={lead.id} className="h-[210px]">
+                                <PatientCard
+                                  id={lead.id}
+                                  lead={lead}
+                                  setDepositModal={() => {}}
+                                  setSelectedLead={setSelectedLead}
+                                  updateStatus={updateStatus}
+                                  STAFF_LIST={dynamicStaffList}
+                                  updateAssignedTo={updateAssignedTo}
+                                  timeAgo={timeAgo}
+                                  clinic={profile}
+                                  onAddToWaitlist={() => {}}
+                                  onOpenPTMode={() => {}}
+                                  onOpenAudit={(l) => setActiveAuditLead(l)}
+                                  focusMode="All"
+                                />
+                              </div>
+                            ))}
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center justify-center py-20 text-center space-y-6">
+                          <div className="w-16 h-16 rounded-3xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-300">
+                            <Users className="w-8 h-8" />
+                          </div>
+                          <div className="space-y-2">
+                             <p className="text-slate-900 font-bold">No patients in the Vault currently.</p>
+                             <p className="text-slate-400 text-xs max-w-sm">Patients marked as 'Waitlist' or those moved from the pipeline will appear here for long-term intelligence exploration.</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* CSV IMPORT MODAL */}
+                  <AnimatePresence>
+                    {isImportModalOpen && (
+                      <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          onClick={() => setIsImportModalOpen(false)}
+                          className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+                        />
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                          animate={{ opacity: 1, scale: 1, y: 0 }}
+                          exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                          className="relative w-full max-w-2xl bg-white rounded-[44px] shadow-2xl overflow-hidden"
+                        >
+                          <div className="p-10">
+                            <div className="flex justify-between items-start mb-8">
+                               <div>
+                                  <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight">Import Lead Stream</h3>
+                                  <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px] mt-1">Smart Mapping Engine Active</p>
+                               </div>
+                               <button 
+                                 onClick={() => setIsImportModalOpen(false)}
+                                 className="p-2 hover:bg-slate-50 rounded-xl text-slate-400 transition-all"
+                               >
+                                 <X className="w-6 h-6" />
+                               </button>
+                            </div>
+
+                            <CSVImportZone
+                              clinicId={profile?.clinic_id || ''}
+                              specialty={profile?.specialty}
+                              onImportComplete={() => {
+                                fetchLeads();
+                                setIsImportModalOpen(false);
+                                setVaultAgreed(true); // Auto-agree after import
+                              }}
+                            />
+                          </div>
+                        </motion.div>
+                      </div>
+                    )}
+                  </AnimatePresence>
                 </motion.div>
               )}
 
