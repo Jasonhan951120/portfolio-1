@@ -23,7 +23,7 @@ export const GoogleOnboardingModal: React.FC<GoogleOnboardingModalProps> = ({ is
 
   // 2. 실제 Google OAuth 2.0 리다이렉트 로직
   const handleGoogleAuthRedirect = () => {
-    const clientId = "YOUR_PLACEHOLDER_CLIENT_ID";
+    const clientId = "401672125235-qu53kh0tnu8guolq1u6ksjsc7bl9uah6.apps.googleusercontent.com";
     const redirectUri = "https://www.hanlanoc.com/admin";
     const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=email%20profile`;
     
@@ -31,9 +31,8 @@ export const GoogleOnboardingModal: React.FC<GoogleOnboardingModalProps> = ({ is
   };
 
   return (
-    {/* 최상위 고정 컨테이너: 대통령 계급장 z-[100]으로 무조건 최상단 노출 */}
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
-      
+      {/* 최상위 고정 컨테이너: 대통령 계급장 z-[100]으로 무조건 최상단 노출 */}
       {/* 까만색 반투명 배경 (Dark Overlay) */}
       <div 
         className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
