@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { supabase, type StaffPerformance } from '../../../lib/supabase';
-import { motion, AnimatePresence } from 'framer-motion';
+import { supabase, type StaffPerformance } from '@/src/lib/supabase';
+import { motion, AnimatePresence } from 'motion/react';
 import {
     Trophy,
     TrendingUp,

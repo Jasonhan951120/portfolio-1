@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { SERVICE_CONVERSION_VALUES } from '../../../lib/constants';
+import { SERVICE_CONVERSION_VALUES } from '@/src/lib/constants';
 import {
     Users,
     Search,
@@ -32,10 +32,10 @@ import {
     verticalListSortingStrategy,
     arrayMove
 } from '@dnd-kit/sortable';
-import { KanbanColumn } from '../../KanbanColumn';
-import { ConsultationRequest } from '../../../lib/supabase';
-import { DONUT_SEGMENTS, KANBAN_COLUMNS } from '../../../lib/constants';
-import { DonutChart } from '../shared/DonutChart';
+import { KanbanColumn } from '@/src/components/KanbanColumn';
+import { ConsultationRequest } from '@/src/lib/supabase';
+import { DONUT_SEGMENTS, KANBAN_COLUMNS } from '@/src/lib/constants';
+import { DonutChart } from '@/src/components/dashboard/shared/DonutChart';
 
 interface LeadsTabProps {
     leads: ConsultationRequest[];

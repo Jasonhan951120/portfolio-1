@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { Instagram, Globe, Zap } from 'lucide-react';
-import DailyInsight from '../../DailyInsight';
-import TrafficSourceChart from '../../TrafficSourceChart';
-import { LiveTrafficPanel } from '../shared/LiveTrafficPanel';
-import { AutoTaggingModal } from '../shared/AutoTaggingModal';
-import MarketingOnboarding from '../../MarketingOnboarding';
+import DailyInsight from '@/src/components/DailyInsight';
+import TrafficSourceChart from '@/src/components/TrafficSourceChart';
+import { LiveTrafficPanel } from '@/src/components/dashboard/shared/LiveTrafficPanel';
+import { AutoTaggingModal } from '@/src/components/dashboard/shared/AutoTaggingModal';
+import MarketingOnboarding from '@/src/components/MarketingOnboarding';
 import { type Profile } from '../../../lib/supabase';
 
 interface MarketingTabProps {
