@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 // Deploy Trigger: Performance & Analytics Overhaul
-import { List } from 'react-window';
+// Deploy Trigger: Performance & Analytics Overhaul
+
 import { motion } from "motion/react";
 import {
   Users, ArrowLeft, MoreHorizontal,
@@ -533,63 +534,53 @@ function KanbanColumn({
 
       <div className="flex-1 overflow-hidden" ref={setNodeRef}>
         <SortableContext items={sortedLeads.map((l: any) => l.id)}>
-          {sortedLeads.length > 0 ? (
-            <List<{}>
-              rowCount={sortedLeads.length}
-              rowHeight={210}
-              rowProps={{}}
-              className="custom-scrollbar-mini"
-              rowComponent={({ index, style, ariaAttributes }: { index: number; style: React.CSSProperties; ariaAttributes: any }) => (
-                <div style={style} {...ariaAttributes}>
-                  <PatientCard
-                    id={sortedLeads[index].id}
-                    lead={sortedLeads[index]}
-                    setDepositModal={setDepositModal}
-                    setSelectedLead={setSelectedLead}
-                    updateStatus={updateStatus}
-                    STAFF_LIST={STAFF_LIST}
-                    updateAssignedTo={updateAssignedTo}
-                    timeAgo={timeAgo}
-                    clinic={clinic}
-                    onAddToWaitlist={onAddToWaitlist}
-                    onOpenPTMode={onOpenPTMode}
-                    onOpenAudit={onOpenAudit}
-                    focusMode={focusMode}
-                  />
+          <div className="flex flex-col gap-4 overflow-y-auto custom-scrollbar-mini h-[calc(100vh-450px)]">
+            {sortedLeads.length > 0 ? (
+              sortedLeads.map((lead: any, index: number) => (
+                <PatientCard
+                  key={lead.id}
+                  id={lead.id}
+                  lead={lead}
+                  setDepositModal={setDepositModal}
+                  setSelectedLead={setSelectedLead}
+                  updateStatus={updateStatus}
+                  STAFF_LIST={STAFF_LIST}
+                  updateAssignedTo={updateAssignedTo}
+                  timeAgo={timeAgo}
+                  clinic={clinic}
+                  onAddToWaitlist={onAddToWaitlist}
+                  onOpenPTMode={onOpenPTMode}
+                  onOpenAudit={onOpenAudit}
+                  focusMode={focusMode}
+                />
+              ))
+            ) : (
+              <div className="h-64 rounded-[44px] flex flex-col items-center justify-center border-[0.5px] border-slate-200/60 bg-white shadow-luxury relative overflow-hidden group">
+                {/* Ascending dynamic trend line (opacity-10 watermark) */}
+                <div className="absolute inset-0 opacity-10 pointer-events-none flex items-end justify-center">
+                  <svg className="w-full h-40 text-slate-400" viewBox="0 0 400 200" fill="none">
+                    <motion.path 
+                      initial={{ pathLength: 0, opacity: 0 }}
+                      animate={{ pathLength: 1, opacity: 1 }}
+                      transition={{ duration: 2, ease: "easeOut" }}
+                      d="M0 180 C 100 170, 150 150, 200 100 C 250 50, 300 30, 400 20" 
+                      stroke="currentColor" 
+                      strokeWidth="3" 
+                    />
+                  </svg>
                 </div>
-              )}
-            />
-          ) : (
-            <div className="h-64 rounded-[44px] flex flex-col items-center justify-center border-[0.5px] border-slate-200/60 bg-white shadow-luxury relative overflow-hidden group">
-              {/* Ascending dynamic trend line (opacity-10 watermark) */}
-              <div className="absolute inset-0 opacity-10 pointer-events-none flex items-end justify-center">
-                <svg className="w-full h-40 text-slate-400" viewBox="0 0 400 200" fill="none">
-                  <motion.path 
-                    initial={{ pathLength: 0, opacity: 0 }}
-                    animate={{ pathLength: 1, opacity: 1 }}
-                    transition={{ duration: 2, ease: "easeOut" }}
-                    d="M0 180 C 100 170, 150 150, 200 100 C 250 50, 300 30, 400 20" 
-                    stroke="currentColor" 
-                    strokeWidth="3" 
-                  />
-                </svg>
+                
+                <div className="w-14 h-14 mb-4 rounded-2xl bg-slate-50 border-[0.5px] border-slate-200/60 flex items-center justify-center group-hover:scale-110 transition-transform relative z-10 shadow-sm">
+                  <Sparkles className="w-7 h-7 text-emerald-500 animate-pulse" />
+                </div>
+                
+                <div className="text-center relative z-10 space-y-1">
+                   <p className="text-[10px] font-black text-slate-900 uppercase tracking-widest italic">Position Zero</p>
+                   <p className="text-[9px] text-slate-400 font-bold uppercase tracking-tighter">Awaiting Clinical Momentum</p>
+                </div>
               </div>
-              
-              <div className="w-14 h-14 mb-4 rounded-2xl bg-slate-50 border-[0.5px] border-slate-200/60 flex items-center justify-center group-hover:scale-110 transition-transform relative z-10 shadow-sm">
-                <Sparkles className="w-7 h-7 text-emerald-500 animate-pulse" />
-              </div>
-              <h4 className="text-[14px] metric-authority uppercase px-8 text-center leading-relaxed relative z-10">Your pipeline is primed.</h4>
-              <p className="metric-label-muted mt-2 relative z-10 text-center max-w-[200px] normal-case">Upload data to unlock hidden revenue.</p>
-              
-              <motion.button 
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="mt-6 relative z-10 px-6 py-2.5 bg-emerald-500 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-emerald-500/20 ring-4 ring-emerald-500/10 animate-pulse"
-              >
-                Upload CSV
-              </motion.button>
-            </div>
-          )}
+            )}
+          </div>
         </SortableContext>
       </div>
     </div>
@@ -1392,40 +1383,52 @@ export default function AdminDashboard() {
     }).sort((a, b) => b.revenue - a.revenue);
   }, [dynamicStaffList, leads]);
 
+  const fetchLock = React.useRef(false);
   const fetchLeads = async (currentLimit = limit, append = false) => {
-    if (!profile?.clinic_id) return;
+    if (!profile?.clinic_id || (append && !hasMore) || isFetchingMore || fetchLock.current) return;
+    
+    fetchLock.current = true;
     if (append) setIsFetchingMore(true);
 
-    const { data, count, error } = await supabase
-      .from('consultation_requests')
-      .select('*', { count: 'exact' })
-      .eq('clinic_id', profile.clinic_id)
-      .order('created_at', { ascending: false })
-      .limit(currentLimit);
+    try {
+      const { data, count, error } = await supabase
+        .from('consultation_requests')
+        .select('*', { count: 'exact' })
+        .eq('clinic_id', profile.clinic_id)
+        .order('created_at', { ascending: false })
+        .limit(currentLimit);
 
-    if (error) {
-      console.error("Error fetching leads:", error);
-    } else {
-      let finalLeads = data || [];
-      // Demo Injection: If no real leads from DB, inject the high-ticket portfolio
-      if (finalLeads.length === 0) {
-        finalLeads = DEMO_LEADS as ConsultationRequest[];
-      }
-      setLeads(finalLeads);
-      if (!append && data) {
-        try {
-          sessionStorage.setItem(`leads_cache_${profile.clinic_id}`, JSON.stringify(data.slice(0, 50)));
-        } catch (e) { }
-      }
-      if (count !== null && data && data.length >= count) {
-        setHasMore(false);
+      if (error) {
+        console.error("Error fetching leads:", error);
+        if (append) setHasMore(false);
       } else {
-        setHasMore(true);
+        let finalLeads = data || [];
+        if (finalLeads.length === 0 && !append) {
+          finalLeads = DEMO_LEADS as ConsultationRequest[];
+        }
+        
+        setLeads(prev => {
+          const next = append ? [...prev, ...(data || [])] : finalLeads;
+          if (JSON.stringify(next) === JSON.stringify(prev)) return prev;
+          return next;
+        });
+        
+        if (count !== null && (data?.length ?? 0) >= count) {
+          setHasMore(false);
+        } else if (data && data.length < currentLimit && !append) {
+           setHasMore(false);
+        } else if (data && data.length === 0) {
+           setHasMore(false);
+        }
       }
+    } catch (err) {
+      console.error("Critical fetchLeads failure:", err);
+      setHasMore(false);
+    } finally {
+      fetchLock.current = false;
+      if (append) setIsFetchingMore(false);
+      if (isInitialLoad) setIsInitialLoad(false);
     }
-
-    if (append) setIsFetchingMore(false);
-    if (isInitialLoad) setIsInitialLoad(false); // Added this line
   };
 
   // --- OFFLINE-PROOF SYNC (Local Caching & Realtime WebSockets) ---
@@ -2380,20 +2383,14 @@ export default function AdminDashboard() {
                   exit={{ opacity: 0, y: -10 }}
                   className="w-full"
                 >
-                  {!isInitialLoad && leads.length === 0 ? (
-                    <EmptyStateView />
+                  {!isInitialLoad && (leads ?? []).length === 0 ? (
+                    <OnboardingEmptyState onInjectSample={() => {}} />
                   ) : (
-                    <>
-                      <PipelineCategoryFilter
-                        activeCategory={activeCategory}
-                        setActiveCategory={setActiveCategory}
-                      />
-                      
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="max-w-7xl mx-auto px-6 py-10 space-y-12"
-                      >
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="max-w-7xl mx-auto px-6 py-10 space-y-12"
+                    >
                         {/* ── North Star Summary Metrics (Cognitive Anchor) ── */}
                         <NorthStarSummaryCards />
 
@@ -2429,7 +2426,6 @@ export default function AdminDashboard() {
                           ))}
                         </div>
                       </motion.div>
-                    </>
                   )}
                 </motion.div>
               )}

@@ -56,6 +56,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     useEffect(() => {
+        console.log("AuthProvider: INITIALIZING ROOT AUTH");
         // Check for Demo Mode bypass
         const isDemo = localStorage.getItem("demo_mode") === "true";
         if (isDemo) {
@@ -77,9 +78,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             else setLoading(false);
         });
 
-        // Listen for auth changes
+        // DISABLED onAuthStateChange listener temporarily to break the loop
+        console.warn("AuthProvider: onAuthStateChange listener DISABLED to prevent re-render storm.");
+        /*
         const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-            if (localStorage.getItem("demo_mode") === "true") return; // Ignore if in demo
+            if (localStorage.getItem("demo_mode") === "true") return;
             setSession(session);
             if (session) fetchProfile(session.user.id);
             else {
@@ -87,8 +90,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 setLoading(false);
             }
         });
-
         return () => subscription.unsubscribe();
+        */
     }, []);
 
     const signOut = async () => {

@@ -229,6 +229,9 @@ export default function App() {
             <Route path="/login" element={<AdminLogin />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/verify-ui" element={<VerifyUI />} />
+            {/* Safe Fallbacks to prevent Guard Loops */}
+            <Route path="/index.html" element={<Navigate to="/" replace />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Router>
       </AnalyticsProvider>

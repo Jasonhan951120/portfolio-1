@@ -109,19 +109,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
   },
 
   getEngineLogs: () => {
-    const categories = get().getDynamicCategories();
-    const top3Categories = categories.slice(0, 3).map(c => c.name);
-    
-    console.group("🚀 HANLAN AI REVENUE ENGINE: CATEGORY ANALYSIS");
-    console.log("Analyzing current pipeline data...");
-    console.log("Top 3 Analyzed Categories:", top3Categories);
-    console.table(categories.map(c => ({ 
-      'Category': c.name, 
-      'Total Potential Revenue': get().region === 'UK' ? `£${c.value.toLocaleString()}` : `$${c.value.toLocaleString()}`,
-      'Rank': categories.indexOf(c) + 1
-    })));
-    console.groupEnd();
-    return categories;
+    return get().getDynamicCategories();
   },
 
   getFilteredLeads: () => {
