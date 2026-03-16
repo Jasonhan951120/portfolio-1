@@ -2375,28 +2375,20 @@ export default function AdminDashboard() {
                 <motion.div
                   key="pipeline-view"
                   layout
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="space-y-0"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="w-full"
                 >
-                  {/* Default Action View within Pipeline (Conditional Empty State) */}
-                  {leads?.length === 0 ? (
-                    <OnboardingEmptyState onInjectSample={() => {
-                        const { injectSampleData } = useDashboardStore.getState();
-                        injectSampleData();
-                        trackEvent('onboarding_sample_data_clicked');
-                    }} />
+                  {!isInitialLoad && leads.length === 0 ? (
+                    <EmptyStateView />
                   ) : (
                     <>
-                      <ZeroDashboardView
-                        leads={leads ?? []}
-                        clinicId={profile?.clinic_id || ''}
-                        specialty={profile?.specialty}
-                        onStatusChange={updateStatus}
-                        onImportComplete={fetchLeads}
+                      <PipelineCategoryFilter
+                        activeCategory={activeCategory}
+                        setActiveCategory={setActiveCategory}
                       />
-
+                      
                       <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -2405,12 +2397,17 @@ export default function AdminDashboard() {
                         {/* ── North Star Summary Metrics (Cognitive Anchor) ── */}
                         <NorthStarSummaryCards />
 
-                        <div className="flex justify-between items-end border-t border-slate-100 pt-12">
-                          <h2 className="text-3xl font-bold text-slate-900 tracking-tight italic uppercase">Lead Flow Board</h2>
-                          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">{(leads ?? []).length} total leads</p>
+                        <div className="flex justify-between items-end border-t border-slate-200/60 pt-12">
+                          <div className="space-y-1">
+                            <h2 className="text-3xl font-bold text-slate-900 tracking-tighter uppercase italic">Lead Flow Board</h2>
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Visualizing Clinical Conversion Pipeline ↗</p>
+                          </div>
+                          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest bg-white border border-slate-100 px-3 py-1 rounded-full shadow-sm">
+                            {(leads ?? []).length} total leads
+                          </p>
                         </div>
 
-                        <div className="flex overflow-x-auto pb-10 gap-4 custom-scrollbar">
+                        <div className="flex overflow-x-auto pb-10 gap-6 custom-scrollbar-premium">
                           {KANBAN_COLUMNS.map(col => (
                             <KanbanColumn
                               key={col}
@@ -2685,48 +2682,47 @@ export default function AdminDashboard() {
         </>
       )}
 
-      {/* Enterprise Guard Footer */}
-      <footer className="mt-24 py-16 px-8 bg-slate-900 border-t border-slate-800">
+      {/* Premium Medical AI Footer */}
+      <footer className="mt-20 py-12 px-8 bg-slate-900 border-t border-slate-800">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-wrap items-center justify-between gap-10">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
             {/* Brand & Security Status */}
-            <div className="flex items-center gap-5">
-              <div className="w-14 h-14 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center shadow-2xl relative group">
-                <div className="absolute inset-0 bg-emerald-500/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-                <Shield className="w-7 h-7 text-emerald-400 relative z-10" strokeWidth={1.5} />
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center shadow-lg">
+                <Shield className="w-5 h-5 text-emerald-400" strokeWidth={2} />
               </div>
               <div>
-                <h3 className="text-sm font-black text-white uppercase tracking-[0.3em]">Enterprise Guard</h3>
-                <div className="flex items-center gap-2 mt-1">
-                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  <p className="text-[10px] text-slate-400 font-bold tracking-widest uppercase">Zero-Trace Persistence Active</p>
+                <h3 className="text-[10px] font-black text-slate-200 uppercase tracking-[0.3em]">Enterprise Protocol</h3>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <div className="w-1 h-1 rounded-full bg-emerald-500" />
+                  <p className="text-[9px] text-slate-500 font-bold tracking-widest uppercase">Encryption Active</p>
                 </div>
               </div>
             </div>
 
-            {/* Compliance Badges (Dynamic) */}
-            <AnimatePresence mode="wait">
-              <SecurityBadge region={region} />
-            </AnimatePresence>
+            {/* Compressed Compliance Badges */}
+            <div className="scale-90 origin-left md:origin-center">
+              <AnimatePresence mode="wait">
+                <SecurityBadge region={region} />
+              </AnimatePresence>
+            </div>
 
-            {/* Legal Links */}
-            <div className="flex flex-wrap gap-x-8 gap-y-4">
-              {["Terms & Conditions", "Privacy Policy", "Data Protection Policy"].map(link => (
-                <button key={link} className="text-[10px] font-bold text-slate-500 hover:text-white uppercase tracking-widest transition-colors">
+            {/* High-Contrast Legal Links */}
+            <div className="flex flex-wrap gap-x-6 gap-y-2">
+              {["Terms", "Privacy", "DPA", "Security"].map(link => (
+                <button key={link} className="text-[10px] font-black text-slate-400 hover:text-white uppercase tracking-widest transition-all">
                   {link}
                 </button>
               ))}
             </div>
           </div>
 
-          <div className="mt-12 pt-8 border-t border-slate-800/50 flex flex-col md:flex-row justify-between gap-6">
-            <p className="text-[10px] md:text-xs text-slate-500 leading-relaxed font-medium max-w-2xl italic">
-              Hanlan OC operates on a <span className="text-slate-300 font-bold">Privacy-First</span> global architecture. 
-              Data is processed in transit with zero local retention. 
-              The Clinic remains the sole <span className="text-white font-black">Data Controller</span>.
+          <div className="mt-10 pt-6 border-t border-slate-800/40 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-[10px] text-slate-500 font-medium italic opacity-80">
+              Medical grade AI infrastructure with <span className="text-slate-300">zero-trace persistence</span>.
             </p>
-            <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">
-              © 2026 Hanlan OC. All Rights Reserved.
+            <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest">
+              © 2026 Hanlan OC.
             </p>
           </div>
         </div>

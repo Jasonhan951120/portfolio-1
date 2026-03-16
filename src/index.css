@@ -47,7 +47,39 @@
   h1, h2, h3, h4 {
     @apply font-sans font-bold tracking-tight leading-tight text-slate-900;
     color: #0F172A !important;
+    letter-spacing: -0.025em;
   }
+}
+
+/* 
+ * --------------------------------------------------------------------------
+ * PREMIUM UI UTILS
+ * -------------------------------------------------------------------------- 
+ */
+.custom-scrollbar-premium::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.custom-scrollbar-premium::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar-premium::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 20px;
+}
+
+.custom-scrollbar-premium::-webkit-scrollbar-thumb:hover {
+  background: #cbd5e1;
+}
+
+.glass-premium {
+  @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-xl shadow-slate-200/50;
+}
+
+.glow-high-intent {
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.15), 0 0 40px rgba(16, 185, 129, 0.05);
 }
 
 /* 
