@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Shield, Lock, CheckCircle2, Globe, ArrowRight, Star, Loader2 } from 'lucide-react';
 import { useDashboardStore } from '../../store/useDashboardStore';
@@ -31,17 +31,29 @@ export const GoogleOnboardingModal: React.FC<GoogleOnboardingModalProps> = ({ is
         }, 2000);
     };
 
+    // Lock background scrolling when modal is open
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'auto';
+        }
+        return () => {
+            document.body.style.overflow = 'auto'; // Cleanup
+        };
+    }, [isOpen]);
+
     if (!isOpen) return null;
 
     return (
         <AnimatePresence>
-            <div className="fixed inset-0 z-[300] flex items-center justify-center p-4">
+            <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     onClick={onClose}
-                    className="absolute inset-0 bg-slate-900/60 backdrop-blur-xl"
+                    className="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm transition-opacity"
                 />
 
                 <motion.div
@@ -49,7 +61,7 @@ export const GoogleOnboardingModal: React.FC<GoogleOnboardingModalProps> = ({ is
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.9, y: 20 }}
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    className="relative w-full max-w-lg bg-white rounded-[40px] overflow-hidden shadow-2xl border border-white/20"
+                    className="relative z-[101] bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto transform transition-all"
                 >
                     {/* Animated Background Accent */}
                     <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 via-blue-500 to-emerald-500 animate-gradient-x" />
