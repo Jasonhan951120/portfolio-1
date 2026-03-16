@@ -53,6 +53,7 @@ import { AICaseNotePopover } from "./dashboard/AICaseNotePopover";
 import { AuditTrailModal } from "./dashboard/AuditTrailModal";
 import { GoogleOnboardingModal } from "./dashboard/GoogleOnboardingModal";
 import { ReviewCorrelationWidget } from "./dashboard/ReviewCorrelationWidget";
+import { NorthStarSummaryCards } from "./dashboard/NorthStarSummaryCards";
 
 // Onboarding Tooltip Component (Medical Precision)
 const OnboardingTooltip = ({ message, onClose }: { message: string; onClose: () => void }) => (
@@ -2218,7 +2219,7 @@ export default function AdminDashboard() {
 
               {/* ── TIER 1: GLOBAL NAVIGATION (Apple-grade) ── */}
               <div className="flex bg-slate-100/50 p-1 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden group">
-                {(['PIPELINE', 'VAULT', 'SECURITY'] as const).map(tab => (
+                {(['PIPELINE', 'INTELLIGENCE', 'VAULT', 'SECURITY'] as const).map(tab => (
                   <div key={tab} className="relative">
                     <button
                       onClick={() => {
@@ -2403,16 +2404,13 @@ export default function AdminDashboard() {
                         onImportComplete={fetchLeads}
                       />
 
-                      {/* Kanban Board within Pipeline */}
                       <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         className="max-w-7xl mx-auto px-6 py-10 space-y-12"
                       >
-                        {/* New Reputation ROI Intelligence */}
-                        <div className="grid grid-cols-1 gap-8">
-                             <ReviewCorrelationWidget />
-                        </div>
+                        {/* ── North Star Summary Metrics (Cognitive Anchor) ── */}
+                        <NorthStarSummaryCards />
 
                         <div className="flex justify-between items-end border-t border-slate-100 pt-12">
                           <h2 className="text-3xl font-bold text-slate-900 tracking-tight italic uppercase">Lead Flow Board</h2>
@@ -2442,6 +2440,26 @@ export default function AdminDashboard() {
                       </motion.div>
                     </>
                   )}
+                </motion.div>
+              )}
+
+              {/* INTELLIGENCE VIEW */}
+              {activeTab === 'INTELLIGENCE' && (
+                <motion.div
+                  key="intelligence-view"
+                  layout
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="max-w-7xl mx-auto px-6 py-20"
+                >
+                  <div className="space-y-10">
+                    <div className="text-center space-y-4">
+                      <h2 className="text-3xl font-bold text-slate-900 tracking-tighter uppercase italic">Intelligence & ROI Exploration</h2>
+                      <p className="text-slate-400 font-bold uppercase tracking-[0.2em] text-[10px]">Deep Correlation Analysis between Reputation and Revenue ↗</p>
+                    </div>
+                    <ReviewCorrelationWidget />
+                  </div>
                 </motion.div>
               )}
 

@@ -4,10 +4,10 @@ import { ConsultationRequest } from '../lib/supabase';
 interface DashboardState {
   leads: ConsultationRequest[];
   activeCategory: string;
-  activeTab: 'PIPELINE' | 'VAULT' | 'SECURITY';
+  activeTab: 'PIPELINE' | 'VAULT' | 'SECURITY' | 'INTELLIGENCE';
   setLeads: (leads: ConsultationRequest[] | ((prev: ConsultationRequest[]) => ConsultationRequest[])) => void;
   setActiveCategory: (category: string) => void;
-  setActiveTab: (tab: 'PIPELINE' | 'VAULT' | 'SECURITY') => void;
+  setActiveTab: (tab: 'PIPELINE' | 'VAULT' | 'SECURITY' | 'INTELLIGENCE') => void;
   updateLead: (id: string, updates: Partial<ConsultationRequest>) => void;
   injectSampleData: () => void;
   region: 'UK' | 'US';
