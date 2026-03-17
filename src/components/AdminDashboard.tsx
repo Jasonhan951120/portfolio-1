@@ -151,13 +151,13 @@ const SecurityBadge = ({ region }: { region: 'UK' | 'US' }) => (
     <div className="flex items-center px-4 py-2">
       <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0 mr-2" />
       <span className="text-[11px] font-bold text-slate-600 tracking-wider uppercase">
-        {region === 'UK' ? "UK GDPR COMPLIANT" : "US HIPAA CERTIFIED"}
+        HIPAA COMPLIANT
       </span>
     </div>
     <div className="flex items-center px-4 py-2">
       <Globe className="w-4 h-4 text-emerald-500 shrink-0 mr-2" />
       <span className="text-[11px] font-bold text-slate-600 tracking-wider uppercase">
-        {region === 'UK' ? "EUROPE DIGITAL STANDARDS" : "CERTIFIED SECURE STREAM"}
+        UK GDPR COMPLIANT
       </span>
     </div>
   </div>
