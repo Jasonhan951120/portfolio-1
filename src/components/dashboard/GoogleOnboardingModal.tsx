@@ -31,7 +31,7 @@ export const GoogleOnboardingModal: React.FC<GoogleOnboardingModalProps> = ({ is
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 overflow-y-auto py-10">
       {/* 최상위 고정 컨테이너: 대통령 계급장 z-[100]으로 무조건 최상단 노출 */}
       {/* 까만색 반투명 배경 (Dark Overlay) */}
       <div 
@@ -40,7 +40,7 @@ export const GoogleOnboardingModal: React.FC<GoogleOnboardingModalProps> = ({ is
       />
 
       {/* 하얀색 모달 박스 알맹이: 배경보다 한 칸 위인 z-[101] 부여 */}
-      <div className="relative z-[101] max-w-lg w-full bg-white rounded-[32px] shadow-2xl border border-white/20 transform transition-all p-10 flex flex-col gap-8">
+      <div className="relative z-[101] max-w-lg w-full bg-white rounded-[32px] shadow-2xl border border-white/20 transform transition-all p-10 flex flex-col gap-8 max-h-[85vh] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200">
         
         {/* 모달 헤더 및 텍스트 */}
         <div className="text-center space-y-4">

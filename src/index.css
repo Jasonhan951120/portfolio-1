@@ -74,6 +74,24 @@
   background: #cbd5e1;
 }
 
+.scrollbar-thin::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thumb-slate-200::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 20px;
+}
+
+.scrollbar-thumb-slate-200::-webkit-scrollbar-thumb:hover {
+  background: #cbd5e1;
+}
+
 .glass-premium {
   @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-xl shadow-slate-200/50;
 }
