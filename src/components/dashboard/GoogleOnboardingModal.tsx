@@ -6,19 +6,7 @@ interface GoogleOnboardingModalProps {
 }
 
 export const GoogleOnboardingModal: React.FC<GoogleOnboardingModalProps> = ({ isOpen, onClose }) => {
-  // 1. 배경 스크롤 잠금 (Body Scroll Lock)
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    // 모달 언마운트 시 스크롤 복구
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen]);
-
+  // Removed body scroll lock as it caused freezing issues on certain devices/viewports
   if (!isOpen) return null;
 
   // 2. 실제 Google OAuth 2.0 리다이렉트 로직
