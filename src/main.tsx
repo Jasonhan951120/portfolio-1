@@ -6,10 +6,22 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <GoogleOAuthProvider clientId={googleClientId || "missing-client-id"}>
-      <App />
-    </GoogleOAuthProvider>
-  </StrictMode>,
-);
+console.log("BOOTSTRAP: main.tsx starting");
+try {
+  const rootElement = document.getElementById('root');
+  if (!rootElement) {
+    console.error("FATAL: Root element not found");
+  } else {
+    console.log("BOOTSTRAP: Root element found, mounting React");
+    createRoot(rootElement).render(
+      <StrictMode>
+        <GoogleOAuthProvider clientId={googleClientId || "missing-client-id"}>
+          <App />
+        </GoogleOAuthProvider>
+      </StrictMode>,
+    );
+    console.log("BOOTSTRAP: Render called");
+  }
+} catch (e) {
+  console.error("BOOTSTRAP ERROR:", e);
+}

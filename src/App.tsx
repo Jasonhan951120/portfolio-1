@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, useLocation, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation, Link, Navigate } from "react-router-dom";
 import Hero from "./components/Hero";
 import Navbar from "./components/Navbar";
 import Reviews from "./components/Reviews";
@@ -66,8 +66,6 @@ function LandingPage({ clinic }: { clinic: any }) {
       <Navbar clinic={clinic} />
       <MobileStickyCTA clinic={clinic} />
       <WhatsAppWidget clinic={clinic} />
-
-
 
       <main className="overflow-hidden">
         <Hero clinic={clinic} />
@@ -238,4 +236,3 @@ export default function App() {
     </AuthProvider>
   );
 }
-
