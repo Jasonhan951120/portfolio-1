@@ -121,7 +121,7 @@ export const PatientCard = React.memo(function PatientCard({
         animate={isExiting ? { opacity: 0, scale: 0.8, x: 50, filter: "blur(4px)" } : {}}
         transition={{ type: "spring", stiffness: 400, damping: 30 }}
         className={`relative flex flex-col gap-3 h-full bg-white/80 backdrop-blur-md border border-white/20 shadow-xl shadow-slate-200/50 rounded-2xl p-5 overflow-hidden group transition-all duration-200
-          ${isDragging ? 'opacity-50 ring-2 ring-emerald-500/50' : ''} 
+          ${isDragging ? 'opacity-50 ring-2 ring-emerald-500 shadow-xl' : ''} 
           ${isOverdue ? 'ring-1 ring-red-200/50' : ''}
           ${showVIPPulse ? 'ring-2 ring-red-400 animate-pulse' : ''}
           ${lead.intent_score > 90 ? 'glow-high-intent ring-1 ring-emerald-400/30' : ''}
@@ -204,7 +204,7 @@ export const PatientCard = React.memo(function PatientCard({
                   ${!hasPhone ? 'text-slate-300 bg-slate-100 border border-slate-200 cursor-not-allowed opacity-50' : ''}
                 `}
               >
-                <MessageCircle className="w-4 h-4" strokeWidth={2.5} />
+                <MessageCircle className="w-4 h-4 fill-current" strokeWidth={2.5} />
                 WhatsApp
               </button>
               
