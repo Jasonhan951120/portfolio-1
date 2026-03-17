@@ -32,14 +32,13 @@ export const GoogleOnboardingModal: React.FC<GoogleOnboardingModalProps> = ({ is
 
   return (
     <div 
-      className="fixed inset-0 z-[100] overflow-y-auto bg-slate-900/60 backdrop-blur-sm transition-opacity py-10"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm transition-opacity p-4 sm:p-6"
       onClick={onClose}
     >
       <div 
-        className="flex min-h-full items-center justify-center p-4 sm:p-6"
+        className="relative z-[101] max-w-lg w-full bg-white rounded-[32px] shadow-2xl border border-white/20 transform transition-all p-10 pb-8 flex flex-col gap-8 max-h-[80vh] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="relative z-[101] max-w-lg w-full bg-white rounded-[32px] shadow-2xl border border-white/20 transform transition-all p-10 pb-8 flex flex-col gap-8">
           
           {/* 모달 헤더 및 텍스트 */}
           <div className="text-center space-y-4">
@@ -73,6 +72,5 @@ export const GoogleOnboardingModal: React.FC<GoogleOnboardingModalProps> = ({ is
           </div>
         </div>
       </div>
-    </div>
   );
 };
