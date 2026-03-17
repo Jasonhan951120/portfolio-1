@@ -40,7 +40,7 @@ export const GoogleOnboardingModal: React.FC<GoogleOnboardingModalProps> = ({ is
       />
 
       {/* 하얀색 모달 박스 알맹이: 배경보다 한 칸 위인 z-[101] 부여 */}
-      <div className="relative z-[101] max-w-lg w-full bg-white rounded-[32px] shadow-2xl border border-white/20 transform transition-all p-10 flex flex-col gap-8 max-h-[85vh] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200">
+      <div className="relative z-[101] max-w-lg w-full bg-white rounded-[32px] shadow-2xl border border-white/20 transform transition-all p-10 pb-8 flex flex-col gap-8 max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200">
         
         {/* 모달 헤더 및 텍스트 */}
         <div className="text-center space-y-4">
