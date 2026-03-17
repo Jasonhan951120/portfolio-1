@@ -519,7 +519,7 @@ function KanbanColumn({
   }, [columnLeads, focusMode]);
 
   return (
-    <div className="w-[290px] shrink-0 flex flex-col h-[calc(100vh-280px)] pr-4 mr-4 last:mr-0 last:pr-0 transition-all duration-500">
+    <div className="flex flex-col h-full transition-all duration-500">
       <div className="flex flex-col mb-6 px-1">
         <h3 className="metric-label-muted mb-1 flex items-center justify-between">
           {columnId}
@@ -532,9 +532,9 @@ function KanbanColumn({
         <div className="h-[2px] w-full bg-slate-100 mt-3 rounded-full" />
       </div>
 
-      <div className="flex-1 overflow-hidden" ref={setNodeRef}>
+      <div className="flex-1 min-h-0 overflow-hidden" ref={setNodeRef}>
         <SortableContext items={sortedLeads.map((l: any) => l.id)}>
-          <div className="flex flex-col gap-4 overflow-y-auto custom-scrollbar-mini h-[calc(100vh-450px)]">
+          <div className="flex flex-col gap-4 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200 pb-4">
             {sortedLeads.length > 0 ? (
               sortedLeads.map((lead: any, index: number) => (
                 <PatientCard
@@ -2171,7 +2171,7 @@ export default function AdminDashboard() {
   );
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans">
+    <div className="h-screen w-full overflow-hidden flex flex-col bg-slate-50 text-slate-900 font-sans">
       {session === null ? (
         <div className="flex items-center justify-center h-screen">
           <RefreshCw className="w-6 h-6 text-gray-400 animate-spin" strokeWidth={1.5} />
@@ -2370,7 +2370,7 @@ export default function AdminDashboard() {
           </AnimatePresence>
 
           {/* ── MAIN CONTENT ── */}
-          <main className={`transition-all duration-700 ease-in-out ${isExpertModeOpen ? 'blur-md scale-[0.98] opacity-60' : 'blur-0 scale-100 opacity-100'}`}>
+          <main className={`flex-1 min-h-0 flex flex-col transition-all duration-700 ease-in-out ${isExpertModeOpen ? 'blur-md scale-[0.98] opacity-60' : 'blur-0 scale-100 opacity-100'}`}>
             <AnimatePresence mode="wait">
 
               {/* PIPELINE VIEW (Two Sub-modes: Action & Board) */}
@@ -2381,7 +2381,7 @@ export default function AdminDashboard() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="w-full"
+                  className="w-full flex-1 flex flex-col min-h-0"
                 >
                   {!isInitialLoad && (leads ?? []).length === 0 ? (
                     <OnboardingEmptyState onInjectSample={() => {}} />
@@ -2389,12 +2389,14 @@ export default function AdminDashboard() {
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className="max-w-7xl mx-auto px-6 py-10 space-y-12"
+                      className="w-full h-full flex flex-col p-6 flex-1 min-h-0"
                     >
                         {/* ── North Star Summary Metrics (Cognitive Anchor) ── */}
-                        <NorthStarSummaryCards />
+                        <div className="shrink-0 mb-6">
+                          <NorthStarSummaryCards />
+                        </div>
 
-                        <div className="flex justify-between items-end border-t border-slate-200/60 pt-12">
+                        <div className="flex justify-between items-end border-t border-slate-200/60 pt-6 pb-4 shrink-0">
                           <div className="space-y-1">
                             <h2 className="text-3xl font-bold text-slate-900 tracking-tighter uppercase italic">Lead Flow Board</h2>
                             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Visualizing Clinical Conversion Pipeline ↗</p>
@@ -2404,26 +2406,28 @@ export default function AdminDashboard() {
                           </p>
                         </div>
 
-                        <div className="flex overflow-x-auto pb-10 gap-6 custom-scrollbar-premium">
-                          {KANBAN_COLUMNS.map(col => (
-                            <KanbanColumn
-                              key={col}
-                              columnId={col}
-                              columnLeads={(leads ?? []).filter(l => l.status === col)}
-                              setDepositModal={() => { }}
-                              setSelectedLead={setSelectedLead}
-                              updateStatus={updateStatus}
-                              onAddToWaitlist={handleAddToWaitlist}
-                              STAFF_LIST={dynamicStaffList}
-                              updateAssignedTo={updateAssignedTo}
-                              timeAgo={timeAgo}
-                              clinic={profile}
-                              onOpenPTMode={() => { }}
-                              onOpenAudit={(lead) => setActiveAuditLead(lead)}
-                              selectedDate={selectedDate}
-                              focusMode={activeCategory}
-                            />
-                          ))}
+                        <div className="flex-1 min-h-0 w-full mt-2">
+                          <div className="grid grid-cols-4 gap-6 w-full h-full">
+                            {KANBAN_COLUMNS.map(col => (
+                              <KanbanColumn
+                                key={col}
+                                columnId={col}
+                                columnLeads={(leads ?? []).filter(l => l.status === col)}
+                                setDepositModal={() => { }}
+                                setSelectedLead={setSelectedLead}
+                                updateStatus={updateStatus}
+                                onAddToWaitlist={handleAddToWaitlist}
+                                STAFF_LIST={dynamicStaffList}
+                                updateAssignedTo={updateAssignedTo}
+                                timeAgo={timeAgo}
+                                clinic={profile}
+                                onOpenPTMode={() => { }}
+                                onOpenAudit={(lead) => setActiveAuditLead(lead)}
+                                selectedDate={selectedDate}
+                                focusMode={activeCategory}
+                              />
+                            ))}
+                          </div>
                         </div>
                       </motion.div>
                   )}

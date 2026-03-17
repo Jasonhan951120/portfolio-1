@@ -120,7 +120,7 @@ export const PatientCard = React.memo(function PatientCard({
         whileTap={{ scale: 0.99 }}
         animate={isExiting ? { opacity: 0, scale: 0.8, x: 50, filter: "blur(4px)" } : {}}
         transition={{ type: "spring", stiffness: 400, damping: 30 }}
-        className={`relative flex flex-col gap-3 h-full glass-premium p-5 overflow-hidden group transition-all duration-300
+        className={`relative flex flex-col gap-3 h-full bg-white/80 backdrop-blur-md border border-white/20 shadow-xl shadow-slate-200/50 hover:shadow-md hover:ring-1 hover:ring-slate-200/50 p-5 overflow-hidden group transition-all duration-200
           ${isDragging ? 'opacity-50 ring-2 ring-emerald-500/50' : ''} 
           ${isOverdue ? 'ring-1 ring-red-200/50' : ''}
           ${showVIPPulse ? 'ring-2 ring-red-400 animate-pulse' : ''}
@@ -134,15 +134,15 @@ export const PatientCard = React.memo(function PatientCard({
           {/* Top Section: Name & Metadata */}
           <div className="flex justify-between items-start w-full mb-1">
             <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-              <div className="flex items-center gap-2 w-full">
-                <h4 className="text-slate-900 font-bold tracking-tighter text-[15px] truncate flex-1 min-w-0">{lead.name}</h4>
+              <div className="flex items-center gap-2 w-full min-w-0 break-words">
+                <h4 className="text-base font-bold text-slate-900 tracking-tight truncate flex-1 min-w-0 break-words">{lead.name}</h4>
                 {isVIP && (
                   <span className="shrink-0 text-[9px] font-black px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-400/20 to-amber-600/20 text-amber-700 border border-amber-200/50 uppercase tracking-widest">
                     VIP
                   </span>
                 )}
               </div>
-              <span className="text-slate-400 font-medium text-[10px] uppercase tracking-wider">{timeAgo(lead.created_at, region)}</span>
+              <span className="text-sm font-medium text-slate-500 break-words">{timeAgo(lead.created_at, region)}</span>
             </div>
             
             <div className="flex items-center gap-1 shrink-0 ml-2 pointer-events-auto">
@@ -199,14 +199,14 @@ export const PatientCard = React.memo(function PatientCard({
                   }
                 }}
                 disabled={!hasPhone}
-                className={`flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.15em] px-4 py-2 rounded-full transition-all shrink-0 shadow-sm active:scale-95
+                className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full font-semibold text-sm transition-colors shrink-0
                   ${hasPhone 
-                    ? 'text-white bg-emerald-500 hover:bg-emerald-600 shadow-emerald-200/50' 
+                    ? 'bg-emerald-50 text-emerald-600 border border-emerald-100 hover:bg-emerald-100' 
                     : 'text-slate-300 bg-slate-100 border border-slate-200 cursor-not-allowed opacity-50'
                   }
                 `}
               >
-                <MessageCircle className="w-3.5 h-3.5" strokeWidth={3} />
+                <MessageCircle className="w-4 h-4" strokeWidth={2.5} />
                 WhatsApp
               </button>
               
