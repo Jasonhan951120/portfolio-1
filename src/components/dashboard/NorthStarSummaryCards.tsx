@@ -20,8 +20,8 @@ export const NorthStarSummaryCards: React.FC = () => {
             value: pipelineValue,
             prefix: currency,
             icon: TrendingUp,
-            color: "text-emerald-400",
-            bg: "bg-emerald-500/10",
+            color: "text-emerald-600",
+            bg: "bg-emerald-50 border border-emerald-100",
             trend: "+12.5%",
             description: "Active high-ticket value"
         },
@@ -30,8 +30,8 @@ export const NorthStarSummaryCards: React.FC = () => {
             value: highIntentCount,
             prefix: "",
             icon: Users,
-            color: "text-blue-400",
-            bg: "bg-blue-500/10",
+            color: "text-blue-600",
+            bg: "bg-blue-50 border border-blue-100",
             trend: "🔥 Priority",
             description: "Patients ready to book"
         },
@@ -41,8 +41,8 @@ export const NorthStarSummaryCards: React.FC = () => {
             prefix: "",
             suffix: "/5.0",
             icon: Star,
-            color: "text-amber-400",
-            bg: "bg-amber-500/10",
+            color: "text-violet-600",
+            bg: "bg-violet-50 border border-violet-100",
             trend: googleProfile?.reviewCount ? `${googleProfile.reviewCount} Reviews` : "Authority",
             description: "Google verification active"
         }
@@ -56,23 +56,25 @@ export const NorthStarSummaryCards: React.FC = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: idx * 0.1 }}
-                    className="relative group overflow-hidden rounded-[32px] bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 p-8 shadow-2xl transition-all hover:border-slate-600 hover:bg-slate-900/90"
+                    className="relative group overflow-hidden bg-white/80 backdrop-blur-md border border-white/20 shadow-xl shadow-slate-200/50 rounded-2xl p-6 transition-all duration-200 hover:shadow-md hover:ring-1 hover:ring-slate-200/50"
                 >
                     {/* Animated Glow Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     
                     <div className="flex justify-between items-start mb-6">
-                        <div className={`p-4 rounded-2xl ${card.bg}`}>
+                        <div className={`p-3 rounded-xl ${card.bg}`}>
                             <card.icon className={`w-6 h-6 ${card.color}`} />
                         </div>
-                        <div className="flex items-center gap-1.5 px-3 py-1 bg-white/5 rounded-full border border-white/10">
-                            <span className="text-[10px] font-black text-white/70 uppercase tracking-widest">{card.trend}</span>
+                        <div className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold border 
+                            ${card.title === 'High Intent Leads' ? 'bg-amber-50 text-amber-600 border-amber-100' : 'bg-emerald-50 text-emerald-600 border-emerald-100'}`}
+                        >
+                            <span className="uppercase tracking-widest">{card.trend}</span>
                         </div>
                     </div>
 
                     <div className="space-y-1">
                         <div className="flex items-baseline gap-1">
-                            <span className="text-3xl font-black text-white tracking-tighter">
+                            <span className="text-4xl font-extrabold text-slate-900 tracking-tight">
                                 {typeof card.value === 'number' && card.title !== "Reputation Power" ? (
                                     <SlotNumber value={card.value} prefix={card.prefix} />
                                 ) : (
@@ -82,12 +84,12 @@ export const NorthStarSummaryCards: React.FC = () => {
                                 )}
                             </span>
                         </div>
-                        <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">{card.title}</h3>
+                        <h3 className="text-sm font-medium text-slate-500">{card.title}</h3>
                     </div>
 
                     <div className="mt-6 flex items-center justify-between">
-                        <p className="text-[10px] font-medium text-slate-500 italic">{card.description}</p>
-                        <ArrowUpRight className="w-4 h-4 text-slate-700 group-hover:text-emerald-400 transition-colors" />
+                        <p className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors italic">{card.description}</p>
+                        <ArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-emerald-500 transition-colors" />
                     </div>
                 </motion.div>
             ))}
