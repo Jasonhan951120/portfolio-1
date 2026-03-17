@@ -11,7 +11,7 @@ import {
   MessageSquare, Send, Sparkles, Layout,
   ArrowRight, ShieldCheck, Zap, Settings, SlidersHorizontal, Building, Save, Plus, Trash2, Camera, Palette, CreditCard,
   Mail, UserPlus, Loader2, Clock, Copy, Shield,
-  Link2, AlertTriangle, MapPin, ChevronDown, Instagram, MessageCircle, Link as LinkIcon, Monitor, Stethoscope
+  Link2, AlertTriangle, MapPin, ChevronDown, Instagram, MessageCircle, Link as LinkIcon, Monitor, Stethoscope, HelpCircle
 } from 'lucide-react';
 import { Link, useNavigate } from "react-router-dom";
 import { supabase, type ConsultationRequest, type Profile, type Invitation } from "../lib/supabase";
@@ -505,8 +505,16 @@ function KanbanColumn({
   return (
     <div className="flex flex-col h-full transition-all duration-500 min-w-0">
       <div className="flex flex-col mb-6 px-1">
-        <h3 className="metric-label-muted mb-1 flex items-center justify-between">
-          {columnId}
+        <h3 className="metric-label-muted mb-1 flex items-center justify-between group relative">
+          <span className="flex items-center gap-2">
+            {COLUMN_METRICS[columnId]?.title || columnId}
+            <HelpCircle className="w-3.5 h-3.5 text-slate-300 hover:text-slate-400 cursor-help transition-colors" />
+            
+            {/* Premium Glassmorphism Tooltip */}
+            <div className="absolute left-0 top-full z-50 w-64 p-3 mt-2 text-sm font-medium text-white bg-slate-800/90 backdrop-blur-md rounded-xl shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+              {COLUMN_METRICS[columnId]?.tooltip}
+            </div>
+          </span>
           <span className="opacity-40">{columnLeads.length}</span>
         </h3>
         <span className="text-xl metric-authority">
@@ -573,6 +581,25 @@ function KanbanColumn({
 
 
 // ─────────────────────────────────────────────────────────────────────────
+
+const COLUMN_METRICS: Record<string, { title: string; tooltip: string }> = {
+  "New Lead": { 
+    title: "New Inquiry", 
+    tooltip: "Review patient profiles and initiate first contact. Fast responses maximize case acceptance." 
+  },
+  "Booked": { 
+    title: "Consultation Booked", 
+    tooltip: "Prepare clinical assessments and personalized treatment plans before arrival." 
+  },
+  "Visited": { 
+    title: "Treatment Proposed", 
+    tooltip: "Track high-value cases pending patient consent. Follow up to secure approval." 
+  },
+  "Treated": { 
+    title: "Case Accepted", 
+    tooltip: "Monitor active treatments and optimize Patient Lifetime Value (LTV)." 
+  }
+};
 
 const KANBAN_COLUMNS = ["New Lead", "Booked", "Visited", "Treated"];
 const BRANCHES = ["London HQ", "Manchester Clinic", "Birmingham Center", "Edinburgh Practice"];
