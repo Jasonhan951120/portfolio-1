@@ -147,36 +147,20 @@ const STATUS_COLORS: Record<string, string> = {
 
 // Enterprise Guard Footer Badge (Universal)
 const SecurityBadge = ({ region }: { region: 'UK' | 'US' }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 10 }}
-    animate={{ opacity: 1, y: 0 }}
-    key={region}
-    className="flex flex-wrap items-center gap-6 bg-white/50 border border-slate-200/60 p-5 rounded-[32px] backdrop-blur-xl shadow-sm"
-  >
-    <div className="flex items-center gap-3">
-      <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
-        <ShieldCheck className="w-5 h-5 text-emerald-600" />
-      </div>
-      <div className="flex flex-col">
-        <span className="text-[10px] font-black text-slate-800 uppercase tracking-widest leading-none mb-1">
-          {region === 'UK' ? "UK GDPR Compliant" : "US HIPAA Certified"}
-        </span>
-        <span className="text-[9px] text-slate-500 font-semibold whitespace-nowrap uppercase tracking-tighter">Zero-EMR Data Protection</span>
-      </div>
+  <div className="inline-flex items-center rounded-full bg-white shadow-sm ring-1 ring-slate-900/5 divide-x divide-slate-100 overflow-hidden">
+    <div className="flex items-center px-4 py-2">
+      <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0 mr-2" />
+      <span className="text-[11px] font-bold text-slate-600 tracking-wider uppercase">
+        {region === 'UK' ? "UK GDPR COMPLIANT" : "US HIPAA CERTIFIED"}
+      </span>
     </div>
-    <div className="hidden md:block w-px h-8 bg-slate-200" />
-    <div className="flex items-center gap-3">
-      <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
-        <Globe className="w-5 h-5 text-blue-600" />
-      </div>
-      <div className="flex flex-col">
-        <span className="text-[10px] font-black text-slate-800 uppercase tracking-widest leading-none mb-1">
-          {region === 'UK' ? "Europe Digital Standards" : "Certified Secure Stream"}
-        </span>
-        <span className="text-[9px] text-slate-500 font-semibold whitespace-nowrap uppercase tracking-tighter">Enterprise Grade Guard</span>
-      </div>
+    <div className="flex items-center px-4 py-2">
+      <Globe className="w-4 h-4 text-emerald-500 shrink-0 mr-2" />
+      <span className="text-[11px] font-bold text-slate-600 tracking-wider uppercase">
+        {region === 'UK' ? "EUROPE DIGITAL STANDARDS" : "CERTIFIED SECURE STREAM"}
+      </span>
     </div>
-  </motion.div>
+  </div>
 );
 
 // Premium Onboarding Empty State (Apple-grade)
@@ -2683,49 +2667,41 @@ export default function AdminDashboard() {
       )}
 
       {/* Premium Medical AI Footer */}
-      <footer className="mt-20 py-12 px-8 bg-slate-900 border-t border-slate-800">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
-            {/* Brand & Security Status */}
-            <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center shadow-lg">
-                <Shield className="w-5 h-5 text-emerald-400" strokeWidth={2} />
-              </div>
-              <div>
-                <h3 className="text-[10px] font-black text-slate-200 uppercase tracking-[0.3em]">Enterprise Protocol</h3>
-                <div className="flex items-center gap-2 mt-0.5">
-                  <div className="w-1 h-1 rounded-full bg-emerald-500" />
-                  <p className="text-[9px] text-slate-500 font-bold tracking-widest uppercase">Encryption Active</p>
-                </div>
+      <footer className="w-full bg-slate-50 border-t border-slate-200/80 py-6 px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+          {/* Brand & Security Status */}
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center shadow-sm">
+              <Shield className="w-5 h-5 text-emerald-500" strokeWidth={2} />
+            </div>
+            <div>
+              <h3 className="text-[11px] font-bold text-slate-900 uppercase tracking-[0.2em]">Enterprise Protocol</h3>
+              <div className="flex items-center gap-2 mt-0.5">
+                <div className="w-1 h-1 rounded-full bg-emerald-500" />
+                <p className="text-[10px] text-slate-400 font-semibold tracking-widest uppercase">Encryption Active</p>
               </div>
             </div>
+          </div>
 
-            {/* Compressed Compliance Badges */}
-            <div className="scale-90 origin-left md:origin-center">
-              <AnimatePresence mode="wait">
-                <SecurityBadge region={region} />
-              </AnimatePresence>
-            </div>
+          {/* Compressed Compliance Badges */}
+          <div className="scale-90 origin-left md:origin-center">
+            <SecurityBadge region={region} />
+          </div>
 
-            {/* High-Contrast Legal Links */}
-            <div className="flex flex-wrap gap-x-6 gap-y-2">
+          <div className="flex flex-col md:flex-row items-center gap-8">
+            {/* Actionable Links */}
+            <div className="flex gap-6">
               {["Terms", "Privacy", "DPA", "Security"].map(link => (
-                <button key={link} className="text-[10px] font-black text-slate-400 hover:text-white uppercase tracking-widest transition-all">
+                <button key={link} className="text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors uppercase tracking-wider">
                   {link}
                 </button>
               ))}
             </div>
-          </div>
 
-          <div className="mt-10 pt-6 border-t border-slate-800/40 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-[10px] text-slate-500 font-medium italic opacity-80">
-              Medical grade AI infrastructure with <span className="text-slate-300">zero-trace persistence</span>.
-            </p>
-            <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest">
+            {/* Copyright */}
+            <p className="text-sm font-medium text-slate-400">
               © 2026 Hanlan OC.
             </p>
           </div>
-        </div>
       </footer>
     </div>
   );
