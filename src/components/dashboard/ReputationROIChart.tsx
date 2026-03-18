@@ -18,16 +18,16 @@ const mockData = [
 const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
         return (
-            <div className="bg-white border border-slate-200 p-4 rounded-2xl shadow-lg">
-                <p className="text-slate-900 font-black mb-2 text-xs uppercase tracking-widest">{label}</p>
-                {payload.map((entry: any, index: number) => (
-                    <div key={index} className="flex items-center gap-2 text-xs font-bold mb-1">
+            <div className="bg-slate-900/95 border border-slate-700/50 p-4 rounded-2xl shadow-2xl backdrop-blur-xl">
+                <p className="text-white font-bold mb-2 text-sm">{label}</p>
+                {payload?.map((entry: any, index: number) => (
+                    <div key={index} className="flex items-center gap-2 text-sm font-medium mb-1">
                         <span
                             className="w-2 h-2 rounded-full"
                             style={{ backgroundColor: entry.color }}
                         />
                         <span className="text-slate-400 capitalize">{entry.name}:</span>
-                        <span className="text-slate-900 tabular-nums">
+                        <span className="text-white font-black tabular-nums">
                             {entry.name === "revenue"
                                 ? `£${entry.value.toLocaleString()}`
                                 : `${entry.value} ★`}
@@ -42,15 +42,15 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 export function ReputationROIChart({ className = "" }: ReputationROIChartProps) {
     return (
-        <div className={`bg-white border border-slate-200 rounded-[44px] p-8 shadow-sm ${className}`}>
+        <div className={`bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-[32px] p-8 ${className}`}>
             <div className="flex items-center justify-between mb-8">
                 <div>
-                    <h3 className="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2 uppercase">
-                        <Star className="w-5 h-5 text-emerald-500 fill-emerald-500" />
-                        Reputation Correlation
+                    <h3 className="text-xl font-display font-bold text-white tracking-tight flex items-center gap-2">
+                        <Star className="w-5 h-5 text-[#C5A059] fill-[#C5A059]" />
+                        Reputation vs. Revenue
                     </h3>
-                    <p className="text-[10px] text-slate-400 mt-1 font-bold uppercase tracking-widest">
-                        Correlation between Google Business rating and monthly revenue
+                    <p className="text-[12px] text-slate-400 mt-1 font-medium">
+                        Correlation between Google Business rating and monthly closed revenue
                     </p>
                 </div>
             </div>
@@ -62,23 +62,21 @@ export function ReputationROIChart({ className = "" }: ReputationROIChartProps) 
                         data={mockData}
                         margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
                     >
-                        <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
                         <XAxis
                             dataKey="month"
                             axisLine={false}
                             tickLine={false}
-                            tick={{ fill: "#94a3b8", fontSize: 10, fontWeight: 900 }}
+                            tick={{ fill: "#6B7280", fontSize: 12, fontWeight: 500 }}
                             dy={10}
-                            className="uppercase tracking-widest"
                         />
                         <YAxis
                             yAxisId="left"
                             axisLine={false}
                             tickLine={false}
-                            tick={{ fill: "#94a3b8", fontSize: 10, fontWeight: 900 }}
+                            tick={{ fill: "#6B7280", fontSize: 12, fontWeight: 500 }}
                             tickFormatter={(value) => `£${(value / 1000)}k`}
                             dx={-10}
-                            className="tabular-nums"
                         />
                         <YAxis
                             yAxisId="right"
@@ -86,12 +84,11 @@ export function ReputationROIChart({ className = "" }: ReputationROIChartProps) 
                             domain={[0, 5]}
                             axisLine={false}
                             tickLine={false}
-                            tick={{ fill: "#94a3b8", fontSize: 10, fontWeight: 900 }}
+                            tick={{ fill: "#6B7280", fontSize: 12, fontWeight: 500 }}
                             tickFormatter={(value) => `${value.toFixed(1)} ★`}
                             dx={10}
-                            className="tabular-nums"
                         />
-                        <Tooltip content={<CustomTooltip />} cursor={{ fill: "#f8fafc" }} />
+                        <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(255,255,255,0.02)" }} />
                         <Legend wrapperStyle={{ paddingTop: "20px" }} />
                         <Bar
                             yAxisId="left"
@@ -107,10 +104,10 @@ export function ReputationROIChart({ className = "" }: ReputationROIChartProps) 
                             type="monotone"
                             dataKey="rating"
                             name="rating"
-                            stroke="#cbd5e1"
-                            strokeWidth={3}
-                            dot={{ r: 4, fill: '#ffffff', stroke: '#cbd5e1', strokeWidth: 2 }}
-                            activeDot={{ r: 6, fill: '#ffffff', stroke: '#cbd5e1' }}
+                            stroke="#CBD5E1"
+                            strokeWidth={2.5}
+                            dot={{ r: 4, fill: '#0F172A', stroke: '#CBD5E1', strokeWidth: 2 }}
+                            activeDot={{ r: 6, fill: '#CBD5E1', stroke: '#0F172A' }}
                         />
                     </ComposedChart>
                 </ResponsiveContainer>

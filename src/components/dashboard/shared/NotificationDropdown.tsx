@@ -30,10 +30,10 @@ export function NotificationDropdown({ notifications, onClose, onDismiss }: Noti
                 </button>
             </div>
             <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
-                {notifications.length === 0 ? (
+                {notifications?.length === 0 ? (
                     <p className="text-[10px] text-gray-400 text-center py-8 italic">No new activity</p>
                 ) : (
-                    notifications.map((n) => (
+                    notifications?.map((n) => (
                         <div key={n.id} className="relative p-4 bg-gray-50 border border-gray-100 rounded-2xl group transition-all">
                             <button
                                 onClick={(e) => {

@@ -21,8 +21,8 @@ export function UpsellOpportunities({ leads, className = "" }: UpsellOpportuniti
 
     const opportunities = useMemo(() => {
         return leads
-            .filter((l) => l.status === "Sale Closed" || l.status === "Consultation Done")
-            .map((l) => {
+            ?.filter((l) => l.status === "Sale Closed" || l.status === "Consultation Done")
+            ?.map((l) => {
                 let recommendation = "";
                 let value = 0;
                 let rationale = "";
@@ -86,7 +86,7 @@ export function UpsellOpportunities({ leads, className = "" }: UpsellOpportuniti
             </div>
 
             <div className="space-y-3">
-                {opportunities.map((opp, idx) => {
+                {opportunities?.map((opp, idx) => {
                     const isTriggered = triggeredIds.has(opp.id);
                     return (
                         <motion.div

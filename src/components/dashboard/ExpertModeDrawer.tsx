@@ -6,11 +6,9 @@ import { ExpertModeContent } from './ExpertModeContent';
 interface ExpertModeDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  onOpenPMSLogs?: () => void;
-  onOpenClinicMeta?: () => void;
 }
 
-export function ExpertModeDrawer({ isOpen, onClose, onOpenPMSLogs, onOpenClinicMeta }: ExpertModeDrawerProps) {
+export function ExpertModeDrawer({ isOpen, onClose }: ExpertModeDrawerProps) {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -21,7 +19,7 @@ export function ExpertModeDrawer({ isOpen, onClose, onOpenPMSLogs, onOpenClinicM
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[150]"
+            className="fixed inset-0 bg-black/40 backdrop-blur-xl z-[150]"
           />
           
           {/* Drawer */}
@@ -42,10 +40,7 @@ export function ExpertModeDrawer({ isOpen, onClose, onOpenPMSLogs, onOpenClinicM
             </div>
             
             <div className="px-12 pb-24">
-              <ExpertModeContent 
-                onOpenPMSLogs={onOpenPMSLogs}
-                onOpenClinicMeta={onOpenClinicMeta}
-              />
+              <ExpertModeContent />
             </div>
           </motion.div>
         </>

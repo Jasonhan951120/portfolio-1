@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { Instagram, Globe, Zap } from 'lucide-react';
-import DailyInsight from '@/src/components/DailyInsight';
-import TrafficSourceChart from '@/src/components/TrafficSourceChart';
-import { LiveTrafficPanel } from '@/src/components/dashboard/shared/LiveTrafficPanel';
-import { AutoTaggingModal } from '@/src/components/dashboard/shared/AutoTaggingModal';
-import MarketingOnboarding from '@/src/components/MarketingOnboarding';
+import DailyInsight from '../../DailyInsight';
+import TrafficSourceChart from '../../TrafficSourceChart';
+import { LiveTrafficPanel } from '../shared/LiveTrafficPanel';
+import { AutoTaggingModal } from '../shared/AutoTaggingModal';
+import MarketingOnboarding from '../../MarketingOnboarding';
 import { type Profile } from '../../../lib/supabase';
 
 interface MarketingTabProps {
@@ -52,10 +52,10 @@ export function MarketingTab({
                         {/* Live Traffic Source Panel — Real-time via Supabase Realtime */}
                         <LiveTrafficPanel clinicId={profile?.clinic_id ?? undefined} />
 
-                        <div className="bg-white border-[0.5px] border-slate-200/60 rounded-2xl p-8 shadow-[0_2px_8px_rgba(0,0,0,0.02),_0_12px_32px_rgba(0,0,0,0.04)]">
+                        <div className="bg-white border border-[rgba(0,0,0,0.04)] rounded-[40px] p-8 shadow-[0_1px_2px_rgba(0,0,0,0.02),_0_8px_24px_-4px_rgba(0,0,0,0.04)]">
                             <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-6">Connected Platforms</h4>
                             <div className="space-y-4">
-                                {marketingConnections.map(conn => (
+                                {marketingConnections?.map(conn => (
                                     <div key={conn.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100">
                                         <div className="flex items-center gap-3">
                                             <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${conn.platform === 'meta' ? 'bg-blue-50 text-blue-600' : 'bg-red-50 text-red-600'}`}>
@@ -84,7 +84,7 @@ export function MarketingTab({
 
                     {/* Right: Detailed ROI Analytics */}
                     <div className="lg:col-span-8">
-                        <div className="bg-white border-[0.5px] border-slate-200/60 rounded-2xl p-10 h-full relative overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.02),_0_12px_32px_rgba(0,0,0,0.04)]">
+                        <div className="bg-white border border-[rgba(0,0,0,0.04)] rounded-[40px] p-10 h-full relative overflow-hidden shadow-[0_1px_2px_rgba(0,0,0,0.02),_0_8px_24px_-4px_rgba(0,0,0,0.04)]">
                             <div className="absolute top-0 right-0 w-64 h-64 bg-[#87A96B]/5 blur-[80px] rounded-full -mr-10 -mt-10" />
                             <div className="relative z-10">
                                 <div className="flex justify-between items-start mb-12">

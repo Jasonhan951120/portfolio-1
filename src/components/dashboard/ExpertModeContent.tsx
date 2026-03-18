@@ -1,100 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Link } from 'react-router-dom';
 import { 
   TrendingUp, BarChart2, Users, Settings, 
-  Target, Zap, Shield, PieChart, Database, Sparkles,
-  ArrowDownCircle, Clock, CheckCircle, TrendingDown
+  Target, Zap, Shield, PieChart, Database
 } from 'lucide-react';
 import { StaffROILeaderboard } from './tabs/StaffROILeaderboard';
 import { ReputationROIChart } from './ReputationROIChart';
 import { RevenueForecastChart } from './RevenueForecastChart';
-import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 
-function SalesFunnel() {
-  const data = [
-    { name: 'New Leads', value: 120, color: '#3b82f6' },
-    { name: 'WhatsApp Sent', value: 85, color: '#8b5cf6' },
-    { name: 'Consultations', value: 42, color: '#00FFA3' }
-  ];
-
-  return (
-    <div className="h-48 w-full mt-6 flex items-center justify-around gap-2 px-4">
-      {data.map((item, idx) => (
-        <div key={item.name} className="flex flex-col items-center gap-4 relative w-full">
-          <div 
-            className="w-full bg-white/10 rounded-3xl border border-white/10 flex flex-col items-center justify-center p-4 group hover:bg-white/[0.15] transition-all"
-            style={{ height: `${100 - idx * 25}%` }}
-          >
-            <span className="text-2xl font-black text-white">{item.value}</span>
-            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">{item.name}</span>
-          </div>
-          {idx < data.length - 1 && (
-            <div className="absolute -right-4 top-1/2 -translate-y-1/2 z-10">
-              <Zap className="w-4 h-4 text-[#00FFA3] animate-pulse" />
-            </div>
-          )}
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function SalesROIDashboard() {
-  return (
-    <section className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest flex items-center gap-2">
-          <TrendingUp className="w-4 h-4 text-[#00FFA3]" /> Conversion Analytics (ROI)
-        </h3>
-        <span className="px-3 py-1 bg-[#00FFA3]/10 text-[#00FFA3] text-[9px] font-bold rounded-full border border-[#00FFA3]/20 animate-pulse">Live Tracking</span>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        <div className="p-6 bg-gray-900 rounded-[32px] border border-white/5 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-[#00FFA3]/10 blur-3xl rounded-full" />
-          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Total Pipeline Value</p>
-          <p className="text-3xl font-black text-[#00FFA3] tracking-tighter">£142.5k</p>
-          <div className="flex items-center gap-1 mt-2 text-[10px] text-emerald-400 font-bold">
-            <TrendingUp className="w-3 h-3" /> +14.2% (7d)
-          </div>
-        </div>
-        <div className="p-6 bg-white rounded-[32px] border border-black/5 relative overflow-hidden group">
-          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Avg Response Speed</p>
-          <p className="text-3xl font-black text-gray-900 tracking-tighter">4.2m</p>
-          <div className="flex items-center gap-1 mt-2 text-[10px] text-emerald-600 font-bold">
-            <Clock className="w-3 h-3" /> Industry Leading
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-gray-900 rounded-[40px] p-8 border border-white/5 shadow-2xl">
-        <div className="flex justify-between items-start mb-4">
-          <div>
-            <h4 className="text-white font-bold text-lg">Sales Funnel</h4>
-            <p className="text-[10px] text-gray-400 uppercase tracking-widest">Lead to Consultation booked</p>
-          </div>
-          <div className="text-right">
-            <p className="text-[10px] font-black text-[#00FFA3] uppercase tracking-widest">Conversion Rate</p>
-            <p className="text-2xl font-black text-white">35%</p>
-          </div>
-        </div>
-        <SalesFunnel />
-      </div>
-    </section>
-  );
-}
-
-export function ExpertModeContent({ 
-  onOpenPMSLogs, 
-  onOpenClinicMeta 
-}: { 
-  onOpenPMSLogs?: () => void; 
-  onOpenClinicMeta?: () => void; 
-}) {
+export function ExpertModeContent() {
   const { profile } = useAuth();
-  const [selectedTone, setSelectedTone] = React.useState('Professional');
+  const [isReady, setIsReady] = useState(false);
+
+  // Brief mount delay to prevent flash-of-crash before auth context resolves
+  useEffect(() => {
+    const t = setTimeout(() => setIsReady(true), 100);
+    return () => clearTimeout(t);
+  }, []);
+
+  if (!isReady) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <p className="text-gray-400 text-sm animate-pulse">Loading Expert Centre...</p>
+      </div>
+    );
+  }
+
+  // Safe clinic ID with optional chaining
+  const clinicId = profile?.clinic_id ?? '';
 
   return (
     <div className="space-y-12">
@@ -102,44 +36,9 @@ export function ExpertModeContent({
       <div className="space-y-2">
         <h2 className="text-3xl font-black text-gray-900 tracking-tight">Expert Centre</h2>
         <p className="text-xs font-bold text-gray-500 uppercase tracking-widest flex items-center gap-2">
-          <Shield className="w-3 h-3 text-[#87A96B]" /> Advanced Analytics & Governance
+          <Shield className="w-3 h-3 text-[#87A96B]" /> Advanced Analytics &amp; Governance
         </p>
       </div>
-
-      {/* AI Persona Presets (Task 2) */}
-      <section className="space-y-4">
-        <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-[#87A96B]" /> AI Analytics Personality
-        </h3>
-        <div className="bg-white rounded-[32px] p-6 border border-black/5 shadow-sm space-y-4">
-          <div className="flex gap-2 p-1 bg-black/5 rounded-2xl">
-            {['Professional', 'Friendly', 'Direct'].map((tone) => (
-              <button
-                key={tone}
-                onClick={() => setSelectedTone(tone)}
-                className="flex-1 py-3 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all active:scale-95"
-                style={{
-                  backgroundColor: tone === selectedTone ? 'white' : 'transparent',
-                  boxShadow: tone === selectedTone ? '0 4px 12px rgba(0,0,0,0.05)' : 'none',
-                  color: tone === selectedTone ? 'black' : '#A0A0A0'
-                }}
-              >
-                {tone}
-              </button>
-            ))}
-          </div>
-          <p className="text-[10px] text-zinc-500 italic px-2">
-            "{selectedTone}" mode {
-              selectedTone === 'Professional' ? 'uses clinical terminology and authoritative tone.' :
-              selectedTone === 'Friendly' ? 'uses warm, empathetic, and conversational language.' :
-              'uses concise, action-oriented directives for staff.'
-            } (Changes applied to all future AI summaries)
-          </p>
-        </div>
-      </section>
-
-      {/* Sales ROI Dashboard (Task 2) */}
-      <SalesROIDashboard />
 
       {/* Quick Stats Grid */}
       <div className="grid grid-cols-2 gap-4">
@@ -178,12 +77,14 @@ export function ExpertModeContent({
             <Users className="w-4 h-4 text-[#87A96B]" /> Staff Efficiency
           </h3>
           <div className="bg-white rounded-[40px] p-8 border border-black/5 shadow-sm">
-             {/* ✅ Optional chaining: only render when clinicId is available */}
-             {profile?.clinic_id ? (
-               <StaffROILeaderboard clinicId={profile.clinic_id} />
-             ) : (
-               <p className="text-xs text-gray-400 text-center py-8 animate-pulse">Clinic profile loading...</p>
-             )}
+            {/* Optional chaining: render only when clinicId is available */}
+            {clinicId ? (
+              <StaffROILeaderboard clinicId={clinicId} />
+            ) : (
+              <p className="text-xs text-gray-400 text-center py-8">
+                Clinic profile not yet loaded.
+              </p>
+            )}
           </div>
         </section>
       </div>
@@ -196,10 +97,7 @@ export function ExpertModeContent({
         </div>
         
         <div className="space-y-2">
-          <button 
-            onClick={() => onOpenPMSLogs?.()}
-            className="w-full p-4 bg-white/5 hover:bg-white/10 rounded-2xl flex items-center justify-between group transition-all"
-          >
+          <button className="w-full p-4 bg-white/5 hover:bg-white/10 rounded-2xl flex items-center justify-between group transition-all">
             <div className="flex items-center gap-3">
               <Database className="w-5 h-5 text-gray-400" />
               <span className="text-sm font-bold">PMS Sync Logs</span>
@@ -207,21 +105,7 @@ export function ExpertModeContent({
             <Zap className="w-4 h-4 text-gray-600 group-hover:text-[#00FFA3]" />
           </button>
           
-          <Link 
-            to="/admin/security"
-            className="w-full p-4 bg-emerald-500/10 hover:bg-emerald-500/20 rounded-2xl flex items-center justify-between group transition-all border border-emerald-500/20"
-          >
-            <div className="flex items-center gap-3">
-              <Shield className="w-5 h-5 text-emerald-400" />
-              <span className="text-sm font-bold text-emerald-400">🛡️ Security & Compliance</span>
-            </div>
-            <Zap className="w-4 h-4 text-emerald-400 animate-pulse" />
-          </Link>
-
-          <button 
-            onClick={() => onOpenClinicMeta?.()}
-            className="w-full p-4 bg-white/5 hover:bg-white/10 rounded-2xl flex items-center justify-between group transition-all"
-          >
+          <button className="w-full p-4 bg-white/5 hover:bg-white/10 rounded-2xl flex items-center justify-between group transition-all">
             <div className="flex items-center gap-3">
               <Settings className="w-5 h-5 text-gray-400" />
               <span className="text-sm font-bold">Clinic Meta Data</span>

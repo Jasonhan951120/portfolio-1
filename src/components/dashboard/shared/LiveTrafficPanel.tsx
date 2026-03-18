@@ -42,7 +42,7 @@ export function LiveTrafficPanel({ clinicId }: LiveTrafficPanelProps) {
     const { stats, isLoading } = useTrafficStats(clinicId);
     const totalVisits = stats.reduce((s, d) => s + d.count, 0);
 
-    const chartData = stats.map(s => ({
+    const chartData = stats?.map(s => ({
         name: s.source,
         value: s.count,
     }));
@@ -102,7 +102,7 @@ export function LiveTrafficPanel({ clinicId }: LiveTrafficPanelProps) {
                                     animationBegin={0}
                                     animationDuration={800}
                                 >
-                                    {chartData.map((entry, i) => (
+                                    {chartData?.map((entry, i) => (
                                         <Cell key={`cell-${i}`} fill={getColor(entry.name)} stroke="white" strokeWidth={2} />
                                     ))}
                                 </Pie>
@@ -121,7 +121,7 @@ export function LiveTrafficPanel({ clinicId }: LiveTrafficPanelProps) {
 
                     {/* Source Breakdown */}
                     <div className="space-y-3">
-                        {stats.map((stat, i) => {
+                        {stats?.map((stat, i) => {
                             const pct = totalVisits > 0 ? Math.round((stat.count / totalVisits) * 100) : 0;
                             return (
                                 <motion.div

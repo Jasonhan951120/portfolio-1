@@ -12,30 +12,29 @@ interface RevenueForecastChartProps {
 }
 
 export function RevenueForecastChart({ data }: RevenueForecastChartProps) {
-    // ✅ Optional chaining guard: if data is empty or undefined, show fallback
+    // ✅ Optional chaining guard: if no data, show fallback
     if (!data?.length) {
         return (
-            <div className="h-32 flex flex-col items-center justify-center gap-2 text-slate-400">
-                <p className="text-sm font-medium">데이터 없음</p>
-                <p className="text-xs opacity-60">Revenue data will appear as pipeline activity accumulates.</p>
+            <div className="h-32 flex items-center justify-center text-slate-500 text-sm">
+                데이터 없음 — Revenue data will appear as pipeline data accumulates.
             </div>
         );
     }
 
     return (
-        <div className="p-8 bg-white rounded-[44px] shadow-sm border border-slate-200">
+        <div className="p-8 bg-slate-900/40 backdrop-blur-2xl rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-800/50">
             <div className="flex items-center justify-between mb-8">
                 <div>
-                    <h3 className="text-slate-900 text-xl font-black tracking-tight uppercase">Revenue Forecast</h3>
-                    <p className="text-slate-400 text-xs mt-1 font-bold uppercase tracking-widest">AI-driven projection based on current pipeline</p>
+                    <h3 className="text-white text-xl font-medium tracking-tight">Revenue Forecast</h3>
+                    <p className="text-slate-400 text-xs mt-1">AI-driven projection based on current pipeline</p>
                 </div>
                 <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-slate-400" />
+                        <div className="w-2 h-2 rounded-full bg-slate-700" />
                         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Actual</span>
                     </div>
                     <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                        <div className="w-2 h-2 rounded-full bg-emerald-400" />
                         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Predicted</span>
                     </div>
                 </div>
@@ -46,41 +45,41 @@ export function RevenueForecastChart({ data }: RevenueForecastChartProps) {
                     <AreaChart data={data} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
                         <defs>
                             <linearGradient id="colorPredicted" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#10b981" stopOpacity={0.1} />
+                                <stop offset="5%" stopColor="#10b981" stopOpacity={0.2} />
                                 <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
                             </linearGradient>
                             <linearGradient id="colorActual" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#94a3b8" stopOpacity={0.1} />
-                                <stop offset="95%" stopColor="#94a3b8" stopOpacity={0} />
+                                <stop offset="5%" stopColor="#475569" stopOpacity={0.2} />
+                                <stop offset="95%" stopColor="#475569" stopOpacity={0} />
                             </linearGradient>
                         </defs>
                         <XAxis
                             dataKey="date"
-                            stroke="#cbd5e1"
+                            stroke="#475569"
                             fontSize={10}
                             tickLine={false}
                             axisLine={false}
                             dy={10}
-                            className="font-bold uppercase tracking-widest"
+                            className="font-medium uppercase tracking-widest"
                         />
                         <YAxis
-                            stroke="#cbd5e1"
+                            stroke="#475569"
                             fontSize={10}
                             tickLine={false}
                             axisLine={false}
                             tickFormatter={(val) => `£${val / 1000}k`}
-                            className="font-bold tabular-nums"
+                            className="font-medium tabular-nums"
                         />
                         <Tooltip
                             contentStyle={{
-                                backgroundColor: '#ffffff',
-                                borderColor: '#e2e8f0',
+                                backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                                backdropFilter: 'blur(12px)',
+                                borderColor: 'rgba(51, 65, 85, 0.5)',
                                 borderRadius: '1.5rem',
-                                border: '1px solid #e2e8f0',
-                                padding: '1rem',
-                                boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.05)'
+                                border: '1px solid rgba(255,255,255,0.1)',
+                                padding: '1rem'
                             }}
-                            itemStyle={{ color: '#0f172a', fontSize: '12px', fontWeight: '900' }}
+                            itemStyle={{ color: '#e2e8f0', fontSize: '12px' }}
                             labelStyle={{ color: '#94a3b8', fontSize: '10px', fontWeight: 'bold', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.1em' }}
                             formatter={(value: number) => [`£${value.toLocaleString()}`, '']}
                         />
@@ -88,7 +87,7 @@ export function RevenueForecastChart({ data }: RevenueForecastChartProps) {
                         <Area
                             type="monotone"
                             dataKey="actual"
-                            stroke="#94a3b8"
+                            stroke="#475569"
                             strokeWidth={2}
                             fillOpacity={1}
                             fill="url(#colorActual)"

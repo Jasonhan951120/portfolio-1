@@ -1,14 +1,12 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { 
-  Users, FileText, Sparkles, 
-  Monitor, MessageCircle 
+  Users, RefreshCw, FileText, Sparkles, 
+  AlertTriangle, Monitor, Send, MessageCircle 
 } from 'lucide-react';
 import { type ConsultationRequest } from "../../lib/supabase";
-import { useDashboardStore } from "../../store/useDashboardStore";
-import { AICaseNotePopover } from "./AICaseNotePopover";
 
 interface PatientCardProps {
   id: string;
@@ -18,55 +16,80 @@ interface PatientCardProps {
   updateStatus: (id: string, status: string) => void;
   STAFF_LIST: string[];
   updateAssignedTo: (id: string, staff: string) => void;
-  timeAgo: (date: string, region: 'UK' | 'US') => string;
+  timeAgo: (date: string) => string;
   clinic: any;
   onAddToWaitlist?: (id: string) => void;
   onOpenPTMode: (lead: ConsultationRequest) => void;
-  focusMode: string;
-  onOpenAudit: (lead: ConsultationRequest) => void;
 }
 
 export const PatientCard = React.memo(function PatientCard({
   id,
   lead,
-  setDepositModal,
   setSelectedLead,
   timeAgo,
   clinic: clinicData,
   onAddToWaitlist,
-  onOpenPTMode,
-  focusMode,
-  onOpenAudit
+  onOpenPTMode
 }: PatientCardProps) {
-  const [isCaseNoteVisible, setIsCaseNoteVisible] = useState(false);
-  const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
   const [timeLeft, setTimeLeft] = useState<number>(15 * 60);
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
 
-  const baseline = useMemo(() => lead.importedAt || new Date(lead.created_at).getTime(), [lead.importedAt, lead.created_at]);
-  const isVIP = lead.is_vip || (lead.potential_value || 0) >= 1500;
-  const isNewLead = lead.status === "New Lead";
-  const minutesInNew = Math.floor((Date.now() - baseline) / 60000);
-  const isExpiring = isNewLead && minutesInNew >= 15;
-  const showVIPPulse = isExpiring;
-
-  const isMatchingFocus = useMemo(() => {
-    if (focusMode === "All") return true;
-    const category = lead.category || "";
-    return category.toLowerCase() === focusMode.toLowerCase();
-  }, [focusMode, lead.category]);
-
-  const region = useDashboardStore.getState().region;
-
   useEffect(() => {
+    const created = new Date(lead.created_at).getTime();
     const now = Date.now();
-    const diffSec = Math.floor((baseline + 15 * 60 * 1000 - now) / 1000);
+    const diffSec = Math.floor((created + 15 * 60 * 1000 - now) / 1000);
     setTimeLeft(Math.max(0, diffSec));
-    const interval = setInterval(() => setTimeLeft(prev => Math.max(0, prev - 1)), 1000);
-    return () => clearInterval(interval);
-  }, [baseline]);
 
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+    const interval = setInterval(() => {
+      setTimeLeft(prev => Math.max(0, prev - 1));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [lead.created_at]);
+
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging
+  } = useSortable({ id });
+
+  const handleSendEmail = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsSendingEmail(true);
+    try {
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-pt-link`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+        },
+        body: JSON.stringify({
+          lead_id: lead.id,
+          name: lead.name,
+          email: lead.email,
+          service: lead.service,
+          origin: window.location.origin,
+          clinic_name: clinicData?.name,
+          clinic_logo: clinicData?.logo_url,
+          brand_color: clinicData?.brand_color,
+          clinic_phone: clinicData?.phone,
+          clinic_address: clinicData?.address,
+          clinic_email: clinicData?.email
+        })
+      });
+
+      if (!response.ok) throw new Error("Failed to send email");
+      alert(`PT Link successfully sent to ${lead.email}!`);
+    } catch (err) {
+      console.error(err);
+      alert("Error sending email. Please try again.");
+    } finally {
+      setIsSendingEmail(false);
+    }
+  };
 
   const handleWaitlistClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -77,7 +100,7 @@ export const PatientCard = React.memo(function PatientCard({
   };
 
   const getWhatsAppLink = () => {
-    const phoneNum = lead.phone || "+447700900000"; // Fallback for prototype data
+    if (!lead.phone) return null;
     
     let message = "";
     const firstName = lead.name.split(' ')[0];
@@ -97,11 +120,15 @@ export const PatientCard = React.memo(function PatientCard({
         message = `Hi ${firstName}, checking in from Hanlan OC. How can we help you today?`;
     }
     
-    return `https://wa.me/${phoneNum.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
+    return `https://wa.me/${lead.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
   };
 
-  const hasPhone = true; // Force enable for all pipeline stages
+  const hasPhone = !!lead.phone;
   const whatsappUrl = getWhatsAppLink();
+
+  const isVIP = lead.name.toLowerCase().includes("vip");
+  const timeLimit = isVIP ? 15 * 60 * 1000 : 86400000;
+  const isOverdue = (lead.status === "New Lead" || lead.status === "Future Pipeline") && (Date.now() - new Date(lead.created_at).getTime()) > timeLimit;
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -109,89 +136,91 @@ export const PatientCard = React.memo(function PatientCard({
     zIndex: isDragging ? 50 : 1,
   };
 
-  const isOverdue = (lead.status === "New Lead") && (Date.now() - baseline) > 86400000;
-
   return (
-    <div ref={setNodeRef} style={style} className="outline-none px-1 h-[210px] transition-all">
+    <div ref={setNodeRef} style={style} className="mb-3 outline-none">
       <motion.div
         layout
         initial={{ opacity: 1, scale: 1 }}
-        whileHover={{ scale: 1.01, y: -2 }}
-        whileTap={{ scale: 0.99 }}
-        animate={isExiting ? { opacity: 0, scale: 0.8, x: 50, filter: "blur(4px)" } : {}}
-        transition={{ type: "spring", stiffness: 400, damping: 30 }}
-        className={`relative flex flex-col gap-3 h-full bg-white/80 backdrop-blur-md border border-white/20 shadow-xl shadow-slate-200/50 rounded-2xl p-5 overflow-hidden group transition-all duration-200
-          ${isDragging ? 'opacity-50 ring-2 ring-emerald-500 shadow-xl' : ''} 
-          ${isOverdue ? 'ring-1 ring-red-200/50' : ''}
-          ${showVIPPulse ? 'ring-2 ring-red-400 animate-pulse' : ''}
-          ${lead.intent_score > 90 ? 'glow-high-intent ring-1 ring-emerald-400/30' : ''}
-          ${!isMatchingFocus && focusMode !== "All" ? 'grayscale opacity-30 scale-[0.98]' : ''}
-          hover:shadow-md hover:ring-1 hover:ring-slate-200/50
-        `}
+        whileHover={{ scale: 1.02 }}
+        animate={isExiting ? { opacity: 0, scale: 0.8, x: 50, filter: "blur(4px)" } : {
+          scale: isDragging ? 1.02 : 1,
+          rotate: isDragging ? 2 : 0,
+          boxShadow: isDragging
+            ? "0 30px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1)"
+            : isOverdue
+              ? "0 0 15px rgba(230,57,70,0.6)"
+              : "0 10px 30px -10px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(0,0,0,0.05)",
+          opacity: isDragging ? 0.95 : 1,
+          backgroundColor: isDragging ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,1)",
+          y: isDragging ? -10 : 0
+        }}
+        transition={{ type: "spring", stiffness: 80, damping: 20 }}
+        className={`rounded-2xl p-4 relative group focus:outline-none transition-all
+          ${isDragging ? 'border-emerald-500/30 cursor-grabbing bg-[#0A0F1E]/80 backdrop-blur-3xl shadow-2xl' :
+            isOverdue ? 'border-[#E63946]/50 hover:border-[#E63946]/80 cursor-grab animate-pulse bg-white/5 backdrop-blur-xl' :
+              'border-white/10 hover:border-emerald-500/20 cursor-grab hover:bg-white/[0.08] bg-white/5 backdrop-blur-xl shadow-lg'
+          }`}
       >
-        <div {...attributes} {...listeners} className="absolute inset-0 z-0 cursor-grab" />
-        
-        <div className="relative z-10 flex flex-col h-full w-full pointer-events-none overflow-hidden">
-          {/* Top Section: Name & Metadata */}
-          <div className="flex justify-between items-start w-full mb-1">
-            <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-              <div className="flex items-center gap-2 w-full min-w-0 break-words">
-                <h4 className="text-base font-bold text-slate-900 tracking-tight truncate flex-1 min-w-0 break-words">{lead.name}</h4>
-                {isVIP && (
-                  <span className="shrink-0 text-[9px] font-black px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-400/20 to-amber-600/20 text-amber-700 border border-amber-200/50 uppercase tracking-widest">
-                    VIP
-                  </span>
-                )}
-              </div>
-              <span className="text-sm font-medium text-slate-500 break-words">{timeAgo(lead.created_at, region)}</span>
+        <div {...attributes} {...listeners} className="absolute inset-0 z-0 outline-none rounded-2xl" />
+
+        <div className="relative z-10 pointer-events-none">
+          <div className="flex justify-between items-start mb-3">
+            <div>
+              <h4 className="font-bold text-[14px] tracking-[-0.02em] text-white truncate mr-2 flex items-center gap-2" data-hj-suppress>
+                {lead.name}
+              </h4>
+              <p className="text-[10px] text-zinc-400 font-medium mt-1 lowercase">Joined {timeAgo(lead.created_at)}</p>
             </div>
-            
-            <div className="flex items-center gap-1 shrink-0 ml-2 pointer-events-auto">
-               <button 
-                onClick={() => onOpenAudit(lead)} 
-                className="p-1 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded transition-all"
-                title="Security & Audit Trail"
-              >
-                <Monitor className="w-4 h-4" />
-              </button>
-              <div className="relative group/popover">
-                <button 
-                  onMouseEnter={(e) => {
-                    setAnchorRect(e.currentTarget.getBoundingClientRect());
-                    setIsCaseNoteVisible(true);
-                  }}
-                  onMouseLeave={() => setIsCaseNoteVisible(false)}
-                  className="p-1 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded transition-all"
-                  title="AI Value Reasoning"
-                >
-                  <FileText className="w-4 h-4" />
-                </button>
-                <AICaseNotePopover lead={lead} isVisible={isCaseNoteVisible} anchorRect={anchorRect} />
-              </div>
+
+            <div className="flex flex-col items-end gap-1">
+              <span className="text-[14px] font-black text-[#10B981] tracking-tight tabular-nums">
+                £{(lead.potential_value ? lead.potential_value : (1000)).toLocaleString()}
+              </span>
+              {isOverdue && (
+                <span className="text-[9px] font-bold text-[#FF3B30] bg-[#FF3B30]/10 border border-[#FF3B30]/20 px-1.5 py-0.5 rounded uppercase tracking-wider flex items-center gap-1">
+                  <AlertTriangle className="w-2 h-2" strokeWidth={1.5} /> Urgent
+                </span>
+              )}
             </div>
           </div>
 
-          {/* Middle Section: AI Insight & Service Tag */}
-          <div className="flex flex-wrap items-center gap-2 my-1">
-            <div className="shrink-0 bg-emerald-50 text-emerald-700 border border-emerald-100 font-bold px-2 py-0.5 rounded text-[10px] flex items-center gap-1 shadow-sm">
-              <Sparkles className="w-3 h-3 fill-emerald-700/20" />
-              {lead.intent_score || 0}% AI INTENT
-            </div>
-            <span className="shrink-0 text-[10px] font-bold text-slate-500 uppercase tracking-widest bg-slate-50 border border-slate-100 px-2 py-0.5 rounded">
+          <div className="flex flex-wrap gap-1 mb-1 items-center">
+            {lead.intent_score && (
+              <span className={`text-[9px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider flex items-center gap-1 border ${lead.intent_score >= 80 ? 'text-[#00FFA3] bg-[#00FFA3]/10 border-[#00FFA3]/20' :
+                lead.intent_score >= 50 ? 'text-[#C5A059] bg-[#C5A059]/10 border-[#C5A059]/20' :
+                  'text-[#FF3B30] bg-[#FF3B30]/10 border-[#FF3B30]/20'
+                }`}>
+                <Sparkles className="w-2 h-2" /> AI {lead.intent_score}%
+              </span>
+            )}
+            <span className="text-[10px] font-bold text-zinc-300 bg-white/5 px-2 py-0.5 rounded-md border border-white/10 uppercase tracking-tighter">
               {lead.service}
             </span>
-          </div>
-
-          {/* Fixed Footer: Price & WhatsApp */}
-          <div className="mt-auto pt-3 border-t border-slate-100 flex justify-between items-center w-full pointer-events-auto">
-            <div className="flex flex-col">
-              <span className="text-slate-900 font-bold tracking-tight text-lg leading-tight">
-                {region === 'UK' ? '£' : '$'}
-                {(lead.potential_value || 1000).toLocaleString()}
+            {lead.appointment_date && !isNaN(new Date(lead.appointment_date).getTime()) && (
+              <span className="text-[10px] font-bold text-[#87A96B] bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">
+                {new Date(lead.appointment_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
               </span>
-            </div>
+            )}
+            {lead.status === "Consultation Done" && (
+              <span className="text-[10px] font-bold text-[#0A0F1E] bg-[#10B981] px-2 py-0.5 rounded-md shadow-[0_0_15px_rgba(16,185,129,0.4)]">
+                Consulted
+              </span>
+            )}
+          </div>
+          
+          <div className="mt-4 pt-4 border-t border-white/[0.05] flex justify-between items-center pointer-events-auto opacity-0 group-hover:opacity-100 transition-all duration-300">
+            <div className="flex gap-2 w-full justify-end">
+              {lead.status === "New Lead" && (
+                <button
+                  onClick={handleWaitlistClick}
+                  className="px-3 py-1.5 text-zinc-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl transition-all border border-white/10 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 self-center mr-1"
+                  title="Move to Waitlist"
+                >
+                  <Users className="w-3 h-3" strokeWidth={1.5} /> Waitlist
+                </button>
+              )}
 
-            <div className="flex items-center gap-2">
+              {/* Dynamic WhatsApp Button */}
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -200,23 +229,46 @@ export const PatientCard = React.memo(function PatientCard({
                   }
                 }}
                 disabled={!hasPhone}
-                className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-600 font-semibold text-sm border border-emerald-100 hover:bg-emerald-100 transition-colors shrink-0
-                  ${!hasPhone ? 'text-slate-300 bg-slate-100 border border-slate-200 cursor-not-allowed opacity-50' : ''}
-                `}
+                className={`p-1.5 rounded-lg transition-all border flex items-center justify-center
+                  ${hasPhone 
+                    ? 'text-[#25D366] bg-[#25D366]/10 border-[#25D366]/20 hover:bg-[#25D366]/20 hover:shadow-[0_0_15px_rgba(37,211,102,0.4)]' 
+                    : 'text-zinc-600 bg-white/5 border-white/5 cursor-not-allowed opacity-50'
+                  }`}
+                title={hasPhone ? "Contact via WhatsApp" : "Phone number required"}
               >
-                <MessageCircle className="w-4 h-4 fill-current" strokeWidth={2.5} />
-                WhatsApp
+                <MessageCircle className="w-3.5 h-3.5" strokeWidth={1.5} />
               </button>
-              
-              {lead.status === "New Lead" && (
-                <button
-                  onClick={handleWaitlistClick}
-                  className="p-1.5 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded transition-all shrink-0"
-                  title="Move to Waitlist"
-                >
-                  <Users className="w-4 h-4" />
-                </button>
-              )}
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onOpenPTMode(lead);
+                }}
+                className="p-1.5 text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 rounded-lg transition-all border border-emerald-500/20 shadow-lg shadow-emerald-500/5"
+                title="Open Tablet PT Consultation Mode"
+              >
+                <Monitor className="w-3.5 h-3.5" strokeWidth={1.5} />
+              </button>
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedLead(lead);
+                }}
+                className="p-1.5 text-zinc-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-lg transition-all border border-white/10"
+                title="View Inquiry details"
+              >
+                <FileText className="w-3.5 h-3.5" strokeWidth={1.5} />
+              </button>
+
+              <button
+                onClick={handleSendEmail}
+                disabled={isSendingEmail}
+                className="p-1.5 text-[#87A96B] hover:text-[#87A96B]/80 bg-[#87A96B]/10 hover:bg-[#87A96B]/20 rounded-lg transition-all border border-[#87A96B]/20 disabled:opacity-50"
+                title="Send PT Link via Email"
+              >
+                {isSendingEmail ? <RefreshCw className="w-3.5 h-3.5 animate-spin text-[#87A96B]" strokeWidth={1.5} /> : <Send className="w-3.5 h-3.5" strokeWidth={1.5} />}
+              </button>
             </div>
           </div>
         </div>
@@ -224,9 +276,9 @@ export const PatientCard = React.memo(function PatientCard({
     </div>
   );
 }, (prev, next) => (
-  prev.lead.id === next.lead.id && 
-  prev.lead.status === next.lead.status && 
-  prev.lead.intent_score === next.lead.intent_score &&
-  prev.focusMode === next.focusMode &&
+  prev.lead === next.lead && 
+  prev.clinic === next.clinic && 
+  prev.id === next.id &&
+  prev.lead.status === next.lead.status &&
   prev.lead.phone === next.lead.phone
 ));

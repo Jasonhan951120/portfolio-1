@@ -62,14 +62,14 @@ export function WaitlistPanel({
                         <div className="space-y-3">
                             <div className="flex justify-between items-center mb-1 ml-1">
                                 <h4 className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Priority Waitlist</h4>
-                                <span className="text-[9px] font-bold text-gray-400 bg-black/5 px-2 py-0.5 rounded-full">{waitlist.length} waiting</span>
+                                <span className="text-[9px] font-bold text-gray-400 bg-black/5 px-2 py-0.5 rounded-full">{waitlist?.length} waiting</span>
                             </div>
 
                             <AnimatePresence>
-                                {waitlist.length === 0 ? (
+                                {waitlist?.length === 0 ? (
                                     <p className="text-[10px] text-gray-400 italic pb-4">No patients currently on the waitlist.</p>
                                 ) : (
-                                    waitlist.map(w => (
+                                    waitlist?.map(w => (
                                         <motion.div
                                             key={w.id}
                                             layout

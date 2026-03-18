@@ -102,7 +102,7 @@ export function LiveTrackingHeader({ metrics, onSync }: LiveTrackingHeaderProps)
                     </div>
 
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full lg:w-auto">
-                        {stats.map((stat, i) => (
+                        {stats?.map((stat, i) => (
                             <motion.div
                                 key={stat.label}
                                 initial={{ opacity: 0, y: 10 }}
