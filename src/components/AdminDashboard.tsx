@@ -55,6 +55,7 @@ import { AuditTrailModal } from "./dashboard/AuditTrailModal";
 import { GoogleOnboardingModal } from "./dashboard/GoogleOnboardingModal";
 import { ReviewCorrelationWidget } from "./dashboard/ReviewCorrelationWidget";
 import { NorthStarSummaryCards } from "./dashboard/NorthStarSummaryCards";
+import { ErrorBoundary } from "./common/ErrorBoundary";
 
 // Onboarding Tooltip Component (Medical Precision)
 const OnboardingTooltip = ({ message, onClose }: { message: string; onClose: () => void }) => (
@@ -2608,24 +2609,28 @@ export default function AdminDashboard() {
           </main>
 
           {/* ── EXPERT MODE DRAWER ── */}
-          <ExpertModeDrawer
-            isOpen={isExpertModeOpen}
-            onClose={() => setIsExpertModeOpen(false)}
-            onOpenPMSLogs={() => setIsPMSLogDrawerOpen(true)}
-            onOpenClinicMeta={() => setIsClinicMetaModalOpen(true)}
-          />
+          <ErrorBoundary name="ExpertModeDrawer">
+            <ExpertModeDrawer
+              isOpen={isExpertModeOpen}
+              onClose={() => setIsExpertModeOpen(false)}
+              onOpenPMSLogs={() => setIsPMSLogDrawerOpen(true)}
+              onOpenClinicMeta={() => setIsClinicMetaModalOpen(true)}
+            />
+          </ErrorBoundary>
 
           {/* ── BACKOFFICE OVERLAYS ── */}
-          <PMSLogDrawer 
-            isOpen={isPMSLogDrawerOpen}
-            onClose={() => setIsPMSLogDrawerOpen(false)}
-          />
+          <ErrorBoundary name="Backoffice Overlays">
+            <PMSLogDrawer 
+              isOpen={isPMSLogDrawerOpen}
+              onClose={() => setIsPMSLogDrawerOpen(false)}
+            />
 
-          <ClinicMetaModal
-            isOpen={isClinicMetaModalOpen}
-            onClose={() => setIsClinicMetaModalOpen(false)}
-            clinic={clinic}
-          />
+            <ClinicMetaModal
+              isOpen={isClinicMetaModalOpen}
+              onClose={() => setIsClinicMetaModalOpen(false)}
+              clinic={clinic}
+            />
+          </ErrorBoundary>
 
           {/* ── TOAST ── */}
           <AnimatePresence>

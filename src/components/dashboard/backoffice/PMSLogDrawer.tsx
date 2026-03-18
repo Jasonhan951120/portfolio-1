@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { X, History, FileText, CheckCircle, AlertCircle, Clock, Database, Search, Shield, ArrowUpRight } from 'lucide-react';
 
 interface PMSLogDrawerProps {

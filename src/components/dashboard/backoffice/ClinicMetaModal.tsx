@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { X, Building2, Globe, CreditCard, ShieldCheck, MapPin, Clock, Info, Check } from 'lucide-react';
 
 interface ClinicMetaModalProps {

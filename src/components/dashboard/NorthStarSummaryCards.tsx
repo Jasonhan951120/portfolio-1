@@ -1,5 +1,5 @@
 import React, { useMemo, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { TrendingUp, Users, Star, ArrowUpRight } from 'lucide-react';
 import { useDashboardStore } from '../../store/useDashboardStore';
 import { SlotNumber } from '../SlotNumber';

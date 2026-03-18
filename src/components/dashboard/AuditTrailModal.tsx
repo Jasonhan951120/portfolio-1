@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { ShieldCheck, X, Clock, Database, BrainCircuit, CheckCircle2 } from 'lucide-react';
 import { ConsultationRequest } from '../../lib/supabase';
 import { sanitizeString } from '../../lib/utils/formatters';

@@ -1,6 +1,6 @@
 import React, { useState, useLayoutEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, ChevronRight, Stethoscope, Search, BarChart3, Target } from 'lucide-react';
 
 interface AI_InsightCardProps {
