@@ -12,6 +12,16 @@ interface RevenueForecastChartProps {
 }
 
 export function RevenueForecastChart({ data }: RevenueForecastChartProps) {
+    // ✅ Optional chaining guard: if data is empty or undefined, show fallback
+    if (!data?.length) {
+        return (
+            <div className="h-32 flex flex-col items-center justify-center gap-2 text-slate-400">
+                <p className="text-sm font-medium">데이터 없음</p>
+                <p className="text-xs opacity-60">Revenue data will appear as pipeline activity accumulates.</p>
+            </div>
+        );
+    }
+
     return (
         <div className="p-8 bg-white rounded-[44px] shadow-sm border border-slate-200">
             <div className="flex items-center justify-between mb-8">

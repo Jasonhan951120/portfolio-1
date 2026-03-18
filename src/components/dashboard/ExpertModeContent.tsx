@@ -10,6 +10,7 @@ import { StaffROILeaderboard } from './tabs/StaffROILeaderboard';
 import { ReputationROIChart } from './ReputationROIChart';
 import { RevenueForecastChart } from './RevenueForecastChart';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
+import { useAuth } from '../../contexts/AuthContext';
 
 function SalesFunnel() {
   const data = [
@@ -92,6 +93,7 @@ export function ExpertModeContent({
   onOpenPMSLogs?: () => void; 
   onOpenClinicMeta?: () => void; 
 }) {
+  const { profile } = useAuth();
   const [selectedTone, setSelectedTone] = React.useState('Professional');
 
   return (
@@ -176,7 +178,12 @@ export function ExpertModeContent({
             <Users className="w-4 h-4 text-[#87A96B]" /> Staff Efficiency
           </h3>
           <div className="bg-white rounded-[40px] p-8 border border-black/5 shadow-sm">
-             <StaffROILeaderboard clinicId="" />
+             {/* ✅ Optional chaining: only render when clinicId is available */}
+             {profile?.clinic_id ? (
+               <StaffROILeaderboard clinicId={profile.clinic_id} />
+             ) : (
+               <p className="text-xs text-gray-400 text-center py-8 animate-pulse">Clinic profile loading...</p>
+             )}
           </div>
         </section>
       </div>
@@ -190,7 +197,7 @@ export function ExpertModeContent({
         
         <div className="space-y-2">
           <button 
-            onClick={onOpenPMSLogs}
+            onClick={() => onOpenPMSLogs?.()}
             className="w-full p-4 bg-white/5 hover:bg-white/10 rounded-2xl flex items-center justify-between group transition-all"
           >
             <div className="flex items-center gap-3">
@@ -212,7 +219,7 @@ export function ExpertModeContent({
           </Link>
 
           <button 
-            onClick={onOpenClinicMeta}
+            onClick={() => onOpenClinicMeta?.()}
             className="w-full p-4 bg-white/5 hover:bg-white/10 rounded-2xl flex items-center justify-between group transition-all"
           >
             <div className="flex items-center gap-3">
