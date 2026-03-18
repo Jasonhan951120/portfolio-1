@@ -1,27 +1,12 @@
 import React, { useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useMotionValue, animate } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle } from 'lucide-react';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // COUNT-UP HOOK  (casino-slot snap: decelerates exponentially)
 // ─────────────────────────────────────────────────────────────────────────────
-function useCountUp(to: number, from: number, duration = 0.5) {
-    const motionVal = useMotionValue(from);
-    const [display, setDisplay] = React.useState(`£${Math.round(from).toLocaleString()}`);
-
-    useEffect(() => {
-        motionVal.set(from);
-        const controls = animate(motionVal, to, {
-            duration,
-            ease: [0.22, 1, 0.36, 1], // sharp expo-out – slot-machine snap
-        });
-        const unsub = motionVal.on('change', v =>
-            setDisplay(`£${Math.round(v).toLocaleString()}`)
-        );
-        return () => { controls.stop(); unsub(); };
-    }, [to, from]);
-
-    return display;
+function useCountUp(to: number, from: number, duration = 0) {
+    return `£${Math.round(to).toLocaleString()}`;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

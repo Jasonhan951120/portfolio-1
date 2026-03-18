@@ -1,12 +1,26 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { TrendingUp, Users, Star, ArrowUpRight } from 'lucide-react';
 import { useDashboardStore } from '../../store/useDashboardStore';
 import { SlotNumber } from '../SlotNumber';
+import { fetchGMBMetrics } from '../../lib/gmb-service';
 
 export const NorthStarSummaryCards: React.FC = () => {
-    const { leads, getStats, googleProfile, region } = useDashboardStore();
+    const { leads, getStats, googleProfile, setGoogleProfile, region } = useDashboardStore();
     const { pipelineValue } = getStats();
+
+    // Fetch Google My Business Metrics on Mount
+    useEffect(() => {
+        const loadGMBData = async () => {
+            try {
+                const metrics = await fetchGMBMetrics();
+                setGoogleProfile(metrics);
+            } catch (error) {
+                console.error("GMB Fetch Error:", error);
+            }
+        };
+        loadGMBData();
+    }, [setGoogleProfile]);
 
     const highIntentCount = useMemo(() => {
         return leads.filter(l => (l.intent_score || 0) >= 80).length;

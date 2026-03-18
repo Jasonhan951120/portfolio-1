@@ -1,5 +1,4 @@
-import { useEffect, useRef } from "react";
-import { useMotionValue, motion, useTransform, animate } from "motion/react";
+// Static rendering only - AntiGravity removal of performance-heavy animations
 
 interface AnimatedNumberProps {
     value: number;
@@ -9,18 +8,7 @@ interface AnimatedNumberProps {
 }
 
 export function AnimatedNumber({ value, className, prefix = "", suffix = "" }: AnimatedNumberProps) {
-    const count = useMotionValue(0);
-    const rounded = useTransform(count, (latest) => {
-        return prefix + Math.floor(latest).toLocaleString() + suffix;
-    });
+    const displayValue = prefix + value.toLocaleString() + suffix;
 
-    useEffect(() => {
-        const controls = animate(count, value, {
-            duration: 1.5,
-            ease: [0.33, 1, 0.68, 1], // Custom slot-machine style easing
-        });
-        return controls.stop;
-    }, [value, count]);
-
-    return <motion.span className={`tabular-nums ${className}`}>{rounded}</motion.span>;
+    return <span className={`tabular-nums ${className}`}>{displayValue}</span>;
 }

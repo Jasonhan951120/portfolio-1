@@ -1,21 +1,13 @@
 import React, { useEffect } from 'react';
-import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { TrendingUp, AlertCircle, PoundSterling, Sparkles } from 'lucide-react';
 
 const CountUp = ({ to, prefix = "", suffix = "" }: { to: number; prefix?: string; suffix?: string }) => {
-    const count = useMotionValue(0);
-    const rounded = useTransform(count, (latest) => Math.round(latest).toLocaleString());
-
-    useEffect(() => {
-        const controls = animate(count, to, { duration: 1.5, ease: "easeOut" });
-        return controls.stop;
-    }, [count, to]);
+    const displayValue = to.toLocaleString();
 
     return (
         <React.Fragment>
-            {prefix}
-            <motion.span>{rounded}</motion.span>
-            {suffix}
+            {prefix}{displayValue}{suffix}
         </React.Fragment>
     );
 };

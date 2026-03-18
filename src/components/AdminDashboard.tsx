@@ -672,7 +672,10 @@ export default function AdminDashboard() {
     getEngineLogs,
     getStats,
     region,
-    setRegion
+    setRegion,
+    subscribeToLeads,
+    updateLeadStatus,
+    clinicId
   } = useDashboardStore();
   
   const { totalRevenue, unsecuredPipeline, pipelineValue: kpiPipelineValue } = getStats();
@@ -718,6 +721,15 @@ export default function AdminDashboard() {
       setShowOnboardingTooltip(true);
     }
   }, [leads.length, loading]);
+
+  // Firestore Real-time Subscription
+  useEffect(() => {
+    if (session) {
+      const unsubscribe = subscribeToLeads();
+      return () => unsubscribe();
+    }
+  }, [session, clinicId]);
+
   const [draftDropoffs, setDraftDropoffs] = useState(0);
   const [clinic, setClinic] = useState<any>(null);
   const [treatments, setTreatments] = useState<any[]>([]);
@@ -1671,88 +1683,23 @@ export default function AdminDashboard() {
     }
   };
 
-  const updateStatus = async (id: string, newStatus: ConsultationRequest["status"]) => {
-    // Validation
-    if (!KANBAN_COLUMNS.includes(newStatus)) {
-      console.error("Attempted to update to invalid status:", newStatus);
-      return;
-    }
-
-    const lead = leads.find(l => l.id === id);
-    const updateData: any = {
-      status: newStatus
-    };
-
-    // Auto-schedule recall for completed/archived leads
-    if (newStatus === 'Closed Won' || newStatus === 'Archived' || newStatus === 'Abandoned') {
-      updateData.recall_interval_months = 6;
-    }
-
-    // Track treatment start
-    if (newStatus === "Closed Won") {
-      updateData.treated_at = new Date().toISOString();
-    }
-
-    // Track first contact time
-    if ((lead?.status === "New Lead") && newStatus !== "New Lead" && !lead?.first_contact_at) {
-      updateData.first_contact_at = new Date().toISOString();
-    }
-
-    const { error } = await supabase
-      .from("consultation_requests")
-      .update(updateData)
-      .eq("id", id);
-
-    if (error) {
-      console.error("Error updating status:", error);
-      alert(`Update failed: ${error.message}. The board will refresh.`);
-      fetchLeads(); // Rollback optimistic update
-      return;
-    }
-
-    // --- REPUTATION AUTOPILOT TRIGGER ---
-    if (newStatus === "Treated" && lead && lead.phone) {
-      supabase.functions.invoke('reputation-autopilot', {
-        body: {
-          lead_id: id,
-          lead_name: lead.name,
-          lead_phone: lead.phone,
-          clinic_name: clinic?.name || "Hanlan OC"
-        }
-      }).catch(e => console.error("Reputation Autopilot Error:", e));
-    }
-
-    // Record Audit Log (Postel's Law - Non-blocking)
-    if (lead && lead.status !== newStatus) {
-      createAuditLog({
-        leadId: id,
-        leadName: lead.name,
-        actionType: 'STATUS_CHANGE',
-        previousValue: lead.status,
-        newValue: newStatus
+  const updateStatus = async (id: string, newStatus: string) => {
+    try {
+      // Use the new Firestore update function from the store
+      await updateLeadStatus(id, newStatus);
+      
+      setToast({
+        message: `Patient status updated to ${newStatus}`,
+        type: "success"
       });
+
+      // Track events for analytics
+      trackEvent('status_change', { lead_id: id, new_status: newStatus });
+
+    } catch (err: any) {
+      console.error("[UPDATE STATUS ERROR]", err);
+      setToast({ message: "Update Failed. Please check connection.", type: "error" });
     }
-
-    // Auto-trigger review SMS when status → "Visited"
-    if (newStatus === "Consultation Done" && lead && !lead.review_requested_at && lead.email) {
-      supabase.functions.invoke('send_review_sms', {
-        body: {
-          lead_id: id,
-          name: lead.name,
-          email: lead.email,
-          phone: lead.phone,
-          service: lead.service
-        }
-      }).catch(e => console.error("Review request error:", e));
-
-      // Update DB to mark as requested
-      supabase
-        .from("consultation_requests")
-        .update({ review_requested_at: new Date().toISOString() })
-        .eq('id', id);
-    }
-
-    fetchLeads();
   };
 
   const handleRevokeInvite = async (inviteId: string) => {

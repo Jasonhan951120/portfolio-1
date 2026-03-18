@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { motion, useSpring, useTransform } from 'framer-motion';
+import React from 'react';
+// Static rendering only - AntiGravity removal of performance-heavy animations
 import { useDashboardStore } from '../store/useDashboardStore';
 
 interface SlotNumberProps {
@@ -12,24 +12,12 @@ export const SlotNumber: React.FC<SlotNumberProps> = ({ value, prefix, className
   const region = useDashboardStore(state => state.region);
   const currencySymbol = region === 'UK' ? '£' : '$';
   
-  const springValue = useSpring(0, {
-    stiffness: 40,
-    damping: 20,
-    restDelta: 0.001
-  });
-
-  const displayValue = useTransform(springValue, (latest) => 
-    Math.floor(latest).toLocaleString()
-  );
-
-  useEffect(() => {
-    springValue.set(value);
-  }, [value, springValue]);
+  const displayValue = Math.floor(value).toLocaleString();
 
   return (
     <div className={className}>
       {prefix !== undefined ? prefix : currencySymbol}
-      <motion.span>{displayValue}</motion.span>
+      <span>{displayValue}</span>
     </div>
   );
 };
