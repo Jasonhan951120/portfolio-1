@@ -7,7 +7,7 @@ import {
 import { StaffROILeaderboard } from './tabs/StaffROILeaderboard';
 import { ReputationROIChart } from './ReputationROIChart';
 import { RevenueForecastChart } from './RevenueForecastChart';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 
 export function ExpertModeContent() {
   const { profile } = useAuth();
