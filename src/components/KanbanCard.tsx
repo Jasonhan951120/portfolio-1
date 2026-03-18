@@ -41,7 +41,7 @@ export function KanbanCard({ lead, onClick }: KanbanCardProps) {
             style={style}
             {...attributes}
             {...listeners}
-            onClick={onClick}
+            onClick={() => onClick?.()}
             layout
             whileDrag={{
                 scale: 1.05,

@@ -10,7 +10,6 @@ legacy_root/skills/ui-ux-pro-max/cli/src/commands/versions.ts(1,19): error TS230
 legacy_root/skills/ui-ux-pro-max/cli/src/commands/versions.ts(2,17): error TS2307: Cannot find module 'ora' or its corresponding type declarations.
 legacy_root/skills/ui-ux-pro-max/cli/src/index.ts(3,25): error TS2307: Cannot find module 'commander' or its corresponding type declarations.
 legacy_root/skills/ui-ux-pro-max/cli/src/utils/logger.ts(1,19): error TS2307: Cannot find module 'chalk' or its corresponding type declarations.
-src/components/dashboard/tabs/LeadsTab.tsx(248,40): error TS2304: Cannot find name 'SERVICE_CONVERSION_VALUES'.
 supabase/functions/accept-invite/index.ts(1,30): error TS2307: Cannot find module 'jsr:@supabase/supabase-js@2' or its corresponding type declarations.
 supabase/functions/accept-invite/index.ts(3,21): error TS2304: Cannot find name 'Deno'.
 supabase/functions/accept-invite/index.ts(4,28): error TS2304: Cannot find name 'Deno'.

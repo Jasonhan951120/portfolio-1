@@ -4,7 +4,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { 
   Users, RefreshCw, FileText, Sparkles, 
-  AlertTriangle, Monitor, Send, MessageCircle 
+  AlertTriangle, Monitor, Send, MessageCircle, Shield
 } from 'lucide-react';
 import { type ConsultationRequest } from "../../lib/supabase";
 
@@ -20,6 +20,8 @@ interface PatientCardProps {
   clinic: any;
   onAddToWaitlist?: (id: string) => void;
   onOpenPTMode: (lead: ConsultationRequest) => void;
+  onOpenAudit: (lead: ConsultationRequest) => void;
+  focusMode: string;
 }
 
 export const PatientCard = React.memo(function PatientCard({
@@ -29,7 +31,13 @@ export const PatientCard = React.memo(function PatientCard({
   timeAgo,
   clinic: clinicData,
   onAddToWaitlist,
-  onOpenPTMode
+  onOpenPTMode,
+  onOpenAudit,
+  focusMode,
+  setDepositModal,
+  updateStatus,
+  STAFF_LIST,
+  updateAssignedTo
 }: PatientCardProps) {
   const [timeLeft, setTimeLeft] = useState<number>(15 * 60);
   const [isSendingEmail, setIsSendingEmail] = useState(false);
@@ -242,7 +250,7 @@ export const PatientCard = React.memo(function PatientCard({
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  onOpenPTMode(lead);
+                  onOpenPTMode?.(lead);
                 }}
                 className="p-1.5 text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 rounded-lg transition-all border border-emerald-500/20 shadow-lg shadow-emerald-500/5"
                 title="Open Tablet PT Consultation Mode"
@@ -253,7 +261,18 @@ export const PatientCard = React.memo(function PatientCard({
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  setSelectedLead(lead);
+                  onOpenAudit?.(lead);
+                }}
+                className="p-1.5 text-purple-400 hover:text-purple-300 bg-purple-500/10 hover:bg-purple-500/20 rounded-lg transition-all border border-purple-500/20 shadow-lg shadow-purple-500/5"
+                title="View Security Audit Trail"
+              >
+                <Shield className="w-3.5 h-3.5" strokeWidth={1.5} />
+              </button>
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedLead?.(lead);
                 }}
                 className="p-1.5 text-zinc-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-lg transition-all border border-white/10"
                 title="View Inquiry details"
@@ -262,7 +281,10 @@ export const PatientCard = React.memo(function PatientCard({
               </button>
 
               <button
-                onClick={handleSendEmail}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleSendEmail?.(e);
+                }}
                 disabled={isSendingEmail}
                 className="p-1.5 text-[#87A96B] hover:text-[#87A96B]/80 bg-[#87A96B]/10 hover:bg-[#87A96B]/20 rounded-lg transition-all border border-[#87A96B]/20 disabled:opacity-50"
                 title="Send PT Link via Email"

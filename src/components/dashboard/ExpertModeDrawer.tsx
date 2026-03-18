@@ -34,7 +34,7 @@ export function ExpertModeDrawer({ isOpen, onClose, onOpenPMSLogs, onOpenClinicM
           >
             <div className="sticky top-0 bg-[#F8F9FA]/80 backdrop-blur-md p-6 flex justify-end z-10">
               <button 
-                onClick={onClose}
+                onClick={() => typeof onClose === 'function' && onClose()}
                 className="p-3 bg-black/5 hover:bg-black/10 rounded-2xl transition-all"
               >
                 <X className="w-6 h-6 text-gray-900" />

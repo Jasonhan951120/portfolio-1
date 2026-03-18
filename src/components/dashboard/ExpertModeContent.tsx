@@ -103,7 +103,7 @@ export function ExpertModeContent({ onOpenPMSLogs, onOpenClinicMeta }: ExpertMod
         
         <div className="space-y-2">
           <button
-            onClick={onOpenPMSLogs}
+            onClick={() => onOpenPMSLogs?.()}
             className="w-full p-4 bg-white/5 hover:bg-white/10 rounded-2xl flex items-center justify-between group transition-all"
           >
             <div className="flex items-center gap-3">
@@ -114,7 +114,7 @@ export function ExpertModeContent({ onOpenPMSLogs, onOpenClinicMeta }: ExpertMod
           </button>
           
           <button
-            onClick={onOpenClinicMeta}
+            onClick={() => onOpenClinicMeta?.()}
             className="w-full p-4 bg-white/5 hover:bg-white/10 rounded-2xl flex items-center justify-between group transition-all"
           >
             <div className="flex items-center gap-3">

@@ -33,7 +33,7 @@ import {
 } from '@dnd-kit/sortable';
 import { KanbanColumn } from '../../KanbanColumn';
 import { ConsultationRequest } from '../../../lib/supabase';
-import { DONUT_SEGMENTS, KANBAN_COLUMNS } from '../../../lib/constants';
+import { DONUT_SEGMENTS, KANBAN_COLUMNS, SERVICE_CONVERSION_VALUES } from '../../../lib/constants';
 import { DonutChart } from '../shared/DonutChart';
 
 interface LeadsTabProps {
@@ -109,7 +109,7 @@ export function LeadsTab({
                                 />
                             </div>
                             <button
-                                onClick={onAddLead}
+                                onClick={() => onAddLead?.()}
                                 className="p-4 bg-gray-900 text-white rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-lg shadow-black/10"
                             >
                                 <Plus className="w-5 h-5" />
@@ -119,12 +119,12 @@ export function LeadsTab({
 
                     <div className="flex gap-4 overflow-x-auto pb-8 custom-scrollbar min-h-[600px]">
                         {KANBAN_COLUMNS.map((column) => (
-                            <KanbanColumn
+                             <KanbanColumn
                                 key={column}
                                 id={column}
                                 title={column}
                                 leads={getLeadsForColumn(column)}
-                                onLeadClick={onLeadClick}
+                                onLeadClick={(lead) => onLeadClick?.(lead)}
                             />
                         ))}
                     </div>
@@ -180,7 +180,7 @@ export function LeadsTab({
 
                     {/* Smart Waitlist CTA */}
                     <button
-                        onClick={() => setIsWaitlistOpen(true)}
+                        onClick={() => setIsWaitlistOpen?.(true)}
                         className="w-full card-light p-8 text-left group hover:bg-gray-900 transition-all duration-500"
                     >
                         <div className="flex justify-between items-start mb-6">
