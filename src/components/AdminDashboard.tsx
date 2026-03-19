@@ -44,7 +44,7 @@ import { RecoveryConcierge } from './dashboard/RecoveryConcierge';
 import { DashboardHeader } from "./dashboard/layout/DashboardHeader";
 import { SettingsDrawer } from "./dashboard/SettingsDrawer";
 import { ZeroDashboardView } from "./dashboard/ZeroDashboardView";
-// import { ExpertModeDrawer } from "./dashboard/ExpertModeDrawer";
+import { ExpertModeDrawer } from "./dashboard/ExpertModeDrawer";
 import { PatientCard } from "./dashboard/PatientCard";
 
 import { PMSLogDrawer } from "./dashboard/backoffice/PMSLogDrawer";
@@ -2611,7 +2611,12 @@ export default function AdminDashboard() {
 
           {/* ── EXPERT MODE DRAWER ── */}
           <ErrorBoundary name="ExpertModeDrawer">
-            {isExpertModeOpen && <div style={{ position: 'fixed', inset: 0, background: 'white', zIndex: 999, padding: '20px', border: '1px solid red' }}>Temporary Settings View</div>}
+            <ExpertModeDrawer
+              isOpen={isExpertModeOpen}
+              onClose={() => setIsExpertModeOpen(false)}
+              onOpenPMSLogs={() => typeof setIsPMSLogDrawerOpen === 'function' ? setIsPMSLogDrawerOpen(true) : {}}
+              onOpenClinicMeta={() => typeof setIsClinicMetaModalOpen === 'function' ? setIsClinicMetaModalOpen(true) : {}}
+            />
           </ErrorBoundary>
 
           {/* ── BACKOFFICE OVERLAYS ── */}
