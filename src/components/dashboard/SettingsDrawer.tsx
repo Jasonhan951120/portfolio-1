@@ -51,7 +51,7 @@ export function SettingsDrawer({ isOpen, onClose, clinicId, currentName, onNameU
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.2 }}
-                        onClick={onClose}
+                        onClick={() => typeof onClose === 'function' && onClose()}
                         className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[500]"
                     />
 
@@ -83,7 +83,7 @@ export function SettingsDrawer({ isOpen, onClose, clinicId, currentName, onNameU
                                 </div>
                             </div>
                             <button
-                                onClick={() => onClose?.()}
+                                onClick={() => typeof onClose === 'function' && onClose()}
                                 className="w-9 h-9 rounded-xl bg-slate-800/60 hover:bg-slate-700/60 border border-slate-700/50 flex items-center justify-center transition-all group"
                             >
                                 <X className="w-4 h-4 text-slate-400 group-hover:text-white transition-colors" />
@@ -153,7 +153,7 @@ export function SettingsDrawer({ isOpen, onClose, clinicId, currentName, onNameU
                         {/* Footer — Save Button */}
                         <div className="px-8 pb-8 pt-4 border-t border-slate-800/60">
                             <button
-                                onClick={() => handleSave?.()}
+                                onClick={() => typeof handleSave === 'function' && handleSave()}
                                 disabled={saveState !== 'idle' || !clinicName.trim() || clinicName === currentName}
                                 className="relative w-full py-4 rounded-2xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-white font-bold tracking-wide text-sm overflow-hidden group"
                             >
