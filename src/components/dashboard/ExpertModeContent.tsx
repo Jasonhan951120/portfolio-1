@@ -20,7 +20,7 @@ export function ExpertModeContent({ onOpenPMSLogs, onOpenClinicMeta }: ExpertMod
 
   // Brief mount delay to prevent flash-of-crash before auth context resolves
   useEffect(() => {
-    const t = setTimeout(() => setIsReady(true), 100);
+    const t = setTimeout(() => typeof setIsReady === 'function' && setIsReady?.(true), 100);
     return () => clearTimeout(t);
   }, []);
 
@@ -64,7 +64,7 @@ export function ExpertModeContent({ onOpenPMSLogs, onOpenClinicMeta }: ExpertMod
             <TrendingUp className="w-4 h-4 text-[#87A96B]" /> Revenue Forecasting
           </h3>
           <div className="bg-white rounded-[40px] p-8 border border-black/5 shadow-sm">
-            <RevenueForecastChart data={[]} />
+            {Array.isArray([]) ? <RevenueForecastChart data={[]} /> : null}
           </div>
         </section>
 

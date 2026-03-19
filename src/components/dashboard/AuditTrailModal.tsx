@@ -58,7 +58,7 @@ export const AuditTrailModal: React.FC<AuditTrailModalProps> = ({ lead, isOpen, 
                   </h3>
                 </div>
                 <button 
-                  onClick={onClose}
+                  onClick={() => onClose?.()}
                   className="p-1.5 hover:bg-slate-200/50 rounded-xl transition-colors text-slate-400"
                 >
                   <X className="w-4 h-4" />

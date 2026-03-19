@@ -13,7 +13,7 @@ interface RevenueForecastChartProps {
 
 export function RevenueForecastChart({ data }: RevenueForecastChartProps) {
     // ✅ Optional chaining guard: if no data, show fallback
-    if (!data?.length) {
+    if (!Array.isArray(data) || !data?.length) {
         return (
             <div className="h-32 flex items-center justify-center text-slate-500 text-sm">
                 데이터 없음 — Revenue data will appear as pipeline data accumulates.

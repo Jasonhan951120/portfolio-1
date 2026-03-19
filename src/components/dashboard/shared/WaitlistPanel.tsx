@@ -39,7 +39,7 @@ export function WaitlistPanel({
                             <h2 className="text-2xl font-semibold text-gray-900">Smart Waitlist</h2>
                             <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">Gap Filling Automation</p>
                         </div>
-                        <button onClick={onClose} className="p-3 bg-black/5 hover:bg-black/5 rounded-2xl text-gray-900 transition-all">
+                        <button onClick={() => onClose?.()} className="p-3 bg-black/5 hover:bg-black/5 rounded-2xl text-gray-900 transition-all">
                             <X className="w-6 h-6" />
                         </button>
                     </div>
@@ -50,7 +50,7 @@ export function WaitlistPanel({
                             <h3 className="text-lg font-bold text-gray-900 mb-2 tracking-tight">Slot Gap Filler</h3>
                             <p className="text-[12px] text-gray-500 leading-relaxed mb-6">We found a 2:00 PM slot tomorrow. Shall we notify matching patients?</p>
                             <button
-                                onClick={onBroadcast}
+                                onClick={() => onBroadcast?.()}
                                 disabled={isBroadcasting}
                                 className="w-full py-4 bg-gray-900 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                             >

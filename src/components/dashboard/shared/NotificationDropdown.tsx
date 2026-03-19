@@ -25,7 +25,7 @@ export function NotificationDropdown({ notifications, onClose, onDismiss }: Noti
         >
             <div className="flex justify-between items-center mb-6">
                 <h3 className="text-xs font-bold text-gray-900 uppercase tracking-widest">Recent Activity</h3>
-                <button onClick={onClose} className="p-1 hover:bg-black/5 rounded-lg text-gray-500">
+                <button onClick={() => onClose?.()} className="p-1 hover:bg-black/5 rounded-lg text-gray-500">
                     <X className="w-4 h-4" />
                 </button>
             </div>

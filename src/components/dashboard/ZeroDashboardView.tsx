@@ -186,7 +186,7 @@ function HotLeadCard({
                         onHoverEnd={() => !sent && (scale.set(1), y.set(0))}
                         onTapStart={() => !sent && scale.set(0.97)}
                         onTapCancel={() => !sent && scale.set(1)}
-                        onClick={handleSend}
+                        onClick={() => handleSend?.()}
                         disabled={sent}
                         className={`
                             w-full font-black uppercase tracking-widest py-6 sm:py-7 rounded-[24px] sm:rounded-[28px]
@@ -224,7 +224,7 @@ function HotLeadCard({
 
                     {!sent && (
                         <button
-                            onClick={onSkip}
+                            onClick={() => onSkip?.()}
                             className="w-full text-[9px] font-black uppercase tracking-[0.25em] text-gray-700 hover:text-gray-400 py-2 transition-colors flex items-center justify-center gap-2"
                         >
                             <SkipForward className="w-3 h-3" />

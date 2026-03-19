@@ -16,6 +16,7 @@ interface StaffROILeaderboardProps {
 }
 
 const Counter = ({ value, prefix = "" }: { value: number | null | undefined; prefix?: string }) => {
+    if (typeof value !== 'number' && typeof value !== 'string') return <span className="font-bold tabular-nums text-gray-500">{prefix}0</span>;
     if (value === null || value === undefined) return <span className="font-bold tabular-nums text-gray-500">{prefix}0</span>;
     return (
         <motion.span
@@ -113,7 +114,7 @@ export const StaffROILeaderboard: React.FC<StaffROILeaderboardProps> = ({ clinic
 
             <div className="space-y-3 relative z-10">
                 <AnimatePresence mode="popLayout">
-                    {performance?.map((staff, index) => {
+                    {Array.isArray(performance) && performance?.map((staff, index) => {
                         const isTop = index === 0;
                         return (
                             <motion.div

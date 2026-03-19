@@ -20,7 +20,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
         return (
             <div className="bg-slate-900/95 border border-slate-700/50 p-4 rounded-2xl shadow-2xl backdrop-blur-xl">
                 <p className="text-white font-bold mb-2 text-sm">{label}</p>
-                {payload?.map((entry: any, index: number) => (
+                {Array.isArray(payload) && payload?.map((entry: any, index: number) => (
                     <div key={index} className="flex items-center gap-2 text-sm font-medium mb-1">
                         <span
                             className="w-2 h-2 rounded-full"
