@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
+import React from "react";
 // Deploy Trigger: Performance & Analytics Overhaul
 // Deploy Trigger: Performance & Analytics Overhaul
 
@@ -43,7 +44,7 @@ import { RecoveryConcierge } from './dashboard/RecoveryConcierge';
 import { DashboardHeader } from "./dashboard/layout/DashboardHeader";
 import { SettingsDrawer } from "./dashboard/SettingsDrawer";
 import { ZeroDashboardView } from "./dashboard/ZeroDashboardView";
-import { ExpertModeDrawer } from "./dashboard/ExpertModeDrawer";
+// import { ExpertModeDrawer } from "./dashboard/ExpertModeDrawer";
 import { PatientCard } from "./dashboard/PatientCard";
 
 import { PMSLogDrawer } from "./dashboard/backoffice/PMSLogDrawer";
@@ -2610,12 +2611,7 @@ export default function AdminDashboard() {
 
           {/* ── EXPERT MODE DRAWER ── */}
           <ErrorBoundary name="ExpertModeDrawer">
-            <ExpertModeDrawer
-              isOpen={isExpertModeOpen}
-              onClose={() => setIsExpertModeOpen(false)}
-              onOpenPMSLogs={() => setIsPMSLogDrawerOpen(true)}
-              onOpenClinicMeta={() => setIsClinicMetaModalOpen(true)}
-            />
+            {isExpertModeOpen && <div style={{ position: 'fixed', inset: 0, background: 'white', zIndex: 999, padding: '20px', border: '1px solid red' }}>Temporary Settings View</div>}
           </ErrorBoundary>
 
           {/* ── BACKOFFICE OVERLAYS ── */}
@@ -2682,10 +2678,6 @@ export default function AdminDashboard() {
             </p>
           </div>
       </footer>
-      <ExpertModeDrawer 
-        isOpen={isExpertModeOpen} 
-        onClose={() => setIsExpertModeOpen(false)} 
-      />
     </div>
   );
 }

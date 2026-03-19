@@ -53,3 +53,4 @@ export function ExpertModeDrawer({ isOpen, onClose, onOpenPMSLogs, onOpenClinicM
     </AnimatePresence>
   );
 }
+export default ExpertModeDrawer;
