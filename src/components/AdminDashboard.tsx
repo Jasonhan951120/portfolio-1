@@ -2220,16 +2220,13 @@ export default function AdminDashboard() {
                     <span className="text-[9px] font-black uppercase tracking-widest text-emerald-600">System Active | Last Scanned: Just now</span>
                   </motion.div>
                 )}
-                {/* 
                 <button
-                  onClick={() => typeof setIsExpertModeOpen === 'function' && setIsExpertModeOpen(true)}
+                  onClick={() => setIsExpertModeOpen(true)}
                   className="p-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl transition-all text-slate-400 hover:text-emerald-600"
                   title="Control Center (Expert Mode)"
                 >
                   <Settings className="w-5 h-5" />
                 </button>
-                */}
-                <a href="#" id="test-fix" style={{color: 'red', fontSize: '20px'}} onClick={(e) => { e.preventDefault(); alert('FIX WORKING'); }}>CLICK ME IF FIXED</a>
                 <button
                   onClick={() => typeof signOut === 'function' && signOut()}
                   className="p-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl transition-all text-slate-400 hover:text-red-600"
@@ -2685,6 +2682,10 @@ export default function AdminDashboard() {
             </p>
           </div>
       </footer>
+      <ExpertModeDrawer 
+        isOpen={isExpertModeOpen} 
+        onClose={() => setIsExpertModeOpen(false)} 
+      />
     </div>
   );
 }
