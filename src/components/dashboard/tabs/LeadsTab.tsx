@@ -191,7 +191,7 @@ export function LeadsTab({
                         </div>
                         <h4 className="text-lg font-bold text-gray-900 group-hover:text-white mb-2 tracking-tight">Open Waitlist</h4>
                         <p className="text-[11px] text-gray-500 group-hover:text-gray-400 leading-relaxed font-medium capitalize">
-                            {activeLeads.filter(l => (l.status as string) === "Waitlisted").length} Patients currently in standby for auto-fill.
+                            {activeLeads.filter(l => (l.status as string) === "Waitlist").length} Patients currently in standby for auto-fill.
                         </p>
                     </button>
 

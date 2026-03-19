@@ -44,7 +44,7 @@ import { RecoveryConcierge } from './dashboard/RecoveryConcierge';
 import { DashboardHeader } from "./dashboard/layout/DashboardHeader";
 import { SettingsDrawer } from "./dashboard/SettingsDrawer";
 import { ZeroDashboardView } from "./dashboard/ZeroDashboardView";
-import { ExpertModeDrawer } from "./dashboard/ExpertModeDrawer";
+import ExpertModeDrawer from "./dashboard/ExpertModeDrawer";
 import { PatientCard } from "./dashboard/PatientCard";
 
 import { PMSLogDrawer } from "./dashboard/backoffice/PMSLogDrawer";
@@ -1655,7 +1655,7 @@ export default function AdminDashboard() {
   };
 
   const handleBroadcast = async () => {
-    const waitlistedLeads = leads.filter(l => (l.status as any) === "Waitlisted");
+    const waitlistedLeads = leads.filter(l => l.status === "Waitlist");
 
     if (waitlistedLeads.length === 0) {
       setToast({ message: "Waitlist is currently empty", type: "error" });
@@ -1724,7 +1724,6 @@ export default function AdminDashboard() {
     }
   };
 
-  // Consolidated with handleAddToWaitlist
 
 
   const handleDragEnd = async (event: DragEndEvent) => {
@@ -2609,15 +2608,10 @@ export default function AdminDashboard() {
             />
           </main>
 
-          {/* ── EXPERT MODE DRAWER ── */}
-          <ErrorBoundary name="ExpertModeDrawer">
-            <ExpertModeDrawer
-              isOpen={isExpertModeOpen}
-              onClose={() => setIsExpertModeOpen(false)}
-              onOpenPMSLogs={() => typeof setIsPMSLogDrawerOpen === 'function' ? setIsPMSLogDrawerOpen(true) : {}}
-              onOpenClinicMeta={() => typeof setIsClinicMetaModalOpen === 'function' ? setIsClinicMetaModalOpen(true) : {}}
-            />
-          </ErrorBoundary>
+          <ExpertModeDrawer 
+            isOpen={isExpertModeOpen} 
+            onClose={() => setIsExpertModeOpen(false)} 
+          />
 
           {/* ── BACKOFFICE OVERLAYS ── */}
           <ErrorBoundary name="Backoffice Overlays">

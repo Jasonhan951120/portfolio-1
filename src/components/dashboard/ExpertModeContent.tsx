@@ -15,7 +15,10 @@ interface ExpertModeContentProps {
 }
 
 export function ExpertModeContent({ onOpenPMSLogs, onOpenClinicMeta }: ExpertModeContentProps) {
-  const { profile } = useAuth();
+  console.log("ExpertModeContent Render - Props:", { hasOnOpenPMSLogs: !!onOpenPMSLogs, hasOnOpenClinicMeta: !!onOpenClinicMeta });
+  const auth = useAuth();
+  const profile = auth?.profile;
+
   const [isReady, setIsReady] = useState(false);
 
   // Brief mount delay to prevent flash-of-crash before auth context resolves
@@ -64,7 +67,7 @@ export function ExpertModeContent({ onOpenPMSLogs, onOpenClinicMeta }: ExpertMod
             <TrendingUp className="w-4 h-4 text-[#87A96B]" /> Revenue Forecasting
           </h3>
           <div className="bg-white rounded-[40px] p-8 border border-black/5 shadow-sm">
-            {Array.isArray([]) ? <RevenueForecastChart data={[]} /> : null}
+            {typeof RevenueForecastChart === 'function' ? <RevenueForecastChart data={[]} /> : <p className="text-xs text-rose-500">RevenueForecastChart is not a function</p>}
           </div>
         </section>
 
@@ -73,7 +76,7 @@ export function ExpertModeContent({ onOpenPMSLogs, onOpenClinicMeta }: ExpertMod
             <BarChart2 className="w-4 h-4 text-[#87A96B]" /> Reputation ROI
           </h3>
           <div className="bg-white rounded-[40px] p-8 border border-black/5 shadow-sm">
-            <ReputationROIChart />
+            {typeof ReputationROIChart === 'function' ? <ReputationROIChart /> : <p className="text-xs text-rose-500">ReputationROIChart is not a function</p>}
           </div>
         </section>
 
@@ -84,7 +87,11 @@ export function ExpertModeContent({ onOpenPMSLogs, onOpenClinicMeta }: ExpertMod
           <div className="bg-white rounded-[40px] p-8 border border-black/5 shadow-sm">
             {/* Optional chaining: render only when clinicId is available */}
             {clinicId ? (
-              <StaffROILeaderboard clinicId={clinicId} />
+              typeof StaffROILeaderboard === 'function' ? (
+                <StaffROILeaderboard clinicId={clinicId} />
+              ) : (
+                <p className="text-xs text-rose-500">StaffROILeaderboard is not a function</p>
+              )
             ) : (
               <p className="text-xs text-gray-400 text-center py-8">
                 Clinic profile not yet loaded.
@@ -103,7 +110,14 @@ export function ExpertModeContent({ onOpenPMSLogs, onOpenClinicMeta }: ExpertMod
         
         <div className="space-y-2">
           <button
-            onClick={() => typeof onOpenPMSLogs === 'function' && onOpenPMSLogs()}
+            onClick={() => {
+              console.log("PMS Logs button clicked");
+              if (typeof onOpenPMSLogs === 'function') {
+                onOpenPMSLogs();
+              } else {
+                console.error("onOpenPMSLogs is not a function:", onOpenPMSLogs);
+              }
+            }}
             className="w-full p-4 bg-white/5 hover:bg-white/10 rounded-2xl flex items-center justify-between group transition-all"
           >
             <div className="flex items-center gap-3">
@@ -114,7 +128,14 @@ export function ExpertModeContent({ onOpenPMSLogs, onOpenClinicMeta }: ExpertMod
           </button>
           
           <button
-            onClick={() => typeof onOpenClinicMeta === 'function' && onOpenClinicMeta()}
+            onClick={() => {
+              console.log("Clinic Meta button clicked");
+              if (typeof onOpenClinicMeta === 'function') {
+                onOpenClinicMeta();
+              } else {
+                console.error("onOpenClinicMeta is not a function:", onOpenClinicMeta);
+              }
+            }}
             className="w-full p-4 bg-white/5 hover:bg-white/10 rounded-2xl flex items-center justify-between group transition-all"
           >
             <div className="flex items-center gap-3">
