@@ -78,8 +78,11 @@ export function ExpertModeContent({
             <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.6)]" />
             <div className="absolute inset-0 bg-red-500 rounded-full animate-ping opacity-20" />
           </div>
-          <p className="text-red-700 font-bold text-sm tracking-tight">
-            £5,200 at risk. <span className="underline underline-offset-4 decoration-red-300">Click 'Booster Mode' to fix.</span>
+          <p className="text-red-700 font-bold text-sm tracking-tight flex items-center gap-2">
+            £5,200 at risk. 
+            <span className="border border-red-300 bg-white/50 px-2.5 py-1 rounded-full text-[10px] text-red-800 uppercase tracking-widest transition-all hover:border-red-400 hover:shadow-sm">
+              Click 'Booster Mode' to fix
+            </span>
           </p>
         </div>
         <AlertTriangle className="w-5 h-5 text-red-400 group-hover:rotate-12 transition-transform" />
@@ -97,7 +100,7 @@ export function ExpertModeContent({
           
           <button 
             onClick={() => setIsAutoPilotOn?.(!isAutoPilotOn)}
-            className={`w-20 h-10 rounded-full p-1 transition-all duration-500 ease-in-out ${isAutoPilotOn ? 'bg-[#2AF598]' : 'bg-slate-200'}`}
+            className={`w-20 h-10 rounded-full p-1 transition-all duration-500 ease-in-out active:scale-[0.98] ${isAutoPilotOn ? 'bg-[#2AF598]' : 'bg-slate-200'}`}
           >
             <motion.div 
               animate={{ x: isAutoPilotOn ? 40 : 0 }}
@@ -118,44 +121,60 @@ export function ExpertModeContent({
       </section>
 
       {/* Mode Bento Grid */}
-      <section className={`transition-all duration-500 ${isAutoPilotOn ? 'opacity-40 grayscale pointer-events-none blur-[1px]' : 'opacity-100'}`}>
-        <div className="grid grid-cols-1 gap-4">
-          {modes?.map((mode) => (
-            <button
-              key={mode?.id}
-              onClick={() => setSelectedMode?.(mode?.id)}
-              className={`p-6 rounded-[32px] border transition-all duration-200 text-left group relative overflow-hidden active:scale-[0.98] ${
-                selectedMode === mode?.id 
-                ? `${mode?.accent} border-black/10 shadow-lg scale-[1.02]` 
-                : 'bg-white border-black/[0.05] hover:border-black/10 hover:shadow-md'
-              }`}
-            >
-              <div className="flex items-start justify-between relative z-10">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2.5 bg-white rounded-2xl shadow-sm border border-black/[0.03]">
-                      {mode?.icon}
+      <section className="relative">
+        <div className={`transition-all duration-500 ${isAutoPilotOn ? 'opacity-30 grayscale pointer-events-none blur-[2px]' : 'opacity-100'}`}>
+          <div className="grid grid-cols-1 gap-4">
+            {modes?.map((mode) => (
+              <button
+                key={mode?.id}
+                onClick={() => setSelectedMode?.(mode?.id)}
+                className={`p-6 rounded-[32px] border transition-all duration-200 text-left group relative overflow-hidden active:scale-[0.98] ${
+                  selectedMode === mode?.id 
+                  ? `${mode?.accent} border-black/10 shadow-lg scale-[1.02]` 
+                  : 'bg-white border-black/[0.05] hover:border-black/10 hover:shadow-md'
+                }`}
+              >
+                <div className="flex items-start justify-between relative z-10">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2.5 bg-white rounded-2xl shadow-sm border border-black/[0.03]">
+                        {mode?.icon}
+                      </div>
+                      <h4 className="font-black text-slate-900 tracking-tight">{mode?.title}</h4>
                     </div>
-                    <h4 className="font-black text-slate-900 tracking-tight">{mode?.title}</h4>
+                    <p className="text-xs text-slate-500 font-medium leading-relaxed max-w-[80%]">
+                      {mode?.desc}
+                    </p>
                   </div>
-                  <p className="text-xs text-slate-500 font-medium leading-relaxed max-w-[80%]">
-                    {mode?.desc}
-                  </p>
+                  {selectedMode === mode?.id && (
+                    <div className="bg-[#2AF598] p-1.5 rounded-full shadow-sm">
+                      <Check className="w-4 h-4 text-black" />
+                    </div>
+                  )}
                 </div>
+                
+                {/* Subtle background glow for active state */}
                 {selectedMode === mode?.id && (
-                  <div className="bg-[#2AF598] p-1.5 rounded-full shadow-sm">
-                    <Check className="w-4 h-4 text-black" />
-                  </div>
+                  <div className="absolute -right-4 -bottom-4 w-32 h-32 bg-[#2AF598]/10 blur-3xl rounded-full" />
                 )}
-              </div>
-              
-              {/* Subtle background glow for active state */}
-              {selectedMode === mode?.id && (
-                <div className="absolute -right-4 -bottom-4 w-32 h-32 bg-[#2AF598]/10 blur-3xl rounded-full" />
-              )}
-            </button>
-          ))}
+              </button>
+            ))}
+          </div>
         </div>
+
+        {/* AI IN CONTROL Overlay */}
+        {isAutoPilotOn && (
+          <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="bg-white/90 backdrop-blur-md border border-black/[0.05] px-4 py-2 rounded-full shadow-xl flex items-center gap-2"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-[#2AF598]" />
+              <span className="text-[10px] font-black text-slate-600 uppercase tracking-[0.2em]">AI IN CONTROL</span>
+            </motion.div>
+          </div>
+        )}
       </section>
 
       {/* Simplified Insights */}
