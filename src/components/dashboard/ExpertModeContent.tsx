@@ -19,7 +19,7 @@ function SalesFunnel() {
 
   return (
     <div className="h-48 w-full mt-6 flex items-center justify-around gap-2 px-4">
-      {data?.map?.((item, idx) => (
+      {(data || [])?.map?.((item, idx) => (
         <div key={item?.name} className="flex flex-col items-center gap-4 relative w-full">
           <div 
             className="w-full bg-white/10 rounded-3xl border border-white/10 flex flex-col items-center justify-center p-4 group hover:bg-white/[0.15] transition-all"
@@ -110,10 +110,10 @@ export function ExpertModeContent({
         </h3>
         <div className="bg-white rounded-[32px] p-6 border border-black/5 shadow-sm space-y-4">
           <div className="flex gap-2 p-1 bg-black/5 rounded-2xl">
-            {['Professional', 'Friendly', 'Direct']?.map?.((tone) => (
+            {(['Professional', 'Friendly', 'Direct'] || [])?.map?.((tone) => (
               <button
                 key={tone}
-                onClick={() => setSelectedTone?.(tone)}
+                onClick={() => { if (typeof setSelectedTone === 'function') setSelectedTone?.(tone); }}
                 className="flex-1 py-3 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all active:scale-95"
                 style={{
                   backgroundColor: tone === selectedTone ? 'white' : 'transparent',
@@ -189,7 +189,7 @@ export function ExpertModeContent({
         
         <div className="space-y-2">
           <button 
-            onClick={() => onOpenPMSLogs?.()}
+            onClick={() => { if (typeof onOpenPMSLogs === 'function') onOpenPMSLogs?.(); }}
             className="w-full p-4 bg-white/5 hover:bg-white/10 rounded-2xl flex items-center justify-between group transition-all"
           >
             <div className="flex items-center gap-3">
@@ -211,7 +211,7 @@ export function ExpertModeContent({
           </Link>
 
           <button 
-            onClick={() => onOpenClinicMeta?.()}
+            onClick={() => { if (typeof onOpenClinicMeta === 'function') onOpenClinicMeta?.(); }}
             className="w-full p-4 bg-white/5 hover:bg-white/10 rounded-2xl flex items-center justify-between group transition-all"
           >
             <div className="flex items-center gap-3">

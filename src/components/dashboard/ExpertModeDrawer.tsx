@@ -92,7 +92,7 @@ export function ExpertModeDrawer({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => onClose?.()}
+              onClick={() => { if (typeof onClose === 'function') onClose?.(); }}
               className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[150]"
             />
             
@@ -106,7 +106,7 @@ export function ExpertModeDrawer({
             >
               <div className="sticky top-0 bg-[#F8F9FA]/80 backdrop-blur-md p-6 flex justify-end z-10">
                 <button 
-                  onClick={() => onClose?.()}
+                  onClick={() => { if (typeof onClose === 'function') onClose?.(); }}
                   className="p-3 bg-black/5 hover:bg-black/10 rounded-2xl transition-all"
                 >
                   <X className="w-6 h-6 text-gray-900" />
@@ -115,8 +115,8 @@ export function ExpertModeDrawer({
               
               <div className="px-12 pb-24">
                 <ExpertModeContent 
-                  onOpenPMSLogs={() => onOpenPMSLogs?.()}
-                  onOpenClinicMeta={() => onOpenClinicMeta?.()}
+                  onOpenPMSLogs={() => { if (typeof onOpenPMSLogs === 'function') onOpenPMSLogs?.(); }}
+                  onOpenClinicMeta={() => { if (typeof onOpenClinicMeta === 'function') onOpenClinicMeta?.(); }}
                 />
               </div>
             </motion.div>
