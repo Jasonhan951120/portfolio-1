@@ -2611,6 +2611,8 @@ export default function AdminDashboard() {
           <ExpertModeDrawer 
             isOpen={isExpertModeOpen} 
             onClose={() => setIsExpertModeOpen(false)} 
+            onOpenPMSLogs={() => setIsPMSLogDrawerOpen?.(true)}
+            onOpenClinicMeta={() => setIsClinicMetaModalOpen?.(true)}
           />
 
           {/* ── BACKOFFICE OVERLAYS ── */}
