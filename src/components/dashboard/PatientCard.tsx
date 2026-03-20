@@ -22,6 +22,7 @@ interface PatientCardProps {
   onOpenPTMode: (lead: ConsultationRequest) => void;
   onOpenAudit: (lead: ConsultationRequest) => void;
   focusMode: string;
+  currency?: string;
 }
 
 export const PatientCard = React.memo(function PatientCard({
@@ -35,9 +36,8 @@ export const PatientCard = React.memo(function PatientCard({
   onOpenAudit,
   focusMode,
   setDepositModal,
-  updateStatus,
-  STAFF_LIST,
-  updateAssignedTo
+  updateAssignedTo,
+  currency = "£"
 }: PatientCardProps) {
   const [timeLeft, setTimeLeft] = useState<number>(15 * 60);
   const [isSendingEmail, setIsSendingEmail] = useState(false);
@@ -182,7 +182,7 @@ export const PatientCard = React.memo(function PatientCard({
 
             <div className="flex flex-col items-end gap-1">
               <span className="text-[14px] font-black text-[#10B981] tracking-tight tabular-nums">
-                £{(lead.potential_value ? lead.potential_value : (1000)).toLocaleString()}
+                {currency}{(lead.potential_value ? lead.potential_value : (1000)).toLocaleString()}
               </span>
               {isOverdue && (
                 <span className="text-[9px] font-bold text-[#FF3B30] bg-[#FF3B30]/10 border border-[#FF3B30]/20 px-1.5 py-0.5 rounded uppercase tracking-wider flex items-center gap-1">
@@ -301,6 +301,7 @@ export const PatientCard = React.memo(function PatientCard({
   prev.lead === next.lead && 
   prev.clinic === next.clinic && 
   prev.id === next.id &&
+  prev.currency === next.currency &&
   prev.lead.status === next.lead.status &&
   prev.lead.phone === next.lead.phone
 ));

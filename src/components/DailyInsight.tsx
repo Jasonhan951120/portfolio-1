@@ -9,12 +9,13 @@ interface DailyInsightProps {
         roi: number;
         topPlatform: string;
     };
+    currency?: string;
 }
 
 /**
  * DailyInsight - A high-end analytics card featuring Matte Dark Mode and Glassmorphism.
  */
-export default function DailyInsight({ metrics }: DailyInsightProps) {
+export default function DailyInsight({ metrics, currency = '£' }: DailyInsightProps) {
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -36,7 +37,7 @@ export default function DailyInsight({ metrics }: DailyInsightProps) {
             <div className="space-y-6">
                 <p className="text-slate-300 text-[15px] leading-relaxed font-medium">
                     Automated performance auditing confirms that <span className="text-emerald-400 font-bold">{metrics.topPlatform} Channels</span> are exhibiting exceptional conversion efficiency.
-                    With a strategic allocation of <span className="text-slate-100 font-bold tabular-nums tracking-tighter">£{metrics.spend}</span> yesterday, the system identified
+                    With a strategic allocation of <span className="text-slate-100 font-bold tabular-nums tracking-tighter">{currency}{metrics.spend}</span> yesterday, the system identified
                     <span className="text-slate-100 font-bold tabular-nums tracking-tighter"> {metrics.leads} high-value procedural leads</span>.
                     The verified conversion efficiency (ROI) is currently optimized at <span className="text-emerald-400 font-bold tabular-nums tracking-tighter">{metrics.roi}x</span>.
                 </p>

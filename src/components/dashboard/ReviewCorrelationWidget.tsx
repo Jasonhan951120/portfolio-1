@@ -15,7 +15,7 @@ import { Star, TrendingUp, MessageSquare, Clock, Zap, Target } from 'lucide-reac
 import { useDashboardStore } from '../../store/useDashboardStore';
 
 export const ReviewCorrelationWidget: React.FC = () => {
-    const { isGoogleConnected, googleProfile, region } = useDashboardStore();
+    const { isGoogleConnected, googleProfile, currency } = useDashboardStore();
 
     // Mock Correlation Data
     const correlationData = useMemo(() => [
@@ -42,7 +42,6 @@ export const ReviewCorrelationWidget: React.FC = () => {
         );
     }
 
-    const currency = region === 'UK' ? '£' : '$';
 
     return (
         <motion.div

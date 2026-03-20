@@ -16,18 +16,20 @@ interface DashboardKPIsProps {
     pipelineValue: number;
     marketingROAS: number;
     revenueAtRisk: number;
+    currency?: string;
 }
 
 export const DashboardKPIs: React.FC<DashboardKPIsProps> = ({
     pipelineValue,
     marketingROAS,
-    revenueAtRisk
+    revenueAtRisk,
+    currency = "£"
 }) => {
     const kpis = [
         {
             title: "Today's Pipeline",
             value: pipelineValue,
-            prefix: "£",
+            prefix: currency,
             icon: PoundSterling,
             color: "from-emerald-400 to-emerald-600",
             glow: "shadow-luxury",
@@ -45,7 +47,7 @@ export const DashboardKPIs: React.FC<DashboardKPIsProps> = ({
         {
             title: "Revenue at Risk",
             value: revenueAtRisk,
-            prefix: "£",
+            prefix: currency,
             icon: AlertCircle,
             color: "from-rose-400 to-rose-600",
             glow: "shadow-luxury",

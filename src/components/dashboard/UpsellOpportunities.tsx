@@ -13,10 +13,11 @@ interface Lead {
 
 interface UpsellOpportunitiesProps {
     leads: Lead[];
+    currency?: string;
     className?: string;
 }
 
-export function UpsellOpportunities({ leads, className = "" }: UpsellOpportunitiesProps) {
+export function UpsellOpportunities({ leads, currency = "£", className = "" }: UpsellOpportunitiesProps) {
     const [triggeredIds, setTriggeredIds] = useState<Set<string>>(new Set());
 
     const opportunities = useMemo(() => {
@@ -114,7 +115,7 @@ export function UpsellOpportunities({ leads, className = "" }: UpsellOpportuniti
                                 <div className="flex items-center gap-4">
                                     <div className="text-right hidden sm:block">
                                         <span className="block text-[10px] uppercase tracking-wider text-gray-600 font-bold mb-0.5">Pot. Value</span>
-                                        <span className="text-[14px] font-black text-[#2AF598]">£{opp.upsellValue.toLocaleString()}</span>
+                                        <span className="text-[14px] font-black text-[#2AF598]">{currency}{opp.upsellValue.toLocaleString()}</span>
                                     </div>
 
                                     <AnimatePresence mode="wait">

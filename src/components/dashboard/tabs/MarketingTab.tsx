@@ -7,6 +7,7 @@ import { LiveTrafficPanel } from '../shared/LiveTrafficPanel';
 import { AutoTaggingModal } from '../shared/AutoTaggingModal';
 import MarketingOnboarding from '../../MarketingOnboarding';
 import { type Profile } from '../../../lib/supabase';
+import { useDashboardStore } from '../../../store/useDashboardStore';
 
 interface MarketingTabProps {
     marketingConnections: any[];
@@ -23,6 +24,7 @@ export function MarketingTab({
     profile,
     loadDashboardData
 }: MarketingTabProps) {
+    const currency = useDashboardStore(state => state.currency);
     const [isAutoTagMenuOpen, setIsAutoTagMenuOpen] = useState(false);
     const [selectedPlatform, setSelectedPlatform] = useState<'meta' | 'google' | null>(null);
 
@@ -47,6 +49,7 @@ export function MarketingTab({
                                 roi: Number(marketingMetrics?.roi) || 0,
                                 topPlatform: marketingMetrics?.topPlatform || "Meta"
                             }}
+                            currency={currency}
                         />
 
                         {/* Live Traffic Source Panel — Real-time via Supabase Realtime */}
@@ -101,15 +104,15 @@ export function MarketingTab({
                                 <div className="grid md:grid-cols-3 gap-6 mb-12">
                                     <div className="p-6 bg-gray-50 rounded-[24px] border border-gray-100">
                                         <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-2">Total Ad Spend</p>
-                                        <div className="text-2xl font-bold text-gray-900">£{marketingMetrics?.spend}</div>
+                                        <div className="text-2xl font-bold text-gray-900">{currency}{marketingMetrics?.spend}</div>
                                     </div>
                                     <div className="p-6 bg-gray-50 rounded-[24px] border border-gray-100">
                                         <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-2">Treated Value (from Ads)</p>
-                                        <div className="text-2xl font-bold text-gray-900">£{marketingMetrics?.revenue}</div>
+                                        <div className="text-2xl font-bold text-gray-900">{currency}{marketingMetrics?.revenue}</div>
                                     </div>
                                     <div className="p-6 bg-gray-50 rounded-[24px] border border-gray-100">
                                         <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-2">Net Gain</p>
-                                        <div className="text-2xl font-bold text-[#87A96B]">£{(marketingMetrics?.revenue || 0) - (marketingMetrics?.spend || 0)}</div>
+                                        <div className="text-2xl font-bold text-[#87A96B]">{currency}{(marketingMetrics?.revenue || 0) - (marketingMetrics?.spend || 0)}</div>
                                     </div>
                                 </div>
 

@@ -58,6 +58,7 @@ const Toast: React.FC<ToastProps> = ({ message, type, onClose }) => {
 interface TreatmentSettingsProps {
     clinicId: string;
     onUpdate?: () => void;
+    currency?: string;
 }
 
 const CURATED_COLORS = [
@@ -73,7 +74,7 @@ const CURATED_COLORS = [
     '#F472B6', // Pink
 ];
 
-export const TreatmentSettings: React.FC<TreatmentSettingsProps> = ({ clinicId, onUpdate }) => {
+export const TreatmentSettings: React.FC<TreatmentSettingsProps> = ({ clinicId, onUpdate, currency = '£' }) => {
     const [treatments, setTreatments] = useState<Treatment[]>([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -449,9 +450,9 @@ export const TreatmentSettings: React.FC<TreatmentSettingsProps> = ({ clinicId, 
 
                                 <div className="grid grid-cols-2 gap-6">
                                     <div>
-                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3 block">Expected Patient Value (£)</label>
+                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3 block">Expected Patient Value ({currency})</label>
                                         <div className="relative">
-                                            <span className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">£</span>
+                                            <span className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">{currency}</span>
                                             <input
                                                 type="number"
                                                 value={newTreatmentForm.potential_revenue}

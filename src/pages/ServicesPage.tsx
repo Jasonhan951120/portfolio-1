@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { useState } from "react";
 import { Sparkles, ShieldCheck, Microscope, ArrowRight, Star, X, Check, CheckCircle2, Phone, Calendar, Award } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useDashboardStore } from "../store/useDashboardStore";
 import Navbar from "../components/Navbar";
 
 const treatments = [
@@ -129,6 +130,7 @@ const treatments = [
 ];
 
 export default function ServicesPage({ clinic }: { clinic: any }) {
+    const currency = useDashboardStore(state => state.currency);
     const [selectedService, setSelectedService] = useState<typeof treatments[0] | null>(null);
 
     return (
@@ -251,7 +253,7 @@ export default function ServicesPage({ clinic }: { clinic: any }) {
                                             </div>
                                             <div>
                                                 <h4 className="text-xs font-black uppercase tracking-widest text-black mb-2 italic">Investment</h4>
-                                                <p className="text-2xl font-display font-bold text-black">{selectedService.pricing}</p>
+                                                <p className="text-2xl font-display font-bold text-black">{selectedService.pricing.replace('£', currency)}</p>
                                                 <p className="text-xs text-muted font-bold mt-2 uppercase tracking-widest">Pricing subject to clinical assessment</p>
                                             </div>
                                         </div>

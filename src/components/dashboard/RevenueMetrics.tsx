@@ -7,10 +7,11 @@ interface RevenueMetricsProps {
     systemGeneratedRevenue: number;
     marketingROAS: number;
     revenueAtRisk: number;
+    currency?: string;
     className?: string;
 }
 
-export function RevenueMetrics({ systemGeneratedRevenue, marketingROAS, revenueAtRisk, className = "" }: RevenueMetricsProps) {
+export function RevenueMetrics({ systemGeneratedRevenue, marketingROAS, revenueAtRisk, currency = "£", className = "" }: RevenueMetricsProps) {
     return (
         <div className={`grid grid-cols-1 md:grid-cols-3 gap-6 ${className}`}>
             {/* System Generated Revenue - Focus: Mint */}
@@ -32,7 +33,7 @@ export function RevenueMetrics({ systemGeneratedRevenue, marketingROAS, revenueA
                     <AnimatedNumber
                         value={systemGeneratedRevenue}
                         className="text-5xl lg:text-6xl font-display font-black text-[#00FFA3] tracking-tighter"
-                        prefix="£"
+                        prefix={currency}
                     />
                 </div>
 
@@ -90,7 +91,7 @@ export function RevenueMetrics({ systemGeneratedRevenue, marketingROAS, revenueA
                     <AnimatedNumber
                         value={revenueAtRisk}
                         className="text-5xl lg:text-6xl font-display font-black text-[#FF3B30] tracking-tighter"
-                        prefix="£"
+                        prefix={currency}
                     />
                     <AlertCircle className="w-5 h-5 text-[#FF3B30] mb-3 animate-pulse" />
                 </div>

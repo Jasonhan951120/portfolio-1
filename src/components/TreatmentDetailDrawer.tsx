@@ -18,6 +18,7 @@ interface TreatmentDetailDrawerProps {
     treatment: Treatment | null;
     onSave: (updatedTreatment: Treatment) => Promise<void>;
     isSaving?: boolean;
+    currency?: string;
 }
 
 export const TreatmentDetailDrawer: React.FC<TreatmentDetailDrawerProps> = ({
@@ -25,7 +26,8 @@ export const TreatmentDetailDrawer: React.FC<TreatmentDetailDrawerProps> = ({
     onClose,
     treatment,
     onSave,
-    isSaving = false
+    isSaving = false,
+    currency = '£'
 }) => {
     const [formData, setFormData] = useState<Treatment | null>(null);
     const [imageError, setImageError] = useState(false);
@@ -77,7 +79,7 @@ export const TreatmentDetailDrawer: React.FC<TreatmentDetailDrawerProps> = ({
                                 <div className="flex items-baseline gap-2">
                                     <span className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Revenue Impact</span>
                                     <span className="tabular-nums font-black text-3xl tracking-tighter text-emerald-500">
-                                        £{formData?.price.toLocaleString()}
+                                        {currency}{formData?.price.toLocaleString()}
                                     </span>
                                 </div>
                             </div>

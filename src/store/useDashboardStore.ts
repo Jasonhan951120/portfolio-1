@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { ConsultationRequest } from '../lib/supabase';
 import { db } from '../lib/firebase';
 import { collection, query, where, onSnapshot, doc, updateDoc, Timestamp, orderBy } from 'firebase/firestore';
+import { DEMO_LEADS } from '../lib/demoData';
+import { formatAuditTimestamp } from '../lib/utils/formatters';
 
 interface DashboardState {
   leads: ConsultationRequest[];
@@ -22,6 +24,8 @@ interface DashboardState {
   setClinicId: (id: string) => void;
   subscribeToLeads: () => () => void;
   updateLeadStatus: (id: string, newStatus: string) => Promise<void>;
+  currency: '£' | '$';
+  setCurrency: (currency: '£' | '$') => void;
 
   // Security & Audit State
   auditLogs: Record<string, any[]>;
@@ -43,6 +47,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
   activeCategory: 'All',
   activeTab: 'PIPELINE',
   region: 'UK',
+  currency: '£',
   isGoogleConnected: false,
   googleProfile: null,
   auditLogs: {
@@ -71,7 +76,8 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
 
   setActiveCategory: (category) => set({ activeCategory: category }),
   setActiveTab: (tab) => set({ activeTab: tab }),
-  setRegion: (region) => set({ region }),
+  setRegion: (region) => set({ region, currency: region === 'UK' ? '£' : '$' }),
+  setCurrency: (currency) => set({ currency, region: currency === '£' ? 'UK' : 'US' }),
   setGoogleConnected: (isConnected, profile) => set({ isGoogleConnected: isConnected, googleProfile: profile || null }),
   setGoogleProfile: (profile) => set({ googleProfile: profile }),
 
@@ -128,12 +134,10 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
   },
 
   injectSampleData: () => {
-    const { DEMO_LEADS } = require('../lib/demoData');
     set({ leads: DEMO_LEADS as ConsultationRequest[] });
   },
 
   addAuditLog: (leadId, action, method) => {
-    const { formatAuditTimestamp } = require('../lib/utils/formatters');
     const timestamp = formatAuditTimestamp(new Date());
     const logEntry = {
       time: timestamp,

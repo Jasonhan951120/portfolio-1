@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Check, ShieldCheck, Zap, LogOut, ArrowRight, Sparkles, TrendingUp, Shield, BarChart3, Users, Clock, MessageCircle, Star, Quote } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useDashboardStore } from '../store/useDashboardStore';
 
 export default function PricingPage() {
     const navigate = useNavigate();
     const { signOut, profile } = useAuth();
+    const currency = useDashboardStore(state => state.currency);
 
     const handleSubscribe = async () => {
         alert("Connecting to our secure payment gateway...\n(Clinical Premium Plan selected)");
@@ -67,7 +69,7 @@ export default function PricingPage() {
                         className="text-4xl md:text-7xl font-black tracking-tight mb-8 leading-[1.1] text-slate-900 uppercase"
                     >
                         Save 1 Patient = <br />
-                        <span className="text-emerald-500">£3,500 REVENUE Generated.</span>
+                        <span className="text-emerald-500">{currency}3,500 REVENUE Generated.</span>
                     </motion.h1>
 
                     <motion.p
@@ -104,7 +106,7 @@ export default function PricingPage() {
                                 <div>
                                     <div className="flex justify-between mb-4">
                                         <label className="text-xs font-black uppercase tracking-widest text-slate-400">Avg. Treatment Value</label>
-                                        <span className="text-emerald-500 font-black text-lg">£3,500</span>
+                                        <span className="text-emerald-500 font-black text-lg">{currency}3,500</span>
                                     </div>
                                     <input type="range" min="1000" max="10000" step="500" defaultValue="3500" className="w-full accent-emerald-500 h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer" />
                                 </div>
@@ -112,7 +114,7 @@ export default function PricingPage() {
 
                             <div className="p-8 bg-slate-50 border border-slate-100 rounded-3xl text-center">
                                 <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-4">Monthly Revenue Recovered</p>
-                                <div className="text-6xl font-black text-slate-900 mb-6">£7,000</div>
+                                <div className="text-6xl font-black text-slate-900 mb-6">{currency}7,000</div>
                                 <div className="h-px bg-slate-200 w-12 mx-auto mb-6"></div>
                                 <p className="text-xs text-emerald-600 font-black leading-relaxed italic uppercase tracking-widest">
                                     "1 recovered patient pays for the year."
@@ -156,7 +158,7 @@ export default function PricingPage() {
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <span className="text-xs font-black uppercase tracking-tight text-slate-400">Value</span>
-                                    <span className="text-sm font-black text-emerald-600 uppercase">£14,200</span>
+                                    <span className="text-sm font-black text-emerald-600 uppercase">{currency}14,200</span>
                                 </div>
                                 <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
                                     <motion.div initial={{ width: 0 }} animate={{ width: "70%" }} className="h-full bg-emerald-500" />
@@ -200,7 +202,7 @@ export default function PricingPage() {
                                 </div>
                                 <div className="mb-12">
                                     <div className="flex items-center justify-center gap-1">
-                                        <span className="text-7xl font-black tracking-tight text-slate-900">£649</span>
+                                        <span className="text-7xl font-black tracking-tight text-slate-900">{currency}649</span>
                                         <span className="text-slate-300 text-xl font-black tracking-widest uppercase mb-1">/mo</span>
                                     </div>
                                     <p className="text-[10px] text-slate-400 mt-2 font-black uppercase tracking-widest">(excl. VAT)</p>

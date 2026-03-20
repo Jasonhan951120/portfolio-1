@@ -16,6 +16,7 @@ interface ZeroDashboardViewProps {
     specialty?: string | null;
     onStatusChange: (leadId: string, newStatus: string) => Promise<void>;
     onImportComplete: () => void;
+    currency?: string;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -49,10 +50,12 @@ function HotLeadCard({
     lead,
     onSend,
     onSkip,
+    currency,
 }: {
     lead: ConsultationRequest;
     onSend: (l: ConsultationRequest) => void;
     onSkip: () => void;
+    currency: string;
 }) {
     const [sent, setSent] = useState(false);
     const value = lead.potential_value || SERVICE_CONVERSION_VALUES[lead.service] || 1000;
@@ -145,7 +148,7 @@ function HotLeadCard({
                         className="font-black tabular-nums tracking-tighter"
                         style={{ fontSize: 'clamp(2.5rem, 9vw, 4.5rem)', lineHeight: 1 }}
                     >
-                        £{value.toLocaleString()}
+                        {currency}{value.toLocaleString()}
                     </motion.p>
                     <div className="flex flex-wrap items-center gap-2 mt-3">
                         {lead.intent_score != null && (
@@ -240,7 +243,7 @@ function HotLeadCard({
 // ─────────────────────────────────────────────────────────────────────────────
 // MAIN COMPONENT
 // ─────────────────────────────────────────────────────────────────────────────
-export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, onImportComplete }: ZeroDashboardViewProps) {
+export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, onImportComplete, currency = '£' }: ZeroDashboardViewProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [sentLeads, setSentLeads] = useState<Set<string>>(new Set());
     const [whatsappModalLead, setWhatsappModalLead] = useState<ConsultationRequest | null>(null);
@@ -325,7 +328,7 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
                                     className="text-4xl sm:text-5xl font-black tabular-nums tracking-tighter leading-none text-transparent bg-clip-text bg-gradient-to-r from-slate-300 via-white to-slate-400 drop-shadow-[0_0_12px_rgba(255,255,255,0.2)]"
                                     style={{ fontSize: 'clamp(2.5rem, 8vw, 3.5rem)' }}
                                 >
-                                    £{totalSecured.toLocaleString()}
+                                    {currency}{totalSecured.toLocaleString()}
                                 </div>
                                 <p className="text-[#2AF598] font-black text-xs uppercase tracking-[0.4em] mt-8 opacity-80">
                                     Protected Portfolio ↗
@@ -345,7 +348,7 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
                                     className="text-4xl sm:text-5xl font-black tabular-nums tracking-tighter leading-none text-transparent bg-clip-text bg-gradient-to-r from-red-200 via-white to-red-400 drop-shadow-[0_0_12px_rgba(239,68,68,0.2)]"
                                     style={{ fontSize: 'clamp(2.5rem, 8vw, 3.5rem)' }}
                                 >
-                                    £{totalAtRisk.toLocaleString()}
+                                    {currency}{totalAtRisk.toLocaleString()}
                                 </div>
                                 <p className="text-[#A0A0A0] font-black text-xs uppercase tracking-[0.4em] mt-8 opacity-60">
                                     High Priority Pipeline ↘
@@ -396,6 +399,7 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
                                 lead={currentLead}
                                 onSend={handleSend}
                                 onSkip={handleNext}
+                                currency={currency}
                             />
                         </div>
                     ) : (
@@ -416,7 +420,7 @@ export function ZeroDashboardView({ leads, clinicId, specialty, onStatusChange, 
                             
                             <div className="bg-white/[0.04] border border-white/5 rounded-3xl p-6 relative z-10">
                                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-2">Total Secured This Week</p>
-                                <p className="text-3xl font-black text-white tabular-nums">£{(totalSecured * 4.2 + 12000).toLocaleString()}</p>
+                                <p className="text-3xl font-black text-white tabular-nums">{currency}{(totalSecured * 4.2 + 12000).toLocaleString()}</p>
                                 <div className="mt-3 flex items-center justify-center gap-2">
                                     <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                                     <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Performance Peak</span>

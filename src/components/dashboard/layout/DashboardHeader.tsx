@@ -13,6 +13,8 @@ interface DashboardHeaderProps {
     setIsBranchDropdownOpen: (open: boolean) => void;
     branches: string[];
     onOpenSettings?: () => void;
+    currency?: string;
+    onToggleCurrency?: (curr: string) => void;
 }
 
 export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
@@ -25,6 +27,8 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
     setIsBranchDropdownOpen,
     branches,
     onOpenSettings,
+    currency = '£',
+    onToggleCurrency,
 }) => {
     return (
         <div className="flex items-center gap-6 relative">
@@ -63,6 +67,26 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             </div>
 
             <div className="flex items-center gap-3">
+                {/* Currency Toggle */}
+                <div className="flex items-center bg-slate-100/50 p-1 rounded-xl border border-black/[0.05] shadow-sm">
+                    <button
+                        onClick={() => onToggleCurrency?.('£')}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${currency === '£' 
+                            ? "bg-white text-slate-900 shadow-sm ring-1 ring-black/5" 
+                            : "text-slate-400 hover:text-slate-600"}`}
+                    >
+                        £
+                    </button>
+                    <button
+                        onClick={() => onToggleCurrency?.('$')}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${currency === '$' 
+                            ? "bg-white text-slate-900 shadow-sm ring-1 ring-black/5" 
+                            : "text-slate-400 hover:text-slate-600"}`}
+                    >
+                        $
+                    </button>
+                </div>
+
                 {/* Settings Button */}
                 <button
                     onClick={onOpenSettings}

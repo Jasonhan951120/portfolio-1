@@ -5,9 +5,10 @@ import { useDashboardStore } from '../../store/useDashboardStore';
 import { SlotNumber } from '../SlotNumber';
 import { fetchGMBMetrics } from '../../lib/gmb-service';
 
-export const NorthStarSummaryCards: React.FC = () => {
+export const NorthStarSummaryCards: React.FC<{ currency?: string }> = ({ currency: propCurrency }) => {
     const { leads, getStats, googleProfile, setGoogleProfile, region } = useDashboardStore();
     const { pipelineValue } = getStats();
+    const currency = propCurrency || (region === 'UK' ? '£' : '$');
 
     // Fetch Google My Business Metrics on Mount
     useEffect(() => {
@@ -26,7 +27,6 @@ export const NorthStarSummaryCards: React.FC = () => {
         return leads.filter(l => (l.intent_score || 0) >= 80).length;
     }, [leads]);
 
-    const currency = region === 'UK' ? '£' : '$';
 
     const cards = [
         {

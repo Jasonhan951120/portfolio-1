@@ -165,39 +165,182 @@ const SecurityBadge = ({ region }: { region: 'UK' | 'US' }) => (
   </div>
 );
 
-// Premium Onboarding Empty State (Apple-grade)
-const OnboardingEmptyState = ({ onInjectSample }: { onInjectSample: () => void }) => (
+// Global Onboarding Hub (UK/US Market Entry)
+const OnboardingEmptyState = ({ onInjectSample, currency }: { onInjectSample: () => void; currency: string }) => (
   <motion.div 
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
-    className="flex flex-col items-center justify-center py-32 space-y-8 text-center"
+    className="flex flex-col items-center justify-center py-20 px-6 max-w-5xl mx-auto space-y-12"
   >
-    <div className="relative group">
-       <div className="absolute -inset-4 bg-emerald-500/5 rounded-full blur-2xl group-hover:bg-emerald-500/10 transition-all duration-700" />
-       <div className="relative w-24 h-24 bg-white rounded-[32px] border border-slate-200 shadow-2xl flex items-center justify-center">
-          <FileText className="w-10 h-10 text-slate-300" strokeWidth={1.5} />
-       </div>
-    </div>
-    
-    <div className="space-y-4 max-w-md">
-      <h2 className="text-3xl font-semibold text-slate-800 tracking-tight italic">Waiting for Patient Data Stream.</h2>
-      <p className="text-slate-500 text-sm font-medium leading-relaxed">
-        Upload your patient logs to activate AI revenue forecasting, or inject sample data to experience the full power of the Hanlan intelligence suite.
-      </p>
+    {/* Global Onboarding Hub - Dual Track UI */}
+    <div className="w-full grid md:grid-cols-2 gap-8">
+      {/* Primary - The Importer */}
+      <div className="flex flex-col items-center justify-center p-12 border-dashed border-2 border-slate-300 bg-white/50 hover:bg-white hover:border-emerald-400 transition-all duration-300 rounded-[40px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] group">
+        <div className="w-20 h-20 bg-emerald-50 rounded-3xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
+          <Plus className="w-10 h-10 text-emerald-500" strokeWidth={1.5} />
+        </div>
+        <h3 className="text-2xl font-bold text-slate-900 mb-2">Import Your Clinic Data</h3>
+        <p className="text-slate-500 text-sm text-center font-medium leading-relaxed max-w-xs">
+          Drag and drop your patient log here. Supports <span className="text-slate-900 font-bold">EXACT, SOE, Dentrix, Eaglesoft, Zenoti, and CSV.</span>
+        </p>
+      </div>
+
+      {/* Secondary - The Demo */}
+      <div className="flex flex-col items-center justify-center p-12 bg-white/50 border border-black/[0.05] rounded-[40px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] text-center space-y-6">
+        <div className="space-y-2">
+          <h3 className="text-xl font-bold text-slate-900">Explore with Demo Data</h3>
+          <p className="text-slate-500 text-sm font-medium">Don't have a file ready? See the AI in action instantly.</p>
+        </div>
+        <button
+          onClick={onInjectSample}
+          className="px-8 py-4 bg-[#2AF598] hover:bg-[#20d886] rounded-2xl text-[11px] font-black uppercase tracking-widest text-slate-900 shadow-lg shadow-emerald-500/20 active:scale-[0.98] transition-all animate-pulse"
+        >
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4" />
+            Activate Intelligence Suite
+          </div>
+        </button>
+      </div>
     </div>
 
-    <button
-      onClick={onInjectSample}
-      className="group relative px-10 py-5 bg-emerald-500 rounded-3xl overflow-hidden transition-all hover:scale-[1.02] active:scale-[0.98] shadow-[0_20px_40px_rgba(16,185,129,0.2)]"
-    >
-      <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity" />
-      <div className="absolute -inset-1 bg-emerald-400/30 blur-xl opacity-0 group-hover:opacity-100 animate-pulse transition-opacity" />
-      <span className="relative flex items-center gap-3 text-white font-black uppercase tracking-widest text-[11px]">
-         <Sparkles className="w-5 h-5" />
-         Activate Intelligence Suite
-      </span>
-    </button>
+    {/* 3-Step Visual Success Path */}
+    <div className="w-full pt-12 border-t border-black/[0.05]">
+      <div className="grid md:grid-cols-3 gap-8">
+        <div className="flex items-start gap-4">
+          <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center shrink-0">
+             <FileText className="w-5 h-5 text-slate-400" />
+          </div>
+          <p className="text-xs font-medium text-slate-500 leading-relaxed">
+            <span className="text-slate-900 font-bold block mb-1 uppercase tracking-wider text-[10px]">1. Export</span>
+            Download your patient log from your clinical software.
+          </p>
+        </div>
+        <div className="flex items-start gap-4">
+          <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center shrink-0">
+             <Plus className="w-5 h-5 text-slate-400" />
+          </div>
+          <p className="text-xs font-medium text-slate-500 leading-relaxed">
+            <span className="text-slate-900 font-bold block mb-1 uppercase tracking-wider text-[10px]">2. Drop</span>
+            Slide the file into Hanlan OC.
+          </p>
+        </div>
+        <div className="flex items-start gap-4">
+          <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center shrink-0">
+             <TrendingUp className="w-5 h-5 text-emerald-500" />
+          </div>
+          <p className="text-xs font-medium text-slate-500 leading-relaxed">
+            <span className="text-slate-900 font-bold block mb-1 uppercase tracking-wider text-[10px]">3. Analyze</span>
+            AI identifies your {currency}5,000+ Revenue Gap in 10 seconds.
+          </p>
+        </div>
+      </div>
+    </div>
+
+// Authority Badge
+    <div className="pt-8 flex flex-col items-center space-y-4">
+      <div className="flex items-center gap-2 px-4 py-2 bg-slate-100/50 rounded-full border border-black/[0.05]">
+        <Globe className="w-4 h-4 text-slate-400" />
+        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">
+          Trusted by top clinics in London and New York
+        </span>
+      </div>
+    </div>
   </motion.div>
+);
+
+const UploadPortal = ({ isAnalyzing, onUpload, currency }: { isAnalyzing: boolean; onUpload: () => void; currency: string }) => (
+  <div className="min-h-screen flex items-center justify-center bg-[#F9FAFB] p-6">
+    <motion.div 
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="bg-white shadow-2xl rounded-[40px] p-12 max-w-2xl w-full text-center space-y-10 border border-slate-100"
+    >
+      <div className="space-y-3">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 rounded-full border border-emerald-100 mb-2">
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+          <span className="text-[9px] font-black text-emerald-600 uppercase tracking-[0.2em]">Security Protocol Active</span>
+        </div>
+        <h1 className="text-4xl font-black text-slate-900 tracking-tight">Connect Your Clinic Data</h1>
+        <p className="text-slate-500 font-medium text-lg">Upload your patient list to reveal hidden revenue gaps.</p>
+      </div>
+
+      <div 
+        className="relative border-dashed border-2 border-slate-200 bg-slate-50/50 rounded-[32px] p-16 group hover:border-emerald-500 hover:bg-white hover:shadow-xl transition-all duration-500 cursor-pointer overflow-hidden"
+        onClick={!isAnalyzing ? onUpload : undefined}
+      >
+        <AnimatePresence mode="wait">
+          {isAnalyzing ? (
+            <motion.div 
+              key="loading"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="flex flex-col items-center space-y-6"
+            >
+              <div className="relative">
+                <Loader2 className="w-16 h-16 text-emerald-500 animate-spin" strokeWidth={1.5} />
+                <motion.div 
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1.2, opacity: 0.5 }}
+                  transition={{ repeat: Infinity, duration: 1.5, repeatType: "reverse" }}
+                  className="absolute inset-0 bg-emerald-200 rounded-full blur-2xl"
+                />
+              </div>
+              <div className="space-y-2">
+                <p className="text-emerald-600 text-xl font-black tracking-tight animate-pulse">Analyzing EXACT data...</p>
+                <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">Applying Neural Revenue Mapping</p>
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div 
+              key="upload"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="flex flex-col items-center space-y-6"
+            >
+              <div className="w-20 h-20 bg-white rounded-3xl shadow-luxury flex items-center justify-center border border-slate-100 group-hover:scale-110 transition-transform duration-500">
+                <Plus className="w-10 h-10 text-slate-300 group-hover:text-emerald-500 transition-colors" strokeWidth={1.5} />
+              </div>
+              <div className="space-y-2">
+                <p className="text-slate-600 text-lg font-bold">
+                  Drag & Drop your <span className="text-slate-900 border-b-2 border-emerald-200">EXACT, Dentrix, or Zenoti .csv</span> file here
+                </p>
+                <p className="text-slate-400 text-xs font-medium">No data is permanently stored. Fully GDPR compliant.</p>
+              </div>
+              <button 
+                className="mt-4 px-10 py-5 bg-slate-900 text-white rounded-2xl font-black uppercase tracking-[0.2em] text-[11px] hover:bg-black hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-black/10 flex items-center gap-3"
+              >
+                <FileText className="w-4 h-4" />
+                Browse Files
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      <div className="grid grid-cols-3 gap-6 pt-6 border-t border-slate-100">
+        <div className="flex flex-col items-center space-y-2">
+          <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center">
+            <Shield className="w-5 h-5 text-slate-400" />
+          </div>
+          <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">HIPAA Ready</span>
+        </div>
+        <div className="flex flex-col items-center space-y-2">
+          <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center">
+            <Globe className="w-5 h-5 text-slate-400" />
+          </div>
+          <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">UK GDPR</span>
+        </div>
+        <div className="flex flex-col items-center space-y-2">
+          <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center">
+            <Zap className="w-5 h-5 text-slate-400" />
+          </div>
+          <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Instant ROI</span>
+        </div>
+      </div>
+    </motion.div>
+  </div>
 );
 
 // Static staff list removed. Using dynamic list from teamMembers and leads instead.
@@ -233,7 +376,7 @@ interface DonutSegment {
   hex: string;
 }
 
-function DonutChart({ segments, total, totalValue }: { segments: DonutSegment[]; total: number; totalValue: number }) {
+function LeadDistributionPieChart({ segments, total, totalValue, currency }: { segments: DonutSegment[]; total: number; totalValue: number; currency: string }) {
   const [animated, setAnimated] = useState(false);
 
   useEffect(() => {
@@ -296,7 +439,7 @@ function DonutChart({ segments, total, totalValue }: { segments: DonutSegment[];
           <div className="w-8 h-px bg-slate-100 my-0.5" />
           <div className="flex flex-col items-center">
             <span className="text-[15px] font-bold text-emerald-600 leading-none" data-hj-suppress>
-              {useDashboardStore.getState().region === 'UK' ? '£' : '$'}
+              {currency}
               {(totalValue / 1000).toFixed(1)}k
             </span>
             <span className="text-[9px] text-slate-500 uppercase tracking-widest font-bold">Value</span>
@@ -373,7 +516,8 @@ function WaitlistPanel({
   waitlist,
   onInvite,
   onBroadcast,
-  isBroadcasting
+  isBroadcasting,
+  currency
 }: {
   isOpen: boolean;
   onClose: () => void;
@@ -381,6 +525,7 @@ function WaitlistPanel({
   onInvite: (id: string) => void;
   onBroadcast: () => void;
   isBroadcasting: boolean;
+  currency: string;
 }) {
   return (
     <AnimatePresence>
@@ -442,7 +587,7 @@ function WaitlistPanel({
                       </div>
                       <div className="flex flex-col items-end gap-1">
                         <span className="text-[10px] font-bold text-[#87A96B]/70 bg-[#87A96B]/10 px-2 py-0.5 rounded border border-[#87A96B]/20">
-                          £{(SERVICE_CONVERSION_VALUES[w.service] || 1000).toLocaleString()}
+                          {currency}{(SERVICE_CONVERSION_VALUES[w.service] || 1000).toLocaleString()}
                         </span>
                         <div className="flex items-center gap-2 mt-1">
                           <span className="text-[8px] font-bold text-[#87A96B]/60 uppercase">{timeAgo(w.created_at)}</span>
@@ -489,7 +634,8 @@ function KanbanColumn({
   onAddToWaitlist,
   onOpenPTMode,
   focusMode,
-  onOpenAudit
+  onOpenAudit,
+  currency = "£"
 }: any) {
   const { setNodeRef } = useDroppable({ id: columnId });
 
@@ -520,7 +666,7 @@ function KanbanColumn({
           <span className="opacity-40">{columnLeads.length}</span>
         </h3>
         <span className="text-xl metric-authority">
-          {useDashboardStore.getState().region === 'UK' ? '£' : '$'}
+          {currency}
           {columnLeads.reduce((sum, l) => sum + (l.expectedRevenue || SERVICE_CONVERSION_VALUES[l.service] || 1000), 0).toLocaleString()}
         </span>
         <div className="h-[2px] w-full bg-slate-100 mt-3 rounded-full" />
@@ -546,6 +692,7 @@ function KanbanColumn({
                   onOpenPTMode={onOpenPTMode}
                   onOpenAudit={onOpenAudit}
                   focusMode={focusMode}
+                  currency={currency}
                 />
               ))
             ) : (
@@ -677,9 +824,23 @@ export default function AdminDashboard() {
     setRegion,
     subscribeToLeads,
     updateLeadStatus,
-    clinicId
+    clinicId,
+    currency,
+    setCurrency
   } = useDashboardStore();
   
+  const patients = leads || []; // Lead Architect Safety: Guaranteed array initialization
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+
+  const handleSimulatedUpload = () => {
+    setIsAnalyzing(true);
+    setTimeout(() => {
+      injectSampleData();
+      setIsAnalyzing(false);
+      setToast({ message: "Clinic data synced successfully. Revenue mapping complete.", type: 'success' });
+    }, 1500);
+  };
+
   const { totalRevenue, unsecuredPipeline, pipelineValue: kpiPipelineValue } = getStats();
   const [performedTreatments, setPerformedTreatments] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -744,6 +905,7 @@ export default function AdminDashboard() {
   const [activeAuditLead, setActiveAuditLead] = useState<ConsultationRequest | null>(null);
   const [isGoogleModalOpen, setIsGoogleModalOpen] = useState(false);
   const isGoogleConnected = useDashboardStore(state => state.isGoogleConnected);
+
 
   // Auto-trigger Google Onboarding Modal
   useEffect(() => {
@@ -825,6 +987,22 @@ export default function AdminDashboard() {
   const [targetROI, setTargetROI] = useState(() => Number(localStorage.getItem('expert_targetROI')) || 35);
   const [insightVerbosity, setInsightVerbosity] = useState(() => localStorage.getItem('expert_insightVerbosity') || 'Detailed');
   const [leadDistribution, setLeadDistribution] = useState(() => localStorage.getItem('expert_leadDistribution') || 'Balanced');
+
+  // Tablet PT Mode Handler (AntiGravity Wire-up)
+  const handleOpenPTMode = useCallback((lead: ConsultationRequest) => {
+    const service = lead.service || "Dental Implants";
+    // Lead Architect: Map service to PT_ASSETS with fallback logic
+    const asset = PT_ASSETS[service as keyof typeof PT_ASSETS] || PT_ASSETS["Dental Implants"];
+    
+    setPtModeData({
+      patientName: lead.name,
+      treatmentName: service,
+      totalPrice: lead.potential_value || 5000,
+      beforeImage: asset.image,
+      afterImage: asset.image
+    });
+    setIsPTModeOpen(true);
+  }, []);
 
   // persistent handlers
   const handleSyncChange = (val: string) => {
@@ -1228,6 +1406,15 @@ export default function AdminDashboard() {
     });
   }, [omniMessages, leads]);
 
+  // Lead Architect: Timeline Generator for Inquiry Drawer
+  const getTimelineEvents = useCallback((lead: ConsultationRequest): TimelineEvent[] => {
+    return [
+      { id: '1', date: 'Just Now', title: 'Inquiry Review', description: 'Lead analyst reviewing clinical history.', type: 'engagement', isPositive: true },
+      { id: '2', date: '2 hours ago', title: 'Marketing Engagement', description: `Interacted with ${lead.service || "service"} campaign.`, type: 'touchpoint', isPositive: true },
+      { id: '3', date: lead.created_at ? timeAgo(lead.created_at) : 'Recently', title: 'Lead Captured', description: `Inquiry received via Website.`, type: 'communication', isPositive: true },
+    ];
+  }, []);
+
   const handleSendMessage = async () => {
     if (!replyText.trim() || !selectedThreadId || !profile?.clinic_id) return;
     const thread = omniThreads.find(t => t.id === selectedThreadId);
@@ -1502,7 +1689,8 @@ export default function AdminDashboard() {
         status: "Booked",
         expectedRevenue: 3800,
         created_at: new Date(Date.now() - 18000000).toISOString(),
-        appointment_date: new Date(Date.now() + 2 * 86400000).toISOString()
+        appointment_date: new Date(Date.now() + 2 * 86400000).toISOString(),
+        notes: "Patient requested morning appointment."
       },
       {
         id: "mock-" + Math.random().toString(36).substr(2, 9),
@@ -1512,7 +1700,8 @@ export default function AdminDashboard() {
         service: "Dental Implants",
         status: "Visited",
         expectedRevenue: 9500,
-        created_at: new Date(Date.now() - 21600000).toISOString()
+        created_at: new Date(Date.now() - 21600000).toISOString(),
+        notes: "Proposed 8 units upper. Patient considering finance."
       },
       {
         id: "mock-" + Math.random().toString(36).substr(2, 9),
@@ -1522,7 +1711,8 @@ export default function AdminDashboard() {
         service: "Veneers",
         status: "Sale Closed",
         expectedRevenue: 11000,
-        created_at: new Date(Date.now() - 25200000).toISOString()
+        created_at: new Date(Date.now() - 25200000).toISOString(),
+        notes: "Single implant. Deposit paid."
       }
     ];
 
@@ -1532,10 +1722,10 @@ export default function AdminDashboard() {
     });
     
     setToast({ 
-      message: "Intelligence Suite Activated: £45,000 in Clinical Momentum injected.", 
+      message: `Intelligence Suite Activated: ${currency}45,000 in Clinical Momentum injected.`, 
       type: 'success' 
     });
-  }, [setLeads]);
+  }, [setLeads, currency]);
 
   const fetchLock = React.useRef(false);
   const fetchLeads = async (currentLimit = limit, append = false) => {
@@ -1557,9 +1747,6 @@ export default function AdminDashboard() {
         if (append) setHasMore(false);
       } else {
         let finalLeads = data || [];
-        if (finalLeads.length === 0 && !append) {
-          finalLeads = DEMO_LEADS as ConsultationRequest[];
-        }
         
         setLeads(prev => {
           const next = append ? [...prev, ...(data || [])] : finalLeads;
@@ -2258,6 +2445,10 @@ export default function AdminDashboard() {
     [leads]
   );
 
+  if (!patients || patients.length === 0) {
+    return <UploadPortal isAnalyzing={isAnalyzing} onUpload={handleSimulatedUpload} currency={currency} />;
+  }
+
   return (
     <div className="min-h-screen w-full flex flex-col bg-slate-50 text-slate-900 font-sans">
       {session === null ? (
@@ -2280,7 +2471,7 @@ export default function AdminDashboard() {
                     </span>
                     <div className="flex items-baseline gap-1">
                       <span className="text-xl font-black tabular-nums text-slate-900 tracking-tighter">
-                        <SlotNumber value={unsecuredPipeline} prefix="£" />
+                        <SlotNumber value={unsecuredPipeline} prefix={currency} />
                       </span>
                     </div>
                   </div>
@@ -2294,11 +2485,32 @@ export default function AdminDashboard() {
                     </span>
                     <div className="flex items-baseline gap-1">
                       <span className="text-xl font-black tabular-nums text-slate-900 tracking-tighter">
-                        <SlotNumber value={totalRevenue} prefix="£" />
+                        <SlotNumber value={totalRevenue} prefix={currency} />
                       </span>
                     </div>
                   </div>
                 </div>
+              </div>
+
+              {/* Currency Toggle (Sleek Parity Switch) */}
+              <div className="flex items-center bg-slate-100/80 p-1 rounded-2xl border border-slate-200/60 shadow-[inner_0_2px_4px_rgba(0,0,0,0.03)] ml-auto mr-4 group/toggle">
+                <button
+                  onClick={() => setCurrency?.('£')}
+                  className={`px-4 py-2 rounded-xl text-[10px] font-black transition-all duration-300 ${currency === '£' 
+                    ? "bg-white text-slate-900 shadow-luxury ring-1 ring-black/5 scale-[1.05]" 
+                    : "text-slate-400 hover:text-slate-600"}`}
+                >
+                  £ GBP
+                </button>
+                <div className="w-[1px] h-3 bg-slate-200 mx-1 opacity-50" />
+                <button
+                  onClick={() => setCurrency?.('$')}
+                  className={`px-4 py-2 rounded-xl text-[10px] font-black transition-all duration-300 ${currency === '$' 
+                    ? "bg-white text-slate-900 shadow-luxury ring-1 ring-black/5 scale-[1.05]" 
+                    : "text-slate-400 hover:text-slate-600"}`}
+                >
+                  $ USD
+                </button>
               </div>
 
               {/* ── TIER 1: GLOBAL NAVIGATION (Apple-grade) ── */}
@@ -2440,7 +2652,7 @@ export default function AdminDashboard() {
                                   >
                                     <span>{cat.name}</span>
                                     <span className="text-[9px] font-medium text-slate-300 group-hover:text-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity">
-                                      {useDashboardStore.getState().region === 'UK' ? '£' : '$'}
+                                      {currency} 
                                       {cat.value.toLocaleString()}
                                     </span>
                                   </button>
@@ -2472,7 +2684,12 @@ export default function AdminDashboard() {
                   className="w-full flex-1 flex flex-col min-h-0"
                 >
                   {!isInitialLoad && (leads ?? []).length === 0 ? (
-                    <OnboardingEmptyState onInjectSample={() => handleActivateAI?.()} />
+                    <div className="flex-1 flex flex-col items-center justify-center p-8">
+                       <OnboardingEmptyState 
+                          onInjectSample={() => handleActivateAI?.()} 
+                          currency={currency}
+                       />
+                    </div>
                   ) : (
                     <motion.div
                       initial={{ opacity: 0 }}
@@ -2481,7 +2698,7 @@ export default function AdminDashboard() {
                     >
                         {/* ── North Star Summary Metrics (Cognitive Anchor) ── */}
                         <div className="shrink-0 mb-6">
-                          <NorthStarSummaryCards />
+                          <NorthStarSummaryCards currency={currency} />
                         </div>
 
                         <div className="flex justify-between items-end border-t border-slate-200/60 pt-6 pb-4 shrink-0">
@@ -2509,10 +2726,11 @@ export default function AdminDashboard() {
                                 updateAssignedTo={updateAssignedTo}
                                 timeAgo={timeAgo}
                                 clinic={profile}
-                                onOpenPTMode={() => { }}
+                                onOpenPTMode={handleOpenPTMode}
                                 onOpenAudit={(lead) => setActiveAuditLead(lead)}
                                 selectedDate={selectedDate}
                                 focusMode={activeCategory}
+                                currency={currency}
                               />
                             ))}
                           </div>
@@ -2735,6 +2953,86 @@ export default function AdminDashboard() {
               isOpen={isGoogleModalOpen}
               onClose={() => setIsGoogleModalOpen(false)}
             />
+
+            {/* Tablet PT Mode Overlay (AntiGravity) */}
+            <PTConsultationMode 
+              isOpen={isPTModeOpen}
+              onClose={() => setIsPTModeOpen(false)}
+              patientName={ptModeData?.patientName || ""}
+              treatmentName={ptModeData?.treatmentName || ""}
+              totalPrice={ptModeData?.totalPrice || 0}
+              beforeImage={ptModeData?.beforeImage || ""}
+              afterImage={ptModeData?.afterImage || ""}
+            />
+
+            {/* Inquiry Detail Drawer (AntiGravity Premium) */}
+            <AnimatePresence>
+              {selectedLead && (
+                <>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    onClick={() => setSelectedLead(null)}
+                    className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[7000]"
+                  />
+                  <motion.div
+                    initial={{ x: "100%" }}
+                    animate={{ x: 0 }}
+                    exit={{ x: "100%" }}
+                    transition={{ type: "spring", damping: 30, stiffness: 300 }}
+                    className="fixed top-0 right-0 h-full w-full max-w-[500px] bg-slate-950 border-l border-white/5 shadow-2xl z-[7001] flex flex-col"
+                  >
+                    <div className="p-8 border-b border-white/5 flex justify-between items-start">
+                      <div>
+                        <h2 className="text-2xl font-black text-white uppercase tracking-tight">{selectedLead.name}</h2>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-emerald-400 font-bold uppercase tracking-widest text-[10px]">{selectedLead.service}</span>
+                          <div className="w-1 h-1 rounded-full bg-white/20" />
+                          <span className="text-white/60 font-bold uppercase tracking-widest text-[10px]">{currency}{selectedLead.potential_value?.toLocaleString()}</span>
+                        </div>
+                      </div>
+                      <button 
+                        onClick={() => setSelectedLead(null)}
+                        className="p-2 hover:bg-white/5 rounded-xl text-slate-400 transition-all"
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
+                    </div>
+                    
+                    <div className="flex-1 overflow-y-auto p-8 space-y-10 custom-scrollbar">
+                      {/* Patient Timeline Component */}
+                      <PatientTimeline events={getTimelineEvents(selectedLead)} />
+                      
+                      {/* Clinical Notes Section */}
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-white font-bold uppercase tracking-widest text-xs flex items-center gap-2">
+                                <FileText className="w-4 h-4 text-emerald-500" /> Intelligence Notes
+                            </h3>
+                            <div className="px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[8px] font-black text-emerald-400 uppercase tracking-widest">
+                                Live Sync Active
+                            </div>
+                        </div>
+                        <textarea
+                          value={dictationText}
+                          onChange={(e) => setDictationText(e.target.value)}
+                          className="w-full h-48 bg-white/5 border border-white/10 rounded-[32px] p-6 text-sm text-slate-300 focus:border-emerald-500/50 outline-none transition-all resize-none shadow-inner"
+                          placeholder="Document clinical context..."
+                        />
+                        <button 
+                          onClick={saveNotes}
+                          className="w-full py-5 bg-emerald-500 hover:bg-emerald-600 rounded-2xl text-[10px] font-black uppercase tracking-widest text-white transition-all shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2"
+                        >
+                          <Save className="w-4 h-4" />
+                          Archive Clinical Note
+                        </button>
+                      </div>
+                    </div>
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>
           </main>
 
           <ExpertModeDrawer 
