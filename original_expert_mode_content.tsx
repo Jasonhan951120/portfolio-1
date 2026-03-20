@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { 
@@ -9,6 +9,7 @@ import {
 import { StaffROILeaderboard } from './tabs/StaffROILeaderboard';
 import { ReputationROIChart } from './ReputationROIChart';
 import { RevenueForecastChart } from './RevenueForecastChart';
+import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 
 function SalesFunnel() {
   const data = [
@@ -19,16 +20,16 @@ function SalesFunnel() {
 
   return (
     <div className="h-48 w-full mt-6 flex items-center justify-around gap-2 px-4">
-      {data?.map?.((item, idx) => (
-        <div key={item?.name} className="flex flex-col items-center gap-4 relative w-full">
+      {data.map((item, idx) => (
+        <div key={item.name} className="flex flex-col items-center gap-4 relative w-full">
           <div 
             className="w-full bg-white/10 rounded-3xl border border-white/10 flex flex-col items-center justify-center p-4 group hover:bg-white/[0.15] transition-all"
             style={{ height: `${100 - idx * 25}%` }}
           >
-            <span className="text-2xl font-black text-white">{item?.value}</span>
-            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">{item?.name}</span>
+            <span className="text-2xl font-black text-white">{item.value}</span>
+            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">{item.name}</span>
           </div>
-          {idx < data?.length - 1 && (
+          {idx < data.length - 1 && (
             <div className="absolute -right-4 top-1/2 -translate-y-1/2 z-10">
               <Zap className="w-4 h-4 text-[#00FFA3] animate-pulse" />
             </div>
@@ -85,13 +86,13 @@ function SalesROIDashboard() {
 }
 
 export function ExpertModeContent({ 
-  onOpenPMSLogs = () => {}, 
-  onOpenClinicMeta = () => {} 
+  onOpenPMSLogs, 
+  onOpenClinicMeta 
 }: { 
   onOpenPMSLogs?: () => void; 
   onOpenClinicMeta?: () => void; 
 }) {
-  const [selectedTone, setSelectedTone] = useState('Professional');
+  const [selectedTone, setSelectedTone] = React.useState('Professional');
 
   return (
     <div className="space-y-12">
@@ -103,17 +104,17 @@ export function ExpertModeContent({
         </p>
       </div>
 
-      {/* AI Persona Presets */}
+      {/* AI Persona Presets (Task 2) */}
       <section className="space-y-4">
         <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-[#87A96B]" /> AI Analytics Personality
         </h3>
         <div className="bg-white rounded-[32px] p-6 border border-black/5 shadow-sm space-y-4">
           <div className="flex gap-2 p-1 bg-black/5 rounded-2xl">
-            {['Professional', 'Friendly', 'Direct']?.map?.((tone) => (
+            {['Professional', 'Friendly', 'Direct'].map((tone) => (
               <button
                 key={tone}
-                onClick={() => setSelectedTone?.(tone)}
+                onClick={() => setSelectedTone(tone)}
                 className="flex-1 py-3 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all active:scale-95"
                 style={{
                   backgroundColor: tone === selectedTone ? 'white' : 'transparent',
@@ -135,7 +136,7 @@ export function ExpertModeContent({
         </div>
       </section>
 
-      {/* Sales ROI Dashboard */}
+      {/* Sales ROI Dashboard (Task 2) */}
       <SalesROIDashboard />
 
       {/* Quick Stats Grid */}
@@ -189,7 +190,7 @@ export function ExpertModeContent({
         
         <div className="space-y-2">
           <button 
-            onClick={() => onOpenPMSLogs?.()}
+            onClick={onOpenPMSLogs}
             className="w-full p-4 bg-white/5 hover:bg-white/10 rounded-2xl flex items-center justify-between group transition-all"
           >
             <div className="flex items-center gap-3">
@@ -211,7 +212,7 @@ export function ExpertModeContent({
           </Link>
 
           <button 
-            onClick={() => onOpenClinicMeta?.()}
+            onClick={onOpenClinicMeta}
             className="w-full p-4 bg-white/5 hover:bg-white/10 rounded-2xl flex items-center justify-between group transition-all"
           >
             <div className="flex items-center gap-3">
@@ -222,10 +223,6 @@ export function ExpertModeContent({
           </button>
         </div>
       </section>
-
-      <p className="mt-12 text-center text-[10px] text-slate-400 uppercase tracking-[3px]">
-        End of Expert Console
-      </p>
     </div>
   );
 }

@@ -1,0 +1,12 @@
+2355a35 feat: safely restore old ExpertModeDrawer features with optional chaining
+b2831be feat: safely add Expert Mode toggle switch with premium dark UI
+ae60463 hotfix: completely rebuild ExpertModeDrawer with minimal safe fallback
+077312d hotfix: replace unsafe optional chaining with robust typeof checks in dashboard drawers to resolve e is not a function
+993ebfa hotfix: apply blanket optional chaining in ExpertModeDrawer to resolve e is not a function
+d235100 hotfix: remove broken ExpertModeDrawer and restore dashboard uptime
+5e354fa DEALING WITH DEPLOYMENT WSOD: Adding red test link to header
+a7f3f87 fix: wire onOpenPMSLogs and onOpenClinicMeta to governance buttons in ExpertModeContent
+eddad1f fix: resolve WSOD and E is not a function in Settings with optional chaining
+69d6bfb fix: resolve WSOD on Settings page and implement Error Boundary for resilience
+e754c46 feat: implement High-End Backoffice features (PMS Sync Logs & Clinic Meta Data)
+41adcd1 Refactor: Implement Zero-Effort MVP with 3-tab structure and Expert Mode isolation
