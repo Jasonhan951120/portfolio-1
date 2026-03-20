@@ -9,6 +9,10 @@ import {
 import { StaffROILeaderboard } from './tabs/StaffROILeaderboard';
 import { ReputationROIChart } from './ReputationROIChart';
 import { RevenueForecastChart } from './RevenueForecastChart';
+import { 
+  RefreshCw, Sliders, Eye, Share2, 
+  ChevronRight, Circle, Check
+} from 'lucide-react';
 
 function SalesFunnel() {
   const data = [
@@ -84,6 +88,127 @@ function SalesROIDashboard() {
   );
 }
 
+function RevenueOptimizationGrid() {
+  const [syncInterval, setSyncInterval] = useState('Hourly');
+  const [targetROI, setTargetROI] = useState(35);
+  const [verbosity, setVerbosity] = useState('Detailed');
+  const [strategy, setStrategy] = useState('Balanced');
+
+  return (
+    <section className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest flex items-center gap-2">
+          <Zap className="w-4 h-4 text-[#00FFA3]" /> Revenue Optimization Matrix
+        </h3>
+        <span className="text-[9px] font-black uppercase tracking-[3px] text-gray-400">Experimental Beta 🧪</span>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Sync Interval */}
+        <div className="p-6 bg-[#1C1F26] border border-white/5 rounded-[32px] space-y-4 group hover:border-[#00FFA3]/30 transition-all">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-blue-500/10 rounded-xl">
+              <RefreshCw className="w-4 h-4 text-blue-400" />
+            </div>
+            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Data Sync Interval</p>
+          </div>
+          <div className="flex gap-2 p-1 bg-black/40 rounded-2xl">
+            {['Real-time', 'Hourly', 'Daily'].map((val) => (
+              <button
+                key={val}
+                onClick={() => setSyncInterval?.(val)}
+                className={`flex-1 py-3 text-[9px] font-black uppercase tracking-widest rounded-xl transition-all ${
+                  syncInterval === val ? 'bg-white text-black shadow-lg shadow-white/5' : 'text-gray-500 hover:text-white'
+                }`}
+              >
+                {val}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Target ROI Slider */}
+        <div className="p-6 bg-[#1C1F26] border border-white/5 rounded-[32px] space-y-4 group hover:border-[#00FFA3]/30 transition-all">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-emerald-500/10 rounded-xl">
+                <Sliders className="w-4 h-4 text-[#00FFA3]" />
+              </div>
+              <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Target ROI Goal</p>
+            </div>
+            <span className="text-xl font-black text-white tabular-nums">{targetROI}%</span>
+          </div>
+          <div className="relative pt-2">
+            <input 
+              type="range"
+              min="0"
+              max="100"
+              value={targetROI}
+              onChange={(e) => setTargetROI?.(parseInt(e.target.value))}
+              className="w-full h-1.5 bg-black/60 rounded-lg appearance-none cursor-pointer accent-[#00FFA3]"
+            />
+            <div className="flex justify-between mt-2">
+              <span className="text-[8px] font-bold text-gray-600">Conservative</span>
+              <span className="text-[8px] font-bold text-gray-600">Aggressive</span>
+            </div>
+          </div>
+        </div>
+
+        {/* AI Insight Verbosity */}
+        <div className="p-6 bg-[#1C1F26] border border-white/5 rounded-[32px] space-y-4 group hover:border-[#00FFA3]/30 transition-all">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-purple-500/10 rounded-xl">
+              <Eye className="w-4 h-4 text-purple-400" />
+            </div>
+            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Insight Verbosity</p>
+          </div>
+          <div className="grid grid-cols-3 gap-2">
+            {['Summary', 'Detailed', 'Data'].map((val) => (
+              <button
+                key={val}
+                onClick={() => setVerbosity?.(val)}
+                className={`py-3 text-[9px] font-black uppercase tracking-widest rounded-xl border border-white/5 transition-all ${
+                  verbosity === val ? 'bg-[#00FFA3]/20 border-[#00FFA3]/40 text-[#00FFA3]' : 'text-gray-500 hover:bg-white/5'
+                }`}
+              >
+                {val}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Lead Distribution Strategy */}
+        <div className="p-6 bg-[#1C1F26] border border-white/5 rounded-[32px] space-y-4 group hover:border-[#00FFA3]/30 transition-all">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-orange-500/10 rounded-xl">
+              <Share2 className="w-4 h-4 text-orange-400" />
+            </div>
+            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Lead Distribution</p>
+          </div>
+          <div className="space-y-2">
+            {['Balanced', 'Top Performers Only'].map((val) => (
+              <button
+                key={val}
+                onClick={() => setStrategy?.(val)}
+                className={`w-full p-4 rounded-2xl border transition-all flex items-center justify-between group/item ${
+                  strategy === val ? 'bg-[#00FFA3]/5 border-[#00FFA3]/30' : 'bg-black/20 border-white/5 hover:border-white/10'
+                }`}
+              >
+                <span className={`text-[10px] font-black uppercase tracking-widest ${strategy === val ? 'text-white' : 'text-gray-500'}`}>{val}</span>
+                {strategy === val ? (
+                  <Check className="w-4 h-4 text-[#00FFA3]" />
+                ) : (
+                  <Circle className="w-3 h-3 text-gray-700" />
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function ExpertModeContent({ 
   onOpenPMSLogs = () => {}, 
   onOpenClinicMeta = () => {} 
@@ -149,6 +274,9 @@ export function ExpertModeContent({
           <p className="text-2xl font-black text-[#87A96B]">+12.5%</p>
         </div>
       </div>
+
+      {/* 4 Killer Revenue Optimization Features (Bento Grid) */}
+      <RevenueOptimizationGrid />
 
       {/* Main Analytics Section */}
       {/* 
