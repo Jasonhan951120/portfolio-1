@@ -136,9 +136,10 @@ export function ExpertModeContent({
       </section>
 
       {/* Sales ROI Dashboard */}
-      <SalesROIDashboard />
+      {/* <SalesROIDashboard /> */}
 
       {/* Quick Stats Grid */}
+      {/* 
       <div className="grid grid-cols-2 gap-4">
         <div className="p-6 bg-black/5 rounded-[32px] border border-black/5">
           <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Clinic Efficiency</p>
@@ -149,8 +150,10 @@ export function ExpertModeContent({
           <p className="text-2xl font-black text-[#87A96B]">+12.5%</p>
         </div>
       </div>
+      */}
 
       {/* Main Analytics Section */}
+      {/* 
       <div className="space-y-8">
         <section className="space-y-4">
           <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest flex items-center gap-2">
@@ -179,6 +182,7 @@ export function ExpertModeContent({
           </div>
         </section>
       </div>
+      */}
 
       {/* Governance & Settings */}
       <section className="p-8 bg-gray-900 rounded-[48px] text-white space-y-6">
