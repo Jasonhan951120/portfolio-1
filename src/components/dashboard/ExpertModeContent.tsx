@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { 
   TrendingUp, BarChart2, Users, Settings, 
   Target, Zap, Shield, PieChart, Database, Sparkles,
-  ArrowDownCircle, Clock, CheckCircle, TrendingDown
+  CircleArrowDown, Clock, CircleCheck, TrendingDown
 } from 'lucide-react';
 import { StaffROILeaderboard } from './tabs/StaffROILeaderboard';
 import { ReputationROIChart } from './ReputationROIChart';
