@@ -151,15 +151,15 @@ export const PatientCard = React.memo(function PatientCard({
         initial={{ opacity: 1, scale: 1 }}
         whileHover={{ scale: 1.02 }}
         animate={isExiting ? { opacity: 0, scale: 0.8, x: 50, filter: "blur(4px)" } : {
-          scale: isDragging ? 1.02 : 1,
+          scale: isDragging ? 1.05 : 1,
           rotate: isDragging ? 2 : 0,
           boxShadow: isDragging
-            ? "0 30px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1)"
+            ? "0 30px 60px rgba(0,0,0,0.6), 0 0 20px rgba(42,245,152,0.15), inset 0 1px 0 rgba(255,255,255,0.15)"
             : isOverdue
-              ? "0 0 15px rgba(230,57,70,0.6)"
-              : "0 10px 30px -10px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(0,0,0,0.05)",
+              ? "0 0 20px rgba(239,68,68,0.4), inset 0 1px 1px rgba(255,255,255,0.1)"
+              : "0 10px 30px -10px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.15)",
           opacity: isDragging ? 0.95 : 1,
-          backgroundColor: isDragging ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,1)",
+          backgroundColor: isDragging ? "rgba(22, 27, 34, 0.98)" : "rgba(255,255,255,0.05)",
           y: isDragging ? -10 : 0
         }}
         transition={{ type: "spring", stiffness: 80, damping: 20 }}
@@ -181,7 +181,7 @@ export const PatientCard = React.memo(function PatientCard({
             </div>
 
             <div className="flex flex-col items-end gap-1">
-              <span className="text-[14px] font-black text-[#10B981] tracking-tight tabular-nums">
+              <span className="text-[14px] font-black text-[#2AF598] tracking-tight tabular-nums">
                 £{(lead.potential_value ? lead.potential_value : (1000)).toLocaleString()}
               </span>
               {isOverdue && (

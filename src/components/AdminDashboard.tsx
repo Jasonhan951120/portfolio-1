@@ -505,30 +505,32 @@ function KanbanColumn({
   }, [columnLeads, focusMode]);
 
   return (
-    <div className="flex flex-col h-full transition-all duration-500 min-w-0">
+    <div className="flex flex-col h-full min-w-0">
       <div className="flex flex-col mb-6 px-1">
-        <h3 className="metric-label-muted mb-1 flex items-center justify-between group relative">
-          <span className="flex items-center gap-2">
+        <h3 className="mb-1 flex items-center justify-between group relative">
+          <span className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-[#A0A0A0]">
             {COLUMN_METRICS[columnId]?.title || columnId}
-            <HelpCircle className="w-3.5 h-3.5 text-slate-300 hover:text-slate-400 cursor-help transition-colors" />
+            <HelpCircle className="w-3.5 h-3.5 text-white/20 hover:text-white/40 cursor-help transition-colors" />
             
             {/* Premium Glassmorphism Tooltip */}
-            <div className="absolute left-0 top-full z-50 w-64 p-3 mt-2 text-sm font-medium text-white bg-slate-800/90 backdrop-blur-md rounded-xl shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+            <div className="absolute left-0 top-full z-50 w-64 p-3 mt-2 text-sm font-medium text-white bg-slate-900/95 backdrop-blur-xl rounded-xl shadow-2xl border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
               {COLUMN_METRICS[columnId]?.tooltip}
             </div>
           </span>
-          <span className="opacity-40">{columnLeads.length}</span>
+          <span className="text-[10px] font-bold bg-white/5 border border-white/10 px-2 py-0.5 rounded-full text-[#A0A0A0]">
+            {columnLeads.length}
+          </span>
         </h3>
-        <span className="text-xl metric-authority">
+        <span className="text-2xl font-black tracking-tight text-[#2AF598] tabular-nums">
           {useDashboardStore.getState().region === 'UK' ? '£' : '$'}
-          {columnLeads.reduce((sum, l) => sum + (SERVICE_CONVERSION_VALUES[l.service] || 1000), 0).toLocaleString()}
+          {columnLeads.reduce((sum, l) => sum + (l.potential_value || SERVICE_CONVERSION_VALUES[l.service] || 1000), 0).toLocaleString()}
         </span>
-        <div className="h-[2px] w-full bg-slate-100 mt-3 rounded-full" />
+        <div className="h-[1px] w-full bg-white/10 mt-3 rounded-full shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]" />
       </div>
 
       <div className="flex-1 min-h-0 overflow-hidden" ref={setNodeRef}>
         <SortableContext items={sortedLeads.map((l: any) => l.id)}>
-          <div className="flex flex-col gap-4 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200 pb-4 pr-2">
+          <div className="flex flex-col gap-4 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 pb-4 pr-2">
             {sortedLeads.length > 0 ? (
               sortedLeads.map((lead: any, index: number) => (
                 <PatientCard
@@ -549,10 +551,9 @@ function KanbanColumn({
                 />
               ))
             ) : (
-              <div className="h-64 rounded-[44px] flex flex-col items-center justify-center border-[0.5px] border-slate-200/60 bg-white shadow-luxury relative overflow-hidden group">
-                {/* Ascending dynamic trend line (opacity-10 watermark) */}
-                <div className="absolute inset-0 opacity-10 pointer-events-none flex items-end justify-center">
-                  <svg className="w-full h-40 text-slate-400" viewBox="0 0 400 200" fill="none">
+              <div className="h-64 rounded-[32px] flex flex-col items-center justify-center border border-white/5 bg-white/5 shadow-luxury relative overflow-hidden group">
+                <div className="absolute inset-0 opacity-5 pointer-events-none flex items-end justify-center">
+                  <svg className="w-full h-40 text-white" viewBox="0 0 400 200" fill="none">
                     <motion.path 
                       initial={{ pathLength: 0, opacity: 0 }}
                       animate={{ pathLength: 1, opacity: 1 }}
@@ -564,13 +565,13 @@ function KanbanColumn({
                   </svg>
                 </div>
                 
-                <div className="w-14 h-14 mb-4 rounded-2xl bg-slate-50 border-[0.5px] border-slate-200/60 flex items-center justify-center group-hover:scale-110 transition-transform relative z-10 shadow-sm">
-                  <Sparkles className="w-7 h-7 text-emerald-500 animate-pulse" />
+                <div className="w-14 h-14 mb-4 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:scale-110 transition-transform relative z-10 shadow-sm shadow-black/20">
+                  <Sparkles className="w-7 h-7 text-[#2AF598] animate-pulse" />
                 </div>
                 
                 <div className="text-center relative z-10 space-y-1">
-                   <p className="text-[10px] font-black text-slate-900 uppercase tracking-widest italic">Position Zero</p>
-                   <p className="text-[9px] text-slate-400 font-bold uppercase tracking-tighter">Awaiting Clinical Momentum</p>
+                   <p className="text-[10px] font-black text-white/80 uppercase tracking-widest italic">Clinical Zero</p>
+                   <p className="text-[9px] text-[#A0A0A0] font-bold uppercase tracking-tighter">Awaiting Momentum</p>
                 </div>
               </div>
             )}
@@ -610,19 +611,19 @@ function KanbanSkeleton() {
   return (
     <div className="flex min-w-max animate-pulse gap-6 overflow-hidden">
       {[1, 2, 3, 4].map(i => (
-        <div key={i} className="flex-shrink-0 w-[280px] bg-white border border-slate-200 rounded-[32px] p-5 flex flex-col h-[65vh]">
+        <div key={i} className="flex-shrink-0 w-[280px] bg-white/5 border border-white/10 rounded-[32px] p-5 flex flex-col h-[65vh]">
           <div className="flex items-center justify-between mb-6">
-            <div className="h-4 w-24 bg-slate-100 rounded-full"></div>
-            <div className="h-5 w-8 bg-slate-100 rounded-full"></div>
+            <div className="h-4 w-24 bg-white/10 rounded-full"></div>
+            <div className="h-5 w-8 bg-white/10 rounded-full"></div>
           </div>
           <div className="flex-1 space-y-4 overflow-hidden">
             {[1, 2, 3].map(j => (
-              <div key={j} className="bg-slate-50 p-5 rounded-[24px] h-36 border border-slate-100">
-                <div className="h-4 w-3/4 bg-slate-200 rounded-full mb-3"></div>
-                <div className="h-3 w-1/2 bg-slate-200 rounded-full mb-5"></div>
+              <div key={j} className="bg-white/5 p-5 rounded-[24px] h-36 border border-white/5">
+                <div className="h-4 w-3/4 bg-white/10 rounded-full mb-3"></div>
+                <div className="h-3 w-1/2 bg-white/10 rounded-full mb-5"></div>
                 <div className="flex gap-2">
-                  <div className="h-8 w-20 bg-slate-100 rounded-full"></div>
-                  <div className="h-8 w-12 bg-slate-100 rounded-full"></div>
+                  <div className="h-8 w-20 bg-white/5 rounded-full"></div>
+                  <div className="h-8 w-12 bg-white/5 rounded-full"></div>
                 </div>
               </div>
             ))}
@@ -794,6 +795,18 @@ export default function AdminDashboard() {
     resourceId: "",
     duration: 30
   });
+
+  // --- Hanlan OC Master PRD: State Transition Guard ---
+  const [bookingGuard, setBookingGuard] = useState<{ 
+    leadId: string; 
+    leadName: string; 
+    service: string;
+    originalStatus: string;
+  } | null>(null);
+  const [guardDate, setGuardDate] = useState(new Date().toISOString().split('T')[0]);
+  const [guardTime, setGuardTime] = useState('10:00');
+  const [guardTreatmentCode, setGuardTreatmentCode] = useState('');
+
   const [doctors, setDoctors] = useState<Profile[]>([]);
   const [resources, setResources] = useState<any[]>([]); // Chairs/Rooms
   const [invitations, setInvitations] = useState<Invitation[]>([]);
@@ -1778,40 +1791,19 @@ export default function AdminDashboard() {
     const lead = leads.find(l => l.id === leadId);
     if (lead && lead.status !== newStatus) {
 
-      // --- ZERO-TRAINING KANBAN GUARD ---
-      // Guard: Prevent drop to 'Booked' without Date
-      if (newStatus === "Booked" && !lead.appointment_date) {
-        setToast({
-          message: "❌ Training Guard: Appointment date is required for 'Booked' status. Reverting card.",
-          type: "error"
+      // --- Hanlan OC Master PRD: State Transition Guard (Drag & Drop Validation) ---
+      if (newStatus === "Booked") {
+        setBookingGuard({
+          leadId: lead.id,
+          leadName: lead.name,
+          service: lead.service,
+          originalStatus: lead.status
         });
-        return; // dnd-kit auto-reverts
-      }
-
-      // Prevent drop to 'Treated' without a recorded amount or confirmed visited status
-      if (newStatus === "Treated" && lead.status !== "Visited") {
-        // Warning but allow if confirmed? No, let's keep it strict for the engine.
-        // For now, let's just implement the requested Booked guard.
-      }
-
-      // Trigger Review Prompt if moving to Treatment Started (handled AFTER date selection if needed)
-
-      // Trigger Appointment Date Modal if moving to Booked and modal logic exists
-      if (newStatus === "Booked" && !lead.appointment_date) {
-        setSchedulingLead({ id: leadId, name: lead.name, targetStatus: newStatus as ConsultationRequest["status"] });
-
-        // Use existing date if available, otherwise tomorrow
-        const baseDate = new Date();
-        baseDate.setDate(baseDate.getDate() + 1);
-
-        setAppointmentDateInput({
-          date: baseDate.toISOString().split('T')[0],
-          time: "10:00",
-          doctorId: lead.doctor_id || "",
-          resourceId: lead.resource_id || "",
-          duration: lead.duration_minutes || 30
-        });
-        return;
+        // Reset guard state
+        setGuardDate(new Date().toISOString().split('T')[0]);
+        setGuardTime("10:00");
+        setGuardTreatmentCode("");
+        return; // Pause transition until modal confirmation
       }
 
       // Trigger Treatment Log Modal if moving to Treated
@@ -2154,7 +2146,7 @@ export default function AdminDashboard() {
   );
 
   return (
-    <div className="min-h-screen w-full flex flex-col bg-slate-50 text-slate-900 font-sans">
+    <div className="min-h-screen w-full flex flex-col bg-[#0A0F1E] text-white font-sans">
       {session === null ? (
         <div className="flex items-center justify-center h-screen">
           <RefreshCw className="w-6 h-6 text-gray-400 animate-spin" strokeWidth={1.5} />
@@ -2197,7 +2189,7 @@ export default function AdminDashboard() {
               </div>
 
               {/* ── TIER 1: GLOBAL NAVIGATION (Apple-grade) ── */}
-              <div className="flex bg-slate-100/50 p-1 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden group">
+              <div className="flex bg-white/5 p-1 rounded-2xl border border-white/10 shadow-sm relative overflow-hidden group">
                 {(['PIPELINE', 'INTELLIGENCE', 'VAULT', 'SECURITY'] as const).map(tab => (
                   <div key={tab} className="relative">
                     <button
@@ -2206,8 +2198,8 @@ export default function AdminDashboard() {
                         if (tab === 'VAULT') setShowOnboardingTooltip(false);
                       }}
                       className={`px-8 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.25em] transition-all duration-300 relative z-10 ${activeTab === tab
-                          ? 'text-emerald-700'
-                          : 'text-slate-400 hover:text-slate-600'
+                          ? 'text-[#2AF598]'
+                          : 'text-white/40 hover:text-white/60'
                         }`}
                     >
                       {activeTab === tab && (
@@ -2379,12 +2371,12 @@ export default function AdminDashboard() {
                           <NorthStarSummaryCards />
                         </div>
 
-                        <div className="flex justify-between items-end border-t border-slate-200/60 pt-6 pb-4 shrink-0">
+                        <div className="flex justify-between items-end border-t border-white/5 pt-6 pb-4 shrink-0">
                           <div className="space-y-1">
-                            <h2 className="text-3xl font-bold text-slate-900 tracking-tighter uppercase italic">Lead Flow Board</h2>
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Visualizing Clinical Conversion Pipeline ↗</p>
+                            <h2 className="text-3xl font-bold text-white tracking-tighter uppercase italic">Lead Flow Board</h2>
+                            <p className="text-[10px] font-bold text-[#A0A0A0] uppercase tracking-[0.2em]">Visualizing Clinical Conversion Pipeline ↗</p>
                           </div>
-                          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest bg-white border border-slate-100 px-3 py-1 rounded-full shadow-sm">
+                          <p className="text-xs font-bold text-[#A0A0A0] uppercase tracking-widest bg-white/5 border border-white/10 px-3 py-1 rounded-full shadow-sm">
                             {(leads ?? []).length} total leads
                           </p>
                         </div>
@@ -2627,9 +2619,112 @@ export default function AdminDashboard() {
             />
 
             <GoogleOnboardingModal 
-              isOpen={isGoogleModalOpen}
+              isOpen={isGoogleConnected === false && activeTab === 'PIPELINE'} // Simplified for brevity as logic was handled in useEffect
               onClose={() => setIsGoogleModalOpen(false)}
             />
+
+            {/* --- Hanlan OC Master PRD: Booking Guard Modal --- */}
+            <AnimatePresence>
+              {bookingGuard && (
+                <div className="fixed inset-0 z-[200] flex items-center justify-center p-6">
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute inset-0 bg-[#0A0F1E]/80 backdrop-blur-xl"
+                    onClick={() => setBookingGuard(null)}
+                  />
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                    className="relative w-full max-w-md bg-[#161B22] border border-white/10 rounded-[40px] shadow-2xl overflow-hidden p-8"
+                  >
+                    <div className="flex justify-between items-start mb-6">
+                       <div>
+                          <h3 className="text-2xl font-black text-white uppercase tracking-tight">State Transition Guard</h3>
+                          <p className="text-[#2AF598] font-bold uppercase tracking-widest text-[10px] mt-1">Move to 'Booked' Protocol</p>
+                       </div>
+                    </div>
+
+                    <div className="space-y-6">
+                      <div className="p-4 bg-white/5 border border-white/5 rounded-2xl">
+                        <p className="text-[10px] font-bold text-[#A0A0A0] uppercase tracking-widest mb-1">Patient</p>
+                        <p className="text-sm font-black text-white">{bookingGuard.leadName}</p>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <label className="text-[10px] font-bold text-[#A0A0A0] uppercase tracking-widest ml-1">Date</label>
+                            <input 
+                              type="date"
+                              value={guardDate}
+                              onChange={(e) => setGuardDate(e.target.value)}
+                              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#2AF598]/50 transition-all"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <label className="text-[10px] font-bold text-[#A0A0A0] uppercase tracking-widest ml-1">Time</label>
+                            <input 
+                              type="time"
+                              value={guardTime}
+                              onChange={(e) => setGuardTime(e.target.value)}
+                              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#2AF598]/50 transition-all"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-bold text-[#A0A0A0] uppercase tracking-widest ml-1">Treatment Code</label>
+                          <input 
+                            type="text"
+                            placeholder="e.g., IMP-01, INV-PRO"
+                            value={guardTreatmentCode}
+                            onChange={(e) => setGuardTreatmentCode(e.target.value)}
+                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#2AF598]/50 transition-all"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex gap-4 pt-4">
+                        <button 
+                          onClick={() => setBookingGuard(null)}
+                          className="flex-1 py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-all"
+                        >
+                          Cancel
+                        </button>
+                        <button 
+                          onClick={async () => {
+                            if (!guardDate || !guardTreatmentCode) {
+                              alert("Required: Appointment Date and Treatment Code.");
+                              return;
+                            }
+                            // Apply transition
+                            const appointmentISO = new Date(`${guardDate}T${guardTime}`).toISOString();
+                            await supabase
+                              .from("consultation_requests")
+                              .update({ 
+                                status: "Booked", 
+                                appointment_date: appointmentISO,
+                                notes: `[System Guard] Treatment Code: ${guardTreatmentCode}`
+                              })
+                              .eq("id", bookingGuard.leadId);
+                            
+                            setLeads(prev => prev.map(l => l.id === bookingGuard.leadId ? { ...l, status: "Booked", appointment_date: appointmentISO } : l));
+                            setBookingGuard(null);
+                            setToast({ message: "Patient moved to 'Booked' successfully.", type: "success" });
+                          }}
+                          className="flex-1 py-4 rounded-2xl bg-[#2AF598] text-[#0A0F1E] font-black text-xs uppercase tracking-widest shadow-[0_0_20px_rgba(42,245,152,0.4)] hover:brightness-110 active:scale-[0.98] transition-all"
+                        >
+                          Confirm Booking
+                        </button>
+                      </div>
+                    </div>
+                  </motion.div>
+                </div>
+              )}
+            </AnimatePresence>
           </main>
 
           <ExpertModeDrawer 
