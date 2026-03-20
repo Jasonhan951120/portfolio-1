@@ -820,6 +820,30 @@ export default function AdminDashboard() {
     afterImage: string;
   } | null>(null);
 
+  // --- Expert Mode Settings (LIFTED) ---
+  const [syncInterval, setSyncInterval] = useState(() => localStorage.getItem('expert_syncInterval') || 'Hourly');
+  const [targetROI, setTargetROI] = useState(() => Number(localStorage.getItem('expert_targetROI')) || 35);
+  const [insightVerbosity, setInsightVerbosity] = useState(() => localStorage.getItem('expert_insightVerbosity') || 'Detailed');
+  const [leadDistribution, setLeadDistribution] = useState(() => localStorage.getItem('expert_leadDistribution') || 'Balanced');
+
+  // persistent handlers
+  const handleSyncChange = (val: string) => {
+    setSyncInterval(val);
+    localStorage.setItem('expert_syncInterval', val);
+  };
+  const handleROIChange = (val: number) => {
+    setTargetROI(val);
+    localStorage.setItem('expert_targetROI', val.toString());
+  };
+  const handleVerbosityChange = (val: string) => {
+    setInsightVerbosity(val);
+    localStorage.setItem('expert_insightVerbosity', val);
+  };
+  const handleStrategyChange = (val: string) => {
+    setLeadDistribution(val);
+    localStorage.setItem('expert_leadDistribution', val);
+  };
+
   // Backoffice Overlays State
   const [isPMSLogDrawerOpen, setIsPMSLogDrawerOpen] = useState(false);
   const [isClinicMetaModalOpen, setIsClinicMetaModalOpen] = useState(false);
@@ -1100,10 +1124,10 @@ export default function AdminDashboard() {
   }, [leads]);
 
   useEffect(() => {
-    if (leads.length > 0 && !aiBriefing) {
-      generateDailyBriefing(leads).then(setAiBriefing);
+    if (leads.length > 0) {
+      generateDailyBriefing(leads, insightVerbosity).then(setAiBriefing);
     }
-  }, [leads, aiBriefing]);
+  }, [leads, insightVerbosity]);
 
   const pointerSensor = useSensor(PointerSensor, { activationConstraint: { distance: 5 } });
   const keyboardSensor = useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates });
@@ -2613,6 +2637,18 @@ export default function AdminDashboard() {
             onClose={() => setIsExpertModeOpen(false)} 
             onOpenPMSLogs={() => setIsPMSLogDrawerOpen?.(true)}
             onOpenClinicMeta={() => setIsClinicMetaModalOpen?.(true)}
+            settings={{
+              syncInterval,
+              targetROI,
+              insightVerbosity,
+              leadDistribution
+            }}
+            handlers={{
+              handleSyncChange,
+              handleROIChange,
+              handleVerbosityChange,
+              handleStrategyChange
+            }}
           />
 
           {/* ── BACKOFFICE OVERLAYS ── */}

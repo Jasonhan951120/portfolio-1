@@ -6,7 +6,7 @@ import type { ConsultationRequest } from "./supabase";
  * In a real environment, this function would send the `leads` context to an LLM endpoint,
  * and the LLM would generate a strategic summary for the clinic administrator.
  */
-export async function generateDailyBriefing(leads: ConsultationRequest[]): Promise<string> {
+export async function generateDailyBriefing(leads: ConsultationRequest[], verbosity: string = 'Detailed'): Promise<string> {
     // Simulate network delay for AI processing
     await new Promise(resolve => setTimeout(resolve, 1500));
 
@@ -26,7 +26,18 @@ export async function generateDailyBriefing(leads: ConsultationRequest[]): Promi
     // Find the top service
     const topService = Object.keys(serviceCounts).sort((a, b) => serviceCounts[b] - serviceCounts[a])[0];
 
-    // Mock AI strategic briefing based on basic data
+    // ROI Threshold Check (Mock)
+    const mockConversionRate = 35; 
+    
+    if (verbosity === 'Summary') {
+      return `📈 Summarized View: ${newToday.length} new leads today. Focus on ${topService}.`;
+    }
+
+    if (verbosity === 'Data') {
+      return `[JSON_DATA_STREAM] leads_count: ${newToday.length}, primary_service: "${topService}", avg_intent: 82%, conversion_est: ${mockConversionRate}%`;
+    }
+
+    // Default: Detailed
     return `📈 AI Insight: You received ${newToday.length} new inquiries today. The most popular request is "${topService}" (${serviceCounts[topService]} leads). 
   
 💡 Strategy Recommendation: For the pending "${topService}" leads, recommend pushing the £150/mo financing plan during your call-backs to increase conversion rates.`;

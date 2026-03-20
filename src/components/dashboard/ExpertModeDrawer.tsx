@@ -8,6 +8,18 @@ interface ExpertModeDrawerProps {
   onClose?: () => void;
   onOpenPMSLogs?: () => void;
   onOpenClinicMeta?: () => void;
+  settings?: {
+    syncInterval: string;
+    targetROI: number;
+    insightVerbosity: string;
+    leadDistribution: string;
+  };
+  handlers?: {
+    handleSyncChange: (val: string) => void;
+    handleROIChange: (val: number) => void;
+    handleVerbosityChange: (val: string) => void;
+    handleStrategyChange: (val: string) => void;
+  };
 }
 
 class DiagnosticErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean; error: Error | null }> {
@@ -78,7 +90,9 @@ export function ExpertModeDrawer({
   isOpen, 
   onClose = () => {}, 
   onOpenPMSLogs = () => {}, 
-  onOpenClinicMeta = () => {} 
+  onOpenClinicMeta = () => {},
+  settings,
+  handlers
 }: ExpertModeDrawerProps) {
   if (!isOpen) return null;
 
@@ -102,14 +116,14 @@ export function ExpertModeDrawer({
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 h-full w-full max-w-2xl bg-[#F8F9FA] z-[160] shadow-[-20px_0_60px_rgba(0,0,0,0.1)] overflow-y-auto custom-scrollbar"
+              className="fixed top-0 right-0 h-full w-full max-w-2xl bg-[#0A0F1E] z-[160] shadow-[-20px_0_60px_rgba(0,0,0,0.5)] overflow-y-auto custom-scrollbar border-l border-white/5"
             >
-              <div className="sticky top-0 bg-[#F8F9FA]/80 backdrop-blur-md p-6 flex justify-end z-10">
+              <div className="sticky top-0 bg-[#0A0F1E]/80 backdrop-blur-xl p-6 flex justify-end z-10 border-b border-white/5">
                 <button 
-                  onClick={() => { if (typeof onClose === 'function') onClose?.(); }}
-                  className="p-3 bg-black/5 hover:bg-black/10 rounded-2xl transition-all"
+                   onClick={() => { if (typeof onClose === 'function') onClose?.(); }}
+                  className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl transition-all active:scale-[0.95] group border border-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]"
                 >
-                  <X className="w-6 h-6 text-gray-900" />
+                  <X className="w-6 h-6 text-white/50 group-hover:text-white transition-colors" />
                 </button>
               </div>
               
@@ -117,6 +131,8 @@ export function ExpertModeDrawer({
                 <ExpertModeContent 
                   onOpenPMSLogs={() => { if (typeof onOpenPMSLogs === 'function') onOpenPMSLogs?.(); }}
                   onOpenClinicMeta={() => { if (typeof onOpenClinicMeta === 'function') onOpenClinicMeta?.(); }}
+                  settings={settings}
+                  handlers={handlers}
                 />
               </div>
             </motion.div>
