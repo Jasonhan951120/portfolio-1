@@ -116,14 +116,14 @@ export function ExpertModeDrawer({
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 h-full w-full max-w-2xl bg-[#0A0F1E] z-[160] shadow-[-20px_0_60px_rgba(0,0,0,0.5)] overflow-y-auto custom-scrollbar border-l border-white/5"
+              className="fixed top-0 right-0 h-full w-full max-w-2xl bg-[#F9FAFB] z-[160] shadow-[-20px_0_60px_rgba(0,0,0,0.05)] overflow-y-auto custom-scrollbar border-l border-black/[0.05]"
             >
-              <div className="sticky top-0 bg-[#0A0F1E]/80 backdrop-blur-xl p-6 flex justify-end z-10 border-b border-white/5">
+              <div className="sticky top-0 bg-[#F9FAFB]/80 backdrop-blur-xl p-6 flex justify-end z-10 border-b border-black/[0.05]">
                 <button 
-                   onClick={() => { if (typeof onClose === 'function') onClose?.(); }}
-                  className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl transition-all active:scale-[0.95] group border border-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]"
+                  onClick={() => { if (typeof onClose === 'function') onClose?.(); }}
+                  className="p-3 bg-white hover:bg-slate-50 rounded-2xl transition-all active:scale-[0.95] group border border-black/[0.05] shadow-sm"
                 >
-                  <X className="w-6 h-6 text-white/50 group-hover:text-white transition-colors" />
+                  <X className="w-6 h-6 text-slate-400 group-hover:text-slate-900 transition-colors" />
                 </button>
               </div>
               
