@@ -71,6 +71,7 @@ export type ConsultationRequest = {
     is_vip?: boolean;
     category?: string;
     importedAt?: number;
+    expectedRevenue?: number;
 };
 
 export type Resource = {

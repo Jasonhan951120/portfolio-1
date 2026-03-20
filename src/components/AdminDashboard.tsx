@@ -521,7 +521,7 @@ function KanbanColumn({
         </h3>
         <span className="text-xl metric-authority">
           {useDashboardStore.getState().region === 'UK' ? '£' : '$'}
-          {columnLeads.reduce((sum, l) => sum + (SERVICE_CONVERSION_VALUES[l.service] || 1000), 0).toLocaleString()}
+          {columnLeads.reduce((sum, l) => sum + (l.expectedRevenue || SERVICE_CONVERSION_VALUES[l.service] || 1000), 0).toLocaleString()}
         </span>
         <div className="h-[2px] w-full bg-slate-100 mt-3 rounded-full" />
       </div>
@@ -1431,6 +1431,111 @@ export default function AdminDashboard() {
       };
     }).sort((a, b) => b.revenue - a.revenue);
   }, [dynamicStaffList, leads]);
+
+  const handleActivateAI = useCallback(() => {
+    const mockData: ConsultationRequest[] = [
+      {
+        id: "mock-" + Math.random().toString(36).substr(2, 9),
+        name: "James Wilson (VIP)",
+        email: "james@example.com",
+        phone: "+447700900001",
+        service: "Dental Implants",
+        status: "New Lead",
+        expectedRevenue: 12000,
+        created_at: new Date().toISOString(),
+        is_vip: true,
+        notes: "High intent, interested in full arch restoration."
+      },
+      {
+        id: "mock-" + Math.random().toString(36).substr(2, 9),
+        name: "Sarah Jenkins",
+        email: "sarah@example.com",
+        phone: "+447700900002",
+        service: "Invisalign",
+        status: "Booked",
+        expectedRevenue: 4500,
+        created_at: new Date(Date.now() - 3600000).toISOString(),
+        appointment_date: new Date(Date.now() + 86400000).toISOString(),
+        notes: "Looking for wedding smile makeover."
+      },
+      {
+        id: "mock-" + Math.random().toString(36).substr(2, 9),
+        name: "Michael Ross",
+        email: "michael@example.com",
+        phone: "+447700900003",
+        service: "Veneers",
+        status: "Visited",
+        expectedRevenue: 8200,
+        created_at: new Date(Date.now() - 7200000).toISOString(),
+        notes: "Proposed 8 units upper. Patient considering finance."
+      },
+      {
+        id: "mock-" + Math.random().toString(36).substr(2, 9),
+        name: "Emma Thompson",
+        email: "emma@example.com",
+        phone: "+447700900004",
+        service: "Dental Implants",
+        status: "Sale Closed",
+        expectedRevenue: 5500,
+        created_at: new Date(Date.now() - 10800000).toISOString(),
+        treated_at: new Date().toISOString(),
+        notes: "Single implant. Deposit paid."
+      },
+      {
+        id: "mock-" + Math.random().toString(36).substr(2, 9),
+        name: "David Beckham",
+        email: "david@example.com",
+        phone: "+447700900005",
+        service: "Veneers",
+        status: "New Lead",
+        expectedRevenue: 15000,
+        created_at: new Date(Date.now() - 15 * 60000).toISOString(),
+        is_vip: true,
+        notes: "Celebrity referral. Fast track requested."
+      },
+      {
+        id: "mock-" + Math.random().toString(36).substr(2, 9),
+        name: "Olivia Colman",
+        email: "olivia@example.com",
+        phone: "+447700900006",
+        service: "Invisalign",
+        status: "Booked",
+        expectedRevenue: 3800,
+        created_at: new Date(Date.now() - 18000000).toISOString(),
+        appointment_date: new Date(Date.now() + 2 * 86400000).toISOString()
+      },
+      {
+        id: "mock-" + Math.random().toString(36).substr(2, 9),
+        name: "Benedict Cumberbatch",
+        email: "benedict@example.com",
+        phone: "+447700900007",
+        service: "Dental Implants",
+        status: "Visited",
+        expectedRevenue: 9500,
+        created_at: new Date(Date.now() - 21600000).toISOString()
+      },
+      {
+        id: "mock-" + Math.random().toString(36).substr(2, 9),
+        name: "Helen Mirren",
+        email: "helen@example.com",
+        phone: "+447700900008",
+        service: "Veneers",
+        status: "Sale Closed",
+        expectedRevenue: 11000,
+        created_at: new Date(Date.now() - 25200000).toISOString()
+      }
+    ];
+
+    setLeads(prev => {
+      // Functional update to ensure no data loss
+      return [...prev, ...mockData];
+    });
+    
+    setToast({ 
+      message: "Intelligence Suite Activated: £45,000 in Clinical Momentum injected.", 
+      type: 'success' 
+    });
+  }, [setLeads]);
 
   const fetchLock = React.useRef(false);
   const fetchLeads = async (currentLimit = limit, append = false) => {
@@ -2367,7 +2472,7 @@ export default function AdminDashboard() {
                   className="w-full flex-1 flex flex-col min-h-0"
                 >
                   {!isInitialLoad && (leads ?? []).length === 0 ? (
-                    <OnboardingEmptyState onInjectSample={() => {}} />
+                    <OnboardingEmptyState onInjectSample={() => handleActivateAI?.()} />
                   ) : (
                     <motion.div
                       initial={{ opacity: 0 }}
