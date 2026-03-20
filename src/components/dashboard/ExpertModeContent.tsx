@@ -89,10 +89,43 @@ function SalesROIDashboard() {
 }
 
 function RevenueOptimizationGrid() {
-  const [syncInterval, setSyncInterval] = useState('Hourly');
-  const [targetROI, setTargetROI] = useState(35);
-  const [verbosity, setVerbosity] = useState('Detailed');
-  const [strategy, setStrategy] = useState('Balanced');
+  const [syncInterval, setSyncInterval] = useState(() => localStorage.getItem('expert_syncInterval') || 'Hourly');
+  const [targetROI, setTargetROI] = useState(() => Number(localStorage.getItem('expert_targetROI')) || 35);
+  const [verbosity, setVerbosity] = useState(() => localStorage.getItem('expert_insightVerbosity') || 'Detailed');
+  const [strategy, setStrategy] = useState(() => localStorage.getItem('expert_leadDistribution') || 'Balanced');
+
+  // Prepare for real API
+  const saveSettingsToAPI = (settings: any) => {
+    console.log("🚀 [API READY] Ready to send these settings to API:", settings);
+  };
+
+  const handleSyncChange = (val: string) => {
+    setSyncInterval?.(val);
+    localStorage.setItem('expert_syncInterval', val);
+    console.log("💾 [Expert Centre] Saving new Sync Interval:", val);
+    saveSettingsToAPI({ syncInterval: val, targetROI, verbosity, strategy });
+  };
+
+  const handleROIChange = (val: number) => {
+    setTargetROI?.(val);
+    localStorage.setItem('expert_targetROI', val.toString());
+    console.log("💾 [Expert Centre] Saving new Target ROI:", val);
+    saveSettingsToAPI({ syncInterval, targetROI: val, verbosity, strategy });
+  };
+
+  const handleVerbosityChange = (val: string) => {
+    setVerbosity?.(val);
+    localStorage.setItem('expert_insightVerbosity', val);
+    console.log("💾 [Expert Centre] Saving new AI Verbosity:", val);
+    saveSettingsToAPI({ syncInterval, targetROI, verbosity: val, strategy });
+  };
+
+  const handleStrategyChange = (val: string) => {
+    setStrategy?.(val);
+    localStorage.setItem('expert_leadDistribution', val);
+    console.log("💾 [Expert Centre] Saving new Lead Strategy:", val);
+    saveSettingsToAPI({ syncInterval, targetROI, verbosity, strategy: val });
+  };
 
   return (
     <section className="space-y-6">
@@ -116,7 +149,7 @@ function RevenueOptimizationGrid() {
             {['Real-time', 'Hourly', 'Daily'].map((val) => (
               <button
                 key={val}
-                onClick={() => setSyncInterval?.(val)}
+                onClick={() => handleSyncChange?.(val)}
                 className={`flex-1 py-3 text-[9px] font-black uppercase tracking-widest rounded-xl transition-all ${
                   syncInterval === val ? 'bg-white text-black shadow-lg shadow-white/5' : 'text-gray-500 hover:text-white'
                 }`}
@@ -144,7 +177,7 @@ function RevenueOptimizationGrid() {
               min="0"
               max="100"
               value={targetROI}
-              onChange={(e) => setTargetROI?.(parseInt(e.target.value))}
+              onChange={(e) => handleROIChange?.(parseInt(e.target.value))}
               className="w-full h-1.5 bg-black/60 rounded-lg appearance-none cursor-pointer accent-[#00FFA3]"
             />
             <div className="flex justify-between mt-2">
@@ -166,7 +199,7 @@ function RevenueOptimizationGrid() {
             {['Summary', 'Detailed', 'Data'].map((val) => (
               <button
                 key={val}
-                onClick={() => setVerbosity?.(val)}
+                onClick={() => handleVerbosityChange?.(val)}
                 className={`py-3 text-[9px] font-black uppercase tracking-widest rounded-xl border border-white/5 transition-all ${
                   verbosity === val ? 'bg-[#00FFA3]/20 border-[#00FFA3]/40 text-[#00FFA3]' : 'text-gray-500 hover:bg-white/5'
                 }`}
@@ -189,7 +222,7 @@ function RevenueOptimizationGrid() {
             {['Balanced', 'Top Performers Only'].map((val) => (
               <button
                 key={val}
-                onClick={() => setStrategy?.(val)}
+                onClick={() => handleStrategyChange?.(val)}
                 className={`w-full p-4 rounded-2xl border transition-all flex items-center justify-between group/item ${
                   strategy === val ? 'bg-[#00FFA3]/5 border-[#00FFA3]/30' : 'bg-black/20 border-white/5 hover:border-white/10'
                 }`}
