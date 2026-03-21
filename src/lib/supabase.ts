@@ -72,6 +72,8 @@ export type ConsultationRequest = {
     category?: string;
     importedAt?: number;
     expectedRevenue?: number;
+    before_photo?: string;
+    after_photo?: string;
 };
 
 export type Resource = {

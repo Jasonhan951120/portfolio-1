@@ -12,7 +12,7 @@ import {
   MessageSquare, Send, Sparkles, Layout,
   ArrowRight, ShieldCheck, Zap, Settings, SlidersHorizontal, Building, Save, Plus, Trash2, Camera, Palette, CreditCard,
   Mail, UserPlus, Loader2, Clock, Copy, Shield,
-  Link2, AlertTriangle, MapPin, ChevronDown, Instagram, MessageCircle, Link as LinkIcon, Monitor, Stethoscope, HelpCircle
+  Link2, AlertTriangle, MapPin, ChevronDown, Instagram, MessageCircle, Link as LinkIcon, Monitor, Stethoscope, HelpCircle, Upload
 } from 'lucide-react';
 import { Link, useNavigate } from "react-router-dom";
 import { supabase, type ConsultationRequest, type Profile, type Invitation } from "../lib/supabase";
@@ -829,7 +829,8 @@ export default function AdminDashboard() {
     updateLeadStatus,
     clinicId,
     currency,
-    setCurrency
+    setCurrency,
+    updateLead,
   } = useDashboardStore();
   
   const patients = leads || []; // Lead Architect Safety: Guaranteed array initialization
@@ -3006,53 +3007,179 @@ export default function AdminDashboard() {
                     animate={{ x: 0 }}
                     exit={{ x: "100%" }}
                     transition={{ type: "spring", damping: 30, stiffness: 300 }}
-                    className="fixed top-0 right-0 h-full w-full max-w-[500px] bg-slate-950 border-l border-white/5 shadow-2xl z-[7001] flex flex-col"
+                    className="fixed top-0 right-0 h-full w-full max-w-[550px] bg-white border-l border-slate-200 shadow-2xl z-[7001] flex flex-col"
                   >
-                    <div className="p-8 border-b border-white/5 flex justify-between items-start">
+                    <div className="p-8 pb-6 border-b border-black/[0.05] flex justify-between items-start">
                       <div>
-                        <h2 className="text-2xl font-black text-white uppercase tracking-tight">{selectedLead.name}</h2>
+                        <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight">{selectedLead.name}</h2>
                         <div className="flex items-center gap-2 mt-1">
-                          <span className="text-emerald-400 font-bold uppercase tracking-widest text-[10px]">{selectedLead.service}</span>
-                          <div className="w-1 h-1 rounded-full bg-white/20" />
-                          <span className="text-white/60 font-bold uppercase tracking-widest text-[10px]">{currency}{selectedLead.potential_value?.toLocaleString()}</span>
+                          <span className="text-emerald-500 font-bold uppercase tracking-widest text-[10px]">{selectedLead.service}</span>
+                          <div className="w-1 h-1 rounded-full bg-slate-200" />
+                          <span className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">{currency}{selectedLead.potential_value?.toLocaleString()}</span>
                         </div>
                       </div>
                       <button 
                         onClick={() => setSelectedLead(null)}
-                        className="p-2 hover:bg-white/5 rounded-xl text-slate-400 transition-all"
+                        className="p-2 hover:bg-slate-50 rounded-xl text-slate-400 border border-transparent hover:border-slate-200 transition-all"
                       >
                         <X className="w-5 h-5" />
                       </button>
                     </div>
                     
                     <div className="flex-1 overflow-y-auto p-8 space-y-10 custom-scrollbar">
+                      
+                      {/* Treatment Plan Builder */}
+                      <div className="space-y-6">
+                        <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                           <Sparkles className="w-5 h-5 text-emerald-500" /> Draft Treatment Plan
+                        </h3>
+                        
+                        <div className="space-y-4">
+                          {/* Treatment Name & Price */}
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Treatment Strategy</label>
+                              <input 
+                                type="text"
+                                value={selectedLead.service || ""}
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  setSelectedLead({ ...selectedLead, service: val });
+                                  updateLead(selectedLead.id, { service: val });
+                                }}
+                                className="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 text-sm font-semibold text-slate-900 focus:ring-2 focus:ring-[#2AF598]/50 focus:border-[#2AF598] outline-none transition-all shadow-sm"
+                                placeholder="E.g. Dental Implants"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Total Investment</label>
+                              <div className="relative">
+                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold">{currency}</span>
+                                <input 
+                                  type="number"
+                                  value={selectedLead.potential_value || ""}
+                                  onChange={(e) => {
+                                    const val = Number(e.target.value);
+                                    setSelectedLead({ ...selectedLead, potential_value: val });
+                                    updateLead(selectedLead.id, { potential_value: val });
+                                  }}
+                                  className="w-full bg-slate-50 border border-slate-200 rounded-lg py-3 pl-8 pr-3 text-sm font-semibold text-slate-900 focus:ring-2 focus:ring-[#2AF598]/50 focus:border-[#2AF598] outline-none transition-all shadow-sm"
+                                  placeholder="0.00"
+                                />
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Description */}
+                          <div>
+                            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Clinical / Patient Notes</label>
+                            <textarea 
+                              value={selectedLead.notes || ""}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setSelectedLead({ ...selectedLead, notes: val });
+                                updateLead(selectedLead.id, { notes: val });
+                              }}
+                              className="w-full h-24 bg-slate-50 border border-slate-200 rounded-lg p-4 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-[#2AF598]/50 focus:border-[#2AF598] outline-none transition-all resize-none shadow-sm"
+                              placeholder="Add personal notes for the patient proposal..."
+                            />
+                          </div>
+                        </div>
+
+                        {/* Visual Assets Upload Zone */}
+                        <div className="pt-2">
+                          <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Visual Assets</label>
+                          <div className="grid grid-cols-2 gap-4">
+                            {/* Before Photo */}
+                            <label className="relative flex flex-col items-center justify-center border-dashed border-2 border-slate-200 bg-slate-50 hover:bg-slate-100 transition-colors rounded-xl p-6 text-center cursor-pointer overflow-hidden group h-32 shadow-sm">
+                              {selectedLead.before_photo ? (
+                                <img src={selectedLead.before_photo} className="absolute inset-0 w-full h-full object-cover" />
+                              ) : (
+                                <>
+                                  <Upload className="w-5 h-5 text-slate-400 mb-2 group-hover:text-emerald-500 transition-colors" />
+                                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider relative z-10">Before Photo</span>
+                                </>
+                              )}
+                              <input 
+                                type="file" 
+                                accept="image/*" 
+                                className="hidden" 
+                                onChange={(e) => {
+                                  if (e.target.files && e.target.files[0]) {
+                                    const reader = new FileReader();
+                                    reader.onload = (event) => {
+                                      const val = event.target?.result as string;
+                                      setSelectedLead({ ...selectedLead, before_photo: val });
+                                      updateLead(selectedLead.id, { before_photo: val });
+                                    };
+                                    reader.readAsDataURL(e.target.files[0]);
+                                  }
+                                }} 
+                              />
+                            </label>
+
+                            {/* Outcome Projection */}
+                            <label className="relative flex flex-col items-center justify-center border-dashed border-2 border-slate-200 bg-slate-50 hover:bg-slate-100 transition-colors rounded-xl p-6 text-center cursor-pointer overflow-hidden group h-32 shadow-sm">
+                              {selectedLead.after_photo ? (
+                                <img src={selectedLead.after_photo} className="absolute inset-0 w-full h-full object-cover" />
+                              ) : (
+                                <>
+                                  <Upload className="w-5 h-5 text-slate-400 mb-2 group-hover:text-emerald-500 transition-colors" />
+                                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider relative z-10">Outcome Projection</span>
+                                </>
+                              )}
+                              <input 
+                                type="file" 
+                                accept="image/*" 
+                                className="hidden" 
+                                onChange={(e) => {
+                                  if (e.target.files && e.target.files[0]) {
+                                    const reader = new FileReader();
+                                    reader.onload = (event) => {
+                                      const val = event.target?.result as string;
+                                      setSelectedLead({ ...selectedLead, after_photo: val });
+                                      updateLead(selectedLead.id, { after_photo: val });
+                                    };
+                                    reader.readAsDataURL(e.target.files[0]);
+                                  }
+                                }} 
+                              />
+                            </label>
+                          </div>
+                        </div>
+
+                      </div>
+
+                      <div className="w-full h-px bg-slate-100" />
+
                       {/* Patient Timeline Component */}
                       <PatientTimeline events={getTimelineEvents(selectedLead)} />
                       
                       {/* Clinical Notes Section */}
                       <div className="space-y-4">
                         <div className="flex items-center justify-between">
-                            <h3 className="text-white font-bold uppercase tracking-widest text-xs flex items-center gap-2">
+                            <h3 className="text-slate-900 font-bold uppercase tracking-widest text-xs flex items-center gap-2">
                                 <FileText className="w-4 h-4 text-emerald-500" /> Intelligence Notes
                             </h3>
-                            <div className="px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[8px] font-black text-emerald-400 uppercase tracking-widest">
+                            <div className="px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-100 text-[8px] font-black text-emerald-600 uppercase tracking-widest">
                                 Live Sync Active
                             </div>
                         </div>
                         <textarea
                           value={dictationText}
                           onChange={(e) => setDictationText(e.target.value)}
-                          className="w-full h-48 bg-white/5 border border-white/10 rounded-[32px] p-6 text-sm text-slate-300 focus:border-emerald-500/50 outline-none transition-all resize-none shadow-inner"
+                          className="w-full h-48 bg-slate-50 border border-slate-200 rounded-2xl p-6 text-sm flex-1 text-slate-900 placeholder:text-slate-400 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all resize-none shadow-sm"
                           placeholder="Document clinical context..."
                         />
                         <button 
                           onClick={saveNotes}
-                          className="w-full py-5 bg-emerald-500 hover:bg-emerald-600 rounded-2xl text-[10px] font-black uppercase tracking-widest text-white transition-all shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2"
+                          className="w-full py-4 bg-emerald-500 hover:bg-emerald-600 rounded-xl text-[10px] font-black uppercase tracking-widest text-white transition-all shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2"
                         >
                           <Save className="w-4 h-4" />
                           Archive Clinical Note
                         </button>
                       </div>
+
                     </div>
                   </motion.div>
                 </>
