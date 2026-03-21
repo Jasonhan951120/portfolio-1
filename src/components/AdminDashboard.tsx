@@ -1002,11 +1002,11 @@ export default function AdminDashboard() {
     const asset = PT_ASSETS[service as keyof typeof PT_ASSETS] || PT_ASSETS["Dental Implants"];
     
     setPtModeData({
-      patientName: lead.name,
-      treatmentName: service,
-      totalPrice: lead.potential_value || 5000,
-      beforeImage: asset.image,
-      afterImage: asset.image
+      patientName: String(lead?.name || 'Valued Patient'),
+      treatmentName: String(service),
+      totalPrice: Number(lead?.potential_value || 5000),
+      beforeImage: String(asset?.image || ''),
+      afterImage: String(asset?.image || '')
     });
     setIsPTModeOpen(true);
   }, []);
@@ -2850,6 +2850,7 @@ export default function AdminDashboard() {
                                   clinic={profile}
                                   onOpenPTMode={() => {}}
                                   onOpenAudit={(l) => setActiveAuditLead(l)}
+                                  onOpenEmailModal={handleOpenEmailModal}
                                   focusMode="All"
                                 />
                               </div>

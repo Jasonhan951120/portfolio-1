@@ -4,9 +4,10 @@ import { motion, AnimatePresence } from "motion/react";
 import {
     ChevronRight, ArrowRight, ShieldCheck,
     Calendar, CheckCircle2, Star, CreditCard,
-    Lock, ArrowLeft, Play, Sparkles
+    Lock as LockIcon, ArrowLeft, Play, Sparkles
 } from "lucide-react";
 import { supabase } from "../lib/supabase";
+import { DEMO_LEADS } from "../lib/demoData";
 
 const ClientPTPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -42,18 +43,37 @@ const ClientPTPage: React.FC = () => {
     useEffect(() => {
         const fetchLead = async () => {
             if (!id) return;
-            const { data, error } = await supabase
-                .from("consultation_requests")
-                .select("*")
-                .eq("id", id)
-                .single();
-            if (data) setLead(data);
-            setLoading(false);
+            
+            // Check demo data first for instant preview
+            const isDemo = id.startsWith('demo-') || id.startsWith('mock-') || id.length <= 8;
+            if (isDemo) {
+                const demoLead = DEMO_LEADS.find(l => String(l.id).startsWith(id));
+                if (demoLead) {
+                    setLead(demoLead);
+                    setLoading(false);
+                    return;
+                }
+            }
+
+            try {
+                const { data, error } = await supabase
+                    .from("consultation_requests")
+                    .select("*")
+                    .ilike("id", `${id}%`)
+                    .single();
+                if (data) setLead(data);
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
         };
         fetchLead();
     }, [id]);
 
-    const activeTreatment = treatmentDetails[lead?.service] || treatmentDetails["Dental Implants"];
+    const activeTreatment = treatmentDetails[lead?.service || 'Dental Implants'] || treatmentDetails["Dental Implants"];
+    const dynamicTotalValue = lead?.potential_value ? Number(lead.potential_value) : parseInt(activeTreatment.investment.replace(/[^0-9]/g, ''), 10);
+    const dynamicMonthly = Math.round(dynamicTotalValue / 24);
 
     if (loading) return (
         <div className="min-h-screen bg-white flex items-center justify-center">
@@ -87,7 +107,9 @@ const ClientPTPage: React.FC = () => {
                             animate={{ opacity: 1, x: 0 }}
                             className="mb-12"
                         >
-                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#87A96B] mb-2 block tracking-widest">Your Tailored Transformation</span>
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#87A96B] mb-2 block">
+                                {lead?.name ? `Prepared Exclusively for ${lead.name}` : 'Your Tailored Transformation'}
+                            </span>
                             <h1 className="text-4xl md:text-5xl font-display font-bold text-gray-950 leading-tight">
                                 Visualising Your <br />New Smile
                             </h1>
@@ -173,7 +195,7 @@ const ClientPTPage: React.FC = () => {
 
                             <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Monthly Investment from</p>
                             <div className="flex items-baseline gap-2 mb-6">
-                                <span className="text-6xl font-display font-bold text-gray-950">{activeTreatment.monthly}</span>
+                                <span className="text-6xl font-display font-bold text-gray-950">£{dynamicMonthly.toLocaleString()}</span>
                                 <span className="text-gray-400 font-bold text-sm uppercase tracking-widest">/mo</span>
                             </div>
 
@@ -185,8 +207,7 @@ const ClientPTPage: React.FC = () => {
                             <div className="mt-8 pt-8 border-t border-gray-100 flex justify-between items-center">
                                 <span className="text-[11px] text-gray-500 font-bold uppercase tracking-widest">Total Investment</span>
                                 <div className="text-right">
-                                    <span className="text-sm font-bold text-gray-300 line-through block">£4,250</span>
-                                    <span className="text-xl font-bold text-gray-950">{activeTreatment.investment}</span>
+                                    <span className="text-xl font-bold text-gray-950">£{dynamicTotalValue.toLocaleString()}</span>
                                 </div>
                             </div>
                         </div>
@@ -204,7 +225,7 @@ const ClientPTPage: React.FC = () => {
                             </motion.button>
 
                             <div className="flex items-center justify-center gap-6 text-[9px] font-black uppercase tracking-[0.2em] text-gray-400 pt-4">
-                                <div className="flex items-center gap-1.5"><Lock className="w-3.5 h-3.5" /> Encrypted</div>
+                                <div className="flex items-center gap-1.5"><LockIcon className="w-3.5 h-3.5" /> Encrypted</div>
                                 <div className="flex items-center gap-1.5"><CreditCard className="w-3.5 h-3.5" /> Stripe Verified</div>
                                 <div className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5" /> UK GDPR</div>
                             </div>
