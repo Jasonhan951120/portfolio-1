@@ -21,6 +21,7 @@ interface PatientCardProps {
   onAddToWaitlist?: (id: string) => void;
   onOpenPTMode: (lead: ConsultationRequest) => void;
   onOpenAudit: (lead: ConsultationRequest) => void;
+  onOpenEmailModal: (lead: ConsultationRequest) => void;
   focusMode: string;
   currency?: string;
 }
@@ -34,13 +35,13 @@ export const PatientCard = React.memo(function PatientCard({
   onAddToWaitlist,
   onOpenPTMode,
   onOpenAudit,
+  onOpenEmailModal,
   focusMode,
   setDepositModal,
   updateAssignedTo,
   currency = "£"
 }: PatientCardProps) {
   const [timeLeft, setTimeLeft] = useState<number>(15 * 60);
-  const [isSendingEmail, setIsSendingEmail] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
@@ -64,40 +65,6 @@ export const PatientCard = React.memo(function PatientCard({
     isDragging
   } = useSortable({ id });
 
-  const handleSendEmail = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsSendingEmail(true);
-    try {
-      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-pt-link`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
-        },
-        body: JSON.stringify({
-          lead_id: lead.id,
-          name: lead.name,
-          email: lead.email,
-          service: lead.service,
-          origin: window.location.origin,
-          clinic_name: clinicData?.name,
-          clinic_logo: clinicData?.logo_url,
-          brand_color: clinicData?.brand_color,
-          clinic_phone: clinicData?.phone,
-          clinic_address: clinicData?.address,
-          clinic_email: clinicData?.email
-        })
-      });
-
-      if (!response.ok) throw new Error("Failed to send email");
-      alert(`PT Link successfully sent to ${lead.email}!`);
-    } catch (err) {
-      console.error(err);
-      alert("Error sending email. Please try again.");
-    } finally {
-      setIsSendingEmail(false);
-    }
-  };
 
   const handleWaitlistClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -283,13 +250,12 @@ export const PatientCard = React.memo(function PatientCard({
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleSendEmail?.(e);
+                  onOpenEmailModal?.(lead);
                 }}
-                disabled={isSendingEmail}
-                className="p-1.5 text-[#87A96B] hover:text-[#87A96B]/80 bg-[#87A96B]/10 hover:bg-[#87A96B]/20 rounded-lg transition-all border border-[#87A96B]/20 disabled:opacity-50"
+                className="p-1.5 text-[#87A96B] hover:text-[#87A96B]/80 bg-[#87A96B]/10 hover:bg-[#87A96B]/20 rounded-lg transition-all border border-[#87A96B]/20"
                 title="Send PT Link via Email"
               >
-                {isSendingEmail ? <RefreshCw className="w-3.5 h-3.5 animate-spin text-[#87A96B]" strokeWidth={1.5} /> : <Send className="w-3.5 h-3.5" strokeWidth={1.5} />}
+                <Send className="w-3.5 h-3.5" strokeWidth={1.5} />
               </button>
             </div>
           </div>

@@ -46,6 +46,7 @@ import { SettingsDrawer } from "./dashboard/SettingsDrawer";
 import { ZeroDashboardView } from "./dashboard/ZeroDashboardView";
 import ExpertModeDrawer from "./dashboard/ExpertModeDrawer";
 import { PatientCard } from "./dashboard/PatientCard";
+import { EmailPreviewModal } from "./dashboard/EmailPreviewModal";
 
 import { PMSLogDrawer } from "./dashboard/backoffice/PMSLogDrawer";
 import { ClinicMetaModal } from "./dashboard/backoffice/ClinicMetaModal";
@@ -635,6 +636,7 @@ function KanbanColumn({
   onOpenPTMode,
   focusMode,
   onOpenAudit,
+  onOpenEmailModal,
   currency = "£"
 }: any) {
   const { setNodeRef } = useDroppable({ id: columnId });
@@ -691,6 +693,7 @@ function KanbanColumn({
                   onAddToWaitlist={onAddToWaitlist}
                   onOpenPTMode={onOpenPTMode}
                   onOpenAudit={onOpenAudit}
+                  onOpenEmailModal={onOpenEmailModal}
                   focusMode={focusMode}
                   currency={currency}
                 />
@@ -982,6 +985,10 @@ export default function AdminDashboard() {
     afterImage: string;
   } | null>(null);
 
+  // Email Preview Modal State
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+  const [emailLead, setEmailLead] = useState<ConsultationRequest | null>(null);
+
   // --- Expert Mode Settings (LIFTED) ---
   const [syncInterval, setSyncInterval] = useState(() => localStorage.getItem('expert_syncInterval') || 'Hourly');
   const [targetROI, setTargetROI] = useState(() => Number(localStorage.getItem('expert_targetROI')) || 35);
@@ -1002,6 +1009,11 @@ export default function AdminDashboard() {
       afterImage: asset.image
     });
     setIsPTModeOpen(true);
+  }, []);
+
+  const handleOpenEmailModal = useCallback((lead: ConsultationRequest) => {
+    setEmailLead(lead);
+    setIsEmailModalOpen(true);
   }, []);
 
   // persistent handlers
@@ -2728,6 +2740,7 @@ export default function AdminDashboard() {
                                 clinic={profile}
                                 onOpenPTMode={handleOpenPTMode}
                                 onOpenAudit={(lead) => setActiveAuditLead(lead)}
+                                onOpenEmailModal={handleOpenEmailModal}
                                 selectedDate={selectedDate}
                                 focusMode={activeCategory}
                                 currency={currency}
@@ -2952,6 +2965,17 @@ export default function AdminDashboard() {
             <GoogleOnboardingModal 
               isOpen={isGoogleModalOpen}
               onClose={() => setIsGoogleModalOpen(false)}
+            />
+
+            <EmailPreviewModal
+              isOpen={isEmailModalOpen}
+              onClose={() => {
+                setIsEmailModalOpen(false);
+                setEmailLead(null);
+              }}
+              lead={emailLead}
+              currency={currency}
+              clinicName="Hanlan OC Dental Clinic"
             />
 
             {/* Tablet PT Mode Overlay (AntiGravity) */}
