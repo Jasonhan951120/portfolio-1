@@ -42,7 +42,7 @@ import { RevenueForecastChart } from './dashboard/RevenueForecastChart';
 import { PatientTimeline, TimelineEvent } from './dashboard/PatientTimeline';
 import { RecoveryConcierge } from './dashboard/RecoveryConcierge';
 import { DashboardHeader } from "./dashboard/layout/DashboardHeader";
-import { SettingsDrawer } from "./dashboard/SettingsDrawer";
+import { ClinicSettings } from "./dashboard/ClinicSettings";
 import { ZeroDashboardView } from "./dashboard/ZeroDashboardView";
 import ExpertModeDrawer from "./dashboard/ExpertModeDrawer";
 import { PatientCard } from "./dashboard/PatientCard";
@@ -2575,6 +2575,13 @@ export default function AdminDashboard() {
                   </motion.div>
                 )}
                 <button
+                  onClick={() => setIsSettingsOpen(true)}
+                  className="p-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl transition-all text-slate-400 hover:text-emerald-600"
+                  title="Clinic Settings & Treatment Menu"
+                >
+                  <Building className="w-5 h-5" />
+                </button>
+                <button
                   onClick={() => setIsExpertModeOpen(true)}
                   className="p-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl transition-all text-slate-400 hover:text-emerald-600"
                   title="Control Center (Expert Mode)"
@@ -3186,6 +3193,12 @@ export default function AdminDashboard() {
               )}
             </AnimatePresence>
           </main>
+
+          <ClinicSettings 
+            isOpen={isSettingsOpen} 
+            onClose={() => setIsSettingsOpen(false)} 
+            currency={currency} 
+          />
 
           <ExpertModeDrawer 
             isOpen={isExpertModeOpen} 
