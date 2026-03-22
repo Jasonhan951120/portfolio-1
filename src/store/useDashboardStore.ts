@@ -4,6 +4,17 @@ import { db } from '../lib/firebase';
 import { collection, query, where, onSnapshot, doc, updateDoc, Timestamp, orderBy } from 'firebase/firestore';
 import { DEMO_LEADS } from '../lib/demoData';
 import { formatAuditTimestamp } from '../lib/utils/formatters';
+import { SERVICE_CONVERSION_VALUES } from '../lib/constants';
+
+export interface TreatmentTemplate {
+  id: string;
+  name: string;
+  price: number;
+  description?: string;
+  beforeImg?: string;
+  afterImg?: string;
+  bookingUrl?: string;
+}
 
 interface DashboardState {
   leads: ConsultationRequest[];
@@ -26,6 +37,10 @@ interface DashboardState {
   updateLeadStatus: (id: string, newStatus: string) => Promise<void>;
   currency: '£' | '$';
   setCurrency: (currency: '£' | '$') => void;
+  
+  // Clinic Settings (The Warehouse)
+  templates: TreatmentTemplate[];
+  setTemplates: (templates: TreatmentTemplate[]) => void;
 
   // Security & Audit State
   auditLogs: Record<string, any[]>;
@@ -80,6 +95,27 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
   setCurrency: (currency) => set({ currency, region: currency === '£' ? 'UK' : 'US' }),
   setGoogleConnected: (isConnected, profile) => set({ isGoogleConnected: isConnected, googleProfile: profile || null }),
   setGoogleProfile: (profile) => set({ googleProfile: profile }),
+
+  templates: (() => {
+    const saved = localStorage.getItem('clinic_templates');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error("Error parsing saved templates:", e);
+      }
+    }
+    return Object.entries(SERVICE_CONVERSION_VALUES).map(([name, price], idx) => ({
+      id: `template-${idx}`,
+      name,
+      price
+    }));
+  })(),
+
+  setTemplates: (templates) => {
+    localStorage.setItem('clinic_templates', JSON.stringify(templates));
+    set({ templates });
+  },
 
   updateLead: (id, updates) => set((state) => ({
     leads: state.leads.map((l) => l.id === id ? { ...l, ...updates } : l)

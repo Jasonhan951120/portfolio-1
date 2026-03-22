@@ -113,26 +113,28 @@ const ClientPTPage: React.FC = () => {
                 {/* Left Side: Transformation Visual (The Hero) */}
                 <div className="flex-1 p-8 lg:p-16 flex flex-col justify-center border-b lg:border-b-0 lg:border-r border-gray-100 bg-white">
                     <div className="max-w-xl mx-auto w-full">
-                        <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            className="mb-12"
-                        >
-                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#87A96B] mb-2 block">
-                                {lead?.name ? `Prepared Exclusively for ${lead.name}` : 'Your Tailored Transformation'}
-                            </span>
-                            <h1 className="text-4xl md:text-5xl font-display font-bold text-gray-950 leading-tight">
-                                Visualising Your <br />New Smile
-                            </h1>
+                        {(displayBeforeImg || displayAfterImg) && (
+                            <motion.div
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                className="mb-12"
+                            >
+                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#87A96B] mb-2 block">
+                                    {lead?.name ? `Prepared Exclusively for ${lead.name}` : 'Your Tailored Transformation'}
+                                </span>
+                                <h1 className="text-4xl md:text-5xl font-display font-bold text-gray-950 leading-tight">
+                                    Visualising Your <br />New Smile
+                                </h1>
 
-                            {personalizedNote && (
-                                <div className="mt-6 p-5 bg-[#87A96B]/5 border-l-4 border-[#87A96B] rounded-r-2xl">
-                                    <p className="text-sm text-gray-700 italic font-medium leading-relaxed">
-                                        "{personalizedNote}"
-                                    </p>
-                                </div>
-                            )}
-                        </motion.div>
+                                {personalizedNote && (
+                                    <div className="mt-6 p-5 bg-[#87A96B]/5 border-l-4 border-[#87A96B] rounded-r-2xl">
+                                        <p className="text-sm text-gray-700 italic font-medium leading-relaxed">
+                                            "{personalizedNote}"
+                                        </p>
+                                    </div>
+                                )}
+                            </motion.div>
+                        )}
 
                         {/* Interactive Before/After Slider - Conditional Render */}
                         {displayBeforeImg && displayAfterImg && (

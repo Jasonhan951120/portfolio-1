@@ -50,7 +50,7 @@ import { SendPTModal } from "./dashboard/SendPTModal";
 
 import { PMSLogDrawer } from "./dashboard/backoffice/PMSLogDrawer";
 import { ClinicMetaModal } from "./dashboard/backoffice/ClinicMetaModal";
-import { useDashboardStore } from "../store/useDashboardStore";
+import { useDashboardStore, type TreatmentTemplate } from "../store/useDashboardStore";
 import { SlotNumber } from "./SlotNumber";
 import { AICaseNotePopover } from "./dashboard/AICaseNotePopover";
 import { AuditTrailModal } from "./dashboard/AuditTrailModal";
@@ -58,16 +58,6 @@ import { GoogleOnboardingModal } from "./dashboard/GoogleOnboardingModal";
 import { ReviewCorrelationWidget } from "./dashboard/ReviewCorrelationWidget";
 import { NorthStarSummaryCards } from "./dashboard/NorthStarSummaryCards";
 import { ErrorBoundary } from "./common/ErrorBoundary";
-
-export interface TreatmentTemplate {
-  id: string;
-  name: string;
-  price: number;
-  description?: string;
-  beforeImg?: string;
-  afterImg?: string;
-  bookingUrl?: string;
-}
 
 
 // Onboarding Tooltip Component (Medical Precision)
@@ -920,16 +910,7 @@ export default function AdminDashboard() {
   const [activeAuditLead, setActiveAuditLead] = useState<ConsultationRequest | null>(null);
   const [isGoogleModalOpen, setIsGoogleModalOpen] = useState(false);
   
-  // Lifted templates state for Smart Link logic
-  const [templates, setTemplates] = useState<TreatmentTemplate[]>(
-    Object.entries(SERVICE_CONVERSION_VALUES).map(([name, price], idx) => ({
-      id: `template-${idx}`,
-      name,
-      price
-    }))
-  );
-
-  const isGoogleConnected = useDashboardStore(state => state.isGoogleConnected);
+  const { templates, setTemplates, isGoogleConnected } = useDashboardStore();
 
 
   // Auto-trigger Google Onboarding Modal

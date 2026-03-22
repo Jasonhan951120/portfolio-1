@@ -2,10 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { 
-  Users, RefreshCw, FileText, Sparkles, 
-  AlertTriangle, Send, MessageCircle, Shield
-} from 'lucide-react';
+import { Send, MessageCircle, Shield, AlertTriangle, Sparkles, Users } from 'lucide-react';
 import { type ConsultationRequest } from "../../lib/supabase";
 
 interface PatientCardProps {
@@ -185,15 +182,7 @@ export const PatientCard = React.memo(function PatientCard({
           
           <div className="mt-4 pt-4 border-t border-white/[0.05] flex justify-between items-center pointer-events-auto opacity-0 group-hover:opacity-100 transition-all duration-300">
             <div className="flex gap-4 w-full justify-end">
-              {lead.status === "New Lead" && (
-                <button
-                  onClick={handleWaitlistClick}
-                  className="px-3 py-1.5 text-zinc-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl transition-all border border-white/10 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 self-center mr-1"
-                  title="Move to Waitlist"
-                >
-                  <Users className="w-3 h-3" strokeWidth={1.5} /> Waitlist
-                </button>
-              )}
+
 
               {/* Dynamic WhatsApp Button */}
               <button
