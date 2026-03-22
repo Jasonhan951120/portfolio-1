@@ -48,15 +48,22 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
   }, [isOpen, lead, templates]);
 
   const QUICK_TEMPLATES = {
-    standard: "Dear {PatientName}, it was a true pleasure welcoming you to {ClinicName} today. Thank you for trusting us with your care. Based on our conversation, I have crafted this bespoke {TreatmentName} plan specifically for you. Our primary focus is ensuring you feel supported and truly cared for at every step. We use proven techniques tailored to your needs for a stress-free experience. Please review the details below and click 'Accept & Book' to secure your next appointment. We've reserved priority slots for you!",
+    standard: "Dear {PatientName}, it was a true pleasure welcoming you to {ClinicName} today. Thank you for trusting us with your care. Based on our conversation, I have crafted this bespoke {TreatmentName} plan specifically for you. Our primary focus is ensuring you feel supported and truly cared for at every step. We use modern, proven techniques tailored to your needs. Please review the details below and click 'Accept & Book' to secure your next appointment. We've reserved priority slots for you!",
     postScan: "Dear {PatientName}, following your high-precision scan at {ClinicName} today, I have finalized your bespoke {TreatmentName} proposal. This plan is designed to deliver optimal clinical outcomes while ensuring your journey is as comfortable as possible. We prioritize precision and your unique dental health needs. Please review your transformation plan below and secure your slot by clicking 'Accept & Book'.",
     aesthetic: "Dear {PatientName}, it was wonderful discussing your aesthetic goals at {ClinicName}. I've designed your {TreatmentName} transformation with a focus on natural beauty and long-term vitality. Our bespoke approach ensures your new smile perfectly complements your unique features for a radiant, confident result. Take a look at the proposed plan below and click 'Accept & Book' to begin your transformation journey.",
     priority: "Dear {PatientName}, thank you for visiting {ClinicName}. I have prioritized your {TreatmentName} plan to ensure we can begin your care as soon as possible. We have reserved a limited, priority surgery slot specifically for you to ensure a seamless experience. Please review the details and click 'Accept & Book' to confirm your appointment and lock in your priority status."
   };
 
-  const applyTemplate = (templateText: string) => {
+  const getProcessingNames = () => {
     const template = templates.find(t => t.id === selectedTemplateId);
-    const treatmentName = template?.name || lead?.service || "Treatment";
+    return {
+      patientName: lead?.name?.split(' ')[0] || "Patient",
+      treatmentName: template?.name || lead?.service || "Treatment"
+    };
+  };
+
+  const applyTemplate = (templateText: string) => {
+    const { patientName, treatmentName } = getProcessingNames();
     
     let processedText = templateText
       .replace(/{PatientName}/g, lead?.name || "Patient")
@@ -71,7 +78,6 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
     const template = templates.find(t => t.id === id);
     if (template) {
       setOverridePrice(String(template.price));
-      // Upon template selection, we now use the 'standard' personalized message as a better starting point
       applyTemplate(QUICK_TEMPLATES.standard);
     }
   };
@@ -79,12 +85,10 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
   const handleWhatsAppSend = () => {
     if (!lead || !lead.phone) return;
     
-    const firstName = lead.name.split(' ')[0];
-    const template = templates.find(t => t.id === selectedTemplateId);
-    const treatmentName = template?.name || lead.service || "Treatment";
-    
+    const { patientName, treatmentName } = getProcessingNames();
     const ptLink = `${window.location.origin}/pt/${lead.id.substring(0, 8)}`;
-    const message = `Dear ${firstName}, it was a pleasure meeting you today. Dr. Hanlan has finalized your bespoke ${treatmentName} plan. View your transformation and book your slot here: ${ptLink}`;
+    
+    const message = `Dear ${patientName}, it was a pleasure meeting you today. Dr. Hanlan has finalized your bespoke ${treatmentName} plan. View your transformation and book your slot here: ${ptLink}`;
     
     const whatsappUrl = `https://wa.me/${lead.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
@@ -125,9 +129,12 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
 
   if (!isOpen || !lead) return null;
 
+  const names = getProcessingNames();
+
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        {/* Backdrop */}
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -136,20 +143,24 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
             className="absolute inset-0 bg-slate-900/60 backdrop-blur-md"
         />
 
+        {/* Modal Card */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9, y: 30 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.9, y: 30 }}
           className="relative w-full max-w-lg bg-white rounded-[40px] shadow-2xl border border-slate-200 overflow-hidden"
         >
+          {/* Header */}
           <div className="px-10 py-8 border-b border-slate-100 flex items-center justify-between bg-white">
             <div className="flex items-center gap-4">
               <div className="p-3 bg-slate-900 rounded-2xl shadow-lg shadow-slate-200">
                 <Send className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-slate-900 tracking-tight">Generate Proposal</h3>
-                <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">{lead.name}'s Bespoke PT</p>
+                <h3 className="text-xl font-bold text-slate-900 tracking-tight">
+                  {names.patientName}'s {names.treatmentName} Proposal
+                </h3>
+                <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Secure Proposal Terminal</p>
               </div>
             </div>
             <button
@@ -160,6 +171,7 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
             </button>
           </div>
 
+          {/* Settings Body */}
           <div className="px-10 py-10 space-y-8 max-h-[60vh] overflow-y-auto">
              <div className="space-y-6">
               {templates && templates.length > 0 && (
@@ -229,13 +241,14 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
                  <textarea 
                     value={personalizedNote}
                     onChange={(e) => setPersonalizedNote(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-5 text-sm font-medium text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all h-40 resize-none shadow-inner"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-5 text-sm font-medium text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all h-44 resize-none shadow-inner"
                     placeholder="Refined your veneers plan based on today's scan..."
                  />
               </div>
              </div>
           </div>
 
+          {/* Delivery Actions */}
           <div className="px-10 py-10 bg-slate-50 border-t border-slate-100 space-y-4">
              <div className="grid grid-cols-2 gap-4">
                 <button

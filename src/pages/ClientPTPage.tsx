@@ -73,11 +73,11 @@ const ClientPTPage: React.FC = () => {
         fetchLead();
     }, [id]);
 
-    const activeTreatment = treatmentDetails[lead?.service || 'Dental Implants'] || treatmentDetails["Dental Implants"];
+    const activeTreatment = treatmentDetails[lead?.treatment_name || lead?.service || 'Dental Implants'] || treatmentDetails["Dental Implants"];
     
     // Dynamic content from PT Engine (Backoffice)
-    const displayBeforeImg = lead?.pt_before_image || (lead?.service ? activeTreatment.beforeAfter.before : null);
-    const displayAfterImg = lead?.pt_after_image || (lead?.service ? activeTreatment.beforeAfter.after : null);
+    const displayBeforeImg = lead?.pt_before_image || null;
+    const displayAfterImg = lead?.pt_after_image || null;
     const displayBookingUrl = lead?.pt_booking_url;
 
     const dynamicTotalValue = lead?.pt_price_override ? Number(lead.pt_price_override) : (lead?.potential_value ? Number(lead.potential_value) : parseInt(activeTreatment.investment.replace(/[^0-9]/g, ''), 10));
