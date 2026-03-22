@@ -46,7 +46,7 @@ import { ClinicSettings } from "./dashboard/ClinicSettings";
 import { ZeroDashboardView } from "./dashboard/ZeroDashboardView";
 import ExpertModeDrawer from "./dashboard/ExpertModeDrawer";
 import { PatientCard } from "./dashboard/PatientCard";
-import { EmailPreviewModal } from "./dashboard/EmailPreviewModal";
+import { SendPTModal } from "./dashboard/SendPTModal";
 
 import { PMSLogDrawer } from "./dashboard/backoffice/PMSLogDrawer";
 import { ClinicMetaModal } from "./dashboard/backoffice/ClinicMetaModal";
@@ -2976,7 +2976,7 @@ export default function AdminDashboard() {
               onClose={() => setIsGoogleModalOpen(false)}
             />
 
-            <EmailPreviewModal
+            <SendPTModal
               isOpen={isEmailModalOpen}
               onClose={() => {
                 setIsEmailModalOpen(false);

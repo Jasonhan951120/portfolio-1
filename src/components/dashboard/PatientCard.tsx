@@ -4,7 +4,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { 
   Users, RefreshCw, FileText, Sparkles, 
-  AlertTriangle, Monitor, Send, MessageCircle, Shield
+  AlertTriangle, Send, MessageCircle, Shield
 } from 'lucide-react';
 import { type ConsultationRequest } from "../../lib/supabase";
 
@@ -184,7 +184,7 @@ export const PatientCard = React.memo(function PatientCard({
           </div>
           
           <div className="mt-4 pt-4 border-t border-white/[0.05] flex justify-between items-center pointer-events-auto opacity-0 group-hover:opacity-100 transition-all duration-300">
-            <div className="flex gap-2 w-full justify-end">
+            <div className="flex gap-4 w-full justify-end">
               {lead.status === "New Lead" && (
                 <button
                   onClick={handleWaitlistClick}
@@ -217,34 +217,12 @@ export const PatientCard = React.memo(function PatientCard({
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  onOpenPTMode?.(lead);
-                }}
-                className="p-1.5 text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 rounded-lg transition-all border border-emerald-500/20 shadow-lg shadow-emerald-500/5"
-                title="Open Tablet PT Consultation Mode"
-              >
-                <Monitor className="w-3.5 h-3.5" strokeWidth={1.5} />
-              </button>
-
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
                   onOpenAudit?.(lead);
                 }}
                 className="p-1.5 text-purple-400 hover:text-purple-300 bg-purple-500/10 hover:bg-purple-500/20 rounded-lg transition-all border border-purple-500/20 shadow-lg shadow-purple-500/5"
                 title="View Security Audit Trail"
               >
                 <Shield className="w-3.5 h-3.5" strokeWidth={1.5} />
-              </button>
-
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setSelectedLead?.(lead);
-                }}
-                className="p-1.5 text-zinc-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-lg transition-all border border-white/10"
-                title="View Inquiry details"
-              >
-                <FileText className="w-3.5 h-3.5" strokeWidth={1.5} />
               </button>
 
               <button
