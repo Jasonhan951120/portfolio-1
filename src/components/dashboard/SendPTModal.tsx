@@ -47,14 +47,32 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
     }
   }, [isOpen, lead, templates]);
 
+  const QUICK_TEMPLATES = {
+    standard: "Dear {PatientName}, it was a true pleasure welcoming you to {ClinicName} today. Thank you for trusting us with your care. Based on our conversation, I have crafted this bespoke {TreatmentName} plan specifically for you. Our primary focus is ensuring you feel supported and truly cared for at every step. We use proven techniques tailored to your needs for a stress-free experience. Please review the details below and click 'Accept & Book' to secure your next appointment. We've reserved priority slots for you!",
+    postScan: "Dear {PatientName}, following your high-precision scan at {ClinicName} today, I have finalized your bespoke {TreatmentName} proposal. This plan is designed to deliver optimal clinical outcomes while ensuring your journey is as comfortable as possible. We prioritize precision and your unique dental health needs. Please review your transformation plan below and secure your slot by clicking 'Accept & Book'.",
+    aesthetic: "Dear {PatientName}, it was wonderful discussing your aesthetic goals at {ClinicName}. I've designed your {TreatmentName} transformation with a focus on natural beauty and long-term vitality. Our bespoke approach ensures your new smile perfectly complements your unique features for a radiant, confident result. Take a look at the proposed plan below and click 'Accept & Book' to begin your transformation journey.",
+    priority: "Dear {PatientName}, thank you for visiting {ClinicName}. I have prioritized your {TreatmentName} plan to ensure we can begin your care as soon as possible. We have reserved a limited, priority surgery slot specifically for you to ensure a seamless experience. Please review the details and click 'Accept & Book' to confirm your appointment and lock in your priority status."
+  };
+
+  const applyTemplate = (templateText: string) => {
+    const template = templates.find(t => t.id === selectedTemplateId);
+    const treatmentName = template?.name || lead?.service || "Treatment";
+    
+    let processedText = templateText
+      .replace(/{PatientName}/g, lead?.name || "Patient")
+      .replace(/{ClinicName}/g, clinicName)
+      .replace(/{TreatmentName}/g, treatmentName);
+      
+    setPersonalizedNote(processedText);
+  };
+
   const handleTemplateChange = (id: string) => {
     setSelectedTemplateId(id);
     const template = templates.find(t => t.id === id);
     if (template) {
       setOverridePrice(String(template.price));
-      if (template.description) {
-        setPersonalizedNote(template.description);
-      }
+      // Upon template selection, we now use the 'standard' personalized message as a better starting point
+      applyTemplate(QUICK_TEMPLATES.standard);
     }
   };
 
@@ -179,11 +197,39 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
               </div>
 
               <div>
-                 <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Doctor's Personalized Note</label>
+                 <div className="flex items-center justify-between mb-3">
+                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest">Doctor's Personalized Note</label>
+                    <div className="flex gap-2">
+                       <button 
+                          onClick={() => applyTemplate(QUICK_TEMPLATES.standard)}
+                          className="bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-full px-3 py-1 text-[9px] font-bold transition-all active:scale-95"
+                       >
+                          Standard
+                       </button>
+                       <button 
+                          onClick={() => applyTemplate(QUICK_TEMPLATES.postScan)}
+                          className="bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-full px-3 py-1 text-[9px] font-bold transition-all active:scale-95"
+                       >
+                          Post-Scan
+                       </button>
+                       <button 
+                          onClick={() => applyTemplate(QUICK_TEMPLATES.aesthetic)}
+                          className="bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-full px-3 py-1 text-[9px] font-bold transition-all active:scale-95"
+                       >
+                          Aesthetic
+                       </button>
+                       <button 
+                          onClick={() => applyTemplate(QUICK_TEMPLATES.priority)}
+                          className="bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-full px-3 py-1 text-[9px] font-bold transition-all active:scale-95"
+                       >
+                          Priority
+                       </button>
+                    </div>
+                 </div>
                  <textarea 
                     value={personalizedNote}
                     onChange={(e) => setPersonalizedNote(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-5 text-sm font-medium text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all h-32 resize-none"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-5 text-sm font-medium text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all h-40 resize-none shadow-inner"
                     placeholder="Refined your veneers plan based on today's scan..."
                  />
               </div>
