@@ -59,6 +59,17 @@ import { ReviewCorrelationWidget } from "./dashboard/ReviewCorrelationWidget";
 import { NorthStarSummaryCards } from "./dashboard/NorthStarSummaryCards";
 import { ErrorBoundary } from "./common/ErrorBoundary";
 
+export interface TreatmentTemplate {
+  id: string;
+  name: string;
+  price: number;
+  description?: string;
+  beforeImg?: string;
+  afterImg?: string;
+  bookingUrl?: string;
+}
+
+
 // Onboarding Tooltip Component (Medical Precision)
 const OnboardingTooltip = ({ message, onClose }: { message: string; onClose: () => void }) => (
   <motion.div
@@ -908,6 +919,16 @@ export default function AdminDashboard() {
   // AI & Audit State
   const [activeAuditLead, setActiveAuditLead] = useState<ConsultationRequest | null>(null);
   const [isGoogleModalOpen, setIsGoogleModalOpen] = useState(false);
+  
+  // Lifted templates state for Smart Link logic
+  const [templates, setTemplates] = useState<TreatmentTemplate[]>(
+    Object.entries(SERVICE_CONVERSION_VALUES).map(([name, price], idx) => ({
+      id: `template-${idx}`,
+      name,
+      price
+    }))
+  );
+
   const isGoogleConnected = useDashboardStore(state => state.isGoogleConnected);
 
 
@@ -2986,6 +3007,7 @@ export default function AdminDashboard() {
               currency={currency}
               clinicName="Hanlan OC Dental Clinic"
               onUpdateLead={updateLead}
+              templates={templates}
             />
 
             {/* Tablet PT Mode Overlay (AntiGravity) */}
@@ -3199,6 +3221,8 @@ export default function AdminDashboard() {
             isOpen={isSettingsOpen} 
             onClose={() => setIsSettingsOpen(false)} 
             currency={currency} 
+            templates={templates}
+            setTemplates={setTemplates}
           />
 
           <ExpertModeDrawer 

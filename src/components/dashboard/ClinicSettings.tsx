@@ -14,19 +14,26 @@ interface TreatmentTemplate {
     name: string;
     price: number;
     description?: string;
-    beforePhotoUrl?: string;
-    afterPhotoUrl?: string;
+    beforeImg?: string;
+    afterImg?: string;
+    bookingUrl?: string;
 }
 
-export function ClinicSettings({ isOpen, onClose, currency = '£' }: ClinicSettingsProps) {
-    // We initialize with the constants we already have + some demo visual assets
-    const [templates, setTemplates] = useState<TreatmentTemplate[]>(
-        Object.entries(SERVICE_CONVERSION_VALUES).map(([name, price], idx) => ({
-            id: `template-${idx}`,
-            name,
-            price
-        }))
-    );
+interface ClinicSettingsProps {
+    isOpen: boolean;
+    onClose: () => void;
+    currency?: string;
+    templates: TreatmentTemplate[];
+    setTemplates: React.Dispatch<React.SetStateAction<TreatmentTemplate[]>>;
+}
+
+export function ClinicSettings({ 
+    isOpen, 
+    onClose, 
+    currency = '£',
+    templates,
+    setTemplates 
+}: ClinicSettingsProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [editingTemplate, setEditingTemplate] = useState<TreatmentTemplate | null>(null);
 
@@ -55,7 +62,7 @@ export function ClinicSettings({ isOpen, onClose, currency = '£' }: ClinicSetti
                 const val = event.target?.result as string;
                 setEditingTemplate({
                     ...editingTemplate,
-                    [type === 'before' ? 'beforePhotoUrl' : 'afterPhotoUrl']: val
+                    [type === 'before' ? 'beforeImg' : 'afterImg']: val
                 });
             };
             reader.readAsDataURL(e.target.files[0]);
@@ -123,7 +130,7 @@ export function ClinicSettings({ isOpen, onClose, currency = '£' }: ClinicSetti
                                         </div>
                                         <button 
                                             onClick={() => {
-                                                setEditingTemplate({ id: '', name: '', price: 0, description: '' });
+                                                setEditingTemplate({ id: '', name: '', price: 0, description: '', bookingUrl: '' });
                                                 setIsEditing(true);
                                             }}
                                             className="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-full text-sm font-bold tracking-wide transition-all active:scale-[0.98] shadow-md hover:shadow-lg flex items-center gap-2"
@@ -152,28 +159,40 @@ export function ClinicSettings({ isOpen, onClose, currency = '£' }: ClinicSetti
 
                                                     <div className="grid grid-cols-2 gap-6">
                                                         <div className="space-y-4">
-                                                            <div>
-                                                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Treatment Name</label>
-                                                                <input 
-                                                                    type="text" 
-                                                                    value={editingTemplate.name}
-                                                                    onChange={(e) => setEditingTemplate({ ...editingTemplate, name: e.target.value })}
-                                                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all shadow-sm"
-                                                                    placeholder="e.g. Premium Implants"
-                                                                />
-                                                            </div>
-                                                            <div>
-                                                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Default Price</label>
-                                                                <div className="relative">
-                                                                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">{currency}</span>
+                                                            <div className="grid grid-cols-2 gap-4">
+                                                                <div>
+                                                                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Treatment Name</label>
                                                                     <input 
-                                                                        type="number" 
-                                                                        value={editingTemplate.price || ''}
-                                                                        onChange={(e) => setEditingTemplate({ ...editingTemplate, price: Number(e.target.value) })}
-                                                                        className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-8 pr-4 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all shadow-sm"
-                                                                        placeholder="8500"
+                                                                        type="text" 
+                                                                        value={editingTemplate.name}
+                                                                        onChange={(e) => setEditingTemplate({ ...editingTemplate, name: e.target.value })}
+                                                                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all shadow-sm"
+                                                                        placeholder="e.g. Premium Implants"
                                                                     />
                                                                 </div>
+                                                                <div>
+                                                                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Default Price</label>
+                                                                    <div className="relative">
+                                                                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">{currency}</span>
+                                                                        <input 
+                                                                            type="number" 
+                                                                            value={editingTemplate.price || ''}
+                                                                            onChange={(e) => setEditingTemplate({ ...editingTemplate, price: Number(e.target.value) })}
+                                                                            className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-8 pr-4 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all shadow-sm"
+                                                                            placeholder="8500"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div>
+                                                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Default Booking URL (Optional)</label>
+                                                                <input 
+                                                                    type="text" 
+                                                                    value={editingTemplate.bookingUrl || ''}
+                                                                    onChange={(e) => setEditingTemplate({ ...editingTemplate, bookingUrl: e.target.value })}
+                                                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all shadow-sm"
+                                                                    placeholder="https://booking.clinic.com/implants"
+                                                                />
                                                             </div>
                                                             <div>
                                                                 <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Master Treatment Description</label>
@@ -181,7 +200,7 @@ export function ClinicSettings({ isOpen, onClose, currency = '£' }: ClinicSetti
                                                                     value={editingTemplate.description || ''}
                                                                     onChange={(e) => setEditingTemplate({ ...editingTemplate, description: e.target.value })}
                                                                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all shadow-sm resize-none h-24"
-                                                                    placeholder="Enter a detailed, patient-friendly explanation of the treatment..."
+                                                                    placeholder="Enter a detailed, patient-friendly explanation..."
                                                                 />
                                                             </div>
                                                         </div>
@@ -192,9 +211,9 @@ export function ClinicSettings({ isOpen, onClose, currency = '£' }: ClinicSetti
                                                             <div className="grid grid-cols-2 gap-4">
                                                                 {/* Before */}
                                                                 <label className="relative flex flex-col items-center justify-center border-dashed border-2 border-slate-200 bg-slate-50 hover:bg-slate-100 hover:border-emerald-400 transition-all rounded-xl p-4 text-center cursor-pointer group h-32 overflow-hidden shadow-sm">
-                                                                    {editingTemplate.beforePhotoUrl ? (
+                                                                    {editingTemplate.beforeImg ? (
                                                                         <>
-                                                                            <img src={editingTemplate.beforePhotoUrl} className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+                                                                            <img src={editingTemplate.beforeImg} className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
                                                                             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                                                                 <span className="text-white text-xs font-bold shadow-md">Replace</span>
                                                                             </div>
@@ -209,9 +228,9 @@ export function ClinicSettings({ isOpen, onClose, currency = '£' }: ClinicSetti
                                                                 </label>
                                                                 {/* After */}
                                                                 <label className="relative flex flex-col items-center justify-center border-dashed border-2 border-slate-200 bg-slate-50 hover:bg-slate-100 hover:border-emerald-400 transition-all rounded-xl p-4 text-center cursor-pointer group h-32 overflow-hidden shadow-sm">
-                                                                    {editingTemplate.afterPhotoUrl ? (
+                                                                    {editingTemplate.afterImg ? (
                                                                         <>
-                                                                            <img src={editingTemplate.afterPhotoUrl} className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+                                                                            <img src={editingTemplate.afterImg} className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
                                                                             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                                                                 <span className="text-white text-xs font-bold shadow-md">Replace</span>
                                                                             </div>
@@ -272,29 +291,29 @@ export function ClinicSettings({ isOpen, onClose, currency = '£' }: ClinicSetti
 
                                                 <div className="mt-auto pt-4 flex items-center justify-between border-t border-slate-100/50">
                                                     <div className="flex -space-x-2">
-                                                        {template.beforePhotoUrl ? (
-                                                            <img src={template.beforePhotoUrl} className="w-8 h-8 rounded-full ring-2 ring-white object-cover shadow-sm bg-slate-100" />
+                                                        {template.beforeImg ? (
+                                                            <img src={template.beforeImg} className="w-8 h-8 rounded-full ring-2 ring-white object-cover shadow-sm bg-slate-100" />
                                                         ) : (
                                                             <div className="w-8 h-8 rounded-full ring-2 ring-white bg-slate-100 flex items-center justify-center shadow-sm">
                                                                 <Camera className="w-3 h-3 text-slate-300" />
                                                             </div>
                                                         )}
-                                                        {template.afterPhotoUrl ? (
-                                                            <img src={template.afterPhotoUrl} className="w-8 h-8 rounded-full ring-2 ring-white object-cover shadow-sm bg-slate-100" />
+                                                        {template.afterImg ? (
+                                                            <img src={template.afterImg} className="w-8 h-8 rounded-full ring-2 ring-white object-cover shadow-sm bg-slate-100" />
                                                         ) : (
                                                             <div className="w-8 h-8 rounded-full ring-2 ring-white bg-slate-100 flex items-center justify-center shadow-sm">
                                                                 <Camera className="w-3 h-3 text-slate-300" />
                                                             </div>
                                                         )}
                                                     </div>
-                                                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{template.beforePhotoUrl && template.afterPhotoUrl ? 'Assets Ready' : 'Pending Assets'}</span>
+                                                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{template.beforeImg && template.afterImg ? 'Assets Ready' : 'Pending Assets'}</span>
                                                 </div>
                                             </div>
                                         ))}
                                         
                                         {/* Empty State / Add Card */}
                                         <button 
-                                            onClick={() => { setEditingTemplate({ id: '', name: '', price: 0, description: '' }); setIsEditing(true); }}
+                                            onClick={() => { setEditingTemplate({ id: '', name: '', price: 0, description: '', bookingUrl: '' }); setIsEditing(true); }}
                                             className="bg-slate-50 hover:bg-slate-100 border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center p-8 transition-colors group min-h-[160px]"
                                         >
                                             <div className="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center group-hover:scale-110 transition-transform mb-3">

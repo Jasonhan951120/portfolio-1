@@ -74,6 +74,12 @@ const ClientPTPage: React.FC = () => {
     }, [id]);
 
     const activeTreatment = treatmentDetails[lead?.service || 'Dental Implants'] || treatmentDetails["Dental Implants"];
+    
+    // Dynamic content from PT Engine (Backoffice)
+    const displayBeforeImg = lead?.pt_before_image || (lead?.service ? activeTreatment.beforeAfter.before : null);
+    const displayAfterImg = lead?.pt_after_image || (lead?.service ? activeTreatment.beforeAfter.after : null);
+    const displayBookingUrl = lead?.pt_booking_url;
+
     const dynamicTotalValue = lead?.pt_price_override ? Number(lead.pt_price_override) : (lead?.potential_value ? Number(lead.potential_value) : parseInt(activeTreatment.investment.replace(/[^0-9]/g, ''), 10));
     const dynamicMonthly = Math.round(dynamicTotalValue / 24);
 
@@ -128,55 +134,59 @@ const ClientPTPage: React.FC = () => {
                             )}
                         </motion.div>
 
-                        {/* Interactive Before/After Slider */}
-                        <div className="relative aspect-[4/3] rounded-[48px] overflow-hidden shadow-2xl shadow-gray-200 group border border-gray-100">
-                            <img src={activeTreatment.beforeAfter.after} alt="After" className="absolute inset-0 w-full h-full object-cover" />
-                            <div
-                                className="absolute inset-0 w-full h-full object-cover overflow-hidden"
-                                style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
-                            >
-                                <img src={activeTreatment.beforeAfter.before} alt="Before" className="absolute inset-0 w-full h-full object-cover" />
-                            </div>
+                        {/* Interactive Before/After Slider - Conditional Render */}
+                        {displayBeforeImg && displayAfterImg && (
+                            <div className="relative aspect-[4/3] rounded-[48px] overflow-hidden shadow-2xl shadow-gray-200 group border border-gray-100">
+                                <img src={displayAfterImg} alt="After" className="absolute inset-0 w-full h-full object-cover" />
+                                <div
+                                    className="absolute inset-0 w-full h-full object-cover overflow-hidden"
+                                    style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
+                                >
+                                    <img src={displayBeforeImg} alt="Before" className="absolute inset-0 w-full h-full object-cover" />
+                                </div>
 
-                            {/* Comparison Line */}
-                            <div
-                                className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize group z-20"
-                                style={{ left: `${sliderPosition}%` }}
-                            >
-                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-xl flex items-center justify-center">
-                                    <div className="flex gap-1.5 items-center">
-                                        <div className="w-1 h-3 rounded-full bg-gray-200" />
-                                        <div className="w-1 h-3 rounded-full bg-gray-200" />
+                                {/* Comparison Line */}
+                                <div
+                                    className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize group z-20"
+                                    style={{ left: `${sliderPosition}%` }}
+                                >
+                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-xl flex items-center justify-center">
+                                        <div className="flex gap-1.5 items-center">
+                                            <div className="w-1 h-3 rounded-full bg-gray-200" />
+                                            <div className="w-1 h-3 rounded-full bg-gray-200" />
+                                        </div>
                                     </div>
                                 </div>
+
+                                {/* Label Overlays */}
+                                <div className="absolute top-6 left-6 px-4 py-2 bg-black/50 backdrop-blur-md rounded-full text-white text-[10px] font-bold uppercase tracking-widest">Initial State</div>
+                                <div className="absolute top-6 right-6 px-4 py-2 bg-[#87A96B]/80 backdrop-blur-md rounded-full text-white text-[10px] font-bold uppercase tracking-widest">Predicted Result</div>
+
+                                {/* Range Hidden Input for Interactivity */}
+                                <input
+                                    type="range"
+                                    min="0" max="100"
+                                    value={sliderPosition}
+                                    onChange={(e) => setSliderPosition(parseInt(e.target.value))}
+                                    className="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-30"
+                                />
                             </div>
+                        )}
 
-                            {/* Label Overlays */}
-                            <div className="absolute top-6 left-6 px-4 py-2 bg-black/50 backdrop-blur-md rounded-full text-white text-[10px] font-bold uppercase tracking-widest">Initial State</div>
-                            <div className="absolute top-6 right-6 px-4 py-2 bg-[#87A96B]/80 backdrop-blur-md rounded-full text-white text-[10px] font-bold uppercase tracking-widest">Predicted Result</div>
-
-                            {/* Range Hidden Input for Interactivity */}
-                            <input
-                                type="range"
-                                min="0" max="100"
-                                value={sliderPosition}
-                                onChange={(e) => setSliderPosition(parseInt(e.target.value))}
-                                className="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-30"
-                            />
-                        </div>
-
-                        <div className="mt-8 flex items-center gap-6 justify-center">
-                            <div className="flex -space-x-2">
-                                {[...Array(3)].map((_, i) => (
-                                    <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-gray-100 flex items-center justify-center text-[10px] font-bold shadow-sm">
-                                        {["JS", "OD", "TW"][i]}
-                                    </div>
-                                ))}
+                        {displayBeforeImg && displayAfterImg && (
+                            <div className="mt-8 flex items-center gap-6 justify-center">
+                                <div className="flex -space-x-2">
+                                    {[...Array(3)].map((_, i) => (
+                                        <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-gray-100 flex items-center justify-center text-[10px] font-bold shadow-sm">
+                                            {["JS", "OD", "TW"][i]}
+                                        </div>
+                                    ))}
+                                </div>
+                                <p className="text-[11px] text-gray-500 font-medium italic">
+                                    "This simulation accurately reflects the desired outcome."
+                                </p>
                             </div>
-                            <p className="text-[11px] text-gray-500 font-medium italic">
-                                "This simulation accurately reflects the desired outcome."
-                            </p>
-                        </div>
+                        )}
 
                         {masterDescription && (
                             <div className="mt-12 bg-white border border-gray-100 p-8 rounded-3xl shadow-sm">
@@ -239,9 +249,19 @@ const ClientPTPage: React.FC = () => {
                             <motion.button
                                 whileHover={{ scale: 1.02, boxShadow: "0 30px 60px -15px rgba(0,0,0,0.15)" }}
                                 whileTap={{ scale: 0.98 }}
+                                onClick={() => {
+                                    if (displayBookingUrl) {
+                                      window.open(displayBookingUrl, '_blank');
+                                    } else {
+                                      // Default behavior if no URL (Stripe or similar)
+                                      alert("Booking confirmed. Initializing secure payment portal...");
+                                    }
+                                }}
                                 className="w-full py-6 bg-gray-900 group rounded-[24px] text-white font-black uppercase tracking-[0.2em] text-xs flex items-center justify-center gap-4 relative overflow-hidden shadow-2xl transition-all"
                             >
-                                <span className="relative z-10">Confirm & Pay via Stripe</span>
+                                <span className="relative z-10">
+                                    {displayBookingUrl ? 'Book Appointment Now' : 'Confirm & Pay via Stripe'}
+                                </span>
                                 <ArrowRight className="w-4 h-4 relative z-10 transition-transform group-hover:translate-x-1" />
                                 <div className="absolute inset-0 bg-gradient-to-r from-[#87A96B] to-[#769b59] opacity-0 group-hover:opacity-100 transition-opacity" />
                             </motion.button>

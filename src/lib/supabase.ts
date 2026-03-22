@@ -76,6 +76,10 @@ export type ConsultationRequest = {
     after_photo?: string;
     pt_price_override?: number;
     pt_personalized_note?: string;
+    treatment_name?: string;
+    pt_before_image?: string;
+    pt_after_image?: string;
+    pt_booking_url?: string;
 };
 
 export type Resource = {
