@@ -2985,6 +2985,7 @@ export default function AdminDashboard() {
               lead={emailLead}
               currency={currency}
               clinicName="Hanlan OC Dental Clinic"
+              onUpdateLead={updateLead}
             />
 
             {/* Tablet PT Mode Overlay (AntiGravity) */}

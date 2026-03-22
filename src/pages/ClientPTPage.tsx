@@ -22,6 +22,7 @@ const ClientPTPage: React.FC = () => {
             monthly: "£145.83",
             term: "24 Months",
             features: ["Custom Abutment", "Premium Titanium Post", "Hand-crafted Porcelain Crown", "Lifetime Guarantee"],
+            description: "Dental implants are the gold standard for tooth replacement. This comprehensive procedure ensures maximum durability, aesthetic integration, and restored functional bite strength, providing a permanent solution that looks and feels completely natural.",
             beforeAfter: {
                 before: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=1200",
                 after: "https://images.unsplash.com/photo-1606811841660-1b51e9ed27ff?auto=format&fit=crop&q=80&w=1200"
@@ -33,6 +34,7 @@ const ClientPTPage: React.FC = () => {
             monthly: "£125.00",
             term: "24 Months",
             features: ["Full 3D Simulation", "Set of Clear Aligners", "Retainers Included", "Post-treatment Whitening"],
+            description: "Our SmartSmile aligner protocol offers a discreet, comfortable path to your perfect smile. Using advanced 3D scanning, we map the exact movement of your teeth to ensure precision alignment without traditional braces.",
             beforeAfter: {
                 before: "https://images.unsplash.com/photo-1598256989800-fe5f95da9787?auto=format&fit=crop&q=80&w=1200",
                 after: "https://images.unsplash.com/photo-1516012828019-06ad1742de8a?auto=format&fit=crop&q=80&w=1200"
@@ -72,8 +74,11 @@ const ClientPTPage: React.FC = () => {
     }, [id]);
 
     const activeTreatment = treatmentDetails[lead?.service || 'Dental Implants'] || treatmentDetails["Dental Implants"];
-    const dynamicTotalValue = lead?.potential_value ? Number(lead.potential_value) : parseInt(activeTreatment.investment.replace(/[^0-9]/g, ''), 10);
+    const dynamicTotalValue = lead?.pt_price_override ? Number(lead.pt_price_override) : (lead?.potential_value ? Number(lead.potential_value) : parseInt(activeTreatment.investment.replace(/[^0-9]/g, ''), 10));
     const dynamicMonthly = Math.round(dynamicTotalValue / 24);
+
+    const personalizedNote = lead?.pt_personalized_note;
+    const masterDescription = activeTreatment.description;
 
     if (loading) return (
         <div className="min-h-screen bg-white flex items-center justify-center">
@@ -113,6 +118,14 @@ const ClientPTPage: React.FC = () => {
                             <h1 className="text-4xl md:text-5xl font-display font-bold text-gray-950 leading-tight">
                                 Visualising Your <br />New Smile
                             </h1>
+
+                            {personalizedNote && (
+                                <div className="mt-6 p-5 bg-[#87A96B]/5 border-l-4 border-[#87A96B] rounded-r-2xl">
+                                    <p className="text-sm text-gray-700 italic font-medium leading-relaxed">
+                                        "{personalizedNote}"
+                                    </p>
+                                </div>
+                            )}
                         </motion.div>
 
                         {/* Interactive Before/After Slider */}
@@ -164,6 +177,15 @@ const ClientPTPage: React.FC = () => {
                                 "This simulation accurately reflects the desired outcome."
                             </p>
                         </div>
+
+                        {masterDescription && (
+                            <div className="mt-12 bg-white border border-gray-100 p-8 rounded-3xl shadow-sm">
+                                <h3 className="text-xs font-black uppercase tracking-widest text-[#87A96B] mb-3">Clinical Overview</h3>
+                                <p className="text-sm text-gray-600 leading-relaxed font-medium">
+                                    {masterDescription}
+                                </p>
+                            </div>
+                        )}
                     </div>
                 </div>
 

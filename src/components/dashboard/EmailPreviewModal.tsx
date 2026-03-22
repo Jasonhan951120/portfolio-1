@@ -9,6 +9,7 @@ interface EmailPreviewModalProps {
   lead: ConsultationRequest | null;
   currency?: string;
   clinicName?: string;
+  onUpdateLead?: (id: string, updates: Partial<ConsultationRequest>) => void;
 }
 
 export const EmailPreviewModal: React.FC<EmailPreviewModalProps> = ({
@@ -16,10 +17,21 @@ export const EmailPreviewModal: React.FC<EmailPreviewModalProps> = ({
   onClose,
   lead,
   currency = '£',
-  clinicName = "Hanlan OC Dental Clinic"
+  clinicName = "Hanlan OC Dental Clinic",
+  onUpdateLead
 }) => {
   const [isSending, setIsSending] = useState(false);
   const [isSent, setIsSent] = useState(false);
+  
+  const [overridePrice, setOverridePrice] = useState<string>('');
+  const [personalizedNote, setPersonalizedNote] = useState<string>('');
+
+  React.useEffect(() => {
+    if (isOpen && lead) {
+       setOverridePrice(String(lead.potential_value || ''));
+       setPersonalizedNote(lead.pt_personalized_note || '');
+    }
+  }, [isOpen, lead]);
 
   const patientName = String(lead?.name || 'Valued Patient');
   const treatmentType = String(lead?.service || 'Dental Treatment');
@@ -28,6 +40,15 @@ export const EmailPreviewModal: React.FC<EmailPreviewModalProps> = ({
 
   const handleSend = () => {
     setIsSending(true);
+
+    if (onUpdateLead && lead) {
+      onUpdateLead(lead.id, {
+        potential_value: Number(overridePrice) || lead.potential_value,
+        pt_price_override: Number(overridePrice) || lead.potential_value,
+        pt_personalized_note: personalizedNote
+      });
+    }
+
     // Simulate high-end processing delay
     setTimeout(() => {
       setIsSending(false);
@@ -81,8 +102,37 @@ export const EmailPreviewModal: React.FC<EmailPreviewModalProps> = ({
             </button>
           </div>
 
+          {/* Override Settings */}
+          <div className="px-8 pt-8 pb-4">
+            <h4 className="text-sm font-bold text-slate-900 mb-4">Patient-Specific Overrides</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                 <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Final Treatment Price</label>
+                 <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">{currency}</span>
+                    <input 
+                       type="number" 
+                       value={overridePrice}
+                       onChange={(e) => setOverridePrice(e.target.value)}
+                       className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-8 pr-4 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all shadow-sm"
+                       placeholder="e.g. 5000"
+                    />
+                 </div>
+              </div>
+              <div>
+                 <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Personalized Note</label>
+                 <textarea 
+                    value={personalizedNote}
+                    onChange={(e) => setPersonalizedNote(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all shadow-sm resize-none h-24"
+                    placeholder="e.g. Great seeing you today, James!"
+                 />
+              </div>
+            </div>
+          </div>
+
           {/* Email Preview Area */}
-          <div className="p-8">
+          <div className="px-8 pb-8">
             <div className="bg-slate-50 rounded-2xl border border-slate-200/60 p-6 space-y-4">
               {/* Subject Line */}
               <div className="flex gap-3 pb-4 border-b border-slate-200/60">

@@ -74,6 +74,8 @@ export type ConsultationRequest = {
     expectedRevenue?: number;
     before_photo?: string;
     after_photo?: string;
+    pt_price_override?: number;
+    pt_personalized_note?: string;
 };
 
 export type Resource = {

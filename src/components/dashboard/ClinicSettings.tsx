@@ -13,6 +13,7 @@ interface TreatmentTemplate {
     id: string;
     name: string;
     price: number;
+    description?: string;
     beforePhotoUrl?: string;
     afterPhotoUrl?: string;
 }
@@ -122,7 +123,7 @@ export function ClinicSettings({ isOpen, onClose, currency = '£' }: ClinicSetti
                                         </div>
                                         <button 
                                             onClick={() => {
-                                                setEditingTemplate({ id: '', name: '', price: 0 });
+                                                setEditingTemplate({ id: '', name: '', price: 0, description: '' });
                                                 setIsEditing(true);
                                             }}
                                             className="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-full text-sm font-bold tracking-wide transition-all active:scale-[0.98] shadow-md hover:shadow-lg flex items-center gap-2"
@@ -173,6 +174,15 @@ export function ClinicSettings({ isOpen, onClose, currency = '£' }: ClinicSetti
                                                                         placeholder="8500"
                                                                     />
                                                                 </div>
+                                                            </div>
+                                                            <div>
+                                                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Master Treatment Description</label>
+                                                                <textarea 
+                                                                    value={editingTemplate.description || ''}
+                                                                    onChange={(e) => setEditingTemplate({ ...editingTemplate, description: e.target.value })}
+                                                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all shadow-sm resize-none h-24"
+                                                                    placeholder="Enter a detailed, patient-friendly explanation of the treatment..."
+                                                                />
                                                             </div>
                                                         </div>
 
@@ -284,7 +294,7 @@ export function ClinicSettings({ isOpen, onClose, currency = '£' }: ClinicSetti
                                         
                                         {/* Empty State / Add Card */}
                                         <button 
-                                            onClick={() => { setEditingTemplate({ id: '', name: '', price: 0 }); setIsEditing(true); }}
+                                            onClick={() => { setEditingTemplate({ id: '', name: '', price: 0, description: '' }); setIsEditing(true); }}
                                             className="bg-slate-50 hover:bg-slate-100 border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center p-8 transition-colors group min-h-[160px]"
                                         >
                                             <div className="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center group-hover:scale-110 transition-transform mb-3">
