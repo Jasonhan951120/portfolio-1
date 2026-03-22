@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Mail, Send, CheckCircle, RefreshCw, Shield } from 'lucide-react';
+import { X, Mail, Send, CheckCircle, RefreshCw, Shield, MessageCircle } from 'lucide-react';
 import { ConsultationRequest } from '../../lib/supabase';
 
 interface TreatmentTemplate {
@@ -52,14 +52,29 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
     const template = templates.find(t => t.id === id);
     if (template) {
       setOverridePrice(String(template.price));
-      // If we have a master description, pre-fill it as a starting point for personalization
       if (template.description) {
         setPersonalizedNote(template.description);
       }
     }
   };
 
-  const handleSend = () => {
+  const handleWhatsAppSend = () => {
+    if (!lead || !lead.phone) return;
+    
+    const firstName = lead.name.split(' ')[0];
+    const template = templates.find(t => t.id === selectedTemplateId);
+    const treatmentName = template?.name || lead.service || "Treatment";
+    
+    const ptLink = `${window.location.origin}/pt/${lead.id.substring(0, 8)}`;
+    const message = `Dear ${firstName}, it was a pleasure meeting you today. Dr. Hanlan has finalized your bespoke ${treatmentName} plan. View your transformation and book your slot here: ${ptLink}`;
+    
+    const whatsappUrl = `https://wa.me/${lead.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+    
+    handleSend(false);
+  };
+
+  const handleSend = (showSuccess = true) => {
     setIsSending(true);
 
     if (onUpdateLead && lead) {
@@ -68,26 +83,26 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
         potential_value: Number(overridePrice) || lead.potential_value,
         pt_price_override: Number(overridePrice) || lead.potential_value,
         pt_personalized_note: personalizedNote,
-        // We link the lead to the master template name if changed
-        treatment_name: template?.name || lead.treatment_name,
-        // We also store the specific visuals if the template has them
+        treatment_name: template?.name || lead.treatment_name || lead.service,
         pt_before_image: template?.beforeImg,
         pt_after_image: template?.afterImg,
-        pt_booking_url: template?.bookingUrl
+        pt_booking_url: template?.bookingUrl,
+        status: "Proposal Sent"
       });
     }
 
-    // Simulate high-end processing delay
-    setTimeout(() => {
-      setIsSending(false);
-      setIsSent(true);
-      // Auto-close after success message
+    if (showSuccess) {
       setTimeout(() => {
-        onClose();
-        // Reset state for next open
-        setTimeout(() => setIsSent(false), 500);
-      }, 2000);
-    }, 1500);
+        setIsSending(false);
+        setIsSent(true);
+        setTimeout(() => {
+          onClose();
+          setTimeout(() => setIsSent(false), 500);
+        }, 2000);
+      }, 1500);
+    } else {
+      setIsSending(false);
+    }
   };
 
   if (!isOpen || !lead) return null;
@@ -95,154 +110,107 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-        {/* Backdrop */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={onClose}
-          className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="absolute inset-0 bg-slate-900/60 backdrop-blur-md"
         />
 
-        {/* Modal Card */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          initial={{ opacity: 0, scale: 0.9, y: 30 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden"
+          exit={{ opacity: 0, scale: 0.9, y: 30 }}
+          className="relative w-full max-w-lg bg-white rounded-[40px] shadow-2xl border border-slate-200 overflow-hidden"
         >
-          {/* Header */}
-          <div className="px-8 py-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-slate-900 rounded-xl">
-                <Mail className="w-5 h-5 text-white" />
+          <div className="px-10 py-8 border-b border-slate-100 flex items-center justify-between bg-white">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-slate-900 rounded-2xl shadow-lg shadow-slate-200">
+                <Send className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-slate-900 tracking-tight">Professional PT Proposal</h3>
-                <p className="text-xs text-slate-500 font-medium">Personalize and send treatment plan</p>
+                <h3 className="text-xl font-bold text-slate-900 tracking-tight">Generate Proposal</h3>
+                <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">{lead.name}'s Bespoke PT</p>
               </div>
             </div>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-slate-200/50 rounded-full transition-colors text-slate-400 hover:text-slate-600"
+              className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-400"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
-          {/* Override Settings */}
-          <div className="px-8 py-10 space-y-8">
-            <div className="space-y-6">
-              {/* Template Selector (Smart Link) */}
+          <div className="px-10 py-10 space-y-8 max-h-[60vh] overflow-y-auto">
+             <div className="space-y-6">
               {templates && templates.length > 0 && (
                 <div>
-                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Linked Treatment Template</label>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Target Treatment Plan</label>
                   <div className="relative group">
                     <select 
                       value={selectedTemplateId}
                       onChange={(e) => handleTemplateChange(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 px-4 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all shadow-sm appearance-none cursor-pointer"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-5 px-5 text-sm font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all appearance-none cursor-pointer"
                     >
-                      <option value="" disabled>Select a treatment template...</option>
+                      <option value="" disabled>Select from Clinic Settings...</option>
                       {templates.map(t => (
                         <option key={t.id} value={t.id}>{t.name} ({currency}{t.price.toLocaleString()})</option>
                       ))}
                     </select>
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-hover:text-slate-600 transition-colors">
+                    <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
                       <RefreshCw className="w-4 h-4" />
                     </div>
                   </div>
                 </div>
               )}
 
-              <div className="grid grid-cols-1 gap-6">
-                <div>
-                   <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Final Proposal Price</label>
-                   <div className="relative">
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">{currency}</span>
-                      <input 
-                         type="number" 
-                         value={overridePrice}
-                         onChange={(e) => setOverridePrice(e.target.value)}
-                         className="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 pl-10 pr-4 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all shadow-sm"
-                         placeholder="e.g. 5000"
-                      />
-                   </div>
-                </div>
+              <div>
+                 <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Investment Value</label>
+                 <div className="relative">
+                    <span className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-lg">{currency}</span>
+                    <input 
+                       type="number" 
+                       value={overridePrice}
+                       onChange={(e) => setOverridePrice(e.target.value)}
+                       className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-5 pl-12 pr-5 text-lg font-black text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all"
+                    />
+                 </div>
               </div>
 
               <div>
-                 <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Personalized Message</label>
+                 <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Doctor's Personalized Note</label>
                  <textarea 
                     value={personalizedNote}
                     onChange={(e) => setPersonalizedNote(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all shadow-sm resize-none h-32"
-                    placeholder="e.g. Great seeing you today! Here is your Smiles transformation plan..."
+                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-5 text-sm font-medium text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all h-32 resize-none"
+                    placeholder="Refined your veneers plan based on today's scan..."
                  />
               </div>
-            </div>
+             </div>
           </div>
 
-          {/* Footer Actions */}
-          <div className="px-8 py-8 bg-slate-50/80 border-t border-slate-100 flex flex-col gap-4">
-            <button
-              onClick={handleSend}
-              disabled={isSending || isSent}
-              className={`w-full py-4 rounded-2xl text-sm font-black uppercase tracking-widest transition-all duration-300 active:scale-[0.98] flex items-center justify-center gap-3 shadow-xl
-                ${isSent 
-                  ? 'bg-emerald-500 text-white shadow-emerald-500/20' 
-                  : 'bg-slate-900 text-white hover:bg-slate-800 shadow-slate-900/10'
-                }
-                disabled:opacity-70 disabled:cursor-not-allowed
-              `}
-            >
-              <AnimatePresence mode="wait">
-                {isSending ? (
-                  <motion.div
-                    key="loading"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="flex items-center gap-2"
-                  >
-                    <RefreshCw className="w-4 h-4 animate-spin" />
-                    <span>Processing Proposal...</span>
-                  </motion.div>
-                ) : isSent ? (
-                  <motion.div
-                    key="success"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="flex items-center gap-2"
-                  >
-                    <CheckCircle className="w-4 h-4" />
-                    <span>Sent Successfully</span>
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="default"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="flex items-center gap-2"
-                  >
-                    <Send className="w-4 h-4" />
-                    <span>Send Proposal to {lead.email || 'Email'}</span>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </button>
+          <div className="px-10 py-10 bg-slate-50 border-t border-slate-100 space-y-4">
+             <div className="grid grid-cols-2 gap-4">
+                <button
+                  onClick={handleWhatsAppSend}
+                  disabled={!lead.phone || isSending}
+                  className="py-5 bg-[#25D366] hover:bg-[#128C7E] disabled:opacity-50 text-white rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all shadow-xl shadow-emerald-500/20 flex items-center justify-center gap-3 active:scale-95"
+                >
+                  <MessageCircle className="w-4 h-4" /> WhatsApp
+                </button>
+                <button
+                  onClick={() => handleSend(true)}
+                  disabled={isSending}
+                  className="py-5 bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all shadow-xl shadow-slate-900/20 flex items-center justify-center gap-3 active:scale-95"
+                >
+                  {isSending ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />} Email
+                </button>
+             </div>
 
-            <div className="flex items-center justify-between mt-2">
-              <div className="flex items-center gap-2 text-slate-400">
-                <Shield className="w-3.5 h-3.5 text-emerald-500" />
-                <span className="text-[10px] font-bold uppercase tracking-widest">Secure PT Link</span>
-              </div>
-              <button
-                disabled={isSending || isSent}
-                onClick={onClose}
-                className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-colors"
-              >
-                Cancel
-              </button>
+            <div className="flex items-center justify-center gap-2 pt-2">
+              <Shield className="w-3.5 h-3.5 text-emerald-500" />
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Secure End-to-End Delivery</span>
             </div>
           </div>
         </motion.div>
