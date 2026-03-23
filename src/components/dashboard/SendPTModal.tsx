@@ -129,7 +129,7 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
         }
 
         // Call the real Supabase Edge Function for sending emails
-        const { error, data } = await supabase.functions.invoke('send-pt-link', {
+        const { error, data } = await supabase.functions.invoke('send-pt-v2', {
           body: {
             lead_id: lead?.id,
             name: lead?.name,

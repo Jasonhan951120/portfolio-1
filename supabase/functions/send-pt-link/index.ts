@@ -33,9 +33,9 @@ Deno.serve(async (req: Request) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: `${practiceName} <${FROM}>`,
+        from: `PT Proposal <${FROM}>`,
         to: [email],
-        subject: `Your Personalized ${service} Treatment Plan — ${practiceName} ✨`,
+        subject: `Your Personalized ${service} Treatment Plan ✨`,
         html: `
           <!DOCTYPE html>
           <html>
@@ -94,20 +94,25 @@ Deno.serve(async (req: Request) => {
       }),
     });
 
+    const resData = await res.json();
+    console.log("Resend response:", resData);
+
     if (!res.ok) {
-      const err = await res.text();
-      console.error("Patient email error:", err);
-      throw new Error(err);
+      console.error("Resend API error:", resData);
+      return new Response(JSON.stringify({ error: resData.message || "Email provider error" }), { 
+        status: res.status,
+        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+      });
     }
 
-    return new Response(JSON.stringify({ success: true }), {
+    return new Response(JSON.stringify({ success: true, id: resData.id }), {
       headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
     });
   } catch (err) {
-    console.error("Edge function error:", err);
+    console.error("Edge function crash:", err);
     return new Response(JSON.stringify({ error: String(err) }), {
       status: 500,
-      headers: { "Access-Control-Allow-Origin": "*" },
+      headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
     });
   }
 });
