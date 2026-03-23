@@ -2,6 +2,33 @@ import { ConsultationRequest } from './supabase';
 
 export const DEMO_LEADS: Partial<ConsultationRequest>[] = [
     {
+        id: "donggyun-live",
+        name: "Donggyun Han",
+        email: "handonggyun18@gmail.com",
+        phone: "+447950833671",
+        service: "Dental Implants",
+        potential_value: 3000,
+        status: "Active / Inquiry",
+        intent_score: 95,
+        created_at: new Date().toISOString(),
+        pt_personalized_note: "Donggyun, here is your bespoke Dental Implants proposal."
+    },
+    {
+        id: "demo-e2e",
+        name: "James",
+        service: "Dental Implants",
+        potential_value: 8500,
+        pt_price_override: 3000,
+        status: "Proposal Sent",
+        intent_score: 99,
+        created_at: new Date().toISOString(),
+        phone: "+447700900123",
+        pt_booking_url: "https://calendly.com/hanlan-oc",
+        pt_before_image: null,
+        pt_after_image: null,
+        pt_personalized_note: "James, it was a pleasure. Here is your bespoke plan at the special rate we discussed."
+    },
+    {
         id: "demo-1",
         name: "James Carter",
         service: "Dental Implants",
