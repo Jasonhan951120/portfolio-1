@@ -58,7 +58,20 @@ interface DashboardState {
 }
 
 export const useDashboardStore = create<DashboardState>((set, get) => ({
-  leads: [],
+  leads: [
+    {
+      id: "donggyun-live",
+      name: "Donggyun Han",
+      email: "handonggyun18@gmail.com",
+      phone: "+447950833671",
+      service: "Dental Implants",
+      status: "New Lead",
+      potential_value: 3000,
+      intent_score: 99,
+      created_at: new Date().toISOString(),
+      pt_personalized_note: "Donggyun, your live PT test lead is ready. Click the paper plane to begin."
+    } as ConsultationRequest
+  ],
   activeCategory: 'All',
   activeTab: 'PIPELINE',
   region: 'UK',
@@ -145,7 +158,20 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
           updated_at: data.updated_at?.toDate?.()?.toISOString() || data.updated_at,
         } as ConsultationRequest);
       });
-      set({ leads });
+      const liveDonggyun: ConsultationRequest = {
+        id: "donggyun-live",
+        name: "Donggyun Han",
+        email: "handonggyun18@gmail.com",
+        phone: "+447950833671",
+        service: "Dental Implants",
+        status: "New Lead",
+        potential_value: 3000,
+        intent_score: 99,
+        created_at: new Date().toISOString(),
+        pt_personalized_note: "Donggyun, your live PT test lead is ready. Click the paper plane to begin."
+      } as ConsultationRequest;
+
+      set({ leads: [liveDonggyun, ...leads] });
     }, (error) => {
       console.error("Firestore Subscription Error:", error);
     });
