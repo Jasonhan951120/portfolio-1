@@ -9,7 +9,10 @@ export const DEMO_LEADS: Partial<ConsultationRequest>[] = [
         status: "New Lead",
         intent_score: 94,
         created_at: new Date(Date.now() - 1000 * 60 * 45).toISOString(), // 45 mins ago
-        phone: "+447700900123"
+        phone: "+447700900123",
+        pt_before_image: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=1200",
+        pt_after_image: "https://images.unsplash.com/photo-1606811841660-1b51e9ed27ff?auto=format&fit=crop&q=80&w=1200",
+        pt_personalized_note: "James, it was a pleasure discussing your implant transformation today. As visualized, we can achieve total aesthetic restoration."
     },
     {
         id: "demo-2",
@@ -19,7 +22,10 @@ export const DEMO_LEADS: Partial<ConsultationRequest>[] = [
         status: "New Lead",
         intent_score: 88,
         created_at: new Date(Date.now() - 1000 * 60 * 120).toISOString(),
-        phone: "+447700900456"
+        phone: "+447700900456",
+        pt_before_image: "https://example.com/placeholder.jpg",
+        pt_after_image: "https://example.com/dummy.jpg",
+        pt_personalized_note: "Emma, here is a placeholder simulation."
     },
     {
         id: "demo-3",
@@ -29,7 +35,10 @@ export const DEMO_LEADS: Partial<ConsultationRequest>[] = [
         status: "Booked",
         intent_score: 91,
         created_at: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString(),
-        appointment_date: new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString() // Tomorrow
+        appointment_date: new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString(), // Tomorrow
+        pt_before_image: null,
+        pt_after_image: null,
+        pt_personalized_note: "Oliver, your plan is ready but images are pending."
     },
     {
         id: "demo-4",

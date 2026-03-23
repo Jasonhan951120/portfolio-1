@@ -9,7 +9,7 @@ import {
 import { supabase } from "../lib/supabase";
 import { DEMO_LEADS } from "../lib/demoData";
 
-const ClientPTPage: React.FC = () => {
+const PTDiscoveryMode: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const [lead, setLead] = useState<any>(null);
     const [loading, setLoading] = useState(true);
@@ -86,6 +86,17 @@ const ClientPTPage: React.FC = () => {
     const personalizedNote = lead?.pt_personalized_note;
     const masterDescription = activeTreatment.description;
 
+    const isPlaceholder = (url: string | null | undefined) => {
+        if (!url) return true;
+        const lowUrl = url.toLowerCase();
+        return lowUrl.includes('dummy') || 
+               lowUrl.includes('placeholder') || 
+               lowUrl.includes('example.com') ||
+               url.length < 10;
+    };
+
+    const hasValidImages = !isPlaceholder(displayBeforeImg) && !isPlaceholder(displayAfterImg);
+
     if (loading) return (
         <div className="min-h-screen bg-white flex items-center justify-center">
             <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1 }}>
@@ -109,23 +120,105 @@ const ClientPTPage: React.FC = () => {
                 </div>
             </header>
 
-            <main className="max-w-[1400px] mx-auto min-h-[calc(100vh-88px)] flex flex-col lg:flex-row">
+            <main className={`max-w-[1400px] mx-auto min-h-[calc(100vh-88px)] flex flex-col ${ hasValidImages ? 'lg:flex-row' : 'items-center justify-center'}`}>
                 {/* Left Side: Transformation Visual (The Hero) */}
-                <div className="flex-1 p-8 lg:p-16 flex flex-col justify-center border-b lg:border-b-0 lg:border-r border-gray-100 bg-white">
-                    <div className="max-w-xl mx-auto w-full">
-                        {(displayBeforeImg || displayAfterImg) && (
-                            <motion.div
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                className="mb-12"
-                            >
+                {hasValidImages && (
+                    <div className="flex-1 p-8 lg:p-16 flex flex-col justify-center border-b lg:border-b-0 lg:border-r border-gray-100 bg-white">
+                        <div className="max-w-xl mx-auto w-full">
+                        {/* Transformation Visual Section - Strict Anti-Empty Rule */}
+                        {hasValidImages && (
+                            <>
+                                <motion.div
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    className="mb-12"
+                                >
+                                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#87A96B] mb-2 block">
+                                        {lead?.name ? `Prepared Exclusively for ${lead.name}` : 'Your Tailored Transformation'}
+                                    </span>
+                                    <h1 className="text-4xl md:text-5xl font-display font-bold text-gray-950 leading-tight">
+                                        Visualising Your <br />New Smile
+                                    </h1>
+
+                                    {personalizedNote && (
+                                        <div className="mt-6 p-5 bg-[#87A96B]/5 border-l-4 border-[#87A96B] rounded-r-2xl">
+                                            <p className="text-sm text-gray-700 italic font-medium leading-relaxed">
+                                                "{personalizedNote}"
+                                            </p>
+                                        </div>
+                                    )}
+                                </motion.div>
+
+                                {/* Interactive Before/After Slider */}
+                                <div className="relative aspect-[4/3] rounded-[48px] overflow-hidden shadow-2xl shadow-gray-200 group border border-gray-100">
+                                    <img src={displayAfterImg!} alt="After" className="absolute inset-0 w-full h-full object-cover" />
+                                    <div
+                                        className="absolute inset-0 w-full h-full object-cover overflow-hidden"
+                                        style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
+                                    >
+                                        <img src={displayBeforeImg!} alt="Before" className="absolute inset-0 w-full h-full object-cover" />
+                                    </div>
+
+                                    {/* Comparison Line */}
+                                    <div
+                                        className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize group z-20"
+                                        style={{ left: `${sliderPosition}%` }}
+                                    >
+                                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-xl flex items-center justify-center">
+                                            <div className="flex gap-1.5 items-center">
+                                                <div className="w-1 h-3 rounded-full bg-gray-200" />
+                                                <div className="w-1 h-3 rounded-full bg-gray-200" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Label Overlays */}
+                                    <div className="absolute top-6 left-6 px-4 py-2 bg-black/50 backdrop-blur-md rounded-full text-white text-[10px] font-bold uppercase tracking-widest">Initial State</div>
+                                    <div className="absolute top-6 right-6 px-4 py-2 bg-[#87A96B]/80 backdrop-blur-md rounded-full text-white text-[10px] font-bold uppercase tracking-widest">Predicted Result</div>
+
+                                    {/* Range Hidden Input for Interactivity */}
+                                    <input
+                                        type="range"
+                                        min="0" max="100"
+                                        value={sliderPosition}
+                                        onChange={(e) => setSliderPosition(parseInt(e.target.value))}
+                                        className="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-30"
+                                    />
+                                </div>
+
+                                <div className="mt-8 flex items-center gap-6 justify-center">
+                                    <div className="flex -space-x-2">
+                                        {[...Array(3)].map((_, i) => (
+                                            <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-gray-100 flex items-center justify-center text-[10px] font-bold shadow-sm">
+                                                {["JS", "OD", "TW"][i]}
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <p className="text-[11px] text-gray-500 font-medium italic">
+                                        "This simulation accurately reflects the desired outcome."
+                                    </p>
+                                </div>
+                            </>
+                        )}
+
+                    </div>
+                </div>
+                )}
+
+                {/* Right Side: Investment Plan (The Closer) */}
+                <div className={`w-full p-8 lg:p-16 flex flex-col justify-center ${ hasValidImages ? 'lg:w-[550px]' : 'max-w-2xl'}`}>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                    >
+                        {!hasValidImages && (
+                             <div className="mb-12">
                                 <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#87A96B] mb-2 block">
                                     {lead?.name ? `Prepared Exclusively for ${lead.name}` : 'Your Tailored Transformation'}
                                 </span>
                                 <h1 className="text-4xl md:text-5xl font-display font-bold text-gray-950 leading-tight">
-                                    Visualising Your <br />New Smile
+                                    {lead?.treatment_name || lead?.service}
                                 </h1>
-
                                 {personalizedNote && (
                                     <div className="mt-6 p-5 bg-[#87A96B]/5 border-l-4 border-[#87A96B] rounded-r-2xl">
                                         <p className="text-sm text-gray-700 italic font-medium leading-relaxed">
@@ -133,80 +226,8 @@ const ClientPTPage: React.FC = () => {
                                         </p>
                                     </div>
                                 )}
-                            </motion.div>
+                             </div>
                         )}
-
-                        {/* Interactive Before/After Slider - Conditional Render */}
-                        {displayBeforeImg && displayAfterImg && (
-                            <div className="relative aspect-[4/3] rounded-[48px] overflow-hidden shadow-2xl shadow-gray-200 group border border-gray-100">
-                                <img src={displayAfterImg} alt="After" className="absolute inset-0 w-full h-full object-cover" />
-                                <div
-                                    className="absolute inset-0 w-full h-full object-cover overflow-hidden"
-                                    style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
-                                >
-                                    <img src={displayBeforeImg} alt="Before" className="absolute inset-0 w-full h-full object-cover" />
-                                </div>
-
-                                {/* Comparison Line */}
-                                <div
-                                    className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize group z-20"
-                                    style={{ left: `${sliderPosition}%` }}
-                                >
-                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-xl flex items-center justify-center">
-                                        <div className="flex gap-1.5 items-center">
-                                            <div className="w-1 h-3 rounded-full bg-gray-200" />
-                                            <div className="w-1 h-3 rounded-full bg-gray-200" />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Label Overlays */}
-                                <div className="absolute top-6 left-6 px-4 py-2 bg-black/50 backdrop-blur-md rounded-full text-white text-[10px] font-bold uppercase tracking-widest">Initial State</div>
-                                <div className="absolute top-6 right-6 px-4 py-2 bg-[#87A96B]/80 backdrop-blur-md rounded-full text-white text-[10px] font-bold uppercase tracking-widest">Predicted Result</div>
-
-                                {/* Range Hidden Input for Interactivity */}
-                                <input
-                                    type="range"
-                                    min="0" max="100"
-                                    value={sliderPosition}
-                                    onChange={(e) => setSliderPosition(parseInt(e.target.value))}
-                                    className="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-30"
-                                />
-                            </div>
-                        )}
-
-                        {displayBeforeImg && displayAfterImg && (
-                            <div className="mt-8 flex items-center gap-6 justify-center">
-                                <div className="flex -space-x-2">
-                                    {[...Array(3)].map((_, i) => (
-                                        <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-gray-100 flex items-center justify-center text-[10px] font-bold shadow-sm">
-                                            {["JS", "OD", "TW"][i]}
-                                        </div>
-                                    ))}
-                                </div>
-                                <p className="text-[11px] text-gray-500 font-medium italic">
-                                    "This simulation accurately reflects the desired outcome."
-                                </p>
-                            </div>
-                        )}
-
-                        {masterDescription && (
-                            <div className="mt-12 bg-white border border-gray-100 p-8 rounded-3xl shadow-sm">
-                                <h3 className="text-xs font-black uppercase tracking-widest text-[#87A96B] mb-3">Clinical Overview</h3>
-                                <p className="text-sm text-gray-600 leading-relaxed font-medium">
-                                    {masterDescription}
-                                </p>
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                {/* Right Side: Investment Plan (The Closer) */}
-                <div className="w-full lg:w-[550px] bg-[#FDFDFD] p-8 lg:p-16 flex flex-col justify-center">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                    >
                         <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#87A96B]/10 rounded-full text-[#87A96B] text-[10px] font-black uppercase tracking-widest mb-6">
                             Exclusive Proposal
                         </div>
@@ -246,6 +267,15 @@ const ClientPTPage: React.FC = () => {
                             </div>
                         </div>
 
+                        {!hasValidImages && masterDescription && (
+                            <div className="mb-12 bg-white border border-gray-100 p-8 rounded-3xl shadow-sm">
+                                <h3 className="text-xs font-black uppercase tracking-widest text-[#87A96B] mb-3">Clinical Overview</h3>
+                                <p className="text-sm text-gray-600 leading-relaxed font-medium">
+                                    {masterDescription}
+                                </p>
+                            </div>
+                        )}
+
                         {/* CTA Section */}
                         <div className="space-y-4">
                             <motion.button
@@ -262,7 +292,7 @@ const ClientPTPage: React.FC = () => {
                                 className="w-full py-6 bg-gray-900 group rounded-[24px] text-white font-black uppercase tracking-[0.2em] text-xs flex items-center justify-center gap-4 relative overflow-hidden shadow-2xl transition-all"
                             >
                                 <span className="relative z-10">
-                                    {displayBookingUrl ? 'Book Appointment Now' : 'Confirm & Pay via Stripe'}
+                                    Accept & Book Now
                                 </span>
                                 <ArrowRight className="w-4 h-4 relative z-10 transition-transform group-hover:translate-x-1" />
                                 <div className="absolute inset-0 bg-gradient-to-r from-[#87A96B] to-[#769b59] opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -299,4 +329,4 @@ const ClientPTPage: React.FC = () => {
     );
 };
 
-export default ClientPTPage;
+export default PTDiscoveryMode;
