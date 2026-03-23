@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Mail, Send, CheckCircle, RefreshCw, Shield, MessageCircle } from 'lucide-react';
-import { ConsultationRequest } from '../../lib/supabase';
+import { supabase, ConsultationRequest } from '../../lib/supabase';
 
 interface TreatmentTemplate {
   id: string;
@@ -96,16 +96,19 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
     handleSend(false);
   };
 
-  const handleSend = (showSuccess = true) => {
+  const handleSend = async (showSuccess = true) => {
     setIsSending(true);
+
+    let finalTreatmentName = lead?.service || "Treatment";
 
     if (onUpdateLead && lead) {
       const template = templates.find(t => t.id === selectedTemplateId);
+      finalTreatmentName = template?.name || lead.treatment_name || lead.service || "Treatment";
       onUpdateLead(lead.id, {
         potential_value: Number(overridePrice) || lead.potential_value,
         pt_price_override: Number(overridePrice) || lead.potential_value,
         pt_personalized_note: personalizedNote,
-        treatment_name: template?.name || lead.treatment_name || lead.service,
+        treatment_name: finalTreatmentName,
         pt_before_image: template?.beforeImg,
         pt_after_image: template?.afterImg,
         pt_booking_url: template?.bookingUrl,
@@ -113,16 +116,36 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
       });
     }
 
-    if (showSuccess) {
-      setTimeout(() => {
+    try {
+      if (showSuccess) {
+        // Call the real Supabase Edge Function for sending emails
+        const { error } = await supabase.functions.invoke('send-pt-link', {
+          body: {
+            lead_id: lead?.id,
+            name: lead?.name,
+            email: lead?.email,
+            service: finalTreatmentName,
+            origin: window.location.origin,
+            clinic_name: clinicName
+          }
+        });
+
+        if (error) {
+          console.error("Failed to send email via edge function:", error);
+          throw error;
+        }
+
         setIsSending(false);
         setIsSent(true);
         setTimeout(() => {
           onClose();
           setTimeout(() => setIsSent(false), 500);
         }, 2000);
-      }, 1500);
-    } else {
+      } else {
+        setIsSending(false);
+      }
+    } catch (err) {
+      console.error("Error during email dispatch:", err);
       setIsSending(false);
     }
   };
