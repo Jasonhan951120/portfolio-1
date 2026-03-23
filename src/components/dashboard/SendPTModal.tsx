@@ -8,9 +8,9 @@ interface TreatmentTemplate {
   name: string;
   price: number;
   description?: string;
-  beforeImg?: string;
   afterImg?: string;
   bookingUrl?: string;
+  messageTemplates?: string[];
 }
 
 interface SendPTModalProps {
@@ -126,7 +126,8 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
             email: lead?.email,
             service: finalTreatmentName,
             origin: window.location.origin,
-            clinic_name: clinicName
+            clinic_name: clinicName,
+            personalized_note: personalizedNote
           }
         });
 
@@ -231,36 +232,33 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
                  </div>
               </div>
 
-              <div>
-                 <div className="flex items-center justify-between mb-3">
-                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest">Doctor's Personalized Note</label>
-                    <div className="flex gap-2">
+              <div>                 <div className="flex flex-col gap-3 mb-3">
+                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest">Doctor's Personalized note</label>
+                    <div className="flex flex-wrap gap-2 text-wrap">
+                       {/* Default Quick Templates */}
                        <button 
                           onClick={() => applyTemplate(QUICK_TEMPLATES.standard)}
-                          className="bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-full px-3 py-1 text-[9px] font-bold transition-all active:scale-95"
+                          className="bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-full px-3 py-1.5 text-[10px] font-bold transition-all active:scale-95 shadow-sm"
                        >
                           Standard
                        </button>
-                       <button 
-                          onClick={() => applyTemplate(QUICK_TEMPLATES.postScan)}
-                          className="bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-full px-3 py-1 text-[9px] font-bold transition-all active:scale-95"
-                       >
-                          Post-Scan
-                       </button>
-                       <button 
-                          onClick={() => applyTemplate(QUICK_TEMPLATES.aesthetic)}
-                          className="bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-full px-3 py-1 text-[9px] font-bold transition-all active:scale-95"
-                       >
-                          Aesthetic
-                       </button>
-                       <button 
-                          onClick={() => applyTemplate(QUICK_TEMPLATES.priority)}
-                          className="bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-full px-3 py-1 text-[9px] font-bold transition-all active:scale-95"
-                       >
-                          Priority
-                       </button>
+                       
+                       {/* Dynamic Treatment Templates */}
+                       {templates.find(t => t.id === selectedTemplateId)?.messageTemplates?.map((tmpl, i) => {
+                          const label = tmpl.length > 20 ? tmpl.substring(0, 20) + "..." : tmpl;
+                          return (
+                             <button 
+                                key={i}
+                                onClick={() => applyTemplate(tmpl)}
+                                className="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-full px-3 py-1.5 text-[10px] font-black transition-all active:scale-95 shadow-sm flex items-center gap-1.5"
+                             >
+                                <CheckCircle className="w-3 h-3" /> {label}
+                             </button>
+                          );
+                       })}
                     </div>
                  </div>
+
                  <textarea 
                     value={personalizedNote}
                     onChange={(e) => setPersonalizedNote(e.target.value)}

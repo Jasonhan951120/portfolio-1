@@ -14,6 +14,7 @@ export interface TreatmentTemplate {
   beforeImg?: string;
   afterImg?: string;
   bookingUrl?: string;
+  messageTemplates?: string[];
 }
 
 interface DashboardState {
