@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Mail, Send, CheckCircle, RefreshCw, Shield, MessageCircle } from 'lucide-react';
+import { X, Mail, Send, CheckCircle, RefreshCw, Shield, MessageCircle, AlertCircle } from 'lucide-react';
 import { supabase, ConsultationRequest } from '../../lib/supabase';
 
 interface TreatmentTemplate {
@@ -8,6 +8,7 @@ interface TreatmentTemplate {
   name: string;
   price: number;
   description?: string;
+  beforeImg?: string;
   afterImg?: string;
   bookingUrl?: string;
   messageTemplates?: string[];
@@ -38,12 +39,14 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>('');
   const [overridePrice, setOverridePrice] = useState<string>('');
   const [personalizedNote, setPersonalizedNote] = useState<string>('');
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   React.useEffect(() => {
     if (isOpen && lead) {
        setOverridePrice(String(lead.potential_value || ''));
        setPersonalizedNote(lead.pt_personalized_note || '');
        setSelectedTemplateId(lead.treatment_name ? (templates.find(t => t.name === lead.treatment_name)?.id || '') : '');
+       setErrorMsg(null);
     }
   }, [isOpen, lead, templates]);
 
@@ -118,8 +121,15 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
 
     try {
       if (showSuccess) {
+        setErrorMsg(null);
+        if (!lead?.email) {
+          setErrorMsg("Patient email address is missing.");
+          setIsSending(false);
+          return;
+        }
+
         // Call the real Supabase Edge Function for sending emails
-        const { error } = await supabase.functions.invoke('send-pt-link', {
+        const { error, data } = await supabase.functions.invoke('send-pt-link', {
           body: {
             lead_id: lead?.id,
             name: lead?.name,
@@ -131,9 +141,11 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
           }
         });
 
-        if (error) {
-          console.error("Failed to send email via edge function:", error);
-          throw error;
+        if (error || (data && data.error)) {
+          console.error("Failed to send email via edge function:", error || data.error);
+          setErrorMsg("Email failed to send. Please check your API configuration.");
+          setIsSending(false);
+          return;
         }
 
         setIsSending(false);
@@ -147,6 +159,7 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
       }
     } catch (err) {
       console.error("Error during email dispatch:", err);
+      setErrorMsg("Email failed to send. Please check your API configuration.");
       setIsSending(false);
     }
   };
@@ -194,6 +207,14 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
               <X className="w-5 h-5" />
             </button>
           </div>
+
+          {/* Error Banner */}
+          {errorMsg && (
+            <div className="px-10 py-4 bg-red-50 border-b border-red-100 flex items-center gap-3">
+              <AlertCircle className="w-5 h-5 text-red-500" />
+              <p className="text-[13px] font-bold text-red-600">{errorMsg}</p>
+            </div>
+          )}
 
           {/* Settings Body */}
           <div className="px-10 py-10 space-y-8 max-h-[60vh] overflow-y-auto">
