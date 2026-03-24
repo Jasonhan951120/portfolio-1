@@ -1,34 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Plus, Trash2, Camera, UploadCloud, Settings, List, HelpCircle, Save, Globe, ShieldCheck, MessageSquare, Briefcase, Zap, Database } from 'lucide-react';
-import { SERVICE_CONVERSION_VALUES } from '../../lib/constants';
+import { X, Plus, Trash2, Camera, Settings, List, Globe, ShieldCheck, MessageSquare, Briefcase, Zap, User } from 'lucide-react';
 import { useDashboardStore } from '../../store/useDashboardStore';
-
-const INDUSTRY_TEMPLATES = {
-    Dental: {
-        friendly: "Dear {PatientName}, it was a true pleasure meeting you today to discuss your smile transformation. I've prepared a bespoke plan to bring back your confident smile. We use the most advanced, gentle techniques to ensure your journey is as comfortable as it is transformative.",
-        professional: "Dear {PatientName}, thank you for visiting us today. Based on our clinical assessment, I have finalized your bespoke dental treatment proposal. This plan is designed to deliver optimal long-term outcomes while prioritizing your unique dental health needs."
-    },
-    Aesthetic: {
-        friendly: "Dear {PatientName}, we are excited to help you achieve your skin goals at {ClinicName}! I've designed a specialized plan tailored just for you to enhance your natural beauty. We can't wait to see your radiant results.",
-        professional: "Dear {PatientName}, thank you for your consultation today. I have prepared a comprehensive aesthetic treatment plan tailored specifically to your unique skin profile and desired outcomes. Please review the clinical details below."
-    },
-    Wellness: {
-        friendly: "Dear {PatientName}, it was wonderful connecting with you today. I've designed a specialized wellness plan to support your holistic journey. We are dedicated to helping you find balance, rejuvenation, and optimal vitality.",
-        professional: "Dear {PatientName}, following our consultation, I have developed a bespoke wellness protocol. This comprehensive plan is meticulously designed to optimize your health outcomes and overall well-being. Please find the proposed intervention below."
-    }
-};
-
-interface ClinicSettingsProps {
-    isOpen: boolean;
-    onClose: () => void;
-    currency?: string;
-}
-
-interface MessageTemplate {
-    title: string;
-    body: string;
-}
 
 interface TreatmentTemplate {
     id: string;
@@ -98,321 +71,349 @@ export function ClinicSettings({
     return (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-[9000] flex items-center justify-center bg-slate-900/40 backdrop-blur-md p-4 md:p-8">
+                <div className="fixed inset-0 z-[9000] flex items-center justify-center bg-[#0f172a]/40 backdrop-blur-xl p-4 md:p-8">
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                        initial={{ opacity: 0, scale: 0.95, y: 30 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                        transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                        className="w-full max-w-5xl h-full max-h-[85vh] bg-white rounded-3xl shadow-2xl flex flex-col overflow-hidden border border-slate-200/60"
+                        exit={{ opacity: 0, scale: 0.95, y: 30 }}
+                        transition={{ type: 'spring', damping: 28, stiffness: 250 }}
+                        className="w-full max-w-6xl h-full max-h-[88vh] bg-[#f8f9fa] rounded-[2.5rem] shadow-2xl flex flex-col overflow-hidden border border-white/40 ring-1 ring-black/5"
                     >
                         {/* Header */}
-                        <div className="flex-shrink-0 px-8 py-6 border-b border-slate-100 flex items-center justify-between bg-white">
-                            <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center shadow-sm">
-                                    <Settings className="w-6 h-6 text-slate-800" strokeWidth={1.5} />
+                        <div className="flex-shrink-0 px-10 py-8 flex items-center justify-between border-b border-black/[0.03]">
+                            <div className="flex items-center gap-5">
+                                <div className="w-14 h-14 rounded-2xl bg-white border border-black/[0.03] flex items-center justify-center shadow-[0_4px_20px_rgba(0,0,0,0.03)] relative">
+                                    <Settings className="w-7 h-7 text-[#1e293b]" strokeWidth={1.2} />
+                                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white shadow-sm" />
                                 </div>
-                                <div>
-                                    <h2 className="text-2xl font-black text-slate-900 tracking-tight">Clinic Settings</h2>
-                                    <div className="flex items-center gap-2 mt-1">
-                                        <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-500 bg-emerald-50 px-2 py-0.5 rounded-md">Executive Protocol</span>
+                                <div className="font-inter tracking-tight">
+                                    <h2 className="text-3xl font-black text-[#0f172a] mb-1">Clinic Settings</h2>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#78dcca]">Executive Protocol</span>
+                                        <div className="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]" />
                                     </div>
                                 </div>
                             </div>
                             <button
                                 onClick={onClose}
-                                className="w-10 h-10 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200/50 flex items-center justify-center transition-all text-slate-400 hover:text-slate-700"
+                                className="w-12 h-12 rounded-2xl bg-white hover:bg-slate-50 border border-black/[0.03] flex items-center justify-center transition-all text-slate-400 hover:text-slate-900 shadow-sm"
                             >
-                                <X className="w-5 h-5" />
+                                <X className="w-6 h-6" />
                             </button>
                         </div>
 
                         {/* Content Area */}
-                        <div className="flex-1 flex overflow-hidden bg-slate-50/50">
-                            {/* Left Sidebar (Tabs) */}
-                            <div className="w-64 flex-shrink-0 border-r border-slate-100 bg-white p-6 flex flex-col gap-2">
+                        <div className="flex-1 flex overflow-hidden">
+                            {/* Left Sidebar (Tabs) - Image 6 Style */}
+                            <div className="w-72 flex-shrink-0 border-r border-black/[0.03] p-8 flex flex-col gap-3 font-inter tracking-tight">
                                 <button 
                                     onClick={() => setActiveTab('menu')}
-                                    className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm transition-all ${
+                                    className={`flex items-center justify-between px-5 py-4 rounded-2xl transition-all duration-300 ${
                                         activeTab === 'menu' 
-                                            ? 'bg-slate-50 text-slate-900 border border-slate-100 shadow-sm' 
-                                            : 'text-slate-500 hover:bg-slate-50'
+                                            ? 'bg-white text-[#0f172a] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-black/[0.02]' 
+                                            : 'text-slate-400 hover:text-slate-600'
                                     }`}
                                 >
-                                    <List className={`w-4 h-4 ${activeTab === 'menu' ? 'text-emerald-500' : ''}`} />
-                                    Treatment Menu
+                                    <div className="flex items-center gap-3">
+                                        <List className={`w-5 h-5 ${activeTab === 'menu' ? 'text-[#78dcca]' : 'text-slate-300'}`} strokeWidth={activeTab === 'menu' ? 2.5 : 2} />
+                                        <span className="font-bold text-base">Treatment Menu</span>
+                                    </div>
+                                    <div className={`w-2 h-2 rounded-full ${activeTab === 'menu' ? 'bg-red-500' : 'bg-transparent'}`} />
                                 </button>
+                                
                                 <button 
                                     onClick={() => setActiveTab('general')}
-                                    className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm transition-all ${
+                                    className={`flex items-center gap-3 px-5 py-4 rounded-2xl transition-all duration-300 ${
                                         activeTab === 'general' 
-                                            ? 'bg-slate-50 text-slate-900 border border-slate-100 shadow-sm' 
-                                            : 'text-slate-500 hover:bg-slate-50'
+                                            ? 'bg-white text-[#0f172a] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-black/[0.02]' 
+                                            : 'text-slate-400 hover:text-slate-600'
                                     }`}
                                 >
-                                    <Settings className={`w-4 h-4 ${activeTab === 'general' ? 'text-emerald-500' : ''}`} />
-                                    General Preferences
+                                    <Globe className={`w-5 h-5 ${activeTab === 'general' ? 'text-[#78dcca]' : 'text-slate-300'}`} strokeWidth={activeTab === 'general' ? 2.5 : 2} />
+                                    <span className="font-bold text-base">General Preferences</span>
                                 </button>
+
                                 <button 
                                     onClick={() => setActiveTab('support')}
-                                    className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm transition-all ${
+                                    className={`flex items-center gap-3 px-5 py-4 rounded-2xl transition-all duration-300 ${
                                         activeTab === 'support' 
-                                            ? 'bg-slate-50 text-slate-900 border border-slate-100 shadow-sm' 
-                                            : 'text-slate-500 hover:bg-slate-50'
+                                            ? 'bg-white text-[#0f172a] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-black/[0.02]' 
+                                            : 'text-slate-400 hover:text-slate-600'
                                     }`}
                                 >
-                                    <HelpCircle className={`w-4 h-4 ${activeTab === 'support' ? 'text-emerald-500' : ''}`} />
-                                    Support & Help
+                                    <User className={`w-5 h-5 ${activeTab === 'support' ? 'text-[#78dcca]' : 'text-slate-300'}`} strokeWidth={activeTab === 'support' ? 2.5 : 2} />
+                                    <span className="font-bold text-base">Support & Help</span>
                                 </button>
                             </div>
 
                             {/* Main Configuration Panel */}
-                            <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
-                                <div className="max-w-4xl mx-auto">
+                            <div className="flex-1 overflow-y-auto p-12 custom-scrollbar bg-white/20">
+                                <div className="max-w-4xl mx-auto font-inter tracking-tight">
                                     
                                     {activeTab === 'menu' && (
-                                        <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
-                                            <div className="mb-10 p-6 bg-white border border-slate-200 rounded-2xl shadow-sm">
-                                                <h3 className="text-lg font-bold text-slate-900 tracking-tight font-inter">Clinic Industry</h3>
-                                                <p className="text-sm font-medium text-slate-500 mt-1 mb-4">Tailor the AI messaging and default templates for your specific field.</p>
-                                                <select 
-                                                    value={clinicType}
-                                                    onChange={(e) => setClinicType(e.target.value as 'Dental' | 'Aesthetic' | 'Wellness')}
-                                                    className="w-full max-w-sm bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all appearance-none cursor-pointer"
-                                                >
-                                                    <option value="Dental">Dental Clinic</option>
-                                                    <option value="Aesthetic">Aesthetic Clinic</option>
-                                                    <option value="Wellness">Wellness & Spa</option>
-                                                </select>
+                                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+                                            <div className="mb-12 p-10 bg-white border border-black/[0.03] rounded-[2.5rem] shadow-[0_10px_40px_rgba(0,0,0,0.02)] relative overflow-hidden group">
+                                                <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity">
+                                                    <Briefcase className="w-32 h-32 text-slate-900" />
+                                                </div>
+                                                <div className="flex items-center gap-3 mb-2">
+                                                    <h3 className="text-2xl font-black text-[#0f172a]">Clinic Industry</h3>
+                                                    <div className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]" />
+                                                </div>
+                                                <p className="text-base font-medium text-slate-500 mb-8 max-w-xl">Tailor the AI messaging and default templates for your specific field.</p>
+                                                <div className="relative max-w-sm group">
+                                                    <select 
+                                                        value={clinicType}
+                                                        onChange={(e) => setClinicType(e.target.value as any)}
+                                                        className="w-full bg-white border border-black/[0.06] rounded-2xl py-4 px-6 text-base font-bold text-[#0f172a] focus:outline-none focus:ring-4 focus:ring-[#78dcca]/10 focus:border-[#78dcca] transition-all appearance-none cursor-pointer shadow-sm"
+                                                    >
+                                                        <option value="Dental">Dental Clinic</option>
+                                                        <option value="Aesthetic">Aesthetic Clinic</option>
+                                                        <option value="Wellness">Wellness & Spa</option>
+                                                    </select>
+                                                    <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-[#78dcca]">
+                                                        <Plus className="w-5 h-5 rotate-45" />
+                                                    </div>
+                                                </div>
                                             </div>
 
-                                            <div className="flex items-center justify-between mb-8">
+                                            <div className="flex items-center justify-between mb-10">
                                                 <div>
-                                                    <h3 className="text-xl font-bold text-slate-900 tracking-tight font-inter">Treatment Menu Builder</h3>
-                                                    <p className="text-sm font-medium text-slate-500 mt-1">Configure standard offerings, default pricing, and premium visual assets.</p>
+                                                    <div className="flex items-center gap-3 mb-1">
+                                                        <h3 className="text-2xl font-black text-[#0f172a]">Treatment Menu Builder</h3>
+                                                        <div className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]" />
+                                                    </div>
+                                                    <p className="text-base font-medium text-slate-500">Configure standard offerings and premium visuals.</p>
                                                 </div>
                                                 <button 
                                                     onClick={() => {
                                                         setEditingTemplate({ id: '', name: '', price: 0, emailContents: '', bookingUrl: '' });
                                                         setIsEditing(true);
                                                     }}
-                                                    className="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-full text-sm font-bold tracking-wide transition-all active:scale-[0.98] shadow-md hover:shadow-lg flex items-center gap-2"
+                                                    className="px-8 py-4 bg-[#0f172a] hover:bg-[#1e293b] text-white rounded-full text-sm font-black tracking-[0.1em] uppercase transition-all active:scale-[0.98] shadow-xl hover:shadow-[#0f172a]/20 flex items-center gap-3"
                                                 >
-                                                    <Plus className="w-4 h-4" /> Add New Treatment
+                                                    <Plus className="w-5 h-5 text-[#78dcca]" strokeWidth={3} /> Add New Treatment
                                                 </button>
                                             </div>
 
-                                            {/* (Edit form drawer and grid content remain here, wrapped in the activeTab condition) */}
-                                            {/* I'll simplify the replacement by keeping the structure but wrapping it */}
-                                            {/* Actually, I should just wrap the existing code block */}
-                                            
                                             {/* Cards Grid */}
-                                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                                 {templates.map(template => (
-                                                    <div key={template.id} className="group bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:border-emerald-500/30 transition-all duration-300 p-6 relative overflow-hidden flex flex-col h-full font-inter tracking-tight">
-                                                        <div className="flex justify-between items-start mb-4">
-                                                            <div>
-                                                                <h4 className="text-slate-900 font-bold text-base truncate pr-6">{template.name}</h4>
-                                                                <p className="text-emerald-600 font-black tracking-tight mt-1">{currency}{template.price.toLocaleString()}</p>
+                                                    <div key={template.id} className="group bg-white rounded-[2rem] border border-black/[0.03] shadow-sm hover:shadow-[0_20px_50px_rgba(0,0,0,0.06)] hover:border-[#78dcca]/40 transition-all duration-500 p-8 relative overflow-hidden flex flex-col h-full ring-1 ring-black/[0.01]">
+                                                        <div className="flex justify-between items-start mb-6">
+                                                            <div className="flex-1">
+                                                                <h4 className="text-[#0f172a] font-black text-lg truncate mb-1 pr-8">{template.name}</h4>
+                                                                <p className="text-[#78dcca] font-black text-xl tracking-tight">{currency}{template.price.toLocaleString()}</p>
                                                             </div>
-                                                            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity absolute top-4 right-4 bg-white/90 backdrop-blur pb-1 pl-1 rounded-bl-xl">
+                                                            <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all absolute top-6 right-6 translate-y-2 group-hover:translate-y-0">
                                                                 <button 
                                                                     onClick={() => { setEditingTemplate(template); setIsEditing(true); }}
-                                                                    className="p-1.5 text-slate-400 hover:text-emerald-600 bg-slate-50 hover:bg-emerald-50 rounded-lg transition-colors"
-                                                                    title="Edit"
+                                                                    className="w-9 h-9 flex items-center justify-center text-slate-400 hover:text-[#78dcca] bg-slate-50 hover:bg-[#78dcca]/5 rounded-xl transition-all"
                                                                 >
                                                                     <Settings className="w-4 h-4" />
                                                                 </button>
                                                                 <button 
                                                                     onClick={() => handleDeleteTemplate(template.id)}
-                                                                    className="p-1.5 text-slate-400 hover:text-red-600 bg-slate-50 hover:bg-red-50 rounded-lg transition-colors"
-                                                                    title="Delete"
+                                                                    className="w-9 h-9 flex items-center justify-center text-slate-400 hover:text-red-500 bg-slate-50 hover:bg-red-50 rounded-xl transition-all"
                                                                 >
                                                                     <Trash2 className="w-4 h-4" />
                                                                 </button>
                                                             </div>
                                                         </div>
 
-                                                        <div className="mt-auto pt-4 flex items-center justify-between border-t border-slate-100/50">
-                                                            <div className="flex -space-x-2">
-                                                                {template.beforeImg ? (
-                                                                    <img src={template.beforeImg} className="w-8 h-8 rounded-full ring-2 ring-white object-cover shadow-sm bg-slate-100" />
-                                                                ) : (
-                                                                    <div className="w-8 h-8 rounded-full ring-2 ring-white bg-slate-100 flex items-center justify-center shadow-sm">
-                                                                        <Camera className="w-3 h-3 text-slate-300" />
+                                                        <div className="mt-auto pt-6 flex items-center justify-between border-t border-black/[0.03]">
+                                                            <div className="flex -space-x-3">
+                                                                {[template.beforeImg, template.afterImg].map((img, i) => (
+                                                                    <div key={i} className="w-10 h-10 rounded-full border-[3px] border-white bg-slate-100 flex items-center justify-center shadow-sm overflow-hidden ring-1 ring-black/5">
+                                                                        {img ? <img src={img} className="w-full h-full object-cover" /> : <Camera className="w-4 h-4 text-slate-300" />}
                                                                     </div>
-                                                                )}
-                                                                {template.afterImg ? (
-                                                                    <img src={template.afterImg} className="w-8 h-8 rounded-full ring-2 ring-white object-cover shadow-sm bg-slate-100" />
-                                                                ) : (
-                                                                    <div className="w-8 h-8 rounded-full ring-2 ring-white bg-slate-100 flex items-center justify-center shadow-sm">
-                                                                        <Camera className="w-3 h-3 text-slate-300" />
-                                                                    </div>
-                                                                )}
+                                                                ))}
                                                             </div>
-                                                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Ready</span>
+                                                            <div className="flex items-center gap-2">
+                                                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Ready</span>
+                                                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 ))}
                                                 
                                                 <button 
                                                     onClick={() => { setEditingTemplate({ id: '', name: '', price: 0, emailContents: '', bookingUrl: '' }); setIsEditing(true); }}
-                                                    className="bg-slate-50 hover:bg-slate-100 border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center p-8 transition-colors group min-h-[160px]"
+                                                    className="bg-white/50 hover:bg-white border-2 border-dashed border-black/[0.05] rounded-[2rem] flex flex-col items-center justify-center p-10 transition-all group min-h-[180px] hover:border-[#78dcca]/40 hover:shadow-xl"
                                                 >
-                                                    <div className="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center group-hover:scale-110 transition-transform mb-3">
-                                                        <Plus className="w-5 h-5 text-slate-400 group-hover:text-emerald-500 transition-colors" />
+                                                    <div className="w-14 h-14 rounded-2xl bg-white shadow-lg border border-black/[0.02] flex items-center justify-center group-hover:scale-110 transition-transform mb-4">
+                                                        <Plus className="w-6 h-6 text-[#78dcca]" strokeWidth={3} />
                                                     </div>
-                                                    <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Add Treatment</span>
+                                                    <span className="text-xs font-black text-slate-400 uppercase tracking-[0.3em]">Add Treatment</span>
                                                 </button>
                                             </div>
                                         </div>
                                     )}
 
                                     {activeTab === 'general' && (
-                                        <div className="animate-in fade-in slide-in-from-bottom-2 duration-500 space-y-10">
-                                            <div>
-                                                <h3 className="text-2xl font-black text-slate-900 tracking-tight font-inter">Branding Identity Suite</h3>
-                                                <p className="text-sm font-medium text-slate-500 mt-1">Refine your practice's digital presence and communication style.</p>
+                                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-10">
+                                            <div className="flex items-center gap-3 mb-2">
+                                                <h3 className="text-3xl font-black text-[#0f172a]">Branding Identity Suite</h3>
+                                                <div className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]" />
                                             </div>
 
-                                            <div className="grid grid-cols-1 gap-8">
+                                            <div className="grid grid-cols-1 gap-10">
                                                 {/* Locale */}
-                                                <div className="p-8 bg-white border border-slate-100 rounded-3xl shadow-sm hover:shadow-md transition-shadow">
-                                                    <div className="flex items-start gap-4 mb-6">
-                                                        <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center">
-                                                            <Globe className="w-6 h-6 text-emerald-600" />
+                                                <div className="p-10 bg-white border border-black/[0.03] rounded-[2.5rem] shadow-sm hover:shadow-[0_15px_40px_rgba(0,0,0,0.03)] transition-all">
+                                                    <div className="flex items-start gap-6 mb-10">
+                                                        <div className="w-16 h-16 rounded-[1.5rem] bg-[#78dcca]/5 border border-[#78dcca]/10 flex items-center justify-center shadow-inner">
+                                                            <Globe className="w-8 h-8 text-[#78dcca]" />
                                                         </div>
                                                         <div className="flex-1">
-                                                            <h4 className="text-lg font-bold text-slate-900 tracking-tight font-inter">Global Synchronisation & Locale</h4>
-                                                            <p className="text-sm text-slate-500 mt-1 leading-relaxed">
+                                                            <h4 className="text-xl font-black text-[#0f172a] mb-2">Global Synchronisation & Locale</h4>
+                                                            <p className="text-base text-slate-500 leading-relaxed font-medium">
                                                                 Align your practice with the global standard. Seamlessly synchronise your operational timezone and bespoke language preferences for international clientele.
                                                             </p>
                                                         </div>
                                                     </div>
-                                                    <select 
-                                                        value={locale}
-                                                        onChange={(e) => setLocale(e.target.value)}
-                                                        className="w-full max-w-sm bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all appearance-none cursor-pointer"
-                                                    >
-                                                        <option value="en-GB">English (United Kingdom) - GMT</option>
-                                                        <option value="en-US">English (United States) - EST</option>
-                                                        <option value="ko-KR">Korean (South Korea) - KST</option>
-                                                    </select>
+                                                    <div className="relative max-w-sm">
+                                                        <select 
+                                                            value={locale}
+                                                            onChange={(e) => setLocale(e.target.value)}
+                                                            className="w-full bg-[#f8f9fa] border border-black/[0.04] rounded-2xl py-[1.125rem] px-6 text-base font-bold text-[#0f172a] focus:outline-none focus:ring-4 focus:ring-[#78dcca]/10 focus:border-[#78dcca] transition-all appearance-none cursor-pointer"
+                                                        >
+                                                            <option value="en-GB">English (United Kingdom) - GMT</option>
+                                                            <option value="en-US">English (United States) - EST</option>
+                                                            <option value="ko-KR">Korean (South Korea) - KST</option>
+                                                        </select>
+                                                        <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-[#78dcca]">
+                                                            <div className="w-1.5 h-1.5 rounded-full bg-[#78dcca]" />
+                                                        </div>
+                                                    </div>
                                                 </div>
 
-                                                {/* Theme */}
-                                                <div className="p-8 bg-white border border-slate-100 rounded-3xl shadow-sm hover:shadow-md transition-shadow">
-                                                    <div className="flex items-start gap-4 mb-6">
-                                                        <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center">
-                                                            <Zap className="w-6 h-6 text-emerald-600" />
+                                                {/* Theme - Image 8 Style */}
+                                                <div className="p-10 bg-white border border-black/[0.03] rounded-[2.5rem] shadow-sm hover:shadow-[0_15px_40px_rgba(0,0,0,0.03)] transition-all">
+                                                    <div className="flex items-start gap-6 mb-10">
+                                                        <div className="w-16 h-16 rounded-[1.5rem] bg-[#78dcca]/5 border border-[#78dcca]/10 flex items-center justify-center shadow-inner">
+                                                            <Zap className="w-8 h-8 text-[#78dcca]" />
                                                         </div>
                                                         <div className="flex-1">
-                                                            <h4 className="text-lg font-bold text-slate-900 tracking-tight font-inter">Brand Aesthetics & Interface</h4>
-                                                            <p className="text-sm text-slate-500 mt-1 leading-relaxed">
+                                                            <h4 className="text-xl font-black text-[#0f172a] mb-2">Brand Aesthetics & Interface</h4>
+                                                            <p className="text-base text-slate-500 leading-relaxed font-medium">
                                                                 Select the visual palette that best reflects your clinic's atmosphere. Choose between our light 'Executive White' or modern 'Matte Dark' modes.
                                                             </p>
                                                         </div>
                                                     </div>
                                                     <div className="flex gap-4">
-                                                        {['Executive White', 'Matte Dark'].map((t) => (
-                                                            <button
-                                                                key={t}
-                                                                onClick={() => setTheme(t as any)}
-                                                                className={`flex-1 py-3 px-6 rounded-xl font-bold text-sm border transition-all ${
-                                                                    theme === t 
-                                                                        ? 'bg-slate-900 text-white border-slate-900 shadow-lg' 
-                                                                        : 'bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100'
-                                                                }`}
-                                                            >
-                                                                {t}
-                                                            </button>
-                                                        ))}
+                                                        <button
+                                                            onClick={() => setTheme('Executive White')}
+                                                            className={`flex-1 py-4 px-6 rounded-2xl font-black text-sm uppercase tracking-widest transition-all duration-300 ${
+                                                                theme === 'Executive White' 
+                                                                    ? 'bg-[#0f172a] text-white shadow-2xl' 
+                                                                    : 'bg-[#f8f9fa] text-slate-400'
+                                                            }`}
+                                                        >
+                                                            Executive White
+                                                        </button>
+                                                        <button
+                                                            onClick={() => setTheme('Matte Dark')}
+                                                            className={`flex-1 py-4 px-6 rounded-2xl font-black text-sm uppercase tracking-widest transition-all duration-300 border-2 ${
+                                                                theme === 'Matte Dark' 
+                                                                    ? 'bg-white text-[#78dcca] border-[#78dcca] shadow-lg' 
+                                                                    : 'bg-[#f8f9fa] text-slate-400 border-transparent'
+                                                            }`}
+                                                        >
+                                                            Matte Dark
+                                                        </button>
                                                     </div>
                                                 </div>
 
                                                 {/* Tone */}
-                                                <div className="p-8 bg-white border border-slate-100 rounded-3xl shadow-sm hover:shadow-md transition-shadow">
-                                                    <div className="flex items-start gap-4 mb-6">
-                                                        <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center">
-                                                            <MessageSquare className="w-6 h-6 text-emerald-600" />
+                                                <div className="p-10 bg-white border border-black/[0.03] rounded-[2.5rem] shadow-sm hover:shadow-[0_15px_40px_rgba(0,0,0,0.03)] transition-all">
+                                                    <div className="flex items-start gap-6 mb-10">
+                                                        <div className="w-16 h-16 rounded-[1.5rem] bg-[#78dcca]/5 border border-[#78dcca]/10 flex items-center justify-center shadow-inner">
+                                                            <MessageSquare className="w-8 h-8 text-[#78dcca]" />
                                                         </div>
                                                         <div className="flex-1">
-                                                            <h4 className="text-lg font-bold text-slate-900 tracking-tight font-inter">Patient Communication Tone</h4>
-                                                            <p className="text-sm text-slate-500 mt-1 leading-relaxed">
+                                                            <h4 className="text-xl font-black text-[#0f172a] mb-2">Patient Communication Tone</h4>
+                                                            <p className="text-base text-slate-500 leading-relaxed font-medium">
                                                                 Define how our AI agents interact with your leads. From warm hospitality to refined clinical excellence, ensure every message feels authentic.
                                                             </p>
                                                         </div>
                                                     </div>
-                                                    <select 
-                                                        value={communicationTone}
-                                                        onChange={(e) => setCommunicationTone(e.target.value as any)}
-                                                        className="w-full max-w-sm bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all appearance-none cursor-pointer"
-                                                    >
-                                                        <option value="Warm & Empathetic">Warm & Empathetic</option>
-                                                        <option value="Refined & Professional">Refined & Professional</option>
-                                                    </select>
+                                                    <div className="relative max-w-sm">
+                                                        <select 
+                                                            value={communicationTone}
+                                                            onChange={(e) => setCommunicationTone(e.target.value as any)}
+                                                            className="w-full bg-[#f8f9fa] border border-black/[0.04] rounded-2xl py-[1.125rem] px-6 text-base font-bold text-[#0f172a] focus:outline-none focus:ring-4 focus:ring-[#78dcca]/10 focus:border-[#78dcca] transition-all appearance-none cursor-pointer"
+                                                        >
+                                                            <option value="Warm & Empathetic">Warm & Empathetic</option>
+                                                            <option value="Refined & Professional">Refined & Professional</option>
+                                                        </select>
+                                                        <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-[#78dcca]">
+                                                            <div className="w-1.5 h-1.5 rounded-full bg-[#78dcca]" />
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     )}
 
                                     {activeTab === 'support' && (
-                                        <div className="animate-in fade-in slide-in-from-bottom-2 duration-500 space-y-10">
-                                            <div className="text-center max-w-2xl mx-auto mb-12">
-                                                <h3 className="text-3xl font-black text-slate-900 tracking-tighter font-inter mb-4">Executive Support Lounge</h3>
-                                                <p className="text-base text-slate-500 font-medium">Experience an unparalleled level of dedicated care and practice optimization.</p>
+                                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-12 pb-10">
+                                            <div className="text-center max-w-2xl mx-auto mb-16">
+                                                <div className="flex items-center justify-center gap-4 mb-4">
+                                                    <h3 className="text-4xl font-black text-[#0f172a] tracking-tight">Executive Wellness Concierge</h3>
+                                                </div>
+                                                <p className="text-lg text-slate-500 font-medium">Experience an unparalleled level of dedicated care and practice optimization.</p>
                                             </div>
 
-                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                                                 {/* Card A: Concierge */}
-                                                <div className="bg-white border border-black/5 rounded-[2rem] p-8 shadow-sm hover:shadow-[0_8px_40px_rgb(0,0,0,0.06)] transition-all flex flex-col relative group overflow-hidden">
-                                                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                                                        <Zap className="w-24 h-24 text-slate-900" />
+                                                <div className="bg-white border border-black/5 rounded-[2.5rem] p-10 shadow-sm hover:shadow-[0_20px_60px_rgba(0,0,0,0.04)] transition-all flex flex-col relative group overflow-hidden">
+                                                    <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
+                                                        <User className="w-24 h-24 text-[#0f172a]" />
                                                     </div>
-                                                    <div className="w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center mb-6 shadow-lg">
-                                                        <Zap className="w-6 h-6 text-white" />
+                                                    <div className="w-14 h-14 rounded-2xl bg-[#78dcca]/10 flex items-center justify-center mb-8 shadow-inner ring-1 ring-[#78dcca]/20">
+                                                        <User className="w-7 h-7 text-[#78dcca]" />
                                                     </div>
-                                                    <h4 className="text-xl font-black text-slate-900 tracking-tight font-inter mb-4">24/7 Executive Concierge</h4>
-                                                    <p className="text-sm text-slate-500 leading-relaxed tracking-tight">
+                                                    <h4 className="text-xl font-black text-[#0f172a] mb-5">24/7 Executive Concierge</h4>
+                                                    <p className="text-base text-slate-500 leading-relaxed font-medium">
                                                         Experience uninterrupted peace of mind. Your dedicated success manager is available 24/7 to ensure your practice runs flawlessly, allowing you to focus entirely on premium patient care.
                                                     </p>
                                                 </div>
 
                                                 {/* Card B: Trust Vault */}
-                                                <div className="bg-white border border-black/5 rounded-[2rem] p-8 shadow-sm hover:shadow-[0_8px_40px_rgb(0,0,0,0.06)] transition-all flex flex-col relative group overflow-hidden">
-                                                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                                                        <ShieldCheck className="w-24 h-24 text-slate-900" />
+                                                <div className="bg-white border border-black/5 rounded-[2.5rem] p-10 shadow-sm hover:shadow-[0_20px_60px_rgba(0,0,0,0.04)] transition-all flex flex-col relative group overflow-hidden">
+                                                    <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
+                                                        <ShieldCheck className="w-24 h-24 text-[#0f172a]" />
                                                     </div>
-                                                    <div className="w-12 h-12 rounded-2xl bg-emerald-500 flex items-center justify-center mb-6 shadow-lg">
-                                                        <ShieldCheck className="w-6 h-6 text-white" />
+                                                    <div className="w-14 h-14 rounded-2xl bg-[#78dcca]/10 flex items-center justify-center mb-8 shadow-inner ring-1 ring-[#78dcca]/20">
+                                                        <ShieldCheck className="w-7 h-7 text-[#78dcca]" />
                                                     </div>
-                                                    <h4 className="text-xl font-black text-slate-900 tracking-tight font-inter mb-4">Trust & Compliance Vault</h4>
-                                                    <p className="text-sm text-slate-500 leading-relaxed tracking-tight">
-                                                        Bank-grade encryption meets healthcare excellence. Your patient data is shielded within an isolated, zero-retention digital vault, ensuring total privacy and regulatory compliance.
+                                                    <h4 className="text-xl font-black text-[#0f172a] mb-5">Trust & Compliance Vault</h4>
+                                                    <p className="text-base text-slate-500 leading-relaxed font-medium">
+                                                        Bank-grade encryption meets healthcare excellence. Your patient data is shielded within an isolated, zero-retention digital vault, ensuring total privacy.
                                                     </p>
                                                 </div>
 
                                                 {/* Card C: Strategic Partnership */}
-                                                <div className="bg-white border border-black/5 rounded-[2rem] p-8 shadow-sm hover:shadow-[0_8px_40px_rgb(0,0,0,0.06)] transition-all flex flex-col relative group overflow-hidden">
-                                                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                                                        <Database className="w-24 h-24 text-slate-900" />
+                                                <div className="bg-white border border-black/5 rounded-[2.5rem] p-10 shadow-sm hover:shadow-[0_20px_60px_rgba(0,0,0,0.04)] transition-all flex flex-col relative group overflow-hidden">
+                                                    <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
+                                                        <Zap className="w-24 h-24 text-[#0f172a]" />
                                                     </div>
-                                                    <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center mb-6 shadow-lg">
-                                                        <Briefcase className="w-6 h-6 text-slate-900" />
+                                                    <div className="w-14 h-14 rounded-2xl bg-[#78dcca]/10 flex items-center justify-center mb-8 shadow-inner ring-1 ring-[#78dcca]/20">
+                                                        <Zap className="w-7 h-7 text-[#78dcca]" strokeWidth={2.5} />
                                                     </div>
-                                                    <h4 className="text-xl font-black text-slate-900 tracking-tight font-inter mb-4">Strategic Partnership & Insights</h4>
-                                                    <p className="text-sm text-slate-500 leading-relaxed tracking-tight">
-                                                        Shape the future of your software. Access bespoke marketing insights or book a private strategy session with our lead architects to optimize your clinical throughput.
+                                                    <h4 className="text-xl font-black text-[#0f172a] mb-5">Strategic Partnership & Insights</h4>
+                                                    <p className="text-base text-slate-500 leading-relaxed font-medium">
+                                                        Shape the future of your software. Access bespoke marketing insights or book a private strategy session with our lead architects.
                                                     </p>
                                                 </div>
                                             </div>
 
-                                            <div className="p-8 bg-slate-900 rounded-[2.5rem] text-center shadow-2xl relative overflow-hidden">
-                                                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 to-transparent" />
+                                            <div className="p-12 bg-[#0f172a] rounded-[3rem] text-center shadow-2xl relative overflow-hidden group">
+                                                <div className="absolute inset-0 bg-gradient-to-tr from-[#78dcca]/10 to-transparent group-hover:scale-110 transition-transform duration-1000" />
                                                 <div className="relative z-10">
-                                                    <h4 className="text-xl font-bold text-white mb-2 tracking-tight font-inter">Request Private Induction</h4>
-                                                    <p className="text-white/60 text-sm mb-6 max-w-lg mx-auto">Deepen your expertise with a 1-on-1 walkthrough of our advanced analytics engine.</p>
-                                                    <button className="px-8 py-3 bg-white text-slate-900 rounded-full font-black text-sm tracking-tight hover:scale-105 transition-transform">Book Strategy Session</button>
+                                                    <h4 className="text-3xl font-black text-white mb-3 tracking-tight">Request Private Induction</h4>
+                                                    <p className="text-white/60 text-lg mb-8 max-w-xl mx-auto font-medium">Deepen your expertise with a 1-on-1 walkthrough of our advanced analytics engine.</p>
+                                                    <button className="px-12 py-5 bg-white text-[#0f172a] rounded-2xl font-black text-sm uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl">Book Strategy Session</button>
                                                 </div>
                                             </div>
                                         </div>
