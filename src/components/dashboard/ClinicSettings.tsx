@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Plus, Trash2, Camera, Settings, List, Globe, ShieldCheck, MessageSquare, Briefcase, Zap, User, ArrowRight, Calendar, Save, Info } from 'lucide-react';
+import { X, Plus, Trash2, Camera, Settings, List, Globe, ShieldCheck, Briefcase, Zap, User, ArrowRight, Calendar, Save } from 'lucide-react';
 import { useDashboardStore } from '../../store/useDashboardStore';
 
 interface TreatmentTemplate {
@@ -11,7 +11,7 @@ interface TreatmentTemplate {
     beforeImg?: string;
     afterImg?: string;
     bookingUrl?: string;
-    status?: string;
+    status?: string; // [에러 방지] 타입스크립트 충돌을 막기 위해 추가
 }
 
 interface ClinicSettingsProps {
@@ -26,7 +26,7 @@ export function ClinicSettings({
     isOpen, 
     onClose, 
     currency = '£',
-    templates,
+    templates = [], // 기본값 설정으로 undefined 방지
     setTemplates 
 }: ClinicSettingsProps) {
     const { clinicType, setClinicType } = useDashboardStore();
@@ -50,19 +50,19 @@ export function ClinicSettings({
         localStorage.setItem('clinic-active-tab', activeTab);
     }, [activeTheme, activeTab]);
 
+    // [핵심 해결] 부모의 setTemplates를 직접 업데이트 (무한 루프 원천 차단)
     const handleAddTreatment = () => {
-        const newTreatment = {
+        const newTreatment: TreatmentTemplate = {
             id: Date.now().toString(),
             name: "New Clinical Protocol",
             price: 0,
             status: "Draft"
         };
-        setTemplates(prev => [...prev, newTreatment]);
+        setTemplates((prev) => [...(prev || []), newTreatment]);
     };
 
     const handleSaveTemplate = () => {
         if (!editingTemplate || !editingTemplate.name) return;
-        // [FIX]: Update parent state directly
         setTemplates(prev => prev.map(t => t.id === editingTemplate.id ? editingTemplate : t));
         setEditingTreatmentId(null);
         setEditingTemplate(null);
@@ -70,7 +70,6 @@ export function ClinicSettings({
 
     const handleDeleteTemplate = (id: string) => {
         if (confirm("Are you sure you want to delete this treatment?")) {
-            // [FIX]: Update parent state directly
             setTemplates(prev => prev.filter(t => t.id !== id));
             if (editingTreatmentId === id) setEditingTreatmentId(null);
         }
@@ -153,7 +152,7 @@ export function ClinicSettings({
                                     
                                     {activeTab === 'menu' && (
                                         <div className="space-y-4 animate-in fade-in zoom-in-95 duration-700">
-                                            {/* Treatment Editor Inline [DYNAMIC STATE] */}
+                                            {/* Treatment Editor Inline */}
                                             <AnimatePresence>
                                                 {editingTreatmentId && (
                                                     <motion.div 
@@ -233,7 +232,7 @@ export function ClinicSettings({
                                                 </button>
                                             </div>
 
-                                            {/* [FIXED]: Mapping strictly from parent props 'templates' */}
+                                            {/* [핵심 렌더링]: 오직 부모의 templates만 맵핑! */}
                                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                                                 {templates.map(template => (
                                                     <div key={template.id} className={`${cardBg} rounded-[2rem] border ${borderColor} p-6 shadow-inner hover:scale-[1.03] transition-all duration-500 group relative overflow-hidden flex flex-col h-full`}>
@@ -248,15 +247,15 @@ export function ClinicSettings({
                                                             </div>
                                                         </div>
                                                         
-                                                        <div className="mt-auto pt-6 border-t ${borderColor} flex items-center justify-between">
+                                                        <div className="mt-auto pt-6 border-t border-black/5 flex items-center justify-between">
                                                             <div className="flex items-center gap-x-4">
                                                                 {[template.beforeImg, template.afterImg].map((img, i) => (
                                                                     <div key={i} className={`w-9 h-9 rounded-full border-2 ${isDark ? 'border-[#0A0F1E]' : 'border-white'} ${isDark ? 'bg-[#151C2F]' : 'bg-white'} flex items-center justify-center shadow-lg overflow-hidden transition-transform group-hover:scale-110 shadow-inner`}>
-                                                                        {img ? <img src={img} className="w-full h-full object-cover" /> : <Camera className="w-4 h-4 text-slate-400" />}
+                                                                        {img ? <img src={img} className="w-full h-full object-cover" alt="" /> : <Camera className="w-4 h-4 text-slate-400" />}
                                                                     </div>
                                                                 ))}
                                                             </div>
-                                                            <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border ${borderColor} backdrop-blur-md shadow-inner">
+                                                            <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-black/5 backdrop-blur-md shadow-inner">
                                                                 <div className="w-2 h-2 rounded-full shadow-[0_0_8px_rgba(135,169,107,0.5)]" style={{ backgroundColor: template.price > 0 ? sageGreen : '#fbbf24' }} />
                                                                 <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] text-inter">{template.price > 0 ? 'Active' : 'Draft'}</span>
                                                             </div>
@@ -271,7 +270,7 @@ export function ClinicSettings({
                                         <div className="animate-in fade-in slide-in-from-right-4 duration-700">
                                             <div className={`${cardBg} border ${borderColor} p-8 rounded-[2.5rem] relative overflow-hidden group`}>
                                                 <div className="flex items-center gap-6 mb-8 text-inter">
-                                                    <div className="w-16 h-16 rounded-[1.5rem] bg-[#78dcca]/5 border ${borderColor} flex items-center justify-center shadow-inner group-hover:rotate-12 transition-transform duration-700">
+                                                    <div className={`w-16 h-16 rounded-[1.5rem] bg-[#78dcca]/5 border ${borderColor} flex items-center justify-center shadow-inner group-hover:rotate-12 transition-transform duration-700`}>
                                                         <Zap className={`w-8 h-8 ${accentColor}`} strokeWidth={1.5} />
                                                     </div>
                                                     <div>
@@ -367,7 +366,6 @@ export function ClinicSettings({
                                             </div>
                                         </div>
                                     )}
-
                                 </div>
                             </div>
                         </div>
