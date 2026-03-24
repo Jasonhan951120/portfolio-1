@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Plus, Trash2, Camera, Settings, List, Globe, ShieldCheck, MessageSquare, Briefcase, Zap, User, ArrowRight, Calendar, Save, Info } from 'lucide-react';
+import { X, Plus, Trash2, Camera, Settings, List, Globe, ShieldCheck, MessageSquare, Briefcase, Zap, User, ArrowRight, Calendar, Save, Info, Sparkles, BriefcaseBusiness } from 'lucide-react';
 import { useDashboardStore } from '../../store/useDashboardStore';
 
 interface TreatmentTemplate {
@@ -54,8 +54,9 @@ export function ClinicSettings({
             id: `template-${Date.now()}`,
             name: "New Clinical Protocol",
             price: 0,
-            emailContents: "Hi {name}, thank you for choosing us for your {treatment}. Here is your link: {pt_link}"
-        };
+            emailContents: "Hi {name}, thank you for choosing us for your {treatment}. Here is your link: {pt_link}",
+            status: "Draft"
+        } as any;
         setTemplates([...templates, newTemplate]);
     };
 
@@ -70,6 +71,22 @@ export function ClinicSettings({
         if (confirm("Are you sure you want to delete this treatment?")) {
             setTemplates(templates.filter(t => t.id !== id));
             if (editingTreatmentId === id) setEditingTreatmentId(null);
+        }
+    };
+
+    const generateTemplate = (tone: 'friendly' | 'professional') => {
+        if (!editingTemplate) return;
+        const name = editingTemplate.name || "Treatment";
+        const isImplant = name.toLowerCase().includes('implant');
+        
+        if (tone === 'friendly') {
+            const base = `Hi {name}! Hope you're feeling great after your {treatment} consultation. Here's your bespoke proposal and special link: {pt_link}`;
+            const final = isImplant ? base.replace('consultation', 'Implant procedure discussion') : base;
+            setEditingTemplate({ ...editingTemplate, emailContents: final });
+        } else {
+            const base = `Dear {name}, following your {treatment} procedure discussion, please review your clinical guidelines and proposal here: {pt_link}`;
+            const final = isImplant ? base.replace('procedure discussion', 'Clinical Implant Protocol review') : base;
+            setEditingTemplate({ ...editingTemplate, emailContents: final });
         }
     };
 
@@ -191,11 +208,27 @@ export function ClinicSettings({
                                                                 </div>
                                                             </div>
 
-                                                            {/* Email Automation Section [NEW] */}
+                                                            {/* Email Automation Section with Tone Buttons */}
                                                             <div className="pt-4 border-t border-black/5">
-                                                                <div className="flex items-center gap-2 mb-3">
-                                                                    <MessageSquare className={`w-4 h-4 ${accentColor}`} />
-                                                                    <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Patient Email Template (Post-Treatment)</label>
+                                                                <div className="flex items-center justify-between mb-3">
+                                                                    <div className="flex items-center gap-2">
+                                                                        <MessageSquare className={`w-4 h-4 ${accentColor}`} />
+                                                                        <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Patient Email Template (Post-Treatment)</label>
+                                                                    </div>
+                                                                    <div className="flex gap-2">
+                                                                        <button 
+                                                                            onClick={() => generateTemplate('friendly')}
+                                                                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100 text-[9px] font-black uppercase tracking-widest hover:bg-emerald-100 transition-all shadow-sm"
+                                                                        >
+                                                                            <Sparkles className="w-3 h-3" /> Friendly 😊
+                                                                        </button>
+                                                                        <button 
+                                                                            onClick={() => generateTemplate('professional')}
+                                                                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 text-blue-700 border border-blue-100 text-[9px] font-black uppercase tracking-widest hover:bg-blue-100 transition-all shadow-sm"
+                                                                        >
+                                                                            <BriefcaseBusiness className="w-3 h-3" /> Professional 💼
+                                                                        </button>
+                                                                    </div>
                                                                 </div>
                                                                 <p className="text-[10px] text-slate-400 mb-4 font-medium italic">This email will be automatically sent to the patient with their unique PT link.</p>
                                                                 <textarea 
