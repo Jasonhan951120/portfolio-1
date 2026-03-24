@@ -26,7 +26,7 @@ export function ClinicSettings({
     isOpen, 
     onClose, 
     currency = '£',
-    templates,
+    templates = [],
     setTemplates 
 }: ClinicSettingsProps) {
     const { clinicType, setClinicType } = useDashboardStore();
@@ -248,15 +248,15 @@ export function ClinicSettings({
                                                             </div>
                                                         </div>
                                                         
-                                                        <div className="mt-auto pt-6 border-t ${borderColor} flex items-center justify-between">
+                                                        <div className={`mt-auto pt-6 border-t ${borderColor} flex items-center justify-between`}>
                                                             <div className="flex items-center gap-x-4">
                                                                 {[template.beforeImg, template.afterImg].map((img, i) => (
                                                                     <div key={i} className={`w-9 h-9 rounded-full border-2 ${isDark ? 'border-[#0A0F1E]' : 'border-white'} ${isDark ? 'bg-[#151C2F]' : 'bg-white'} flex items-center justify-center shadow-lg overflow-hidden transition-transform group-hover:scale-110 shadow-inner`}>
-                                                                        {img ? <img src={img} className="w-full h-full object-cover" /> : <Camera className="w-4 h-4 text-slate-400" />}
+                                                                        {img ? <img src={img} className="w-full h-full object-cover" alt="" /> : <Camera className="w-4 h-4 text-slate-400" />}
                                                                     </div>
                                                                 ))}
                                                             </div>
-                                                            <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border ${borderColor} backdrop-blur-md shadow-inner">
+                                                            <div className={`flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border ${borderColor} backdrop-blur-md shadow-inner`}>
                                                                 <div className="w-2 h-2 rounded-full shadow-[0_0_8px_rgba(135,169,107,0.5)]" style={{ backgroundColor: template.price > 0 ? sageGreen : '#fbbf24' }} />
                                                                 <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] text-inter">{template.price > 0 ? 'Active' : 'Draft'}</span>
                                                             </div>
@@ -271,7 +271,7 @@ export function ClinicSettings({
                                         <div className="animate-in fade-in slide-in-from-right-4 duration-700">
                                             <div className={`${cardBg} border ${borderColor} p-8 rounded-[2.5rem] relative overflow-hidden group`}>
                                                 <div className="flex items-center gap-6 mb-8 text-inter">
-                                                    <div className="w-16 h-16 rounded-[1.5rem] bg-[#78dcca]/5 border ${borderColor} flex items-center justify-center shadow-inner group-hover:rotate-12 transition-transform duration-700">
+                                                    <div className={`w-16 h-16 rounded-[1.5rem] bg-[#78dcca]/5 border ${borderColor} flex items-center justify-center shadow-inner group-hover:rotate-12 transition-transform duration-700`}>
                                                         <Zap className={`w-8 h-8 ${accentColor}`} strokeWidth={1.5} />
                                                     </div>
                                                     <div>
@@ -367,7 +367,6 @@ export function ClinicSettings({
                                             </div>
                                         </div>
                                     )}
-
                                 </div>
                             </div>
                         </div>
