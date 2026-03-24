@@ -36,17 +36,19 @@ export function ClinicSettings({
     const [locale, setLocale] = useState('en-GB');
     const [editingTreatmentId, setEditingTreatmentId] = useState<string| null>(null);
 
-    // [CRITICAL FIX]: Use local state for immediate UI reactivity
+    // [CRITICAL HARD-FIX]: Use local state derived from templates at initialization
     const [treatments, setTreatments] = useState<TreatmentTemplate[]>(templates);
 
-    // Sync local state changes back to parent
+    // Sync local changes back to the parent store/state
     useEffect(() => {
         setTemplates(treatments);
     }, [treatments, setTemplates]);
 
-    // Force sync when props from parent change (e.g., initial load)
+    // Handle incoming prop updates ONLY if the ID list changes (e.g., loaded from remote storage)
     useEffect(() => {
-        if (templates.length !== treatments.length) {
+        const localIds = treatments.map(t => t.id).join(',');
+        const propIds = templates.map(t => t.id).join(',');
+        if (localIds !== propIds) {
             setTreatments(templates);
         }
     }, [templates]);
@@ -68,10 +70,9 @@ export function ClinicSettings({
         const newTreatment: TreatmentTemplate = {
             id: Date.now().toString(),
             name: "New Clinical Protocol",
-            price: 0,
-            status: "Draft"
+            price: 0
         } as any;
-        // [FORCE UI UPDATE]: Use functional update on local state
+        // [HARD-FIX]: Pure functional update to trigger React's reconciliation engine
         setTreatments((prev) => [...prev, newTreatment]);
     };
 
@@ -180,7 +181,7 @@ export function ClinicSettings({
                                                                  <div className={`w-10 h-10 rounded-full bg-[#78dcca]/10 flex items-center justify-center`}>
                                                                     <Settings className={`w-5 h-5 ${accentColor}`} strokeWidth={2} />
                                                                 </div>
-                                                                <h3 className={`text-xl font-black ${textColor} uppercase tracking-tight text-inter`}>Edit Clinical Protocol</h3>
+                                                                <h3 className={`text-xl font-black ${textColor} uppercase tracking-tight text-inter text-nowrap`}>Edit Clinical Protocol</h3>
                                                             </div>
                                                             <button onClick={() => setEditingTreatmentId(null)} className="w-8 h-8 rounded-full hover:bg-black/5 flex items-center justify-center transition-colors"><X className="w-5 h-5 text-slate-400" /></button>
                                                         </div>
@@ -221,7 +222,7 @@ export function ClinicSettings({
                                                         <h3 className={`text-xl font-black ${textColor} mb-1 uppercase tracking-tight`}>Practice Identity</h3>
                                                         <p className={`text-xs ${subTextColor} font-medium tracking-tight`}>Engineered precision for your specific field.</p>
                                                     </div>
-                                                    <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center shadow-inner group-hover:rotate-12 transition-transform duration-500"><Briefcase className={`w-5 h-5 ${accentColor}`} /></div>
+                                                    <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center shadow-inner group-hover:rotate-12 transition-transform duration-500"><Briefcase className={`w-5 h-5 ${accentColor}`} strokeWidth={2} /></div>
                                                 </div>
                                                 <div className="relative max-w-sm">
                                                     <select 
@@ -246,10 +247,10 @@ export function ClinicSettings({
                                                 </button>
                                             </div>
 
-                                            {/* [FIXED RENDERING LOOP]: Map from reactive 'treatments' state */}
+                                            {/* [HARD-FIX]: Map from REFRESHED local state 'treatments' */}
                                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                                                 {treatments.map(template => (
-                                                    <div key={template.id} className={`${cardBg} rounded-[2rem] border ${borderColor} p-6 shadow-inner hover:scale-[1.05] transition-all duration-500 group relative overflow-hidden flex flex-col h-full`}>
+                                                    <div key={template.id} className={`${cardBg} rounded-[2rem] border ${borderColor} p-6 shadow-inner hover:scale-[1.03] transition-all duration-500 group relative overflow-hidden flex flex-col h-full`}>
                                                         <div className="flex justify-between items-start mb-4 text-inter">
                                                             <div className="flex-1">
                                                                 <h4 className={`${textColor} font-black text-sm truncate uppercase tracking-widest`}>{template.name}</h4>

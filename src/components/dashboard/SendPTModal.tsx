@@ -50,7 +50,7 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
   onClose,
   lead,
   currency = '£',
-  clinicName = "Hanlan OC Dental Clinic",
+  clinicName = "Hanlan OC",
   onUpdateLead,
   templates = []
 }) => {
@@ -101,13 +101,14 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
 
   const applyDualTemplate = (tone: 'friendly' | 'professional') => {
     const { patientName, treatmentName } = getProcessingNames();
-    
+    const ptLink = "{pt_link}"; // Backend replaces this
+
     if (tone === 'friendly') {
         setEmailSubject(`Thank you for your visit, ${patientName} - Your Bespoke ${treatmentName} Proposal`);
-        setEmailTemplate(`Hi ${patientName},\n\nIt was truly wonderful seeing you at the clinic today. Thank you for trusting us with your smile and your care. Following our consultation regarding your ${treatmentName}, I have personally prepared a bespoke treatment plan for you.\n\nYou can securely review your clinical proposal and next steps right here: {pt_link}\n\nWarmly,\n${clinicName}`);
+        setEmailTemplate(`Hi ${patientName},\n\nIt was truly wonderful seeing you at the clinic today. Thank you for trusting us with your smile and your care. Following our consultation regarding your ${treatmentName}, I have personally prepared a bespoke treatment plan for you.\n\nYou can securely review your clinical proposal and next steps right here: ${ptLink}\n\nWarmly,\n${clinicName}`);
     } else {
         setEmailSubject(`Clinical Proposal & Next Steps for ${patientName} - ${treatmentName}`);
-        setEmailTemplate(`Dear ${patientName},\n\nThank you for visiting our clinic for your consultation today. Based on our comprehensive evaluation regarding your ${treatmentName}, I have finalized your bespoke clinical protocol and secure proposal.\n\nPlease access your dedicated portal to review the precise details: {pt_link}\n\nSincerely,\n${clinicName}`);
+        setEmailTemplate(`Dear ${patientName},\n\nThank you for visiting our clinic for your consultation today. Based on our comprehensive evaluation regarding your ${treatmentName}, I have finalized your bespoke clinical protocol and secure proposal.\n\nPlease access your dedicated portal to review the precise details: ${ptLink}\n\nSincerely,\n${clinicName}`);
     }
   };
 
@@ -173,7 +174,6 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
           return;
         }
 
-        // Call the real Supabase Edge Function for sending emails
         const { error, data } = await supabase.functions.invoke('send-pt-v2', {
           body: {
             lead_id: lead?.id,
@@ -188,7 +188,7 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
         });
 
         if (error || (data && data.error)) {
-          console.error("Failed to send email via edge function:", error || data.error);
+          console.error("Failed to send email:", error || data.error);
           setErrorMsg("Email failed to send. Please check your API configuration.");
           setIsSending(false);
           return;
@@ -212,12 +212,9 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
 
   if (!isOpen || !lead) return null;
 
-  const names = getProcessingNames();
-
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-        {/* Backdrop */}
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -226,7 +223,6 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
             className="absolute inset-0 bg-slate-900/60 backdrop-blur-md"
         />
 
-        {/* Modal Card */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9, y: 30 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -241,20 +237,16 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
               </div>
               <div>
                 <h3 className="text-xl font-bold text-slate-900 tracking-tight">
-                  {names.patientName}'s {names.treatmentName} Proposal
+                  {getProcessingNames().patientName}'s Proposal
                 </h3>
                 <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Secure Proposal Terminal</p>
               </div>
             </div>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-400"
-            >
+            <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-400">
               <X className="w-5 h-5" />
             </button>
           </div>
 
-          {/* Error Banner */}
           {errorMsg && (
             <div className="px-10 py-4 bg-red-50 border-b border-red-100 flex items-center gap-3">
               <AlertCircle className="w-5 h-5 text-red-500" />
@@ -263,81 +255,36 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
           )}
 
           {/* Settings Body */}
-          <div className="px-10 py-10 space-y-8 max-h-[60vh] overflow-y-auto">
+          <div className="px-10 py-10 space-y-8 max-h-[60vh] overflow-y-auto custom-scrollbar">
              <div className="space-y-6">
               {templates && templates.length > 0 && (
                 <div>
                   <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Target Treatment Plan</label>
-                  <div className="relative group">
-                    <select 
-                      value={selectedTemplateId}
-                      onChange={(e) => handleTemplateChange(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-5 px-5 text-sm font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all appearance-none cursor-pointer"
-                    >
-                      <option value="" disabled>Select from Clinic Settings...</option>
-                      {templates.map(t => (
-                        <option key={t.id} value={t.id}>{t.name} ({currency}{t.price.toLocaleString()})</option>
-                      ))}
-                    </select>
-                    <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                      <RefreshCw className="w-4 h-4" />
-                    </div>
-                  </div>
+                  <select 
+                    value={selectedTemplateId}
+                    onChange={(e) => handleTemplateChange(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 px-5 text-sm font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all appearance-none cursor-pointer"
+                  >
+                    <option value="" disabled>Select Protocol...</option>
+                    {templates.map(t => (
+                      <option key={t.id} value={t.id}>{t.name} ({currency}{t.price.toLocaleString()})</option>
+                    ))}
+                  </select>
                 </div>
               )}
 
-              <div>
-                 <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Investment Value</label>
-                 <div className="relative">
-                    <span className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-lg">{currency}</span>
-                    <input 
-                       type="number" 
-                       value={overridePrice}
-                       onChange={(e) => setOverridePrice(e.target.value)}
-                       className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-5 pl-12 pr-5 text-lg font-black text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all"
-                    />
-                 </div>
-              </div>
-
-              <div>
-                 <div className="flex flex-col gap-3 mb-3">
-                    <div className="flex items-center justify-between">
-                        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest">Email Template</label>
-                        <div className="flex gap-2">
-                            <button 
-                                onClick={() => applyDualTemplate('friendly')}
-                                className="bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-full px-4 py-1.5 text-[9px] font-black uppercase tracking-widest transition-all active:scale-95 shadow-sm"
-                            >
-                                Friendly
-                            </button>
-                            <button 
-                                onClick={() => applyDualTemplate('professional')}
-                                className="bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-full px-4 py-1.5 text-[9px] font-black uppercase tracking-widest transition-all active:scale-95 shadow-sm"
-                            >
-                                Professional
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Dynamic Treatment Templates */}
-                    <div className="flex flex-wrap gap-2">
-                       {templates.find(t => t.id === selectedTemplateId)?.messageTemplates?.map((tmpl, i) => {
-                          return (
-                             <button 
-                                key={i}
-                                onClick={() => setEmailTemplate(tmpl.body)}
-                                className="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-full px-4 py-2 text-[10px] font-black transition-all active:scale-95 shadow-sm flex items-center gap-1.5"
-                             >
-                                <CheckCircle className="w-3.5 h-3.5" /> {tmpl.title}
-                             </button>
-                          );
-                       })}
+              <div className="flex flex-col gap-4">
+                 <div className="flex items-center justify-between">
+                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest">Tone Selection</label>
+                    <div className="flex gap-2">
+                        <button onClick={() => applyDualTemplate('friendly')} className="bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-full px-4 py-2 text-[10px] font-black uppercase tracking-widest transition-all active:scale-95">Friendly</button>
+                        <button onClick={() => applyDualTemplate('professional')} className="bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-full px-4 py-2 text-[10px] font-black uppercase tracking-widest transition-all active:scale-95">Professional</button>
                     </div>
                  </div>
 
-                 {/* New EMAIL SUBJECT Field as per Luxury Spec */}
-                 <div className="mb-4">
-                    <label className="block text-sm font-medium text-slate-700 mb-1 font-inter tracking-tight uppercase text-[10px] font-black tracking-widest">EMAIL SUBJECT</label>
+                 {/* Premium EMAIL SUBJECT Input */}
+                 <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1 font-inter tracking-tight">EMAIL SUBJECT</label>
                     <input 
                        type="text" 
                        value={emailSubject} 
@@ -346,12 +293,14 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
                     />
                  </div>
 
-                 <textarea 
-                    value={emailTemplate}
-                    onChange={(e) => setEmailTemplate(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-5 text-sm font-medium text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all h-56 resize-none shadow-inner font-inter leading-relaxed"
-                    placeholder="Refined your veneers plan based on today's scan..."
-                 />
+                 <div>
+                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">EMAIL TEMPLATE</label>
+                    <textarea 
+                       value={emailTemplate}
+                       onChange={(e) => setEmailTemplate(e.target.value)}
+                       className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-5 text-sm font-medium text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all h-64 resize-none shadow-inner font-inter leading-relaxed"
+                    />
+                 </div>
               </div>
              </div>
           </div>
@@ -362,22 +311,22 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
                 <button
                   onClick={handleWhatsAppSend}
                   disabled={!lead.phone || isSending}
-                  className="py-5 bg-[#25D366] hover:bg-[#128C7E] disabled:opacity-50 text-white rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all shadow-xl shadow-emerald-500/20 flex items-center justify-center gap-3 active:scale-95"
+                  className="py-5 bg-[#25D366] hover:bg-[#128C7E] disabled:opacity-50 text-white rounded-3xl text-[11px] font-black uppercase tracking-widest transition-all shadow-xl shadow-emerald-500/10 flex items-center justify-center gap-3 active:scale-95"
                 >
                   <MessageCircle className="w-4 h-4" /> WhatsApp
                 </button>
                 <button
                   onClick={() => handleSend(true)}
                   disabled={isSending}
-                  className="py-5 bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all shadow-xl shadow-slate-900/20 flex items-center justify-center gap-3 active:scale-95"
+                  className="py-5 bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white rounded-3xl text-[11px] font-black uppercase tracking-widest transition-all shadow-xl shadow-slate-900/10 flex items-center justify-center gap-3 active:scale-95"
                 >
-                  {isSending ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />} Email
+                  {isSending ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />} Email Terminal
                 </button>
              </div>
 
             <div className="flex items-center justify-center gap-2 pt-2">
               <Shield className="w-3.5 h-3.5 text-emerald-500" />
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Secure End-to-End Delivery</span>
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">End-to-End Clinical Encryption</span>
             </div>
           </div>
         </motion.div>
