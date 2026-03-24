@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Plus, Trash2, Camera, Settings, List, Globe, ShieldCheck, MessageSquare, Briefcase, Zap, User, ArrowRight, Calendar } from 'lucide-react';
+import { X, Plus, Trash2, Camera, Settings, List, Globe, ShieldCheck, MessageSquare, Briefcase, Zap, User, ArrowRight, Calendar, Save } from 'lucide-react';
 import { useDashboardStore } from '../../store/useDashboardStore';
 
 interface TreatmentTemplate {
@@ -30,11 +30,11 @@ export function ClinicSettings({
 }: ClinicSettingsProps) {
     const { clinicType, setClinicType } = useDashboardStore();
     const [activeTab, setActiveTab] = useState<'menu' | 'general' | 'support'>('menu');
-    const [isEditing, setIsEditing] = useState(false);
     const [editingTemplate, setEditingTemplate] = useState<TreatmentTemplate | null>(null);
     const [activeTheme, setActiveTheme] = useState<'white' | 'dark'>('white');
     const [communicationTone, setCommunicationTone] = useState<'Warm & Empathetic' | 'Refined & Professional'>('Refined & Professional');
     const [locale, setLocale] = useState('en-GB');
+    const [editingTreatmentId, setEditingTreatmentId] = useState<string | null>(null);
 
     // Persistence Logic
     useEffect(() => {
@@ -49,30 +49,38 @@ export function ClinicSettings({
         localStorage.setItem('clinic-active-tab', activeTab);
     }, [activeTheme, activeTab]);
 
+    const handleAddMasterpiece = () => {
+        const newTemplate: TreatmentTemplate = {
+            id: `template-${Date.now()}`,
+            name: "New Masterpiece",
+            price: 0,
+            status: "Draft"
+        } as any;
+        setTemplates([...templates, newTemplate]);
+    };
+
     const handleSaveTemplate = () => {
         if (!editingTemplate || !editingTemplate.name) return;
-        if (templates.find(t => t.id === editingTemplate.id)) {
-            setTemplates(templates.map(t => t.id === editingTemplate.id ? editingTemplate : t));
-        } else {
-            setTemplates([...templates, { ...editingTemplate, id: `template-${Date.now()}` }]);
-        }
-        setIsEditing(false);
+        setTemplates(templates.map(t => t.id === editingTemplate.id ? editingTemplate : t));
+        setEditingTreatmentId(null);
         setEditingTemplate(null);
     };
 
     const handleDeleteTemplate = (id: string) => {
         if (confirm("Are you sure you want to delete this treatment?")) {
             setTemplates(templates.filter(t => t.id !== id));
+            if (editingTreatmentId === id) setEditingTreatmentId(null);
         }
     };
 
     // Theme Engine: Luxury Wellness Edition
     const isDark = activeTheme === 'dark';
     const bgColor = isDark ? 'bg-[#0A0F1E]' : 'bg-white';
-    const cardBg = isDark ? 'bg-[#151C2F]/60 backdrop-blur-xl' : 'bg-[#fdfcfb]'; // Light cream for light mode
+    const cardBg = isDark ? 'bg-[#151C2F]/60 backdrop-blur-xl' : 'bg-[#fdfcfb]';
     const textColor = isDark ? 'text-white' : 'text-[#0f172a]';
     const subTextColor = isDark ? 'text-slate-400' : 'text-slate-500';
-    const accentColor = isDark ? 'text-[#2AF598]' : 'text-[#78dcca]'; // Wellness Mint
+    const accentColor = isDark ? 'text-[#2AF598]' : 'text-[#78dcca]';
+    const accentBg = isDark ? 'bg-[#2AF598]' : 'bg-[#78dcca]';
     const borderColor = isDark ? 'border-white/10' : 'border-black/5';
     const sageGreen = '#87A96B';
 
@@ -120,7 +128,9 @@ export function ClinicSettings({
                                         onClick={() => setActiveTab(tab.id as any)}
                                         className={`flex items-center justify-between px-5 py-3 rounded-xl transition-all duration-500 group relative ${
                                             activeTab === tab.id 
-                                                ? `${isDark ? 'bg-white/10' : 'bg-white shadow-lg'} ${textColor} border ${borderColor}` 
+                                                ? tab.id === 'support' 
+                                                    ? 'bg-white text-[#0f172a] shadow-sm border border-gray-100 p-4' 
+                                                    : `${isDark ? 'bg-white/10' : 'bg-white shadow-lg'} ${textColor} border ${borderColor}` 
                                                 : 'text-slate-500 hover:text-slate-300'
                                         }`}
                                     >
@@ -128,7 +138,7 @@ export function ClinicSettings({
                                             <tab.icon className={`w-4 h-4 ${activeTab === tab.id ? (isDark ? 'text-[#2AF598]' : 'text-[#78dcca]') : 'text-slate-400'}`} strokeWidth={2.5} />
                                             <span className="font-bold text-xs uppercase tracking-widest">{tab.label}</span>
                                         </div>
-                                        {activeTab === tab.id && <motion.div layoutId="nav-glow" className={`absolute inset-0 rounded-xl ${isDark ? 'bg-[#2AF598]/5 shadow-[inset_0_0_20px_rgba(42,245,152,0.1)]' : 'bg-sky-500/5'} border ${isDark ? 'border-[#2AF598]/30' : 'border-sky-500/30'}`} />}
+                                        {activeTab === tab.id && tab.id !== 'support' && <motion.div layoutId="nav-glow" className={`absolute inset-0 rounded-xl ${isDark ? 'bg-[#2AF598]/5 shadow-[inset_0_0_20px_rgba(42,245,152,0.1)]' : 'bg-sky-500/5'} border ${isDark ? 'border-[#2AF598]/30' : 'border-sky-500/30'}`} />}
                                         <ArrowRight className={`w-3 h-3 transition-all duration-500 ${activeTab === tab.id ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2'}`} />
                                     </button>
                                 ))}
@@ -140,6 +150,46 @@ export function ClinicSettings({
                                     
                                     {activeTab === 'menu' && (
                                         <div className="space-y-4 animate-in fade-in zoom-in-95 duration-700">
+                                            {/* Treatment Editor Inline */}
+                                            <AnimatePresence>
+                                                {editingTreatmentId && (
+                                                    <motion.div 
+                                                        initial={{ opacity: 0, y: -20 }}
+                                                        animate={{ opacity: 1, y: 0 }}
+                                                        exit={{ opacity: 0, y: -20 }}
+                                                        className={`${cardBg} border-2 border-[#78dcca] p-6 rounded-[2rem] shadow-xl mb-4 relative overflow-hidden`}
+                                                    >
+                                                        <div className="flex items-center justify-between mb-4">
+                                                            <h3 className={`text-lg font-black ${textColor}`}>Edit Masterpiece</h3>
+                                                            <button onClick={() => setEditingTreatmentId(null)} className="text-slate-400 hover:text-slate-600"><X className="w-5 h-5" /></button>
+                                                        </div>
+                                                        <div className="grid grid-cols-2 gap-4">
+                                                            <div>
+                                                                <label className="text-[10px] font-bold uppercase text-slate-400 block mb-1">Treatment Name</label>
+                                                                <input 
+                                                                    type="text" 
+                                                                    value={editingTemplate?.name || ''} 
+                                                                    onChange={e => setEditingTemplate({...editingTemplate!, name: e.target.value})}
+                                                                    className="w-full bg-white/5 border border-black/5 rounded-xl py-2 px-4 text-sm font-bold focus:outline-none"
+                                                                />
+                                                            </div>
+                                                            <div>
+                                                                <label className="text-[10px] font-bold uppercase text-slate-400 block mb-1">Price ({currency})</label>
+                                                                <input 
+                                                                    type="number" 
+                                                                    value={editingTemplate?.price || 0} 
+                                                                    onChange={e => setEditingTemplate({...editingTemplate!, price: Number(e.target.value)})}
+                                                                    className="w-full bg-white/5 border border-black/5 rounded-xl py-2 px-4 text-sm font-bold focus:outline-none"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <button onClick={handleSaveTemplate} className="mt-4 w-full py-3 bg-[#0f172a] text-white rounded-xl font-black text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-slate-800 transition-all">
+                                                            <Save className="w-4 h-4" /> Save Changes
+                                                        </button>
+                                                    </motion.div>
+                                                )}
+                                            </AnimatePresence>
+
                                             <div className={`${cardBg} border ${borderColor} p-6 rounded-[2rem] shadow-2xl relative overflow-hidden group hover:scale-[1.01] transition-all duration-500`}>
                                                 <div className="flex items-center justify-between mb-4">
                                                     <div>
@@ -164,14 +214,14 @@ export function ClinicSettings({
                                             <div className={`flex items-center justify-between p-6 ${cardBg} border ${borderColor} rounded-[2rem] hover:scale-[1.01] transition-all duration-500`}>
                                                 <h3 className={`text-xl font-black ${textColor}`}>Signature Menu Builder</h3>
                                                 <button 
-                                                    onClick={() => { setEditingTemplate({ id: '', name: '', price: 0 }); setIsEditing(true); }}
+                                                    onClick={handleAddMasterpiece}
                                                     className={`px-6 py-3 ${isDark ? 'bg-white text-black' : 'bg-[#0f172a] text-white'} rounded-xl text-[10px] font-black tracking-widest uppercase transition-all shadow-xl hover:shadow-[#78dcca]/20 active:scale-95 flex items-center gap-2`}
                                                 >
                                                     <Plus className={`w-4 h-4 ${accentColor}`} strokeWidth={4} /> Add Masterpiece
                                                 </button>
                                             </div>
 
-                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                                 {templates.map(template => (
                                                     <div key={template.id} className={`${cardBg} rounded-[2rem] border ${borderColor} p-5 shadow-inner hover:scale-[1.05] transition-all duration-500 group relative overflow-hidden flex flex-col h-full`}>
                                                         <div className="flex justify-between items-start mb-3 text-inter">
@@ -179,13 +229,13 @@ export function ClinicSettings({
                                                                 <h4 className={`${textColor} font-black text-sm truncate uppercase tracking-widest`}>{template.name}</h4>
                                                                 <p className={`${accentColor} font-black text-lg`}>{currency}{template.price.toLocaleString()}</p>
                                                             </div>
-                                                            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-all">
-                                                                <button onClick={() => { setEditingTemplate(template); setIsEditing(true); }} className={`w-8 h-8 flex items-center justify-center ${isDark ? 'bg-white/5 hover:bg-[#78dcca]/10' : 'bg-white hover:bg-slate-50'} rounded-lg border ${borderColor}`}><Settings className="w-4 h-4 text-slate-400" /></button>
+                                                            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0">
+                                                                <button onClick={() => { setEditingTreatmentId(template.id); setEditingTemplate(template); }} className={`w-8 h-8 flex items-center justify-center ${isDark ? 'bg-white/5 hover:bg-[#78dcca]/10' : 'bg-white hover:bg-slate-50'} rounded-lg border ${borderColor}`}><Settings className="w-4 h-4 text-slate-400" /></button>
                                                                 <button onClick={() => handleDeleteTemplate(template.id)} className={`w-8 h-8 flex items-center justify-center ${isDark ? 'bg-white/5 hover:bg-red-500/10' : 'bg-white hover:bg-red-50'} rounded-lg border ${borderColor}`}><Trash2 className="w-4 h-4 text-slate-400 hover:text-red-500" /></button>
                                                             </div>
                                                         </div>
                                                         <div className="mt-auto pt-4 border-t ${borderColor} flex items-center justify-between">
-                                                            <div className="flex -space-x-2">
+                                                            <div className="flex items-center gap-x-4">
                                                                 {[template.beforeImg, template.afterImg].map((img, i) => (
                                                                     <div key={i} className={`w-8 h-8 rounded-full border-2 ${isDark ? 'border-[#0A0F1E]' : 'border-white'} ${isDark ? 'bg-[#151C2F]' : 'bg-white'} flex items-center justify-center shadow-lg overflow-hidden`}>
                                                                         {img ? <img src={img} className="w-full h-full object-cover" /> : <Camera className="w-3 h-3 text-slate-400" />}
@@ -193,8 +243,8 @@ export function ClinicSettings({
                                                                 ))}
                                                             </div>
                                                             <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border ${borderColor}">
-                                                                <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: sageGreen }} />
-                                                                <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Active</span>
+                                                                <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: template.price > 0 ? sageGreen : '#fbbf24' }} />
+                                                                <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">{template.price > 0 ? 'Active' : 'Draft'}</span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -283,7 +333,7 @@ export function ClinicSettings({
                                                             <card.icon className={`w-5 h-5 ${accentColor}`} strokeWidth={2.5} />
                                                         </div>
                                                         <h4 className={`text-base font-black ${textColor} mb-2 uppercase tracking-tight`}>{card.label}</h4>
-                                                        <p className={`text-[10px] ${subTextColor} leading-relaxed font-semibold mb-6 flex-1`}>{card.desc}</p>
+                                                        <p className={`text-[10px] ${subTextColor} leading-relaxed font-semibold mb-6 flex-1 text-inter`}>{card.desc}</p>
                                                         
                                                         {card.isAction && (
                                                             <button className={`w-full py-2.5 ${isDark ? 'bg-[#78dcca] text-[#0f172a]' : 'bg-[#0f172a] text-white'} rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg hover:scale-[1.05] transition-all`}>
