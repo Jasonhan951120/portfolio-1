@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Plus, Trash2, Camera, Settings, List, Globe, ShieldCheck, MessageSquare, Briefcase, Zap, User, ArrowRight, Calendar, Save } from 'lucide-react';
+import { X, Plus, Trash2, Camera, Settings, List, Globe, ShieldCheck, MessageSquare, Briefcase, Zap, User, ArrowRight, Calendar, Save, Info } from 'lucide-react';
 import { useDashboardStore } from '../../store/useDashboardStore';
 
 interface TreatmentTemplate {
@@ -49,13 +49,13 @@ export function ClinicSettings({
         localStorage.setItem('clinic-active-tab', activeTab);
     }, [activeTheme, activeTab]);
 
-    const handleAddMasterpiece = () => {
+    const handleAddTreatment = () => {
         const newTemplate: TreatmentTemplate = {
             id: `template-${Date.now()}`,
-            name: "New Masterpiece",
+            name: "New Clinical Protocol",
             price: 0,
-            status: "Draft"
-        } as any;
+            emailContents: "Hi {name}, thank you for choosing us for your {treatment}. Here is your link: {pt_link}"
+        };
         setTemplates([...templates, newTemplate]);
     };
 
@@ -102,7 +102,7 @@ export function ClinicSettings({
                                     <Settings className={`w-6 h-6 ${textColor}`} strokeWidth={1.2} />
                                 </div>
                                 <div>
-                                    <h2 className={`text-2xl font-black ${textColor} uppercase tracking-tight`}>Lounge Settings</h2>
+                                    <h2 className={`text-2xl font-black ${textColor} uppercase tracking-tight text-inter`}>Lounge Settings</h2>
                                     <div className="flex items-center gap-2">
                                         <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: sageGreen }} />
                                         <span className={`text-[10px] font-bold uppercase tracking-[0.2em]`} style={{ color: sageGreen }}>System Operational</span>
@@ -154,47 +154,78 @@ export function ClinicSettings({
                                             <AnimatePresence>
                                                 {editingTreatmentId && (
                                                     <motion.div 
-                                                        initial={{ opacity: 0, y: -20 }}
-                                                        animate={{ opacity: 1, y: 0 }}
-                                                        exit={{ opacity: 0, y: -20 }}
-                                                        className={`${cardBg} border-2 border-[#78dcca] p-6 rounded-[2rem] shadow-xl mb-4 relative overflow-hidden`}
+                                                        initial={{ opacity: 0, scale: 0.95 }}
+                                                        animate={{ opacity: 1, scale: 1 }}
+                                                        exit={{ opacity: 0, scale: 0.95 }}
+                                                        className={`${cardBg} border-2 border-[#78dcca]/50 p-8 rounded-[2.5rem] shadow-2xl mb-8 relative overflow-hidden`}
                                                     >
-                                                        <div className="flex items-center justify-between mb-4">
-                                                            <h3 className={`text-lg font-black ${textColor}`}>Edit Masterpiece</h3>
-                                                            <button onClick={() => setEditingTreatmentId(null)} className="text-slate-400 hover:text-slate-600"><X className="w-5 h-5" /></button>
-                                                        </div>
-                                                        <div className="grid grid-cols-2 gap-4">
-                                                            <div>
-                                                                <label className="text-[10px] font-bold uppercase text-slate-400 block mb-1">Treatment Name</label>
-                                                                <input 
-                                                                    type="text" 
-                                                                    value={editingTemplate?.name || ''} 
-                                                                    onChange={e => setEditingTemplate({...editingTemplate!, name: e.target.value})}
-                                                                    className="w-full bg-white/5 border border-black/5 rounded-xl py-2 px-4 text-sm font-bold focus:outline-none"
-                                                                />
+                                                        <div className="flex items-center justify-between mb-8">
+                                                            <div className="flex items-center gap-3">
+                                                                <div className={`w-10 h-10 rounded-full bg-[#78dcca]/10 flex items-center justify-center`}>
+                                                                    <Settings className={`w-5 h-5 ${accentColor}`} strokeWidth={2} />
+                                                                </div>
+                                                                <h3 className={`text-xl font-black ${textColor} uppercase tracking-tight`}>Edit Clinical Protocol</h3>
                                                             </div>
-                                                            <div>
-                                                                <label className="text-[10px] font-bold uppercase text-slate-400 block mb-1">Price ({currency})</label>
-                                                                <input 
-                                                                    type="number" 
-                                                                    value={editingTemplate?.price || 0} 
-                                                                    onChange={e => setEditingTemplate({...editingTemplate!, price: Number(e.target.value)})}
-                                                                    className="w-full bg-white/5 border border-black/5 rounded-xl py-2 px-4 text-sm font-bold focus:outline-none"
+                                                            <button onClick={() => setEditingTreatmentId(null)} className="w-8 h-8 rounded-full hover:bg-black/5 flex items-center justify-center transition-colors"><X className="w-5 h-5 text-slate-400" /></button>
+                                                        </div>
+                                                        
+                                                        <div className="space-y-6">
+                                                            <div className="grid grid-cols-2 gap-6">
+                                                                <div>
+                                                                    <label className="text-[10px] font-black uppercase text-slate-500 block mb-2 tracking-widest">Protocol Name</label>
+                                                                    <input 
+                                                                        type="text" 
+                                                                        value={editingTemplate?.name || ''} 
+                                                                        onChange={e => setEditingTemplate({...editingTemplate!, name: e.target.value})}
+                                                                        className={`w-full ${isDark ? 'bg-white/5 border-white/5' : 'bg-white border-black/5'} border rounded-2xl py-3 px-5 text-sm font-bold ${textColor} focus:outline-none focus:ring-2 focus:ring-[#78dcca]/20 transition-all`}
+                                                                    />
+                                                                </div>
+                                                                <div>
+                                                                    <label className="text-[10px] font-black uppercase text-slate-500 block mb-2 tracking-widest">Global Fee ({currency})</label>
+                                                                    <input 
+                                                                        type="number" 
+                                                                        value={editingTemplate?.price || 0} 
+                                                                        onChange={e => setEditingTemplate({...editingTemplate!, price: Number(e.target.value)})}
+                                                                        className={`w-full ${isDark ? 'bg-white/5 border-white/5' : 'bg-white border-black/5'} border rounded-2xl py-3 px-5 text-sm font-bold ${textColor} focus:outline-none focus:ring-2 focus:ring-[#78dcca]/20 transition-all`}
+                                                                    />
+                                                                </div>
+                                                            </div>
+
+                                                            {/* Email Automation Section [NEW] */}
+                                                            <div className="pt-4 border-t border-black/5">
+                                                                <div className="flex items-center gap-2 mb-3">
+                                                                    <MessageSquare className={`w-4 h-4 ${accentColor}`} />
+                                                                    <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Patient Email Template (Post-Treatment)</label>
+                                                                </div>
+                                                                <p className="text-[10px] text-slate-400 mb-4 font-medium italic">This email will be automatically sent to the patient with their unique PT link.</p>
+                                                                <textarea 
+                                                                    rows={4}
+                                                                    value={editingTemplate?.emailContents || ''}
+                                                                    onChange={e => setEditingTemplate({...editingTemplate!, emailContents: e.target.value})}
+                                                                    className={`w-full ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-gray-200'} border rounded-2xl p-5 text-sm font-medium leading-relaxed ${textColor} focus:outline-none focus:ring-2 focus:ring-[#78dcca]/20 transition-all resize-none font-inter`}
+                                                                    placeholder="Hi {name}, thank you for your visit..."
                                                                 />
+                                                                <div className="mt-3 flex items-start gap-2 bg-black/5 p-3 rounded-xl">
+                                                                    <Info className="w-3.5 h-3.5 text-slate-400 mt-0.5" />
+                                                                    <p className="text-[9px] text-slate-500 font-bold uppercase tracking-wider leading-relaxed">
+                                                                        Variable Guide: <span className="text-[#78dcca]">{'{'}name{'}'}</span> = Patient Name, <span className="text-[#78dcca]">{'{'}treatment{'}'}</span> = Treatment, <span className="text-[#78dcca]">{'{'}pt_link{'}'}</span> = Personalised Link
+                                                                    </p>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                        <button onClick={handleSaveTemplate} className="mt-4 w-full py-3 bg-[#0f172a] text-white rounded-xl font-black text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-slate-800 transition-all">
-                                                            <Save className="w-4 h-4" /> Save Changes
+
+                                                        <button onClick={handleSaveTemplate} className={`mt-8 w-full py-4 ${isDark ? 'bg-[#78dcca] text-[#0f172a]' : 'bg-[#0f172a] text-white'} rounded-2xl font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 shadow-xl hover:scale-[1.01] transition-all`}>
+                                                            <Save className="w-4 h-4" /> Save Clinical Protocol
                                                         </button>
                                                     </motion.div>
                                                 )}
                                             </AnimatePresence>
 
                                             <div className={`${cardBg} border ${borderColor} p-6 rounded-[2rem] shadow-2xl relative overflow-hidden group hover:scale-[1.01] transition-all duration-500`}>
-                                                <div className="flex items-center justify-between mb-4">
+                                                <div className="flex items-center justify-between mb-4 text-inter">
                                                     <div>
-                                                        <h3 className={`text-xl font-black ${textColor} mb-1`}>Practice Identity</h3>
-                                                        <p className={`text-xs ${subTextColor}`}>Engineered precision for your specific field.</p>
+                                                        <h3 className={`text-xl font-black ${textColor} mb-1 uppercase tracking-tight`}>Practice Identity</h3>
+                                                        <p className={`text-xs ${subTextColor} font-medium tracking-tight`}>Engineered precision for your specific field.</p>
                                                     </div>
                                                     <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center"><Briefcase className={`w-5 h-5 ${accentColor}`} /></div>
                                                 </div>
@@ -202,7 +233,7 @@ export function ClinicSettings({
                                                     <select 
                                                         value={clinicType}
                                                         onChange={(e) => setClinicType(e.target.value as any)}
-                                                        className={`w-full bg-white/5 border ${borderColor} rounded-xl py-3 px-5 text-sm font-bold ${textColor} focus:outline-none transition-all appearance-none cursor-pointer backdrop-blur-md`}
+                                                        className={`w-full bg-white/5 border ${borderColor} rounded-xl py-3 px-5 text-sm font-bold ${textColor} focus:outline-none transition-all appearance-none cursor-pointer backdrop-blur-md font-inter tracking-tight`}
                                                     >
                                                         <option value="Dental">Elite Dental Protocol</option>
                                                         <option value="Aesthetic">Bespoke Aesthetics</option>
@@ -212,39 +243,40 @@ export function ClinicSettings({
                                             </div>
 
                                             <div className={`flex items-center justify-between p-6 ${cardBg} border ${borderColor} rounded-[2rem] hover:scale-[1.01] transition-all duration-500`}>
-                                                <h3 className={`text-xl font-black ${textColor}`}>Signature Menu Builder</h3>
+                                                <h3 className={`text-xl font-black ${textColor} uppercase tracking-tight text-inter`}>Signature Menu Builder</h3>
                                                 <button 
-                                                    onClick={handleAddMasterpiece}
-                                                    className={`px-6 py-3 ${isDark ? 'bg-white text-black' : 'bg-[#0f172a] text-white'} rounded-xl text-[10px] font-black tracking-widest uppercase transition-all shadow-xl hover:shadow-[#78dcca]/20 active:scale-95 flex items-center gap-2`}
+                                                    onClick={handleAddTreatment}
+                                                    className={`px-6 py-4 ${isDark ? 'bg-white text-black' : 'bg-[#0f172a] text-white'} rounded-2xl text-[10px] font-black tracking-widest uppercase transition-all shadow-xl hover:shadow-[#78dcca]/20 active:scale-95 flex items-center gap-3`}
                                                 >
-                                                    <Plus className={`w-4 h-4 ${accentColor}`} strokeWidth={4} /> Add Masterpiece
+                                                    <Plus className={`w-4 h-4 ${accentColor}`} strokeWidth={4} /> Add Treatment
                                                 </button>
                                             </div>
 
-                                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                                                 {templates.map(template => (
-                                                    <div key={template.id} className={`${cardBg} rounded-[2rem] border ${borderColor} p-5 shadow-inner hover:scale-[1.05] transition-all duration-500 group relative overflow-hidden flex flex-col h-full`}>
-                                                        <div className="flex justify-between items-start mb-3 text-inter">
+                                                    <div key={template.id} className={`${cardBg} rounded-[2rem] border ${borderColor} p-6 shadow-inner hover:scale-[1.05] transition-all duration-500 group relative overflow-hidden flex flex-col h-full`}>
+                                                        <div className="flex justify-between items-start mb-4 text-inter">
                                                             <div className="flex-1">
                                                                 <h4 className={`${textColor} font-black text-sm truncate uppercase tracking-widest`}>{template.name}</h4>
-                                                                <p className={`${accentColor} font-black text-lg`}>{currency}{template.price.toLocaleString()}</p>
+                                                                <p className={`${accentColor} font-black text-xl mt-1 tracking-tight`}>{currency}{template.price.toLocaleString()}</p>
                                                             </div>
-                                                            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0">
-                                                                <button onClick={() => { setEditingTreatmentId(template.id); setEditingTemplate(template); }} className={`w-8 h-8 flex items-center justify-center ${isDark ? 'bg-white/5 hover:bg-[#78dcca]/10' : 'bg-white hover:bg-slate-50'} rounded-lg border ${borderColor}`}><Settings className="w-4 h-4 text-slate-400" /></button>
-                                                                <button onClick={() => handleDeleteTemplate(template.id)} className={`w-8 h-8 flex items-center justify-center ${isDark ? 'bg-white/5 hover:bg-red-500/10' : 'bg-white hover:bg-red-50'} rounded-lg border ${borderColor}`}><Trash2 className="w-4 h-4 text-slate-400 hover:text-red-500" /></button>
+                                                            <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0">
+                                                                <button onClick={() => { setEditingTreatmentId(template.id); setEditingTemplate(template); }} className={`w-9 h-9 flex items-center justify-center ${isDark ? 'bg-white/5 hover:bg-[#78dcca]/10' : 'bg-white hover:bg-slate-50'} rounded-xl border ${borderColor} shadow-sm transition-all`}><Settings className="w-4 h-4 text-slate-400" /></button>
+                                                                <button onClick={() => handleDeleteTemplate(template.id)} className={`w-9 h-9 flex items-center justify-center ${isDark ? 'bg-white/5 hover:bg-red-500/10' : 'bg-white hover:bg-red-50'} rounded-xl border ${borderColor} shadow-sm transition-all`}><Trash2 className="w-4 h-4 text-slate-400 hover:text-red-500" /></button>
                                                             </div>
                                                         </div>
-                                                        <div className="mt-auto pt-4 border-t ${borderColor} flex items-center justify-between">
+                                                        
+                                                        <div className="mt-auto pt-6 border-t ${borderColor} flex items-center justify-between">
                                                             <div className="flex items-center gap-x-4">
                                                                 {[template.beforeImg, template.afterImg].map((img, i) => (
-                                                                    <div key={i} className={`w-8 h-8 rounded-full border-2 ${isDark ? 'border-[#0A0F1E]' : 'border-white'} ${isDark ? 'bg-[#151C2F]' : 'bg-white'} flex items-center justify-center shadow-lg overflow-hidden`}>
-                                                                        {img ? <img src={img} className="w-full h-full object-cover" /> : <Camera className="w-3 h-3 text-slate-400" />}
+                                                                    <div key={i} className={`w-9 h-9 rounded-full border-2 ${isDark ? 'border-[#0A0F1E]' : 'border-white'} ${isDark ? 'bg-[#151C2F]' : 'bg-white'} flex items-center justify-center shadow-lg overflow-hidden transition-transform group-hover:scale-110`}>
+                                                                        {img ? <img src={img} className="w-full h-full object-cover" /> : <Camera className="w-4 h-4 text-slate-400" />}
                                                                     </div>
                                                                 ))}
                                                             </div>
-                                                            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border ${borderColor}">
-                                                                <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: template.price > 0 ? sageGreen : '#fbbf24' }} />
-                                                                <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">{template.price > 0 ? 'Active' : 'Draft'}</span>
+                                                            <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border ${borderColor} backdrop-blur-md">
+                                                                <div className="w-2 h-2 rounded-full shadow-[0_0_8px_rgba(135,169,107,0.5)]" style={{ backgroundColor: template.price > 0 ? sageGreen : '#fbbf24' }} />
+                                                                <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">{template.price > 0 ? 'Active' : 'Draft'}</span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -256,19 +288,19 @@ export function ClinicSettings({
                                     {activeTab === 'general' && (
                                         <div className="animate-in fade-in slide-in-from-right-4 duration-700">
                                             <div className={`${cardBg} border ${borderColor} p-8 rounded-[2.5rem] relative overflow-hidden group`}>
-                                                <div className="flex items-center gap-6 mb-8">
+                                                <div className="flex items-center gap-6 mb-8 text-inter">
                                                     <div className="w-16 h-16 rounded-[1.5rem] bg-[#78dcca]/5 border ${borderColor} flex items-center justify-center shadow-inner group-hover:rotate-12 transition-transform duration-700">
-                                                        <Zap className={`w-8 h-8 ${accentColor}`} />
+                                                        <Zap className={`w-8 h-8 ${accentColor}`} strokeWidth={1.5} />
                                                     </div>
                                                     <div>
-                                                        <h3 className={`text-2xl font-black ${textColor} uppercase tracking-tighter text-inter`}>Bespoke Branding Identity</h3>
-                                                        <p className={`text-sm ${subTextColor}`}>Synchronise your global presence and visual personality.</p>
+                                                        <h3 className={`text-2xl font-black ${textColor} uppercase tracking-tighter`}>Bespoke Branding Identity</h3>
+                                                        <p className={`text-sm ${subTextColor} font-medium`}>Synchronise your global presence and visual personality.</p>
                                                     </div>
                                                 </div>
 
                                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                                     <div className={`p-6 ${isDark ? 'bg-white/5' : 'bg-white'} border ${borderColor} rounded-[2rem] transition-all hover:scale-[1.02]`}>
-                                                        <h4 className={`text-xs font-black uppercase tracking-widest ${subTextColor} mb-4`}>Aesthetic Override</h4>
+                                                        <h4 className={`text-[10px] font-black uppercase tracking-widest ${subTextColor} mb-5`}>Aesthetic Override</h4>
                                                         <div className="flex gap-2">
                                                             <button
                                                                 onClick={() => setActiveTheme('white')}
@@ -294,16 +326,16 @@ export function ClinicSettings({
                                                     </div>
 
                                                     <div className="space-y-4">
-                                                        <div className={`p-4 ${isDark ? 'bg-white/5' : 'bg-white'} border ${borderColor} rounded-[1.5rem]`}>
-                                                            <span className="text-[10px] font-black uppercase text-slate-500 mb-2 block tracking-widest">Global Locale Sync</span>
-                                                            <select value={locale} onChange={e => setLocale(e.target.value)} className={`w-full bg-transparent border-none text-xs font-bold ${textColor} focus:ring-0 cursor-pointer`}>
+                                                        <div className={`p-5 ${isDark ? 'bg-white/5' : 'bg-white'} border ${borderColor} rounded-[1.5rem] shadow-sm`}>
+                                                            <span className="text-[10px] font-black uppercase text-slate-500 mb-2 block tracking-widest text-inter">Global Locale Sync</span>
+                                                            <select value={locale} onChange={e => setLocale(e.target.value)} className={`w-full bg-transparent border-none text-xs font-bold ${textColor} focus:ring-0 cursor-pointer p-0 font-inter tracking-tight`}>
                                                                 <option value="en-GB">UK Private Protocol (GMT)</option>
                                                                 <option value="ko-KR">South Korean Executive (KST)</option>
                                                             </select>
                                                         </div>
-                                                        <div className={`p-4 ${isDark ? 'bg-white/5' : 'bg-white'} border ${borderColor} rounded-[1.5rem]`}>
+                                                        <div className={`p-5 ${isDark ? 'bg-white/5' : 'bg-white'} border ${borderColor} rounded-[1.5rem] shadow-sm`}>
                                                             <span className="text-[10px] font-black uppercase text-slate-500 mb-2 block tracking-widest text-inter">AI Communication Tone</span>
-                                                            <select value={communicationTone} onChange={e => setCommunicationTone(e.target.value as any)} className={`w-full bg-transparent border-none text-xs font-bold ${textColor} focus:ring-0 cursor-pointer`}>
+                                                            <select value={communicationTone} onChange={e => setCommunicationTone(e.target.value as any)} className={`w-full bg-transparent border-none text-xs font-bold ${textColor} focus:ring-0 cursor-pointer p-0 font-inter tracking-tight`}>
                                                                 <option value="Refined & Professional">Refined & Professional</option>
                                                                 <option value="Warm & Empathetic">Warm & Empathetic</option>
                                                             </select>
@@ -316,9 +348,9 @@ export function ClinicSettings({
 
                                     {activeTab === 'support' && (
                                         <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-                                            <div className="text-center mb-10">
-                                                <h3 className={`text-3xl font-black ${textColor} tracking-tight`}>Wellness Concierge</h3>
-                                                <p className="text-base text-slate-500 font-medium">Dedicated optimization support.</p>
+                                            <div className="text-center mb-10 text-inter">
+                                                <h3 className={`text-3xl font-black ${textColor} tracking-tighter`}>Wellness Concierge</h3>
+                                                <p className="text-base text-slate-500 font-medium tracking-tight">Dedicated optimization support.</p>
                                             </div>
                                             
                                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pb-12">
@@ -328,15 +360,15 @@ export function ClinicSettings({
                                                     { icon: Zap, label: 'Strategic Insights', desc: 'Market analysis & growth.' },
                                                     { icon: Calendar, label: 'Book Session', desc: 'Dedicated strategy optimization consultation.', isAction: true }
                                                 ].map((card, i) => (
-                                                    <div key={i} className={`${cardBg} border ${borderColor} p-6 rounded-[2rem] hover:scale-[1.03] transition-all duration-500 flex flex-col items-center text-center relative overflow-hidden group h-full`}>
-                                                        <div className="w-12 h-12 rounded-full bg-[#78dcca]/10 border border-[#78dcca]/20 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
-                                                            <card.icon className={`w-5 h-5 ${accentColor}`} strokeWidth={2.5} />
+                                                    <div key={i} className={`${cardBg} border ${borderColor} p-6 rounded-[2.5rem] hover:scale-[1.03] transition-all duration-500 flex flex-col items-center text-center relative overflow-hidden group h-full shadow-lg hover:shadow-xl`}>
+                                                        <div className="w-14 h-14 rounded-full bg-[#78dcca]/10 border border-[#78dcca]/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-all duration-500">
+                                                            <card.icon className={`w-6 h-6 ${accentColor}`} strokeWidth={2} />
                                                         </div>
-                                                        <h4 className={`text-base font-black ${textColor} mb-2 uppercase tracking-tight`}>{card.label}</h4>
-                                                        <p className={`text-[10px] ${subTextColor} leading-relaxed font-semibold mb-6 flex-1 text-inter`}>{card.desc}</p>
+                                                        <h4 className={`text-base font-black ${textColor} mb-3 uppercase tracking-tight text-inter`}>{card.label}</h4>
+                                                        <p className={`text-[10px] ${subTextColor} leading-[1.6] font-bold mb-8 flex-1 text-inter uppercase tracking-[0.05em]`}>{card.desc}</p>
                                                         
                                                         {card.isAction && (
-                                                            <button className={`w-full py-2.5 ${isDark ? 'bg-[#78dcca] text-[#0f172a]' : 'bg-[#0f172a] text-white'} rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg hover:scale-[1.05] transition-all`}>
+                                                            <button className={`w-full py-4 ${isDark ? 'bg-[#78dcca] text-[#0f172a]' : 'bg-[#0f172a] text-white'} rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:scale-[1.05] transition-all active:scale-95`}>
                                                                 Book Now
                                                             </button>
                                                         )}
@@ -345,10 +377,10 @@ export function ClinicSettings({
                                             </div>
 
                                             {/* Subtle Branding Bottom */}
-                                            <div className="flex justify-end pr-4 opacity-30">
+                                            <div className="flex justify-end pr-4 opacity-40">
                                                 <div className="text-right">
-                                                    <span className={`text-[10px] font-black uppercase tracking-[0.4em] ${textColor}`}>Hanlan OC</span>
-                                                    <div className={`h-[1px] w-12 ${accentBg} mt-1 ml-auto`} />
+                                                    <span className={`text-[10px] font-black uppercase tracking-[0.6em] ${textColor} text-inter`}>Hanlan OC</span>
+                                                    <div className={`h-[1px] w-14 ${accentBg} mt-2 ml-auto`} />
                                                 </div>
                                             </div>
                                         </div>
