@@ -3,6 +3,11 @@ import { motion, AnimatePresence } from 'motion/react';
 import { X, Mail, Send, CheckCircle, RefreshCw, Shield, MessageCircle, AlertCircle } from 'lucide-react';
 import { supabase, ConsultationRequest } from '../../lib/supabase';
 
+interface MessageTemplate {
+  title: string;
+  body: string;
+}
+
 interface TreatmentTemplate {
   id: string;
   name: string;
@@ -11,7 +16,7 @@ interface TreatmentTemplate {
   beforeImg?: string;
   afterImg?: string;
   bookingUrl?: string;
-  messageTemplates?: string[];
+  messageTemplates?: MessageTemplate[];
 }
 
 interface SendPTModalProps {
@@ -266,14 +271,13 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
                        
                        {/* Dynamic Treatment Templates */}
                        {templates.find(t => t.id === selectedTemplateId)?.messageTemplates?.map((tmpl, i) => {
-                          const label = tmpl.length > 20 ? tmpl.substring(0, 20) + "..." : tmpl;
                           return (
                              <button 
                                 key={i}
-                                onClick={() => applyTemplate(tmpl)}
-                                className="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-full px-3 py-1.5 text-[10px] font-black transition-all active:scale-95 shadow-sm flex items-center gap-1.5"
+                                onClick={() => applyTemplate(tmpl.body)}
+                                className="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-full px-4 py-2 text-[10px] font-black transition-all active:scale-95 shadow-sm flex items-center gap-1.5"
                              >
-                                <CheckCircle className="w-3 h-3" /> {label}
+                                <CheckCircle className="w-3.5 h-3.5" /> {tmpl.title}
                              </button>
                           );
                        })}

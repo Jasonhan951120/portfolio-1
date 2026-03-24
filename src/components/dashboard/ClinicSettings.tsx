@@ -9,6 +9,11 @@ interface ClinicSettingsProps {
     currency?: string;
 }
 
+interface MessageTemplate {
+    title: string;
+    body: string;
+}
+
 interface TreatmentTemplate {
     id: string;
     name: string;
@@ -17,7 +22,7 @@ interface TreatmentTemplate {
     beforeImg?: string;
     afterImg?: string;
     bookingUrl?: string;
-    messageTemplates?: string[];
+    messageTemplates?: MessageTemplate[];
 }
 
 interface ClinicSettingsProps {
@@ -211,39 +216,51 @@ export function ClinicSettings({
                                                                     Message Templates
                                                                     <span className="text-[9px] lowercase italic font-medium normal-case">Use {"{PatientName}"} for auto-name</span>
                                                                 </label>
-                                                                <div className="space-y-3">
+                                                                <div className="space-y-4">
                                                                     {(editingTemplate.messageTemplates || []).map((tmpl, idx) => (
-                                                                        <div key={idx} className="flex gap-2">
-                                                                            <input 
-                                                                                type="text"
-                                                                                value={tmpl}
+                                                                        <div key={idx} className="p-4 bg-slate-50 border border-slate-200 rounded-2xl relative group/item">
+                                                                            <div className="flex gap-2 mb-2">
+                                                                                <input 
+                                                                                    type="text"
+                                                                                    value={tmpl.title}
+                                                                                    onChange={(e) => {
+                                                                                        const newTemplates = [...(editingTemplate.messageTemplates || [])];
+                                                                                        newTemplates[idx] = { ...newTemplates[idx], title: e.target.value };
+                                                                                        setEditingTemplate({ ...editingTemplate, messageTemplates: newTemplates });
+                                                                                    }}
+                                                                                    className="flex-1 bg-white border border-slate-200 rounded-xl px-4 py-2 text-xs font-bold text-slate-900 focus:outline-none focus:border-emerald-500 transition-all shadow-sm"
+                                                                                    placeholder="Template Title (e.g. Professional)"
+                                                                                />
+                                                                                <button 
+                                                                                    onClick={() => {
+                                                                                        const newTemplates = (editingTemplate.messageTemplates || []).filter((_, i) => i !== idx);
+                                                                                        setEditingTemplate({ ...editingTemplate, messageTemplates: newTemplates });
+                                                                                    }}
+                                                                                    className="p-2 text-slate-400 hover:text-red-500 transition-colors"
+                                                                                >
+                                                                                    <Trash2 className="w-4 h-4" />
+                                                                                </button>
+                                                                            </div>
+                                                                            <textarea 
+                                                                                value={tmpl.body}
                                                                                 onChange={(e) => {
                                                                                     const newTemplates = [...(editingTemplate.messageTemplates || [])];
-                                                                                    newTemplates[idx] = e.target.value;
+                                                                                    newTemplates[idx] = { ...newTemplates[idx], body: e.target.value };
                                                                                     setEditingTemplate({ ...editingTemplate, messageTemplates: newTemplates });
                                                                                 }}
-                                                                                className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all shadow-sm"
+                                                                                className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-xs font-medium text-slate-600 focus:outline-none focus:border-emerald-500 transition-all h-24 resize-none shadow-inner"
                                                                                 placeholder="Dear {PatientName}, thank you for visiting..."
                                                                             />
-                                                                            <button 
-                                                                                onClick={() => {
-                                                                                    const newTemplates = (editingTemplate.messageTemplates || []).filter((_, i) => i !== idx);
-                                                                                    setEditingTemplate({ ...editingTemplate, messageTemplates: newTemplates });
-                                                                                }}
-                                                                                className="p-2 text-slate-400 hover:text-red-500 transition-colors"
-                                                                            >
-                                                                                <Trash2 className="w-4 h-4" />
-                                                                            </button>
                                                                         </div>
                                                                     ))}
                                                                     <button 
                                                                         onClick={() => {
-                                                                            const newTemplates = [...(editingTemplate.messageTemplates || []), ""];
+                                                                            const newTemplates = [...(editingTemplate.messageTemplates || []), { title: 'Untitled Template', body: '' }];
                                                                             setEditingTemplate({ ...editingTemplate, messageTemplates: newTemplates });
                                                                         }}
-                                                                        className="w-full py-2 border-2 border-dashed border-slate-200 rounded-xl text-[10px] font-bold text-slate-400 uppercase tracking-widest hover:bg-slate-50 hover:border-emerald-400 hover:text-emerald-500 transition-all"
+                                                                        className="w-full py-3 border-2 border-dashed border-slate-200 rounded-2xl text-[10px] font-bold text-slate-400 uppercase tracking-widest hover:bg-slate-50 hover:border-emerald-400 hover:text-emerald-500 transition-all flex items-center justify-center gap-2"
                                                                     >
-                                                                        + Add Template
+                                                                        <Plus className="w-3.5 h-3.5" /> add rich template
                                                                     </button>
                                                                 </div>
                                                             </div>
