@@ -36,17 +36,6 @@ export function ClinicSettings({
     const [locale, setLocale] = useState('en-GB');
     const [editingTreatmentId, setEditingTreatmentId] = useState<string| null>(null);
 
-    // [CRITICAL STRUCTURAL FIX]: Initial state from props, then local state is truth
-    // ALL STATIC CONSTANTS LIKE INITIAL_TREATMENTS HAVE BEEN DELETED.
-    const [treatments, setTreatments] = useState<TreatmentTemplate[]>(templates);
-
-    // Sync local changes back to the parent store - THIS IS THE ONLY SYNC
-    useEffect(() => {
-        if (isOpen) {
-            setTemplates(treatments);
-        }
-    }, [treatments, setTemplates, isOpen]);
-
     // Persistence Logic
     useEffect(() => {
         const savedTheme = localStorage.getItem('clinic-theme');
@@ -66,20 +55,22 @@ export function ClinicSettings({
             name: "New Clinical Protocol",
             price: 0
         };
-        // [EMERGENCY FIX]: Explicit functional update to force UI re-render
-        setTreatments((prev) => [...prev, newTreatment]);
+        // [FIX]: Directly update parent state to avoid sync loops
+        setTemplates(prev => [...prev, newTreatment]);
     };
 
     const handleSaveTemplate = () => {
         if (!editingTemplate || !editingTemplate.name) return;
-        setTreatments(prev => prev.map(t => t.id === editingTemplate.id ? editingTemplate : t));
+        // [FIX]: Update parent state directly
+        setTemplates(prev => prev.map(t => t.id === editingTemplate.id ? editingTemplate : t));
         setEditingTreatmentId(null);
         setEditingTemplate(null);
     };
 
     const handleDeleteTemplate = (id: string) => {
         if (confirm("Are you sure you want to delete this treatment?")) {
-            setTreatments(prev => prev.filter(t => t.id !== id));
+            // [FIX]: Update parent state directly
+            setTemplates(prev => prev.filter(t => t.id !== id));
             if (editingTreatmentId === id) setEditingTreatmentId(null);
         }
     };
@@ -234,16 +225,16 @@ export function ClinicSettings({
                                             <div className={`flex items-center justify-between p-6 ${cardBg} border ${borderColor} rounded-[2rem] hover:scale-[1.01] transition-all duration-500`}>
                                                 <h3 className={`text-xl font-black ${textColor} uppercase tracking-tight text-inter`}>Signature Menu Builder</h3>
                                                 <button 
-                                                    onClick={() => handleAddTreatment()}
+                                                    onClick={handleAddTreatment}
                                                     className={`px-6 py-4 ${isDark ? 'bg-white text-black' : 'bg-[#0f172a] text-white'} rounded-2xl text-[10px] font-black tracking-widest uppercase transition-all shadow-xl hover:shadow-[#78dcca]/20 active:scale-95 flex items-center gap-3 text-inter`}
                                                 >
                                                     <Plus className={`w-4 h-4 ${accentColor}`} strokeWidth={4} /> Add Treatment
                                                 </button>
                                             </div>
 
-                                            {/* [EMERGENCY FIX]: Explicitly mapping ONLY from local reactive state 'treatments' */}
+                                            {/* [FIXED]: Mapping strictly from parent props 'templates' */}
                                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                                                {treatments.map(template => (
+                                                {templates.map(template => (
                                                     <div key={template.id} className={`${cardBg} rounded-[2rem] border ${borderColor} p-6 shadow-inner hover:scale-[1.03] transition-all duration-500 group relative overflow-hidden flex flex-col h-full`}>
                                                         <div className="flex justify-between items-start mb-4 text-inter">
                                                             <div className="flex-1">
