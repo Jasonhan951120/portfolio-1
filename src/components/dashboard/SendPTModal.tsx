@@ -103,11 +103,11 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
     const { patientName, treatmentName } = getProcessingNames();
     
     if (tone === 'friendly') {
-        setEmailSubject("Thank you for your visit, " + patientName + " - Your Bespoke " + treatmentName + " Proposal");
-        setEmailTemplate("Hi " + patientName + ",\n\nIt was truly wonderful seeing you at the clinic today. Thank you for trusting us with your smile and your care. Following our consultation regarding your " + treatmentName + " procedure, I have personally prepared a bespoke treatment plan for you.\n\nYou can securely review your clinical proposal and next steps right here: {pt_link}\n\nIf you have any questions at all, please don't hesitate to reach out. We are here to take great care of you!\n\nWarmly,\n" + clinicName);
+        setEmailSubject(`Thank you for your visit, ${patientName} - Your Bespoke ${treatmentName} Proposal`);
+        setEmailTemplate(`Hi ${patientName},\n\nIt was truly wonderful seeing you at the clinic today. Thank you for trusting us with your smile and your care. Following our consultation regarding your ${treatmentName}, I have personally prepared a bespoke treatment plan for you.\n\nYou can securely review your clinical proposal and next steps right here: {pt_link}\n\nWarmly,\n${clinicName}`);
     } else {
-        setEmailSubject("Clinical Proposal & Next Steps for " + patientName + " - " + treatmentName);
-        setEmailTemplate("Dear " + patientName + ",\n\nThank you for visiting our clinic for your consultation today. We greatly appreciate the opportunity to assist you with your dental care.\n\nBased on our comprehensive evaluation regarding your " + treatmentName + ", I have finalized your bespoke clinical protocol and secure proposal.\n\nPlease access your dedicated portal to review the precise details and financial overview: {pt_link}\n\nShould you require any further clarification, our concierge team is entirely at your disposal.\n\nSincerely,\n" + clinicName);
+        setEmailSubject(`Clinical Proposal & Next Steps for ${patientName} - ${treatmentName}`);
+        setEmailTemplate(`Dear ${patientName},\n\nThank you for visiting our clinic for your consultation today. Based on our comprehensive evaluation regarding your ${treatmentName}, I have finalized your bespoke clinical protocol and secure proposal.\n\nPlease access your dedicated portal to review the precise details: {pt_link}\n\nSincerely,\n${clinicName}`);
     }
   };
 
@@ -179,7 +179,7 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
             lead_id: lead?.id,
             name: lead?.name,
             email: lead?.email,
-            subject: emailSubject, // Added dynamic subject
+            subject: emailSubject,
             service: finalTreatmentName,
             origin: window.location.origin,
             clinic_name: clinicName,
@@ -335,15 +335,14 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
                     </div>
                  </div>
 
-                 {/* New EMAIL SUBJECT Field */}
+                 {/* New EMAIL SUBJECT Field as per Luxury Spec */}
                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-1 mt-4 font-inter tracking-tight uppercase text-[10px] font-black text-slate-400 tracking-widest">EMAIL SUBJECT</label>
+                    <label className="block text-sm font-medium text-slate-700 mb-1 font-inter tracking-tight uppercase text-[10px] font-black tracking-widest">EMAIL SUBJECT</label>
                     <input 
                        type="text" 
                        value={emailSubject} 
                        onChange={(e) => setEmailSubject(e.target.value)} 
-                       placeholder="Clinical Proposal & Next Steps..."
-                       className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 px-5 text-sm font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-inter tracking-tight" 
+                       className="w-full border border-gray-200 rounded-lg p-3 mb-4 text-slate-800 focus:ring-2 focus:ring-slate-900 transition-all font-inter tracking-tight" 
                     />
                  </div>
 
