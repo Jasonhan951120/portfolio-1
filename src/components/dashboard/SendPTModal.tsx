@@ -60,7 +60,8 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
   
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>('');
   const [overridePrice, setOverridePrice] = useState<string>('');
-  const [personalizedNote, setPersonalizedNote] = useState<string>('');
+  const [emailSubject, setEmailSubject] = useState<string>('');
+  const [emailTemplate, setEmailTemplate] = useState<string>('');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   React.useEffect(() => {
@@ -73,10 +74,10 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
        const firstName = lead.name?.split(' ')[0] || "Patient";
        const treatmentName = matchedTemplate?.name || lead.service || "Treatment";
 
-       // Auto-populate with default matching template if empty
+       // Default initialization
+       let initialSubject = `Your Bespoke ${treatmentName} Proposal - ${clinicName}`;
        let noteToSet = lead.pt_personalized_note || matchedTemplate?.emailContents || INDUSTRY_TEMPLATES[clinicType].friendly;
        
-       // ALWAYS replace placeholders dynamically BEFORE doctor sees it
        if (noteToSet.includes('{PatientName}') || noteToSet.includes('{ClinicName}') || noteToSet.includes('{TreatmentName}')) {
            noteToSet = noteToSet
                .replace(/{PatientName}/g, firstName)
@@ -84,7 +85,8 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
                .replace(/{TreatmentName}/g, treatmentName);
        }
        
-       setPersonalizedNote(noteToSet);
+       setEmailSubject(initialSubject);
+       setEmailTemplate(noteToSet);
        setErrorMsg(null);
     }
   }, [isOpen, lead, templates, clinicName, clinicType]);
@@ -97,15 +99,16 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
     };
   };
 
-  const applyTemplate = (templateText: string) => {
+  const applyDualTemplate = (tone: 'friendly' | 'professional') => {
     const { patientName, treatmentName } = getProcessingNames();
     
-    let processedText = templateText
-      .replace(/{PatientName}/g, patientName)
-      .replace(/{ClinicName}/g, clinicName)
-      .replace(/{TreatmentName}/g, treatmentName);
-      
-    setPersonalizedNote(processedText);
+    if (tone === 'friendly') {
+        setEmailSubject("Thank you for your visit, " + patientName + " - Your Bespoke " + treatmentName + " Proposal");
+        setEmailTemplate("Hi " + patientName + ",\n\nIt was truly wonderful seeing you at the clinic today. Thank you for trusting us with your smile and your care. Following our consultation regarding your " + treatmentName + " procedure, I have personally prepared a bespoke treatment plan for you.\n\nYou can securely review your clinical proposal and next steps right here: {pt_link}\n\nIf you have any questions at all, please don't hesitate to reach out. We are here to take great care of you!\n\nWarmly,\n" + clinicName);
+    } else {
+        setEmailSubject("Clinical Proposal & Next Steps for " + patientName + " - " + treatmentName);
+        setEmailTemplate("Dear " + patientName + ",\n\nThank you for visiting our clinic for your consultation today. We greatly appreciate the opportunity to assist you with your dental care.\n\nBased on our comprehensive evaluation regarding your " + treatmentName + ", I have finalized your bespoke clinical protocol and secure proposal.\n\nPlease access your dedicated portal to review the precise details and financial overview: {pt_link}\n\nShould you require any further clarification, our concierge team is entirely at your disposal.\n\nSincerely,\n" + clinicName);
+    }
   };
 
   const handleTemplateChange = (id: string) => {
@@ -114,16 +117,16 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
     if (template) {
       setOverridePrice(String(template.price));
       
-      // Auto-populate Email Contents if available
-      const textToProcess = template.emailContents || INDUSTRY_TEMPLATES[clinicType].friendly;
       const { patientName, treatmentName } = getProcessingNames();
+      setEmailSubject(`Your Bespoke ${treatmentName} Proposal - ${clinicName}`);
       
+      const textToProcess = template.emailContents || INDUSTRY_TEMPLATES[clinicType].friendly;
       const processedText = textToProcess
         .replace(/{PatientName}/g, patientName)
         .replace(/{ClinicName}/g, clinicName)
         .replace(/{TreatmentName}/g, treatmentName);
         
-      setPersonalizedNote(processedText);
+      setEmailTemplate(processedText);
     }
   };
 
@@ -152,7 +155,7 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
       onUpdateLead(lead.id, {
         potential_value: Number(overridePrice) || lead.potential_value,
         pt_price_override: Number(overridePrice) || lead.potential_value,
-        pt_personalized_note: personalizedNote,
+        pt_personalized_note: emailTemplate,
         treatment_name: finalTreatmentName,
         pt_before_image: template?.beforeImg,
         pt_after_image: template?.afterImg,
@@ -176,10 +179,11 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
             lead_id: lead?.id,
             name: lead?.name,
             email: lead?.email,
+            subject: emailSubject, // Added dynamic subject
             service: finalTreatmentName,
             origin: window.location.origin,
             clinic_name: clinicName,
-            personalized_note: personalizedNote
+            personalized_note: emailTemplate
           }
         });
 
@@ -295,29 +299,33 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
                  </div>
               </div>
 
-              <div>                 <div className="flex flex-col gap-3 mb-3">
-                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest">Doctor's Personalized note</label>
-                    <div className="flex flex-wrap gap-2 text-wrap">
-                       {/* Default Quick Templates */}
-                       <button 
-                          onClick={() => applyTemplate(INDUSTRY_TEMPLATES[clinicType].friendly)}
-                          className="bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-full px-3 py-1.5 text-[10px] font-bold transition-all active:scale-95 shadow-sm"
-                       >
-                          Friendly
-                       </button>
-                       <button 
-                          onClick={() => applyTemplate(INDUSTRY_TEMPLATES[clinicType].professional)}
-                          className="bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-full px-3 py-1.5 text-[10px] font-bold transition-all active:scale-95 shadow-sm"
-                       >
-                          Professional
-                       </button>
-                       
-                       {/* Dynamic Treatment Templates */}
+              <div>
+                 <div className="flex flex-col gap-3 mb-3">
+                    <div className="flex items-center justify-between">
+                        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest">Email Template</label>
+                        <div className="flex gap-2">
+                            <button 
+                                onClick={() => applyDualTemplate('friendly')}
+                                className="bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-full px-4 py-1.5 text-[9px] font-black uppercase tracking-widest transition-all active:scale-95 shadow-sm"
+                            >
+                                Friendly
+                            </button>
+                            <button 
+                                onClick={() => applyDualTemplate('professional')}
+                                className="bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-full px-4 py-1.5 text-[9px] font-black uppercase tracking-widest transition-all active:scale-95 shadow-sm"
+                            >
+                                Professional
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Dynamic Treatment Templates */}
+                    <div className="flex flex-wrap gap-2">
                        {templates.find(t => t.id === selectedTemplateId)?.messageTemplates?.map((tmpl, i) => {
                           return (
                              <button 
                                 key={i}
-                                onClick={() => applyTemplate(tmpl.body)}
+                                onClick={() => setEmailTemplate(tmpl.body)}
                                 className="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-full px-4 py-2 text-[10px] font-black transition-all active:scale-95 shadow-sm flex items-center gap-1.5"
                              >
                                 <CheckCircle className="w-3.5 h-3.5" /> {tmpl.title}
@@ -327,10 +335,22 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
                     </div>
                  </div>
 
+                 {/* New EMAIL SUBJECT Field */}
+                 <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-1 mt-4 font-inter tracking-tight uppercase text-[10px] font-black text-slate-400 tracking-widest">EMAIL SUBJECT</label>
+                    <input 
+                       type="text" 
+                       value={emailSubject} 
+                       onChange={(e) => setEmailSubject(e.target.value)} 
+                       placeholder="Clinical Proposal & Next Steps..."
+                       className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 px-5 text-sm font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-inter tracking-tight" 
+                    />
+                 </div>
+
                  <textarea 
-                    value={personalizedNote}
-                    onChange={(e) => setPersonalizedNote(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-5 text-sm font-medium text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all h-44 resize-none shadow-inner"
+                    value={emailTemplate}
+                    onChange={(e) => setEmailTemplate(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-5 text-sm font-medium text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all h-56 resize-none shadow-inner font-inter leading-relaxed"
                     placeholder="Refined your veneers plan based on today's scan..."
                  />
               </div>
