@@ -9,6 +9,9 @@ import {
 import { supabase } from "../lib/supabase";
 import { DEMO_LEADS } from "../lib/demoData";
 
+const bentoBoxClass = "bg-white border border-black/5 rounded-[32px] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden transition-all duration-500 hover:shadow-[0_8px_40px_rgb(0,0,0,0.08)]";
+const glassBoxClass = "bg-white/40 backdrop-blur-xl border border-white/60 rounded-[32px] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden";
+
 const PTDiscoveryMode: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const [lead, setLead] = useState<any>(null);
@@ -96,6 +99,7 @@ const PTDiscoveryMode: React.FC = () => {
     };
 
     const hasValidImages = !isPlaceholder(displayBeforeImg) && !isPlaceholder(displayAfterImg);
+    const hasTestimonial = !!activeTreatment.testimonial;
 
     if (loading) return (
         <div className="min-h-screen bg-white flex items-center justify-center">
@@ -120,192 +124,165 @@ const PTDiscoveryMode: React.FC = () => {
                 </div>
             </header>
 
-            <main className={`max-w-[1400px] mx-auto min-h-[calc(100vh-88px)] flex flex-col ${ hasValidImages ? 'lg:flex-row' : 'items-center justify-center'}`}>
-                {/* Left Side: Transformation Visual (The Hero) */}
+            <main className="max-w-[1400px] mx-auto p-4 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-[calc(100vh-88px)]">
+                
+                {/* 1. The Hero Visual (Slider) - BENTO BOX */}
                 {hasValidImages && (
-                    <div className="flex-1 p-8 lg:p-16 flex flex-col justify-center border-b lg:border-b-0 lg:border-r border-gray-100 bg-white">
-                        <div className="max-w-xl mx-auto w-full">
-                        {/* Transformation Visual Section - Strict Anti-Empty Rule */}
-                        {hasValidImages && (
-                            <>
-                                <motion.div
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    className="mb-12"
-                                >
-                                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#87A96B] mb-2 block">
-                                        {lead?.name ? `Prepared Exclusively for ${lead.name}` : 'Your Tailored Transformation'}
-                                    </span>
-                                    <h1 className="text-4xl md:text-5xl font-display font-bold text-gray-950 leading-tight">
-                                        Visualising Your <br />New Smile
-                                    </h1>
-
-                                    {personalizedNote && (
-                                        <div className="mt-6 p-5 bg-[#87A96B]/5 border-l-4 border-[#87A96B] rounded-r-2xl">
-                                            <p className="text-sm text-gray-700 italic font-medium leading-relaxed">
-                                                "{personalizedNote}"
-                                            </p>
-                                        </div>
-                                    )}
-                                </motion.div>
-
-                                {/* Interactive Before/After Slider */}
-                                <div className="relative aspect-[4/3] rounded-[48px] overflow-hidden shadow-2xl shadow-gray-200 group border border-gray-100">
-                                    <img src={displayAfterImg!} alt="After" className="absolute inset-0 w-full h-full object-cover" />
-                                    <div
-                                        className="absolute inset-0 w-full h-full object-cover overflow-hidden"
-                                        style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
-                                    >
-                                        <img src={displayBeforeImg!} alt="Before" className="absolute inset-0 w-full h-full object-cover" />
-                                    </div>
-
-                                    {/* Comparison Line */}
-                                    <div
-                                        className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize group z-20"
-                                        style={{ left: `${sliderPosition}%` }}
-                                    >
-                                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-xl flex items-center justify-center">
-                                            <div className="flex gap-1.5 items-center">
-                                                <div className="w-1 h-3 rounded-full bg-gray-200" />
-                                                <div className="w-1 h-3 rounded-full bg-gray-200" />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Label Overlays */}
-                                    <div className="absolute top-6 left-6 px-4 py-2 bg-black/50 backdrop-blur-md rounded-full text-white text-[10px] font-bold uppercase tracking-widest">Initial State</div>
-                                    <div className="absolute top-6 right-6 px-4 py-2 bg-[#87A96B]/80 backdrop-blur-md rounded-full text-white text-[10px] font-bold uppercase tracking-widest">Predicted Result</div>
-
-                                    {/* Range Hidden Input for Interactivity */}
-                                    <input
-                                        type="range"
-                                        min="0" max="100"
-                                        value={sliderPosition}
-                                        onChange={(e) => setSliderPosition(parseInt(e.target.value))}
-                                        className="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-30"
-                                    />
-                                </div>
-
-                                <div className="mt-8 flex items-center gap-6 justify-center">
-                                    <div className="flex -space-x-2">
-                                        {[...Array(3)].map((_, i) => (
-                                            <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-gray-100 flex items-center justify-center text-[10px] font-bold shadow-sm">
-                                                {["JS", "OD", "TW"][i]}
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <p className="text-[11px] text-gray-500 font-medium italic">
-                                        "This simulation accurately reflects the desired outcome."
-                                    </p>
-                                </div>
-                            </>
-                        )}
-
-                    </div>
-                </div>
-                )}
-
-                {/* Right Side: Investment Plan (The Closer) */}
-                <div className={`w-full p-8 lg:p-16 flex flex-col justify-center ${ hasValidImages ? 'lg:w-[550px]' : 'max-w-2xl'}`}>
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                    >
-                        {!hasValidImages && (
-                             <div className="mb-12">
+                    <div className={`col-span-1 lg:col-span-8 ${bentoBoxClass} flex flex-col justify-center bg-gray-50/30`}>
+                        <div className="w-full max-w-2xl mx-auto">
+                            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="mb-8">
                                 <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#87A96B] mb-2 block">
                                     {lead?.name ? `Prepared Exclusively for ${lead.name}` : 'Your Tailored Transformation'}
                                 </span>
-                                <h1 className="text-4xl md:text-5xl font-display font-bold text-gray-950 leading-tight">
+                                <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-950 tracking-tight leading-tight">
+                                    Visualising Your <br />New Smile
+                                </h1>
+                            </motion.div>
+
+                            <div className="relative aspect-[4/3] rounded-[24px] overflow-hidden shadow-2xl shadow-gray-200/50 group border border-black/5 ring-1 ring-white/50">
+                                <img src={displayAfterImg!} alt="After" className="absolute inset-0 w-full h-full object-cover" />
+                                <div className="absolute inset-0 w-full h-full object-cover overflow-hidden" style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}>
+                                    <img src={displayBeforeImg!} alt="Before" className="absolute inset-0 w-full h-full object-cover" />
+                                </div>
+                                <div className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize group z-20" style={{ left: `${sliderPosition}%` }}>
+                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-xl flex items-center justify-center border border-gray-100">
+                                        <div className="flex gap-1 items-center">
+                                            <div className="w-0.5 h-3 rounded-full bg-slate-300" />
+                                            <div className="w-0.5 h-3 rounded-full bg-slate-300" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="absolute top-4 left-4 px-3 py-1.5 bg-black/40 backdrop-blur-md rounded-full text-white text-[9px] font-bold uppercase tracking-widest">Initial</div>
+                                <div className="absolute top-4 right-4 px-3 py-1.5 bg-[#87A96B]/90 backdrop-blur-md rounded-full text-white text-[9px] font-bold uppercase tracking-widest">Predicted</div>
+                                <input type="range" min="0" max="100" value={sliderPosition} onChange={(e) => setSliderPosition(parseInt(e.target.value))} className="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-30" />
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* 2. Personal Note & Clinical Overview - BENTO BOX */}
+                <div className={`col-span-1 ${hasValidImages ? 'lg:col-span-4' : 'lg:col-span-12'} ${bentoBoxClass} flex flex-col justify-center bg-gradient-to-br from-white to-[#f8f9fa]`}>
+                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-xl mx-auto">
+                        {!hasValidImages && (
+                            <div className="mb-10">
+                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#87A96B] mb-2 block">
+                                    {lead?.name ? `Prepared Exclusively for ${lead.name}` : 'Your Tailored Transformation'}
+                                </span>
+                                <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-950 tracking-tight leading-tight">
                                     {lead?.treatment_name || lead?.service}
                                 </h1>
-                                {personalizedNote && (
-                                    <div className="mt-6 p-5 bg-[#87A96B]/5 border-l-4 border-[#87A96B] rounded-r-2xl">
-                                        <p className="text-sm text-gray-700 italic font-medium leading-relaxed">
-                                            "{personalizedNote}"
-                                        </p>
-                                    </div>
-                                )}
-                             </div>
+                            </div>
                         )}
-                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#87A96B]/10 rounded-full text-[#87A96B] text-[10px] font-black uppercase tracking-widest mb-6">
-                            Exclusive Proposal
-                        </div>
-                        <h2 className="text-3xl font-display font-bold text-gray-950 mb-8 uppercase tracking-tight">Investment Plan</h2>
 
-                        <div className="space-y-4 mb-12">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#87A96B]/10 rounded-full text-[#87A96B] text-[10px] font-black uppercase tracking-widest mb-6 border border-[#87A96B]/20">
+                            Clinical Overview
+                        </div>
+                        
+                        {personalizedNote ? (
+                           <div className="p-6 bg-white rounded-2xl border border-black/5 shadow-sm mb-6 relative">
+                               <div className="absolute -top-3 -left-2 text-4xl text-[#87A96B]/20 font-serif">"</div>
+                               <p className="text-sm text-slate-700 italic font-medium leading-relaxed relative z-10">
+                                   {personalizedNote}
+                               </p>
+                           </div>
+                        ) : null}
+
+                        <h3 className="text-lg font-bold text-slate-900 tracking-tight mb-4">Master Treatment Plan</h3>
+                        <p className="text-sm text-slate-600 leading-relaxed font-medium mb-8">
+                            {masterDescription}
+                        </p>
+
+                        <div className="space-y-3">
                             {activeTreatment.features.map((feature: string, i: number) => (
-                                <div key={i} className="flex items-center gap-4 py-3 border-b border-gray-100 last:border-0 text-[13px] font-medium text-gray-700">
-                                    <div className="w-6 h-6 rounded-full bg-[#87A96B]/10 flex items-center justify-center shrink-0">
-                                        <CheckCircle2 className="w-3.5 h-3.5 text-[#87A96B]" />
+                                <div key={i} className="flex items-center gap-3 py-2 text-[13px] font-medium text-slate-700">
+                                    <div className="w-5 h-5 rounded-full bg-[#87A96B]/10 flex items-center justify-center shrink-0">
+                                        <CheckCircle2 className="w-3 h-3 text-[#87A96B]" />
                                     </div>
                                     {feature}
                                 </div>
                             ))}
                         </div>
-
-                        {/* Financing Focus Card */}
-                        <div className="bg-white border border-gray-200 rounded-[40px] p-10 shadow-sm mb-12 relative overflow-hidden group hover:border-[#87A96B]/30 transition-all duration-500">
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-[#87A96B]/5 rounded-full -mr-16 -mt-16 blur-2xl" />
-
-                            <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Monthly Investment from</p>
-                            <div className="flex items-baseline gap-2 mb-6">
-                                <span className="text-6xl font-display font-bold text-gray-950">£{dynamicMonthly.toLocaleString()}</span>
-                                <span className="text-gray-400 font-bold text-sm uppercase tracking-widest">/mo</span>
-                            </div>
-
-                            <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-[#87A96B] bg-[#87A96B]/5 px-5 py-4 rounded-2xl border border-[#87A96B]/10">
-                                <span className="flex items-center gap-2 rotate-0">0% Interest Options Available <Sparkles className="w-3 h-3" /></span>
-                                <Star className="w-3.5 h-3.5 fill-[#87A96B] text-[#87A96B]" />
-                            </div>
-
-                            <div className="mt-8 pt-8 border-t border-gray-100 flex justify-between items-center">
-                                <span className="text-[11px] text-gray-500 font-bold uppercase tracking-widest">Total Investment</span>
-                                <div className="text-right">
-                                    <span className="text-xl font-bold text-gray-950">£{dynamicTotalValue.toLocaleString()}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {!hasValidImages && masterDescription && (
-                            <div className="mb-12 bg-white border border-gray-100 p-8 rounded-3xl shadow-sm">
-                                <h3 className="text-xs font-black uppercase tracking-widest text-[#87A96B] mb-3">Clinical Overview</h3>
-                                <p className="text-sm text-gray-600 leading-relaxed font-medium">
-                                    {masterDescription}
-                                </p>
-                            </div>
-                        )}
-
-                        {/* CTA Section */}
-                        <div className="space-y-4">
-                            <motion.button
-                                whileHover={{ scale: 1.02, boxShadow: "0 30px 60px -15px rgba(0,0,0,0.15)" }}
-                                whileTap={{ scale: 0.98 }}
-                                onClick={() => {
-                                    if (displayBookingUrl) {
-                                      window.open(displayBookingUrl, '_blank');
-                                    } else {
-                                      // Default behavior if no URL (Stripe or similar)
-                                      alert("Booking confirmed. Initializing secure payment portal...");
-                                    }
-                                }}
-                                className="w-full py-6 bg-gray-900 group rounded-[24px] text-white font-black uppercase tracking-[0.2em] text-xs flex items-center justify-center gap-4 relative overflow-hidden shadow-2xl transition-all"
-                            >
-                                <span className="relative z-10">
-                                    Accept & Book Now
-                                </span>
-                                <ArrowRight className="w-4 h-4 relative z-10 transition-transform group-hover:translate-x-1" />
-                                <div className="absolute inset-0 bg-gradient-to-r from-[#87A96B] to-[#769b59] opacity-0 group-hover:opacity-100 transition-opacity" />
-                            </motion.button>
-
-                            <div className="flex items-center justify-center gap-6 text-[9px] font-black uppercase tracking-[0.2em] text-gray-400 pt-4">
-                                <div className="flex items-center gap-1.5"><LockIcon className="w-3.5 h-3.5" /> Encrypted</div>
-                                <div className="flex items-center gap-1.5"><CreditCard className="w-3.5 h-3.5" /> Stripe Verified</div>
-                                <div className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5" /> UK GDPR</div>
-                            </div>
-                        </div>
                     </motion.div>
                 </div>
+
+                {/* 3. Smart Trust & Testimonial - BENTO BOX */}
+                <div className={`col-span-1 lg:col-span-5 ${bentoBoxClass} flex flex-col justify-center items-center text-center`}>
+                    {hasTestimonial ? (
+                        <div className="max-w-xs mx-auto">
+                            <Star className="w-8 h-8 text-[#87A96B] fill-[#87A96B] mx-auto mb-6" />
+                            <p className="text-lg text-slate-800 font-serif italic leading-relaxed mb-4">
+                                "{activeTreatment.testimonial}"
+                            </p>
+                            <span className="text-[10px] font-black uppercase tracking-widest text-[#87A96B]">— Verified Patient</span>
+                        </div>
+                    ) : (
+                        <div className="max-w-xs mx-auto">
+                            <div className="flex items-center justify-center gap-1 mb-4">
+                                {[...Array(5)].map((_, i) => <Star key={i} className="w-6 h-6 text-amber-400 fill-amber-400" />)}
+                            </div>
+                            <h3 className="text-2xl font-bold text-slate-900 tracking-tight mb-2">5.0 Google Rating</h3>
+                            <p className="text-sm font-medium text-slate-500 max-w-[200px] mx-auto">Trusted Harley Street Excellence & Clinical Precision</p>
+                            <div className="mt-8 flex -space-x-3 justify-center">
+                                {[...Array(4)].map((_, i) => (
+                                    <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-slate-100 flex items-center justify-center text-[10px] font-bold shadow-md">
+                                        {["JD", "MK", "SL", "TW"][i]}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* 4. The Financing Card (Glassmorphism) - BENTO/GLASS BOX */}
+                <div className={`col-span-1 lg:col-span-7 ${glassBoxClass} flex flex-col justify-between group hover:border-[#87A96B]/30 transition-all duration-500`}>
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-[#87A96B]/10 rounded-full -mr-16 -mt-16 blur-3xl transition-all group-hover:bg-[#87A96B]/20" />
+                    
+                    <div className="relative z-10 w-full max-w-lg mx-auto">
+                        <div className="flex justify-between items-start mb-8">
+                            <div>
+                                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Monthly Investment</p>
+                                <div className="flex items-baseline gap-2">
+                                    <span className="text-5xl font-display font-bold text-slate-950 tracking-tight">£{dynamicMonthly.toLocaleString()}</span>
+                                    <span className="text-slate-400 font-bold text-sm uppercase tracking-widest">/mo</span>
+                                </div>
+                            </div>
+                            <div className="text-right">
+                                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Total Value</p>
+                                <span className="text-xl font-bold text-slate-900">£{dynamicTotalValue.toLocaleString()}</span>
+                            </div>
+                        </div>
+
+                        <div className="flex justify-between items-center mb-10 pb-6 border-b border-black/5">
+                            <span className="text-[11px] font-bold text-slate-600 flex items-center gap-2">
+                                <ShieldCheck className="w-4 h-4 text-[#87A96B]" /> 0% Interest Available
+                            </span>
+                            <span className="text-[11px] font-bold text-slate-600 flex items-center gap-2">
+                                <CreditCard className="w-4 h-4 text-[#87A96B]" /> Fully Transparent
+                            </span>
+                        </div>
+
+                        {/* CTA Section */}
+                        <motion.button
+                            whileHover={{ scale: 1.01, y: -2 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => {
+                                if (displayBookingUrl) {
+                                  window.open(displayBookingUrl, '_blank');
+                                } else {
+                                  alert("Booking confirmed. Initializing secure payment portal...");
+                                }
+                            }}
+                            className="w-full py-5 bg-slate-950 rounded-2xl text-white font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 shadow-xl hover:shadow-2xl transition-all overflow-hidden relative"
+                        >
+                            <span className="relative z-10 flex items-center justify-center gap-3">
+                                Accept & Book Now <ArrowRight className="w-4 h-4" />
+                            </span>
+                            <div className="absolute inset-0 bg-gradient-to-r from-[#87A96B]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </motion.button>
+                        <p className="text-center text-[10px] text-slate-400 font-medium mt-4 tracking-wide uppercase">Powered by Secure London Protocol</p>
+                    </div>
+                </div>
+
             </main>
 
             {/* Sticky Footer for Trust */}

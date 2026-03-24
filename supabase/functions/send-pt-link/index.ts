@@ -49,12 +49,12 @@ Deno.serve(async (req: Request) => {
               .header { text-align: center; padding-bottom: 40px; }
               .clinic-name { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; text-transform: uppercase; margin: 0; }
               .divider { height: 1px; background-color: #f4f4f5; margin: 40px 0; }
-              .note-container { background-color: #fafafa; border-radius: 16px; padding: 32px; border: 1px solid #f1f1f1; margin: 32px 0; }
-              .note-text { font-size: 16px; line-height: 1.6; color: #3f3f46; white-space: pre-wrap; margin: 0; }
-              .cta-container { text-align: center; padding: 20px 0; }
+              .note-container { background-color: #f8f9fa; border-radius: 16px; padding: 32px; border: 1px solid #f1f1f1; margin: 48px 0; }
+              .note-text { font-size: 16px; line-height: 1.8; color: #1e293b; white-space: pre-wrap; margin: 0; font-family: 'Inter', serif; }
+              .cta-container { text-align: center; padding: 32px 0; }
               .cta-button { background-color: #18181b; color: #ffffff !important; padding: 20px 48px; border-radius: 9999px; text-decoration: none; font-size: 16px; font-weight: 700; display: inline-block; transition: all 0.2s; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
               .footer { text-align: center; padding-top: 60px; color: #a1a1aa; font-size: 12px; }
-              .security-note { color: #d4d4d8; font-size: 11px; margin-top: 24px; font-weight: 500; }
+              .security-note { color: #8c8c8c; font-size: 12px; margin-top: 24px; font-weight: 500; }
             </style>
           </head>
           <body>
@@ -64,17 +64,17 @@ Deno.serve(async (req: Request) => {
                 <div style="width: 40px; height: 2px; background-color: #18181b; margin: 16px auto;"></div>
               </div>
 
-              <h1 style="font-size: 28px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 24px;">Your Bespoke Treatment Plan</h1>
+              <h1 style="font-size: 28px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 32px;">A Private Invitation</h1>
               
-              <p style="font-size: 16px; line-height: 1.6; color: #52525b;">Hello ${name},</p>
+              <p style="font-size: 16px; line-height: 1.6; color: #52525b;">Dear ${name},</p>
               
               <div class="note-container">
                 <p class="note-text">${(personalized_note || '').replace(/\n/g, '<br>')}</p>
               </div>
 
               <div class="cta-container">
-                <a href="${ptLink}" class="cta-button">View My Bespoke Proposal →</a>
-                <p class="security-note">This secure, personalized link will expire in 48 hours.</p>
+                <a href="${ptLink}" class="cta-button">View My Bespoke Smile Transformation →</a>
+                <p class="security-note">This secure, personalized link will expire in 48 hours to protect your privacy.</p>
               </div>
 
               <div class="divider"></div>
