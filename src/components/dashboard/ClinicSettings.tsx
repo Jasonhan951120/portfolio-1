@@ -11,6 +11,7 @@ interface TreatmentTemplate {
     beforeImg?: string;
     afterImg?: string;
     bookingUrl?: string;
+    status?: string;
 }
 
 interface ClinicSettingsProps {
@@ -50,12 +51,12 @@ export function ClinicSettings({
     }, [activeTheme, activeTab]);
 
     const handleAddTreatment = () => {
-        const newTreatment: TreatmentTemplate = {
+        const newTreatment = {
             id: Date.now().toString(),
             name: "New Clinical Protocol",
-            price: 0
+            price: 0,
+            status: "Draft"
         };
-        // [FIX]: Directly update parent state to avoid sync loops
         setTemplates(prev => [...prev, newTreatment]);
     };
 
