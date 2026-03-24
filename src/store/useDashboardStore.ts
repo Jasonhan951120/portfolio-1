@@ -39,6 +39,10 @@ interface DashboardState {
   currency: '£' | '$';
   setCurrency: (currency: '£' | '$') => void;
   
+  // Clinic Profile
+  clinicType: 'Dental' | 'Aesthetic' | 'Wellness';
+  setClinicType: (type: 'Dental' | 'Aesthetic' | 'Wellness') => void;
+  
   // Clinic Settings (The Warehouse)
   templates: TreatmentTemplate[];
   setTemplates: (templates: TreatmentTemplate[]) => void;
@@ -109,6 +113,12 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
   setCurrency: (currency) => set({ currency, region: currency === '£' ? 'UK' : 'US' }),
   setGoogleConnected: (isConnected, profile) => set({ isGoogleConnected: isConnected, googleProfile: profile || null }),
   setGoogleProfile: (profile) => set({ googleProfile: profile }),
+
+  clinicType: (localStorage.getItem('clinic_type') as 'Dental' | 'Aesthetic' | 'Wellness') || 'Dental',
+  setClinicType: (type) => {
+    localStorage.setItem('clinic_type', type);
+    set({ clinicType: type });
+  },
 
   templates: (() => {
     const saved = localStorage.getItem('clinic_templates');

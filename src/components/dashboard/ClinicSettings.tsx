@@ -2,6 +2,22 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Plus, Trash2, Camera, UploadCloud, Settings, List, HelpCircle, Save, Check } from 'lucide-react';
 import { SERVICE_CONVERSION_VALUES } from '../../lib/constants';
+import { useDashboardStore } from '../../store/useDashboardStore';
+
+const INDUSTRY_TEMPLATES = {
+    Dental: {
+        friendly: "Dear {PatientName}, it was a true pleasure meeting you today to discuss your smile transformation. I've prepared a bespoke plan to bring back your confident smile. We use the most advanced, gentle techniques to ensure your journey is as comfortable as it is transformative.",
+        professional: "Dear {PatientName}, thank you for visiting us today. Based on our clinical assessment, I have finalized your bespoke dental treatment proposal. This plan is designed to deliver optimal long-term outcomes while prioritizing your unique dental health needs."
+    },
+    Aesthetic: {
+        friendly: "Dear {PatientName}, we are excited to help you achieve your skin goals at {ClinicName}! I've designed a specialized plan tailored just for you to enhance your natural beauty. We can't wait to see your radiant results.",
+        professional: "Dear {PatientName}, thank you for your consultation today. I have prepared a comprehensive aesthetic treatment plan tailored specifically to your unique skin profile and desired outcomes. Please review the clinical details below."
+    },
+    Wellness: {
+        friendly: "Dear {PatientName}, it was wonderful connecting with you today. I've designed a specialized wellness plan to support your holistic journey. We are dedicated to helping you find balance, rejuvenation, and optimal vitality.",
+        professional: "Dear {PatientName}, following our consultation, I have developed a bespoke wellness protocol. This comprehensive plan is meticulously designed to optimize your health outcomes and overall well-being. Please find the proposed intervention below."
+    }
+};
 
 interface ClinicSettingsProps {
     isOpen: boolean;
@@ -39,6 +55,7 @@ export function ClinicSettings({
     templates,
     setTemplates 
 }: ClinicSettingsProps) {
+    const { clinicType, setClinicType } = useDashboardStore();
     const [isEditing, setIsEditing] = useState(false);
     const [editingTemplate, setEditingTemplate] = useState<TreatmentTemplate | null>(null);
 
@@ -128,6 +145,20 @@ export function ClinicSettings({
                             <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
                                 <div className="max-w-4xl mx-auto">
                                     
+                                    <div className="mb-10 p-6 bg-white border border-slate-200 rounded-2xl shadow-sm">
+                                        <h3 className="text-lg font-bold text-slate-900 tracking-tight">Clinic Industry</h3>
+                                        <p className="text-sm font-medium text-slate-500 mt-1 mb-4">Tailor the AI messaging and default templates for your specific field.</p>
+                                        <select 
+                                            value={clinicType}
+                                            onChange={(e) => setClinicType(e.target.value as 'Dental' | 'Aesthetic' | 'Wellness')}
+                                            className="w-full max-w-sm bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all appearance-none cursor-pointer"
+                                        >
+                                            <option value="Dental">Dental Clinic</option>
+                                            <option value="Aesthetic">Aesthetic Clinic</option>
+                                            <option value="Wellness">Wellness & Spa</option>
+                                        </select>
+                                    </div>
+
                                     <div className="flex items-center justify-between mb-8">
                                         <div>
                                             <h3 className="text-xl font-bold text-slate-900 tracking-tight">Treatment Menu Builder</h3>
@@ -207,7 +238,7 @@ export function ClinicSettings({
                                                                                 type="button"
                                                                                 onClick={() => setEditingTemplate({
                                                                                     ...editingTemplate,
-                                                                                    emailContents: "Dear {PatientName}, it was such a pleasure meeting you today! I've prepared a bespoke plan to bring back your confident smile. We use the most advanced, gentle techniques to ensure your journey is as comfortable as it is transformative."
+                                                                                    emailContents: INDUSTRY_TEMPLATES[clinicType].friendly
                                                                                 })}
                                                                                 className="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md hover:bg-emerald-100 transition-colors border border-emerald-200"
                                                                             >
@@ -217,7 +248,7 @@ export function ClinicSettings({
                                                                                 type="button"
                                                                                 onClick={() => setEditingTemplate({
                                                                                     ...editingTemplate,
-                                                                                    emailContents: "Dear {PatientName}, thank you for visiting us today. Based on our clinical assessment, I have finalized your bespoke treatment proposal. This plan is designed to deliver optimal long-term outcomes while prioritizing your unique dental health needs."
+                                                                                    emailContents: INDUSTRY_TEMPLATES[clinicType].professional
                                                                                 })}
                                                                                 className="text-[9px] font-bold text-slate-600 bg-slate-100 px-2 py-1 rounded-md hover:bg-slate-200 transition-colors border border-slate-300"
                                                                             >

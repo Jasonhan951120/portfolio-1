@@ -2,6 +2,22 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Mail, Send, CheckCircle, RefreshCw, Shield, MessageCircle, AlertCircle } from 'lucide-react';
 import { supabase, ConsultationRequest } from '../../lib/supabase';
+import { useDashboardStore } from '../../store/useDashboardStore';
+
+const INDUSTRY_TEMPLATES = {
+    Dental: {
+        friendly: "Dear {PatientName}, it was a true pleasure meeting you today to discuss your smile transformation. I've prepared a bespoke plan to bring back your confident smile. We use the most advanced, gentle techniques to ensure your journey is as comfortable as it is transformative.",
+        professional: "Dear {PatientName}, thank you for visiting us today. Based on our clinical assessment, I have finalized your bespoke dental treatment proposal. This plan is designed to deliver optimal long-term outcomes while prioritizing your unique dental health needs."
+    },
+    Aesthetic: {
+        friendly: "Dear {PatientName}, we are excited to help you achieve your skin goals at {ClinicName}! I've designed a specialized plan tailored just for you to enhance your natural beauty. We can't wait to see your radiant results.",
+        professional: "Dear {PatientName}, thank you for your consultation today. I have prepared a comprehensive aesthetic treatment plan tailored specifically to your unique skin profile and desired outcomes. Please review the clinical details below."
+    },
+    Wellness: {
+        friendly: "Dear {PatientName}, it was wonderful connecting with you today. I've designed a specialized wellness plan to support your holistic journey. We are dedicated to helping you find balance, rejuvenation, and optimal vitality.",
+        professional: "Dear {PatientName}, following our consultation, I have developed a bespoke wellness protocol. This comprehensive plan is meticulously designed to optimize your health outcomes and overall well-being. Please find the proposed intervention below."
+    }
+};
 
 interface MessageTemplate {
   title: string;
@@ -12,7 +28,7 @@ interface TreatmentTemplate {
   id: string;
   name: string;
   price: number;
-  description?: string;
+  emailContents?: string;
   beforeImg?: string;
   afterImg?: string;
   bookingUrl?: string;
@@ -38,6 +54,7 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
   onUpdateLead,
   templates = []
 }) => {
+  const { clinicType } = useDashboardStore();
   const [isSending, setIsSending] = useState(false);
   const [isSent, setIsSent] = useState(false);
   
@@ -49,18 +66,28 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
   React.useEffect(() => {
     if (isOpen && lead) {
        setOverridePrice(String(lead.potential_value || ''));
-       setPersonalizedNote(lead.pt_personalized_note || '');
-       setSelectedTemplateId(lead.treatment_name ? (templates.find(t => t.name === lead.treatment_name)?.id || '') : '');
+       
+       const matchedTemplate = lead.treatment_name ? templates.find(t => t.name === lead.treatment_name) : null;
+       setSelectedTemplateId(matchedTemplate?.id || '');
+
+       const firstName = lead.name?.split(' ')[0] || "Patient";
+       const treatmentName = matchedTemplate?.name || lead.service || "Treatment";
+
+       // Auto-populate with default matching template if empty
+       let noteToSet = lead.pt_personalized_note || matchedTemplate?.emailContents || INDUSTRY_TEMPLATES[clinicType].friendly;
+       
+       // ALWAYS replace placeholders dynamically BEFORE doctor sees it
+       if (noteToSet.includes('{PatientName}') || noteToSet.includes('{ClinicName}') || noteToSet.includes('{TreatmentName}')) {
+           noteToSet = noteToSet
+               .replace(/{PatientName}/g, firstName)
+               .replace(/{ClinicName}/g, clinicName)
+               .replace(/{TreatmentName}/g, treatmentName);
+       }
+       
+       setPersonalizedNote(noteToSet);
        setErrorMsg(null);
     }
-  }, [isOpen, lead, templates]);
-
-  const QUICK_TEMPLATES = {
-    standard: "Dear {PatientName}, it was a true pleasure welcoming you to {ClinicName} today. Thank you for trusting us with your care. Based on our conversation, I have crafted this bespoke {TreatmentName} plan specifically for you. Our primary focus is ensuring you feel supported and truly cared for at every step. We use modern, proven techniques tailored to your needs. Please review the details below and click 'Accept & Book' to secure your next appointment. We've reserved priority slots for you!",
-    postScan: "Dear {PatientName}, following your high-precision scan at {ClinicName} today, I have finalized your bespoke {TreatmentName} proposal. This plan is designed to deliver optimal clinical outcomes while ensuring your journey is as comfortable as possible. We prioritize precision and your unique dental health needs. Please review your transformation plan below and secure your slot by clicking 'Accept & Book'.",
-    aesthetic: "Dear {PatientName}, it was wonderful discussing your aesthetic goals at {ClinicName}. I've designed your {TreatmentName} transformation with a focus on natural beauty and long-term vitality. Our bespoke approach ensures your new smile perfectly complements your unique features for a radiant, confident result. Take a look at the proposed plan below and click 'Accept & Book' to begin your transformation journey.",
-    priority: "Dear {PatientName}, thank you for visiting {ClinicName}. I have prioritized your {TreatmentName} plan to ensure we can begin your care as soon as possible. We have reserved a limited, priority surgery slot specifically for you to ensure a seamless experience. Please review the details and click 'Accept & Book' to confirm your appointment and lock in your priority status."
-  };
+  }, [isOpen, lead, templates, clinicName, clinicType]);
 
   const getProcessingNames = () => {
     const template = templates.find(t => t.id === selectedTemplateId);
@@ -74,7 +101,7 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
     const { patientName, treatmentName } = getProcessingNames();
     
     let processedText = templateText
-      .replace(/{PatientName}/g, lead?.name || "Patient")
+      .replace(/{PatientName}/g, patientName)
       .replace(/{ClinicName}/g, clinicName)
       .replace(/{TreatmentName}/g, treatmentName);
       
@@ -86,7 +113,17 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
     const template = templates.find(t => t.id === id);
     if (template) {
       setOverridePrice(String(template.price));
-      applyTemplate(QUICK_TEMPLATES.standard);
+      
+      // Auto-populate Email Contents if available
+      const textToProcess = template.emailContents || INDUSTRY_TEMPLATES[clinicType].friendly;
+      const { patientName, treatmentName } = getProcessingNames();
+      
+      const processedText = textToProcess
+        .replace(/{PatientName}/g, patientName)
+        .replace(/{ClinicName}/g, clinicName)
+        .replace(/{TreatmentName}/g, treatmentName);
+        
+      setPersonalizedNote(processedText);
     }
   };
 
@@ -263,10 +300,16 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
                     <div className="flex flex-wrap gap-2 text-wrap">
                        {/* Default Quick Templates */}
                        <button 
-                          onClick={() => applyTemplate(QUICK_TEMPLATES.standard)}
+                          onClick={() => applyTemplate(INDUSTRY_TEMPLATES[clinicType].friendly)}
                           className="bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-full px-3 py-1.5 text-[10px] font-bold transition-all active:scale-95 shadow-sm"
                        >
-                          Standard
+                          Friendly
+                       </button>
+                       <button 
+                          onClick={() => applyTemplate(INDUSTRY_TEMPLATES[clinicType].professional)}
+                          className="bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-full px-3 py-1.5 text-[10px] font-bold transition-all active:scale-95 shadow-sm"
+                       >
+                          Professional
                        </button>
                        
                        {/* Dynamic Treatment Templates */}
