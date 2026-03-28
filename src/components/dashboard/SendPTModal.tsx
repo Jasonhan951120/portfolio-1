@@ -32,7 +32,7 @@ interface TreatmentTemplate {
   beforeImg?: string;
   afterImg?: string;
   bookingUrl?: string;
-  messageTemplates?: MessageTemplate[];
+  messageTemplates?: string[];
 }
 
 interface SendPTModalProps {

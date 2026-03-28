@@ -8,7 +8,7 @@ export const DEMO_LEADS: Partial<ConsultationRequest>[] = [
         phone: "+447950833671",
         service: "Dental Implants",
         potential_value: 3000,
-        status: "Active / Inquiry",
+        status: "New Lead",
         intent_score: 95,
         created_at: new Date().toISOString(),
         pt_personalized_note: "Donggyun, here is your bespoke Dental Implants proposal."
