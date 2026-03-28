@@ -187,18 +187,25 @@ const PTDiscoveryMode: React.FC = () => {
                            </div>
                         ) : null}
 
-                        <h3 className="text-lg font-bold text-slate-900 tracking-tight mb-4">Master Treatment Plan</h3>
+                        <h3 className="text-xl font-display font-bold text-slate-900 tracking-tight mb-1">
+                            {lead?.name ? `${lead.name}'s Bespoke Smile Protocol` : 'Bespoke Smile Protocol'}
+                        </h3>
+                        <p className="text-sm text-slate-500 italic mb-6 border-b border-black/5 pb-4">Crafted with Harley Street Excellence</p>
+
                         <p className="text-sm text-slate-600 leading-relaxed font-medium mb-8">
                             {masterDescription}
                         </p>
 
                         <div className="space-y-3">
                             {activeTreatment.features.map((feature: string, i: number) => (
-                                <div key={i} className="flex items-center gap-3 py-2 text-[13px] font-medium text-slate-700">
-                                    <div className="w-5 h-5 rounded-full bg-[#87A96B]/10 flex items-center justify-center shrink-0">
-                                        <CheckCircle2 className="w-3 h-3 text-[#87A96B]" />
+                                <div key={i} className="flex items-start gap-4 py-3 border-b border-black/5 last:border-0">
+                                    <div className="w-6 h-6 rounded-full bg-[#87A96B]/10 flex items-center justify-center shrink-0 mt-0.5">
+                                        <CheckCircle2 className="w-3.5 h-3.5 text-[#87A96B]" />
                                     </div>
-                                    {feature}
+                                    <div>
+                                        <p className="text-[14px] font-bold text-slate-800">{feature}</p>
+                                        <p className="text-xs text-slate-400 mt-1">Lifetime durability and optimal bio-compatibility.</p>
+                                    </div>
                                 </div>
                             ))}
                         </div>
@@ -241,14 +248,15 @@ const PTDiscoveryMode: React.FC = () => {
                         <div className="flex justify-between items-start mb-8">
                             <div>
                                 <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Monthly Investment</p>
-                                <div className="flex items-baseline gap-2">
-                                    <span className="text-5xl font-display font-bold text-slate-950 tracking-tight">£{dynamicMonthly.toLocaleString()}</span>
+                                <div className="flex items-baseline gap-2 mb-1">
+                                    <span className="text-5xl font-display font-bold text-[#1E3A8A] tracking-tight">£{dynamicMonthly.toLocaleString()}</span>
                                     <span className="text-slate-400 font-bold text-sm uppercase tracking-widest">/mo</span>
                                 </div>
+                                <span className="text-[12px] text-[#1E3A8A]/70 font-bold uppercase tracking-widest">Accessible Premium Care</span>
                             </div>
                             <div className="text-right">
                                 <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Total Value</p>
-                                <span className="text-xl font-bold text-slate-900">£{dynamicTotalValue.toLocaleString()}</span>
+                                <span className="text-lg font-medium text-slate-400">£{dynamicTotalValue.toLocaleString()}</span>
                             </div>
                         </div>
 
@@ -261,46 +269,37 @@ const PTDiscoveryMode: React.FC = () => {
                             </span>
                         </div>
 
-                        {/* CTA Section */}
-                        <motion.button
-                            whileHover={{ scale: 1.01, y: -2 }}
-                            whileTap={{ scale: 0.98 }}
-                            onClick={() => {
-                                if (displayBookingUrl) {
-                                  window.open(displayBookingUrl, '_blank');
-                                } else {
-                                  alert("Booking confirmed. Initializing secure payment portal...");
-                                }
-                            }}
-                            className="w-full py-5 bg-slate-950 rounded-2xl text-white font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 shadow-xl hover:shadow-2xl transition-all overflow-hidden relative"
-                        >
-                            <span className="relative z-10 flex items-center justify-center gap-3">
-                                Accept & Book Now <ArrowRight className="w-4 h-4" />
-                            </span>
-                            <div className="absolute inset-0 bg-gradient-to-r from-[#87A96B]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                        </motion.button>
-                        <p className="text-center text-[10px] text-slate-400 font-medium mt-4 tracking-wide uppercase">Powered by Secure London Protocol</p>
+                        {/* CTA Section (Moved to Sticky Footer mostly, but keeping a gentle scroll nudge here) */}
+                        <div className="text-center mt-6">
+                            <p className="text-center text-[10px] text-slate-400 font-medium tracking-wide uppercase">Powered by Secure London Protocol</p>
+                        </div>
                     </div>
                 </div>
 
             </main>
 
-            {/* Sticky Footer for Trust */}
-            <footer className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[90%] md:w-auto px-8 py-5 bg-white/70 backdrop-blur-2xl border border-gray-200 rounded-full shadow-2xl z-50 flex items-center gap-8 justify-center">
-                <div className="hidden md:flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center border border-blue-100">
-                        <Star className="w-4 h-4 text-blue-400 fill-blue-400" />
-                    </div>
-                    <span className="text-[10px] font-bold text-gray-600 uppercase tracking-widest">Harley Street Standard</span>
+            {/* 4. [Call to Action (CTA) - Sticky Bottom Bar] designed for conversion */}
+            <footer className="fixed bottom-0 left-0 right-0 w-full px-6 py-6 bg-white/95 backdrop-blur-2xl border-t border-slate-200 shadow-[0_-20px_40px_rgba(0,0,0,0.05)] z-50 flex flex-col items-center justify-center">
+                <p className="text-sm text-center text-slate-600 mb-3 font-medium">Take the first step towards your new smile.</p>
+                <div className="flex flex-col sm:flex-row items-center gap-6">
+                    <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => {
+                            if (displayBookingUrl) {
+                                window.open(displayBookingUrl, '_blank');
+                            } else {
+                                alert("Booking confirmed. Initializing secure payment portal...");
+                            }
+                        }}
+                        className="px-10 py-5 bg-slate-950 rounded-full text-white font-black uppercase tracking-[0.15em] text-xs flex items-center justify-center shadow-xl hover:shadow-2xl hover:shadow-slate-900/20 transition-all border border-slate-800"
+                    >
+                        Secure My Priority Slot
+                    </motion.button>
+                    <button className="text-[11px] font-bold text-slate-400 uppercase tracking-widest hover:text-slate-900 transition-colors underline underline-offset-4 decoration-slate-300">
+                        Download PDF
+                    </button>
                 </div>
-                <div className="h-4 w-px bg-gray-200 hidden md:block" />
-                <p className="text-[10px] text-gray-500 font-medium tracking-wide">
-                    This bespoke proposal is valid for the next 48 hours to secure your priority surgical slot.
-                </p>
-                <div className="h-4 w-px bg-gray-200 hidden md:block" />
-                <button className="text-[10px] font-black text-gray-900 uppercase tracking-widest hover:text-[#87A96B] transition-colors">
-                    Download PDF
-                </button>
             </footer>
         </div>
     );
