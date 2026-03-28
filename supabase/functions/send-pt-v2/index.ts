@@ -14,7 +14,7 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    const { lead_id, name, email, service, origin, clinic_name, clinic_logo, clinic_phone, clinic_address, personalized_note } = await req.json();
+    const { lead_id, name, email, service, origin, clinic_name, clinic_logo, clinic_phone, clinic_address, personalized_note, subject } = await req.json();
 
     if (!RESEND_API_KEY) {
       console.error("RESEND_API_KEY not set");
@@ -25,7 +25,8 @@ Deno.serve(async (req: Request) => {
     const ptLink = `${baseUrl}/pt/${lead_id}`;
     const practiceName = clinic_name || "London Smile Dental";
 
-    // Build the HTML with Luxury Executive Aesthetic - UNBOXED LOOK
+    // Build the HTML with minimal, high-end, unboxed look.
+    // Dynamic mapping from SendPTModal is preserved here.
     let htmlContent = `
       <!DOCTYPE html>
       <html>
@@ -34,23 +35,87 @@ Deno.serve(async (req: Request) => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
           @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-          body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; margin: 0; padding: 0; background-color: #ffffff; color: #1e293b; line-height: 1.6; }
-          .wrapper { width: 100%; table-layout: fixed; background-color: #ffffff; padding: 60px 0; }
-          .container { margin: 0 auto; width: 100%; max-width: 600px; padding: 0 24px; }
-          .header { padding-bottom: 48px; text-align: left; }
-          .content { padding-bottom: 48px; }
-          .clinic-logo { max-height: 32px; margin-bottom: 24px; }
-          .clinic-name { font-size: 16px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #0f172a; margin: 0; }
-          .h1 { font-size: 32px; font-weight: 800; color: #0f172a; letter-spacing: -0.04em; margin: 0 0 40px; line-height: 1.1; }
-          .note-container { margin: 0 0 48px; }
-          .note-text { font-size: 17px; color: #1e293b; font-weight: 400; white-space: pre-wrap; margin: 0; line-height: 1.8; }
-          .cta-container { text-align: left; margin-top: 48px; padding-top: 48px; border-top: 1px solid #f1f5f9; }
-          .cta-button { background-color: #0f172a; color: #ffffff !important; padding: 20px 40px; border-radius: 12px; font-size: 15px; font-weight: 700; text-decoration: none; display: inline-block; transition: all 0.2s; box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.1); }
-          .footer { text-align: left; padding-top: 60px; color: #94a3b8; font-size: 12px; font-weight: 500; }
-          .footer p { margin: 4px 0; }
+          body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            background-color: #ffffff; 
+            color: #1e293b; 
+            line-height: 1.8; 
+          }
+          .wrapper { 
+            width: 100%; 
+            table-layout: fixed; 
+            background-color: #ffffff; 
+            padding: 80px 0; 
+          }
+          .container { 
+            margin: 0 auto; 
+            width: 100%; 
+            max-width: 600px; 
+            padding: 0 40px; 
+          }
+          .header { 
+            padding-bottom: 60px; 
+            text-align: left; 
+          }
+          .content { 
+            padding-bottom: 60px; 
+          }
+          .clinic-logo { 
+            max-height: 32px; 
+            margin-bottom: 32px; 
+          }
+          .clinic-name { 
+            font-size: 14px; 
+            font-weight: 800; 
+            letter-spacing: 0.2em; 
+            text-transform: uppercase; 
+            color: #0f172a; 
+            margin: 0; 
+          }
+          .note-container { 
+            margin: 0 0 60px; 
+          }
+          .note-text { 
+            font-size: 18px; 
+            color: #0f172a; 
+            font-weight: 400; 
+            white-space: pre-wrap; 
+            margin: 0; 
+          }
+          .cta-container { 
+            text-align: left; 
+            margin-top: 60px; 
+            padding-top: 60px; 
+            border-top: 1px solid #f1f5f9; 
+          }
+          .cta-button { 
+            background-color: #0f172a; 
+            color: #ffffff !important; 
+            padding: 24px 48px; 
+            border-radius: 12px; 
+            font-size: 16px; 
+            font-weight: 700; 
+            text-decoration: none; 
+            display: inline-block; 
+            transition: all 0.2s; 
+          }
+          .footer { 
+            text-align: left; 
+            padding-top: 80px; 
+            color: #94a3b8; 
+            font-size: 12px; 
+            font-weight: 500; 
+            letter-spacing: 0.02em;
+          }
+          .footer p { 
+            margin: 6px 0; 
+          }
           @media screen and (max-width: 600px) {
-            .h1 { font-size: 28px; }
-            .container { padding: 0 20px; }
+            .container { padding: 0 32px; }
+            .note-text { font-size: 16px; }
+            .wrapper { padding: 40px 0; }
           }
         </style>
       </head>
@@ -61,23 +126,27 @@ Deno.serve(async (req: Request) => {
               ${clinic_logo ? `<img src="${clinic_logo}" alt="${practiceName}" class="clinic-logo">` : `<p class="clinic-name">${practiceName}</p>`}
             </div>
             <div class="content">
-              <h1 class="h1">Your Personalized ${service} Plan</h1>
+              {/* Mandatory Layout Cleanup: No white box wrapper (contained by body/wrapper directly) */}
               
               <div class="note-container">
+                {/* 
+                   Dynamic Content Mapping:
+                   The note-text renders the dynamic emailTemplate from the UI.
+                   We stripped the first greeting: only the dynamic input is used.
+                */}
                 <p class="note-text">${(personalized_note || '').replace(/\n/g, '<br>')}</p>
               </div>
 
               <div class="cta-container">
-                <a href="${ptLink}" class="cta-button">View My Bespoke Proposal →</a>
-                <p style="margin-top: 24px; font-size: 13px; color: #94a3b8;">This secure, personalized link will protect your clinical privacy.</p>
+                <a href="${ptLink}" class="cta-button">View Full Treatment Proposal →</a>
               </div>
             </div>
             <div class="footer">
-              <p style="font-weight: 700; color: #0f172a; margin-bottom: 8px;">${practiceName}</p>
+              <p style="font-weight: 700; color: #0f172a; margin-bottom: 12px; font-size: 14px;">${practiceName}</p>
               <p>${clinic_address || ""}</p>
               <p>${clinic_phone || ""}</p>
-              <div style="margin-top: 24px;">
-                <a href="${baseUrl}" style="color: #64748b; text-decoration: none; border-bottom: 1px solid #e2e8f0;">Official Website</a>
+              <div style="margin-top: 32px;">
+                <a href="${baseUrl}" style="color: #64748b; text-decoration: none; border-bottom: 1px solid #e2e8f0; padding-bottom: 2px;">Official Clinic Portal</a>
               </div>
             </div>
           </div>
@@ -85,17 +154,6 @@ Deno.serve(async (req: Request) => {
       </body>
       </html>
     `;
-
-    // CRITICAL: Variable Leak Protection (Safety Regex)
-    const bodyStart = htmlContent.indexOf('<body>');
-    const headPart = htmlContent.substring(0, bodyStart);
-    let bodyPart = htmlContent.substring(bodyStart);
-    
-    // Replace unparsed variables in the body only
-    // bodyPart = bodyPart.replace(/\${[^}]*}/g, ' '); // No redaction needed here if we trust the values
-    // bodyPart = bodyPart.replace(/\{[^}]*}/g, ' ');
-
-    const finalHtml = headPart + bodyPart;
 
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -106,8 +164,9 @@ Deno.serve(async (req: Request) => {
       body: JSON.stringify({
         from: `PT Proposal <${FROM}>`,
         to: [email],
-        subject: `Your Bespoke ${service} Plan ✨`,
-        html: finalHtml,
+        // Data Mapping Fix: Use the subject from the payload
+        subject: subject || `Your Bespoke ${service} Plan ✨`,
+        html: htmlContent,
       }),
     });
 
