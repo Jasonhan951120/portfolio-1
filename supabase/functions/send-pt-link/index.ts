@@ -45,16 +45,16 @@ Deno.serve(async (req: Request) => {
             <style>
               @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
               body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; margin: 0; padding: 0; background-color: #ffffff; color: #18181b; }
-              .container { max-width: 600px; margin: 0 auto; padding: 40px 20px; }
-              .header { text-align: center; padding-bottom: 40px; }
-              .clinic-name { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; text-transform: uppercase; margin: 0; }
-              .divider { height: 1px; background-color: #f4f4f5; margin: 40px 0; }
-              .note-container { background-color: #f8f9fa; border-radius: 16px; padding: 32px; border: 1px solid #f1f1f1; margin: 48px 0; }
-              .note-text { font-size: 16px; line-height: 1.8; color: #1e293b; white-space: pre-wrap; margin: 0; font-family: 'Inter', serif; }
-              .cta-container { text-align: center; padding: 32px 0; }
-              .cta-button { background-color: #18181b; color: #ffffff !important; padding: 20px 48px; border-radius: 9999px; text-decoration: none; font-size: 16px; font-weight: 700; display: inline-block; transition: all 0.2s; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
-              .footer { text-align: center; padding-top: 60px; color: #a1a1aa; font-size: 12px; }
-              .security-note { color: #8c8c8c; font-size: 12px; margin-top: 24px; font-weight: 500; }
+              .container { max-width: 600px; margin: 0 auto; padding: 60px 24px; }
+              .header { text-align: center; padding-bottom: 48px; }
+              .clinic-name { font-size: 14px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; margin: 0; color: #71717a; }
+              .divider { height: 1px; background-color: #f4f4f5; margin: 60px 0; }
+              .main-content { margin-bottom: 48px; }
+              .note-text { font-size: 18px; line-height: 1.8; color: #27272a; white-space: pre-wrap; margin: 0; }
+              .cta-container { text-align: left; padding: 48px 0; border-top: 1px solid #f4f4f5; }
+              .cta-button { background-color: #18181b; color: #ffffff !important; padding: 22px 48px; border-radius: 12px; text-decoration: none; font-size: 16px; font-weight: 700; display: inline-block; transition: all 0.2s; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); }
+              .footer { text-align: left; padding-top: 40px; color: #a1a1aa; font-size: 13px; line-height: 1.6; }
+              .security-note { color: #a1a1aa; font-size: 13px; margin-top: 32px; font-weight: 500; }
             </style>
           </head>
           <body>
@@ -64,27 +64,25 @@ Deno.serve(async (req: Request) => {
                 <div style="width: 40px; height: 2px; background-color: #18181b; margin: 16px auto;"></div>
               </div>
 
-              <h1 style="font-size: 28px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 32px;">A Private Invitation</h1>
+              <h1 style="font-size: 32px; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 48px; color: #09090b; line-height: 1.1;">
+                Your Personalized ${service} Plan
+              </h1>
               
-              <p style="font-size: 16px; line-height: 1.6; color: #52525b;">Dear ${name},</p>
-              
-              <div class="note-container">
+              <div class="main-content">
                 <p class="note-text">${(personalized_note || '').replace(/\n/g, '<br>')}</p>
               </div>
 
               <div class="cta-container">
-                <a href="${ptLink}" class="cta-button">View My Bespoke Smile Transformation →</a>
+                <a href="${ptLink}" class="cta-button">View Full Treatment Plan →</a>
                 <p class="security-note">This secure, personalized link will expire in 48 hours to protect your privacy.</p>
               </div>
 
-              <div class="divider"></div>
-
               <div class="footer">
-                <p style="font-weight: 700; color: #71717a; margin-bottom: 4px;">${practiceName}</p>
-                <p style="margin: 0;">${clinic_address || "Exclusive Dental Care"}</p>
+                <p style="font-weight: 700; color: #18181b; margin-bottom: 4px; font-size: 14px;">${practiceName}</p>
+                <p style="margin: 0;">${clinic_address || "Executive Dental Care"}</p>
                 <p style="margin: 4px 0;">${clinic_phone || ""}</p>
-                <div style="margin-top: 20px;">
-                  <a href="${baseUrl}" style="color: #71717a; text-decoration: underline;">Visit Website</a>
+                <div style="margin-top: 24px;">
+                  <a href="${baseUrl}" style="color: #71717a; text-decoration: none; border-bottom: 1px solid #71717a;">Visit Website</a>
                 </div>
               </div>
             </div>
