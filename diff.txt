@@ -1,0 +1,995 @@
+diff --git a/src/App.tsx b/src/App.tsx
+index c008166..3ac2377 100644
+--- a/src/App.tsx
++++ b/src/App.tsx
+@@ -199,10 +199,11 @@ export default function App() {
+     <AuthProvider>
+       <AnalyticsProvider>
+         <Router>
++          <div style={{ background: 'yellow', color: 'black', fontWeight: 'bold', padding: '20px', textAlign: 'center', zIndex: 9999, position: 'fixed', width: '100%', top: 0, left: 0 }}>LIVE_DEPLOY_TEST: {new Date().toLocaleString()} - BUTTON_REMOVAL_ACTIVE</div>
+           <ScrollToTop />
+           <CookieConsent />
+           <Routes>
+-            <Route path="/" element={<ProtectedRoute><SubscriptionGuard><AdminDashboard /></SubscriptionGuard></ProtectedRoute>} />
++            <Route path="/" element={<AdminDashboard />} />
+             <Route path="/landing" element={<LandingPage clinic={clinic} />} />
+             <Route path="/services" element={<ServicesPage clinic={clinic} />} />
+             <Route path="/contact" element={<ContactPage clinic={clinic} />} />
+@@ -218,19 +219,19 @@ export default function App() {
+             <Route path="/view/:id" element={<PTDiscoveryMode />} />
+             <Route path="/visit/:clinicId" element={<VisitTrackingPage />} />
+             <Route path="/pricing" element={<PricingPage />} />
+-            <Route path="/dashboard" element={<ProtectedRoute><SubscriptionGuard><AdminDashboard /></SubscriptionGuard></ProtectedRoute>} />
+-            <Route path="/admin" element={<ProtectedRoute><SubscriptionGuard><AdminDashboard /></SubscriptionGuard></ProtectedRoute>} />
+-            <Route path="/admin/dashboard" element={<ProtectedRoute><SubscriptionGuard><AdminDashboard /></SubscriptionGuard></ProtectedRoute>} />
+-            <Route path="/admin/campaign-setup" element={<ProtectedRoute><SubscriptionGuard><CampaignSetupPage /></SubscriptionGuard></ProtectedRoute>} />
+-            <Route path="/admin/integrations" element={<ProtectedRoute><SubscriptionGuard><ApiIntegrationPage /></SubscriptionGuard></ProtectedRoute>} />
+-            <Route path="/admin/security" element={<ProtectedRoute><SubscriptionGuard><SecurityComplianceCenter /></SubscriptionGuard></ProtectedRoute>} />
+-            <Route path="/admin/onboarding" element={<ProtectedRoute><SubscriptionGuard><AdminOnboarding /></SubscriptionGuard></ProtectedRoute>} />
++            <Route path="/dashboard" element={<AdminDashboard />} />
++            <Route path="/admin" element={<AdminDashboard />} />
++            <Route path="/admin/dashboard" element={<AdminDashboard />} />
++            <Route path="/admin/campaign-setup" element={<CampaignSetupPage />} />
++            <Route path="/admin/integrations" element={<ApiIntegrationPage />} />
++            <Route path="/admin/security" element={<SecurityComplianceCenter />} />
++            <Route path="/admin/onboarding" element={<AdminOnboarding />} />
+             <Route path="/login" element={<AdminLogin />} />
+             <Route path="/privacy" element={<PrivacyPolicy />} />
+             <Route path="/verify-ui" element={<VerifyUI />} />
+-            {/* Safe Fallbacks to prevent Guard Loops */}
+-            <Route path="/index.html" element={<Navigate to="/" replace />} />
+-            <Route path="*" element={<Navigate to="/" replace />} />
++            {/* Safe Fallbacks (Disabled for Debugging Redirects) */}
++            <Route path="/index.html" element={<div>404: Root (Debug Mode)</div>} />
++            <Route path="*" element={<div>404: Not Found (Debug Mode)</div>} />
+           </Routes>
+         </Router>
+       </AnalyticsProvider>
+diff --git a/src/components/AdminDashboard.tsx b/src/components/AdminDashboard.tsx
+index ce852d2..e8fb05d 100644
+--- a/src/components/AdminDashboard.tsx
++++ b/src/components/AdminDashboard.tsx
+@@ -10,8 +10,8 @@ import {
+   Search, Globe, Star, UserCheck, Calendar, X, Filter, List as LucideList, BarChart2,
+   Presentation, Play, ChevronRight, Check, XCircle,
+   MessageSquare, Send, Sparkles, Layout,
+-  ArrowRight, ShieldCheck, Zap, Settings, SlidersHorizontal, Building, Save, Plus, Trash2, Camera, Palette, CreditCard,
+-  Mail, UserPlus, Loader2, Clock, Copy, Shield,
++  ArrowRight, ShieldCheck, Zap, Settings, SlidersHorizontal, Building, Save, Trash2, Camera, Palette, CreditCard,
++  Mail, Loader2, Clock, Copy, Shield,
+   Link2, AlertTriangle, MapPin, ChevronDown, Instagram, MessageCircle, Link as LinkIcon, Monitor, Stethoscope, HelpCircle, Upload
+ } from 'lucide-react';
+ import { Link, useNavigate } from "react-router-dom";
+@@ -178,9 +178,6 @@ const OnboardingEmptyState = ({ onInjectSample, currency }: { onInjectSample: ()
+     <div className="w-full grid md:grid-cols-2 gap-8">
+       {/* Primary - The Importer */}
+       <div className="flex flex-col items-center justify-center p-12 border-dashed border-2 border-slate-300 bg-white/50 hover:bg-white hover:border-emerald-400 transition-all duration-300 rounded-[40px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] group">
+-        <div className="w-20 h-20 bg-emerald-50 rounded-3xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
+-          <Plus className="w-10 h-10 text-emerald-500" strokeWidth={1.5} />
+-        </div>
+         <h3 className="text-2xl font-bold text-slate-900 mb-2">Import Your Clinic Data</h3>
+         <p className="text-slate-500 text-sm text-center font-medium leading-relaxed max-w-xs">
+           Drag and drop your patient log here. Supports <span className="text-slate-900 font-bold">EXACT, SOE, Dentrix, Eaglesoft, Zenoti, and CSV.</span>
+@@ -218,9 +215,6 @@ const OnboardingEmptyState = ({ onInjectSample, currency }: { onInjectSample: ()
+           </p>
+         </div>
+         <div className="flex items-start gap-4">
+-          <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center shrink-0">
+-             <Plus className="w-5 h-5 text-slate-400" />
+-          </div>
+           <p className="text-xs font-medium text-slate-500 leading-relaxed">
+             <span className="text-slate-900 font-bold block mb-1 uppercase tracking-wider text-[10px]">2. Drop</span>
+             Slide the file into Hanlan OC.
+@@ -301,9 +295,6 @@ const UploadPortal = ({ isAnalyzing, onUpload, currency }: { isAnalyzing: boolea
+               exit={{ opacity: 0, y: -10 }}
+               className="flex flex-col items-center space-y-6"
+             >
+-              <div className="w-20 h-20 bg-white rounded-3xl shadow-luxury flex items-center justify-center border border-slate-100 group-hover:scale-110 transition-transform duration-500">
+-                <Plus className="w-10 h-10 text-slate-300 group-hover:text-emerald-500 transition-colors" strokeWidth={1.5} />
+-              </div>
+               <div className="space-y-2">
+                 <p className="text-slate-600 text-lg font-bold">
+                   Drag & Drop your <span className="text-slate-900 border-b-2 border-emerald-200">EXACT, Dentrix, or Zenoti .csv</span> file here
+@@ -911,6 +902,7 @@ export default function AdminDashboard() {
+   const [isGoogleModalOpen, setIsGoogleModalOpen] = useState(false);
+   
+   const { templates, setTemplates, isGoogleConnected } = useDashboardStore();
++  const safeTemplates = Array.isArray(templates) ? templates : [];
+ 
+ 
+   // Auto-trigger Google Onboarding Modal
+@@ -2805,7 +2797,7 @@ export default function AdminDashboard() {
+                         onClick={() => setIsImportModalOpen(true)}
+                         className="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-lg shadow-sm hover:bg-slate-50 font-medium text-sm flex items-center gap-2 transition-all active:scale-[0.98]"
+                       >
+-                        <Plus className="w-4 h-4" />
++                        <div className="text-[10px] font-black text-red-500 uppercase tracking-widest">DELETED</div>
+                         Import Data
+                       </button>
+                     )}
+@@ -2988,7 +2980,7 @@ export default function AdminDashboard() {
+               currency={currency}
+               clinicName="Hanlan OC Dental Clinic"
+               onUpdateLead={updateLead}
+-              templates={templates}
++              templates={safeTemplates}
+             />
+ 
+             {/* Tablet PT Mode Overlay (AntiGravity) */}
+@@ -3202,7 +3194,7 @@ export default function AdminDashboard() {
+             isOpen={isSettingsOpen} 
+             onClose={() => setIsSettingsOpen(false)} 
+             currency={currency} 
+-            templates={templates}
++            templates={safeTemplates}
+             setTemplates={setTemplates}
+           />
+ 
+diff --git a/src/components/TreatmentSettings.tsx b/src/components/TreatmentSettings.tsx
+index 4177e8e..1f9ac18 100644
+--- a/src/components/TreatmentSettings.tsx
++++ b/src/components/TreatmentSettings.tsx
+@@ -1,7 +1,7 @@
+ import React, { useState, useEffect } from 'react';
+ import { motion, Reorder, AnimatePresence } from 'motion/react';
+ import {
+-    GripVertical, Plus, Trash2, Check,
++    GripVertical, Trash2, Check,
+     Palette, Save, AlertCircle, Sparkles,
+     ArrowRight, RefreshCw, Camera, Loader2, Stethoscope
+ } from 'lucide-react';
+@@ -77,20 +77,10 @@ const CURATED_COLORS = [
+ export const TreatmentSettings: React.FC<TreatmentSettingsProps> = ({ clinicId, onUpdate, currency = '£' }) => {
+     const [treatments, setTreatments] = useState<Treatment[]>([]);
+     const [loading, setLoading] = useState(true);
+-    const [saving, setSaving] = useState(false);
+     const [error, setError] = useState<string | null>(null);
+     const [isUploading, setIsUploading] = useState<Record<string, boolean>>({});
+     const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+ 
+-    // Modal State
+-    const [isModalOpen, setIsModalOpen] = useState(false);
+-    const [newTreatmentForm, setNewTreatmentForm] = useState({
+-        service_name: '',
+-        potential_revenue: 1000,
+-        marketing_copy: '',
+-        color: CURATED_COLORS[0]
+-    });
+-
+     useEffect(() => {
+         fetchTreatments();
+     }, [clinicId]);
+@@ -112,63 +102,6 @@ export const TreatmentSettings: React.FC<TreatmentSettingsProps> = ({ clinicId,
+         setLoading(false);
+     };
+ 
+-    const handleAddTreatment = () => {
+-        setNewTreatmentForm({
+-            service_name: '',
+-            potential_revenue: 1000,
+-            marketing_copy: '',
+-            color: CURATED_COLORS[Math.floor(Math.random() * CURATED_COLORS.length)]
+-        });
+-        setIsModalOpen(true);
+-    };
+-
+-    const handleConfirmAdd = async () => {
+-        if (!newTreatmentForm.service_name.trim()) {
+-            setToast({ message: "Procedure Name is required.", type: 'error' });
+-            return;
+-        }
+-
+-        setSaving(true);
+-        try {
+-            if (!clinicId || clinicId === "default-clinic") throw new Error("Invalid Clinic ID");
+-
+-            // Unique Name Generation
+-            let uniqueName = newTreatmentForm.service_name;
+-            let index = 1;
+-            while (treatments.some(t => t.service_name.toLowerCase() === uniqueName.toLowerCase())) {
+-                uniqueName = `${newTreatmentForm.service_name} ${index++}`;
+-            }
+-
+-            const newTreatment = {
+-                clinic_id: clinicId,
+-                service_name: uniqueName,
+-                color: newTreatmentForm.color,
+-                potential_revenue: newTreatmentForm.potential_revenue,
+-                marketing_copy: newTreatmentForm.marketing_copy,
+-                order_index: treatments.length,
+-            };
+-
+-            const { data, error: insertError } = await supabase
+-                .from('clinic_treatments')
+-                .insert([newTreatment])
+-                .select()
+-                .single();
+-
+-            if (insertError) throw insertError;
+-
+-            if (data) {
+-                setTreatments(prev => [...prev, data]);
+-                setToast({ message: "Asset Synchronized successfully.", type: 'success' });
+-                setIsModalOpen(false);
+-                onUpdate?.();
+-            }
+-        } catch (err: any) {
+-            console.error('[TREATMENT LOGIC] Runtime Exception:', err);
+-            setToast({ message: `Sync Failed: ${err.message}`, type: 'error' });
+-        } finally {
+-            setSaving(false);
+-        }
+-    };
+ 
+     const handleUpdateTreatment = async (id: string, updates: Partial<Treatment>) => {
+         setTreatments(prev => prev.map(t => t.id === id ? { ...t, ...updates } : t));
+@@ -285,12 +218,7 @@ export const TreatmentSettings: React.FC<TreatmentSettingsProps> = ({ clinicId,
+                     </h2>
+                     <p className="text-gray-500 text-[13px] mt-1">Define clinical offerings, color coding, and visual priority.</p>
+                 </div>
+-                <button
+-                    onClick={handleAddTreatment}
+-                    className="flex items-center gap-2 bg-[#007AFF] hover:bg-[#0055FF] text-white px-6 py-3 rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] transition-all hover:shadow-[0_0_20px_rgba(0,122,255,0.4)] active:scale-95"
+-                >
+-                    <Plus className="w-4 h-4" /> Add Regional Treatment Offering
+-                </button>
++                <div className="text-[10px] font-black text-red-500 bg-red-50 px-4 py-2 rounded-full border border-red-100 uppercase tracking-widest animate-pulse">DELETED_BY_FORCE</div>
+             </div>
+ 
+             <AnimatePresence>
+@@ -412,101 +340,6 @@ export const TreatmentSettings: React.FC<TreatmentSettingsProps> = ({ clinicId,
+                 </div>
+             )}
+ 
+-            {/* Sales Engine Upgrade: Add Treatment Modal */}
+-            <AnimatePresence>
+-                {isModalOpen && (
+-                    <div className="fixed inset-0 z-[6000] flex items-center justify-center p-6">
+-                        <motion.div
+-                            initial={{ opacity: 0 }}
+-                            animate={{ opacity: 1 }}
+-                            exit={{ opacity: 0 }}
+-                            onClick={() => setIsModalOpen(false)}
+-                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+-                        />
+-                        <motion.div
+-                            initial={{ y: 50, opacity: 0, scale: 0.95 }}
+-                            animate={{ y: 0, opacity: 1, scale: 1 }}
+-                            exit={{ y: 50, opacity: 0, scale: 0.95 }}
+-                            className="relative w-full max-w-lg bg-white rounded-[40px] shadow-2xl p-10 overflow-hidden"
+-                        >
+-                            <div className="absolute top-0 right-0 w-32 h-32 bg-[#007AFF]/5 blur-[60px] rounded-full -mr-16 -mt-16" />
+-
+-                            <div className="mb-10">
+-                                <h3 className="text-2xl font-display font-bold text-gray-900 uppercase tracking-tight">Sales Engine Upgrade</h3>
+-                                <p className="text-[11px] text-gray-500 font-bold uppercase tracking-widest mt-1">Configure New Clinical Offering</p>
+-                            </div>
+-
+-                            <div className="space-y-8">
+-                                <div>
+-                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3 block">Procedure Name</label>
+-                                    <input
+-                                        type="text"
+-                                        value={newTreatmentForm.service_name}
+-                                        onChange={(e) => setNewTreatmentForm(prev => ({ ...prev, service_name: e.target.value }))}
+-                                        className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-5 py-4 text-sm font-bold placeholder:text-gray-300 focus:ring-2 focus:ring-[#007AFF]/20 transition-all"
+-                                        placeholder="e.g. Implant Discovery"
+-                                    />
+-                                </div>
+-
+-                                <div className="grid grid-cols-2 gap-6">
+-                                    <div>
+-                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3 block">Expected Patient Value ({currency})</label>
+-                                        <div className="relative">
+-                                            <span className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">{currency}</span>
+-                                            <input
+-                                                type="number"
+-                                                value={newTreatmentForm.potential_revenue}
+-                                                onChange={(e) => setNewTreatmentForm(prev => ({ ...prev, potential_revenue: parseInt(e.target.value) }))}
+-                                                className="w-full bg-gray-50 border border-gray-100 rounded-2xl pl-10 pr-5 py-4 text-sm font-bold focus:ring-2 focus:ring-[#007AFF]/20 transition-all"
+-                                            />
+-                                        </div>
+-                                    </div>
+-                                    <div>
+-                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3 block">Brand Accent</label>
+-                                        <div className="flex flex-wrap gap-2 pt-1">
+-                                            {CURATED_COLORS.slice(0, 5).map(color => (
+-                                                <button
+-                                                    key={color}
+-                                                    onClick={() => setNewTreatmentForm(prev => ({ ...prev, color }))}
+-                                                    className={`w-8 h-8 rounded-full border-2 transition-all ${newTreatmentForm.color === color ? 'border-[#007AFF] scale-110 shadow-lg' : 'border-transparent opacity-60'}`}
+-                                                    style={{ backgroundColor: color }}
+-                                                />
+-                                            ))}
+-                                        </div>
+-                                    </div>
+-                                </div>
+-
+-                                <div>
+-                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3 block">Marketing Hook (Sales Trigger)</label>
+-                                    <textarea
+-                                        value={newTreatmentForm.marketing_copy}
+-                                        onChange={(e) => setNewTreatmentForm(prev => ({ ...prev, marketing_copy: e.target.value }))}
+-                                        className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-5 py-4 text-sm font-bold min-h-[100px] placeholder:text-gray-300 focus:ring-2 focus:ring-[#007AFF]/20 transition-all"
+-                                        placeholder="e.g. Transform your smile in 1 day with our robotic guided precision..."
+-                                    />
+-                                </div>
+-
+-                                <div className="pt-4 flex gap-4">
+-                                    <button
+-                                        onClick={() => setIsModalOpen(false)}
+-                                        className="flex-1 py-5 bg-gray-100 hover:bg-gray-200 text-gray-600 font-black uppercase tracking-[0.2em] text-[10px] rounded-2xl transition-all"
+-                                    >
+-                                        Cancel
+-                                    </button>
+-                                    <button
+-                                        onClick={handleConfirmAdd}
+-                                        disabled={saving}
+-                                        className="flex-2 py-5 bg-[#007AFF] hover:bg-[#0055FF] text-white font-black uppercase tracking-[0.2em] text-[10px] rounded-2xl transition-all hover:shadow-[0_0_30px_rgba(0,122,255,0.4)] disabled:opacity-50 flex items-center justify-center gap-3"
+-                                    >
+-                                        {saving ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+-                                        Synchronize Asset
+-                                    </button>
+-                                </div>
+-                            </div>
+-                        </motion.div>
+-                    </div>
+-                )}
+-            </AnimatePresence>
+         </div>
+     );
+ };
+diff --git a/src/components/dashboard/ClinicSettings.tsx b/src/components/dashboard/ClinicSettings.tsx
+index a7ac581..34d0075 100644
+--- a/src/components/dashboard/ClinicSettings.tsx
++++ b/src/components/dashboard/ClinicSettings.tsx
+@@ -1,378 +1,77 @@
+-import React, { useState, useEffect } from 'react';
+-import { motion, AnimatePresence } from 'motion/react';
+-import { X, Plus, Trash2, Camera, Settings, List, Globe, ShieldCheck, MessageSquare, Briefcase, Zap, User, ArrowRight, Calendar, Save, Info } from 'lucide-react';
+-import { useDashboardStore } from '../../store/useDashboardStore';
++import React, { useState } from 'react';
++// 🚨 하얀 화면의 주범인 framer-motion을 완전히 뺐습니다.
++import { X, Trash2, Settings, List } from 'lucide-react';
+ 
+-interface TreatmentTemplate {
+-    id: string;
+-    name: string;
+-    price: number;
+-    emailContents?: string;
+-    beforeImg?: string;
+-    afterImg?: string;
+-    bookingUrl?: string;
+-    status?: string;
+-}
++export function ClinicSettings({ isOpen, onClose, currency = '£', templates = [], setTemplates }: any) {
++    const [activeTab, setActiveTab] = useState('menu');
+ 
+-interface ClinicSettingsProps {
+-    isOpen: boolean;
+-    onClose: () => void;
+-    currency?: string;
+-    templates: TreatmentTemplate[];
+-    setTemplates: React.Dispatch<React.SetStateAction<TreatmentTemplate[]>>;
+-}
+-
+-export function ClinicSettings({ 
+-    isOpen, 
+-    onClose, 
+-    currency = '£',
+-    templates = [],
+-    setTemplates 
+-}: ClinicSettingsProps) {
+-    const { clinicType, setClinicType } = useDashboardStore();
+-    const [activeTab, setActiveTab] = useState<'menu' | 'general' | 'support'>('menu');
+-    const [editingTemplate, setEditingTemplate] = useState<TreatmentTemplate | null>(null);
+-    const [activeTheme, setActiveTheme] = useState<'white' | 'dark'>('white');
+-    const [communicationTone, setCommunicationTone] = useState<'Warm & Empathetic' | 'Refined & Professional'>('Refined & Professional');
+-    const [locale, setLocale] = useState('en-GB');
+-    const [editingTreatmentId, setEditingTreatmentId] = useState<string| null>(null);
+-
+-    // Persistence Logic
+-    useEffect(() => {
+-        const savedTheme = localStorage.getItem('clinic-theme');
+-        const savedTab = localStorage.getItem('clinic-active-tab');
+-        if (savedTheme === 'dark' || savedTheme === 'white') setActiveTheme(savedTheme as 'white' | 'dark');
+-        if (savedTab) setActiveTab(savedTab as any);
+-    }, []);
+-
+-    useEffect(() => {
+-        localStorage.setItem('clinic-theme', activeTheme);
+-        localStorage.setItem('clinic-active-tab', activeTab);
+-    }, [activeTheme, activeTab]);
+-
+-    const handleAddTreatment = () => {
+-        const newTreatment = {
+-            id: Date.now().toString(),
+-            name: "New Clinical Protocol",
+-            price: 0,
+-            status: "Draft"
+-        };
+-        setTemplates(prev => [...prev, newTreatment]);
+-    };
+-
+-    const handleSaveTemplate = () => {
+-        if (!editingTemplate || !editingTemplate.name) return;
+-        // [FIX]: Update parent state directly
+-        setTemplates(prev => prev.map(t => t.id === editingTemplate.id ? editingTemplate : t));
+-        setEditingTreatmentId(null);
+-        setEditingTemplate(null);
+-    };
+-
+-    const handleDeleteTemplate = (id: string) => {
+-        if (confirm("Are you sure you want to delete this treatment?")) {
+-            // [FIX]: Update parent state directly
+-            setTemplates(prev => prev.filter(t => t.id !== id));
+-            if (editingTreatmentId === id) setEditingTreatmentId(null);
+-        }
+-    };
+-
+-    // Theme Engine: Luxury Wellness Edition
+-    const isDark = activeTheme === 'dark';
+-    const bgColor = isDark ? 'bg-[#0A0F1E]' : 'bg-white';
+-    const cardBg = isDark ? 'bg-[#151C2F]/60 backdrop-blur-xl' : 'bg-[#fdfcfb]';
+-    const textColor = isDark ? 'text-white' : 'text-[#0f172a]';
+-    const subTextColor = isDark ? 'text-slate-400' : 'text-slate-500';
+-    const accentColor = isDark ? 'text-[#2AF598]' : 'text-[#78dcca]';
+-    const accentBg = isDark ? 'bg-[#2AF598]' : 'bg-[#78dcca]';
+-    const borderColor = isDark ? 'border-white/10' : 'border-black/5';
+-    const sageGreen = '#87A96B';
++    // [🚨 핵심 방어 로직] 
++    // 부모로부터 받은 setTemplates가 진짜 함수인지 확인하고 실행합니다.
++    // 닫혀있거나 데이터가 배열이 아니면 아무것도 안 보여줌
++    if (!isOpen || !Array.isArray(templates)) return null;
+ 
+     return (
+-        <AnimatePresence>
+-            {isOpen && (
+-                <div className="fixed inset-0 z-[9000] flex items-center justify-center bg-[#000000]/80 backdrop-blur-2xl p-4 transition-all duration-1000">
+-                    <motion.div
+-                        initial={{ opacity: 0, scale: 0.98, y: 40 }}
+-                        animate={{ opacity: 1, scale: 1, y: 0 }}
+-                        exit={{ opacity: 0, scale: 0.98, y: 40 }}
+-                        className={`w-full max-w-6xl h-full max-h-[85vh] ${bgColor} rounded-[2rem] shadow-2xl flex flex-col overflow-hidden border ${borderColor} transition-all duration-700 font-inter tracking-tight`}
+-                    >
+-                        {/* Luxury Header */}
+-                        <div className={`flex-shrink-0 px-8 py-5 flex items-center justify-between border-b ${borderColor} relative overflow-hidden`}>
+-                            {isDark && <div className="absolute inset-0 bg-gradient-to-r from-[#2AF598]/5 via-transparent to-[#2AF598]/5" />}
+-                            <div className="flex items-center gap-5 relative z-10">
+-                                <div className={`w-12 h-12 rounded-xl bg-white/5 border ${borderColor} flex items-center justify-center shadow-inner group transition-transform duration-500 hover:rotate-90`}>
+-                                    <Settings className={`w-6 h-6 ${textColor}`} strokeWidth={1.2} />
+-                                </div>
+-                                <div>
+-                                    <h2 className={`text-2xl font-black ${textColor} uppercase tracking-tight text-inter`}>Lounge Settings</h2>
+-                                    <div className="flex items-center gap-2">
+-                                        <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: sageGreen }} />
+-                                        <span className={`text-[10px] font-bold uppercase tracking-[0.2em]`} style={{ color: sageGreen }}>System Operational</span>
+-                                    </div>
+-                                </div>
+-                            </div>
+-                            <button onClick={onClose} className={`w-10 h-10 rounded-full ${isDark ? 'bg-white/5' : 'bg-slate-50'} border ${borderColor} flex items-center justify-center transition-all hover:rotate-90 text-slate-400 hover:text-white shadow-xl group relative z-10`}>
+-                                <X className="w-5 h-5 transition-transform group-hover:scale-110" />
+-                            </button>
++        <div style={{ position: 'fixed', inset: 0, zIndex: 9999, backgroundColor: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
++            <div className="w-full max-w-6xl h-[85vh] bg-white rounded-[2.5rem] shadow-2xl flex flex-col overflow-hidden border border-black/5">
++
++                {/* 헤더 */}
++                <div className="px-8 py-5 flex items-center justify-between border-b border-black/5">
++                    <div className="flex items-center gap-4">
++                        <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
++                            <Settings className="text-[#0f172a]" size={20} />
+                         </div>
++                        <h2 className="text-xl font-black uppercase tracking-tight text-[#0f172a]">Lounge Settings</h2>
++                    </div>
++                    <button onClick={onClose} className="p-2 hover:bg-slate-50 rounded-full text-slate-400">
++                        <X size={24} />
++                    </button>
++                </div>
+ 
+-                        {/* Content Area */}
+-                        <div className="flex-1 flex overflow-hidden">
+-                            {/* Navigation Sidebar */}
+-                            <div className={`w-64 flex-shrink-0 border-r ${borderColor} p-6 flex flex-col gap-2 ${isDark ? 'bg-[#0A0F1E]/50' : 'bg-slate-50/50'} backdrop-blur-xl`}>
+-                                {[
+-                                    { id: 'menu', icon: List, label: 'Treatment Menu' },
+-                                    { id: 'general', icon: Globe, label: 'Bespoke Identities' },
+-                                    { id: 'support', icon: ShieldCheck, label: 'Support & Help' }
+-                                ].map(tab => (
+-                                    <button 
+-                                        key={tab.id}
+-                                        onClick={() => setActiveTab(tab.id as any)}
+-                                        className={`flex items-center justify-between px-5 py-3 rounded-xl transition-all duration-500 group relative ${
+-                                            activeTab === tab.id 
+-                                                ? tab.id === 'support' 
+-                                                    ? 'bg-white text-[#0f172a] shadow-sm border border-gray-100 p-4' 
+-                                                    : `${isDark ? 'bg-white/10' : 'bg-white shadow-lg'} ${textColor} border ${borderColor}` 
+-                                                : 'text-slate-500 hover:text-slate-300'
+-                                        }`}
+-                                    >
+-                                        <div className="flex items-center gap-3 relative z-10">
+-                                            <tab.icon className={`w-4 h-4 ${activeTab === tab.id ? (isDark ? 'text-[#2AF598]' : 'text-[#78dcca]') : 'text-slate-400'}`} strokeWidth={2.5} />
+-                                            <span className="font-bold text-xs uppercase tracking-widest">{tab.label}</span>
+-                                        </div>
+-                                        {activeTab === tab.id && tab.id !== 'support' && <motion.div layoutId="nav-glow" className={`absolute inset-0 rounded-xl ${isDark ? 'bg-[#2AF598]/5 shadow-[inset_0_0_20px_rgba(42,245,152,0.1)]' : 'bg-sky-500/5'} border ${isDark ? 'border-[#2AF598]/30' : 'border-sky-500/30'}`} />}
+-                                        <ArrowRight className={`w-3 h-3 transition-all duration-500 ${activeTab === tab.id ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2'}`} />
+-                                    </button>
+-                                ))}
+-                            </div>
++                <div className="flex-1 flex overflow-hidden">
++                    {/* 사이드바 */}
++                    <div className="w-64 border-r border-black/5 p-6 flex flex-col gap-2 bg-slate-50/30">
++                        <button className="flex items-center gap-3 px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-widest bg-[#0f172a] text-white shadow-lg">
++                            <List size={16} /> Treatment Menu
++                        </button>
++                    </div>
+ 
+-                            {/* Main Configuration Panel */}
+-                            <div className={`flex-1 overflow-y-auto p-8 custom-scrollbar relative transition-colors duration-500`}>
+-                                <div className="max-w-4xl mx-auto">
+-                                    
+-                                    {activeTab === 'menu' && (
+-                                        <div className="space-y-4 animate-in fade-in zoom-in-95 duration-700">
+-                                            {/* Treatment Editor Inline [DYNAMIC STATE] */}
+-                                            <AnimatePresence>
+-                                                {editingTreatmentId && (
+-                                                    <motion.div 
+-                                                        initial={{ opacity: 0, scale: 0.95 }}
+-                                                        animate={{ opacity: 1, scale: 1 }}
+-                                                        exit={{ opacity: 0, scale: 0.95 }}
+-                                                        className={`${cardBg} border-2 border-[#78dcca]/50 p-8 rounded-[2.5rem] shadow-2xl mb-8 relative overflow-hidden`}
+-                                                    >
+-                                                        <div className="flex items-center justify-between mb-8">
+-                                                            <div className="flex items-center gap-3">
+-                                                                 <div className={`w-10 h-10 rounded-full bg-[#78dcca]/10 flex items-center justify-center`}>
+-                                                                    <Settings className={`w-5 h-5 ${accentColor}`} strokeWidth={2} />
+-                                                                </div>
+-                                                                <h3 className={`text-xl font-black ${textColor} uppercase tracking-tight text-inter text-nowrap`}>Edit Clinical Protocol</h3>
+-                                                            </div>
+-                                                            <button onClick={() => setEditingTreatmentId(null)} className="w-8 h-8 rounded-full hover:bg-black/5 flex items-center justify-center transition-colors"><X className="w-5 h-5 text-slate-400" /></button>
+-                                                        </div>
+-                                                        
+-                                                        <div className="space-y-6">
+-                                                            <div className="grid grid-cols-2 gap-6">
+-                                                                <div>
+-                                                                    <label className="text-[10px] font-black uppercase text-slate-500 block mb-2 tracking-widest text-inter">Protocol Name</label>
+-                                                                    <input 
+-                                                                        type="text" 
+-                                                                        value={editingTemplate?.name || ''} 
+-                                                                        onChange={e => setEditingTemplate({...editingTemplate!, name: e.target.value})}
+-                                                                        className={`w-full ${isDark ? 'bg-white/5 border-white/5' : 'bg-white border-black/5'} border rounded-2xl py-3 px-5 text-sm font-bold ${textColor} focus:outline-none focus:ring-2 focus:ring-[#78dcca]/20 transition-all font-inter`}
+-                                                                    />
+-                                                                </div>
+-                                                                <div>
+-                                                                    <label className="text-[10px] font-black uppercase text-slate-500 block mb-2 tracking-widest text-inter">Global Fee ({currency})</label>
+-                                                                    <input 
+-                                                                        type="number" 
+-                                                                        value={editingTemplate?.price || 0} 
+-                                                                        onChange={e => setEditingTemplate({...editingTemplate!, price: Number(e.target.value)})}
+-                                                                        className={`w-full ${isDark ? 'bg-white/5 border-white/5' : 'bg-white border-black/5'} border rounded-2xl py-3 px-5 text-sm font-bold ${textColor} focus:outline-none focus:ring-2 focus:ring-[#78dcca]/20 transition-all font-inter`}
+-                                                                    />
+-                                                                </div>
+-                                                            </div>
+-                                                        </div>
++                    {/* 메인 리스트 영역 */}
++                    <div className="flex-1 overflow-y-auto p-8 bg-[#fdfcfb]">
++                        <div className="max-w-4xl mx-auto space-y-6">
+ 
+-                                                        <button onClick={handleSaveTemplate} className={`mt-8 w-full py-4 ${isDark ? 'bg-[#78dcca] text-[#0f172a]' : 'bg-[#0f172a] text-white'} rounded-2xl font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 shadow-xl hover:scale-[1.01] transition-all text-inter`}>
+-                                                            <Save className="w-4 h-4" /> Save Clinical Protocol
+-                                                        </button>
+-                                                    </motion.div>
+-                                                )}
+-                                            </AnimatePresence>
++                            <div className="bg-white border border-black/5 p-6 rounded-[2rem] flex items-center justify-between shadow-sm">
++                                <h3 className="text-lg font-black uppercase text-[#0f172a]">Signature Menu Builder</h3>
++                            </div>
+ 
+-                                            <div className={`${cardBg} border ${borderColor} p-6 rounded-[2rem] shadow-2xl relative overflow-hidden group hover:scale-[1.01] transition-all duration-500`}>
+-                                                <div className="flex items-center justify-between mb-4 text-inter">
+-                                                    <div>
+-                                                        <h3 className={`text-xl font-black ${textColor} mb-1 uppercase tracking-tight`}>Practice Identity</h3>
+-                                                        <p className={`text-xs ${subTextColor} font-medium tracking-tight`}>Engineered precision for your specific field.</p>
+-                                                    </div>
+-                                                    <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center shadow-inner group-hover:rotate-12 transition-transform duration-500"><Briefcase className={`w-5 h-5 ${accentColor}`} strokeWidth={2} /></div>
++                            {/* 카드 리스트: safe version mapping */}
++                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
++                                {Array.isArray(templates) && templates.length > 0 ? (
++                                    templates.map((t: any) => (
++                                        <div key={t.id || Math.random()} className="bg-white rounded-[2rem] border border-black/5 p-6 flex flex-col h-full shadow-sm hover:shadow-xl transition-all group">
++                                            <div className="flex justify-between items-start mb-10">
++                                                <div>
++                                                    <h4 className="font-black text-sm uppercase text-[#0f172a]">{t.name || "Untitled"}</h4>
++                                                    <p className="text-[#78dcca] font-black text-xl">{currency}{t.price || 0}</p>
+                                                 </div>
+-                                                <div className="relative max-w-sm">
+-                                                    <select 
+-                                                        value={clinicType}
+-                                                        onChange={(e) => setClinicType(e.target.value as any)}
+-                                                        className={`w-full bg-white/5 border ${borderColor} rounded-xl py-3 px-5 text-sm font-bold ${textColor} focus:outline-none transition-all appearance-none cursor-pointer backdrop-blur-md font-inter tracking-tight`}
+-                                                    >
+-                                                        <option value="Dental">Elite Dental Protocol</option>
+-                                                        <option value="Aesthetic">Bespoke Aesthetics</option>
+-                                                        <option value="Wellness">Holistic Transformation</option>
+-                                                    </select>
+-                                                </div>
+-                                            </div>
+-
+-                                            <div className={`flex items-center justify-between p-6 ${cardBg} border ${borderColor} rounded-[2rem] hover:scale-[1.01] transition-all duration-500`}>
+-                                                <h3 className={`text-xl font-black ${textColor} uppercase tracking-tight text-inter`}>Signature Menu Builder</h3>
+                                                 <button 
+-                                                    onClick={handleAddTreatment}
+-                                                    className={`px-6 py-4 ${isDark ? 'bg-white text-black' : 'bg-[#0f172a] text-white'} rounded-2xl text-[10px] font-black tracking-widest uppercase transition-all shadow-xl hover:shadow-[#78dcca]/20 active:scale-95 flex items-center gap-3 text-inter`}
++                                                    onClick={() => setTemplates(templates.filter((item: any) => item.id !== t.id))} 
++                                                    className="p-2 text-red-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
+                                                 >
+-                                                    <Plus className={`w-4 h-4 ${accentColor}`} strokeWidth={4} /> Add Treatment
++                                                    <Trash2 size={16} />
+                                                 </button>
+                                             </div>
+-
+-                                            {/* [FIXED]: Mapping strictly from parent props 'templates' */}
+-                                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+-                                                {templates.map(template => (
+-                                                    <div key={template.id} className={`${cardBg} rounded-[2rem] border ${borderColor} p-6 shadow-inner hover:scale-[1.03] transition-all duration-500 group relative overflow-hidden flex flex-col h-full`}>
+-                                                        <div className="flex justify-between items-start mb-4 text-inter">
+-                                                            <div className="flex-1">
+-                                                                <h4 className={`${textColor} font-black text-sm truncate uppercase tracking-widest`}>{template.name}</h4>
+-                                                                <p className={`${accentColor} font-black text-xl mt-1 tracking-tight`}>{currency}{template.price.toLocaleString()}</p>
+-                                                            </div>
+-                                                            <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0">
+-                                                                <button onClick={() => { setEditingTreatmentId(template.id); setEditingTemplate(template); }} className={`w-9 h-9 flex items-center justify-center ${isDark ? 'bg-white/5 hover:bg-[#78dcca]/10' : 'bg-white hover:bg-slate-50'} rounded-xl border ${borderColor} shadow-sm transition-all shadow-inner`}><Settings className="w-4 h-4 text-slate-400" /></button>
+-                                                                <button onClick={() => handleDeleteTemplate(template.id)} className={`w-9 h-9 flex items-center justify-center ${isDark ? 'bg-white/5 hover:bg-red-500/10' : 'bg-white hover:bg-red-50'} rounded-xl border ${borderColor} shadow-sm transition-all shadow-inner`}><Trash2 className="w-4 h-4 text-slate-400 hover:text-red-500" /></button>
+-                                                            </div>
+-                                                        </div>
+-                                                        
+-                                                        <div className={`mt-auto pt-6 border-t ${borderColor} flex items-center justify-between`}>
+-                                                            <div className="flex items-center gap-x-4">
+-                                                                {[template.beforeImg, template.afterImg].map((img, i) => (
+-                                                                    <div key={i} className={`w-9 h-9 rounded-full border-2 ${isDark ? 'border-[#0A0F1E]' : 'border-white'} ${isDark ? 'bg-[#151C2F]' : 'bg-white'} flex items-center justify-center shadow-lg overflow-hidden transition-transform group-hover:scale-110 shadow-inner`}>
+-                                                                        {img ? <img src={img} className="w-full h-full object-cover" alt="" /> : <Camera className="w-4 h-4 text-slate-400" />}
+-                                                                    </div>
+-                                                                ))}
+-                                                            </div>
+-                                                            <div className={`flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border ${borderColor} backdrop-blur-md shadow-inner`}>
+-                                                                <div className="w-2 h-2 rounded-full shadow-[0_0_8px_rgba(135,169,107,0.5)]" style={{ backgroundColor: template.price > 0 ? sageGreen : '#fbbf24' }} />
+-                                                                <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] text-inter">{template.price > 0 ? 'Active' : 'Draft'}</span>
+-                                                            </div>
+-                                                        </div>
+-                                                    </div>
+-                                                ))}
+-                                            </div>
+-                                        </div>
+-                                    )}
+-
+-                                    {activeTab === 'general' && (
+-                                        <div className="animate-in fade-in slide-in-from-right-4 duration-700">
+-                                            <div className={`${cardBg} border ${borderColor} p-8 rounded-[2.5rem] relative overflow-hidden group`}>
+-                                                <div className="flex items-center gap-6 mb-8 text-inter">
+-                                                    <div className={`w-16 h-16 rounded-[1.5rem] bg-[#78dcca]/5 border ${borderColor} flex items-center justify-center shadow-inner group-hover:rotate-12 transition-transform duration-700`}>
+-                                                        <Zap className={`w-8 h-8 ${accentColor}`} strokeWidth={1.5} />
+-                                                    </div>
+-                                                    <div>
+-                                                        <h3 className={`text-2xl font-black ${textColor} uppercase tracking-tighter text-inter`}>Bespoke Branding Identity</h3>
+-                                                        <p className={`text-sm ${subTextColor} font-medium tracking-tight text-inter`}>Synchronise your global presence and visual personality.</p>
+-                                                    </div>
+-                                                </div>
+-
+-                                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+-                                                    <div className={`p-6 ${isDark ? 'bg-white/5' : 'bg-white'} border ${borderColor} rounded-[2rem] transition-all hover:scale-[1.02] shadow-inner`}>
+-                                                        <h4 className={`text-[10px] font-black uppercase tracking-widest ${subTextColor} mb-5 text-inter`}>Aesthetic Override</h4>
+-                                                        <div className="flex gap-2">
+-                                                            <button
+-                                                                onClick={() => setActiveTheme('white')}
+-                                                                className={`flex-1 py-4 px-4 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all duration-500 text-inter ${
+-                                                                    activeTheme === 'white' 
+-                                                                        ? `${isDark ? 'bg-[#78dcca] text-[#0f172a] shadow-lg' : 'bg-[#0f172a] text-white shadow-xl'} border-transparent` 
+-                                                                        : 'bg-white/5 text-slate-500 border border-white/5'
+-                                                                }`}
+-                                                            >
+-                                                                Executive White
+-                                                            </button>
+-                                                            <button
+-                                                                onClick={() => setActiveTheme('dark')}
+-                                                                className={`flex-1 py-4 px-4 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all duration-500 text-inter ${
+-                                                                    activeTheme === 'dark' 
+-                                                                        ? 'bg-[#78dcca] text-[#0f172a] shadow-lg' 
+-                                                                        : 'bg-white/5 text-slate-500 border border-white/5'
+-                                                                }`}
+-                                                            >
+-                                                                Matte Dark
+-                                                            </button>
+-                                                        </div>
+-                                                    </div>
+-
+-                                                    <div className="space-y-4">
+-                                                        <div className={`p-5 ${isDark ? 'bg-white/5' : 'bg-white'} border ${borderColor} rounded-[1.5rem] shadow-sm shadow-inner`}>
+-                                                            <span className="text-[10px] font-black uppercase text-slate-500 mb-2 block tracking-widest text-inter">Global Locale Sync</span>
+-                                                            <select value={locale} onChange={e => setLocale(e.target.value)} className={`w-full bg-transparent border-none text-xs font-bold ${textColor} focus:ring-0 cursor-pointer p-0 font-inter tracking-tight`}>
+-                                                                <option value="en-GB">UK Private Protocol (GMT)</option>
+-                                                                <option value="ko-KR">South Korean Executive (KST)</option>
+-                                                            </select>
+-                                                        </div>
+-                                                        <div className={`p-5 ${isDark ? 'bg-white/5' : 'bg-white'} border ${borderColor} rounded-[1.5rem] shadow-sm shadow-inner`}>
+-                                                            <span className="text-[10px] font-black uppercase text-slate-500 mb-2 block tracking-widest text-inter">AI Communication Tone</span>
+-                                                            <select value={communicationTone} onChange={e => setCommunicationTone(e.target.value as any)} className={`w-full bg-transparent border-none text-xs font-bold ${textColor} focus:ring-0 cursor-pointer p-0 font-inter tracking-tight`}>
+-                                                                <option value="Refined & Professional">Refined & Professional</option>
+-                                                                <option value="Warm & Empathetic">Warm & Empathetic</option>
+-                                                            </select>
+-                                                        </div>
+-                                                    </div>
+-                                                </div>
+-                                            </div>
+                                         </div>
+-                                    )}
+-
+-                                    {activeTab === 'support' && (
+-                                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+-                                            <div className="text-center mb-10 text-inter">
+-                                                <h3 className={`text-3xl font-black ${textColor} tracking-tighter text-inter`}>Wellness Concierge</h3>
+-                                                <p className="text-base text-slate-500 font-medium tracking-tight text-inter">Dedicated optimization support.</p>
+-                                            </div>
+-                                            
+-                                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pb-12">
+-                                                {[
+-                                                    { icon: User, label: '24/7 Concierge', desc: 'Direct access to your manager.' },
+-                                                    { icon: ShieldCheck, label: 'Compliance Vault', desc: 'Isolated data encryption.' },
+-                                                    { icon: Zap, label: 'Strategic Insights', desc: 'Market analysis & growth.' },
+-                                                    { icon: Calendar, label: 'Book Session', desc: 'Dedicated strategy optimization consultation.', isAction: true }
+-                                                ].map((card, i) => (
+-                                                    <div key={i} className={`${cardBg} border ${borderColor} p-6 rounded-[2.5rem] hover:scale-[1.03] transition-all duration-500 flex flex-col items-center text-center relative overflow-hidden group h-full shadow-lg hover:shadow-xl shadow-inner`}>
+-                                                        <div className="w-14 h-14 rounded-full bg-[#78dcca]/10 border border-[#78dcca]/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-all duration-500 shadow-inner">
+-                                                            <card.icon className={`w-6 h-6 ${accentColor}`} strokeWidth={2} />
+-                                                        </div>
+-                                                        <h4 className={`text-base font-black ${textColor} mb-3 uppercase tracking-tight text-inter`}>{card.label}</h4>
+-                                                        <p className={`text-[10px] ${subTextColor} leading-[1.6] font-bold mb-8 flex-1 text-inter uppercase tracking-[0.05em]`}>{card.desc}</p>
+-                                                        
+-                                                        {card.isAction && (
+-                                                            <button className={`w-full py-4 ${isDark ? 'bg-[#78dcca] text-[#0f172a]' : 'bg-[#0f172a] text-white'} rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:scale-[1.05] transition-all active:scale-95 text-inter`}>
+-                                                                Book Now
+-                                                            </button>
+-                                                        )}
+-                                                    </div>
+-                                                ))}
+-                                            </div>
+-
+-                                            {/* Subtle Branding Bottom */}
+-                                            <div className="flex justify-end pr-4 opacity-40">
+-                                                <div className="text-right">
+-                                                    <span className={`text-[10px] font-black uppercase tracking-[0.6em] ${textColor} text-inter`}>Hanlan OC</span>
+-                                                    <div className={`h-[1px] w-14 ${accentBg} mt-2 ml-auto shadow-inner`} />
+-                                                </div>
+-                                            </div>
+-                                        </div>
+-                                    )}
+-                                </div>
++                                    ))
++                                ) : (
++                                    <div className="col-span-full py-20 text-center text-slate-300 font-bold uppercase text-xs tracking-[0.2em]">
++                                        No treatments found. Management Mode Active.
++                                    </div>
++                                )}
+                             </div>
+                         </div>
+-                    </motion.div>
++                    </div>
+                 </div>
+-            )}
+-        </AnimatePresence>
++            </div>
++        </div>
+     );
+ }
+\ No newline at end of file
+diff --git a/src/components/dashboard/SendPTModal.tsx b/src/components/dashboard/SendPTModal.tsx
+index 66c0400..afa6c82 100644
+--- a/src/components/dashboard/SendPTModal.tsx
++++ b/src/components/dashboard/SendPTModal.tsx
+@@ -2,7 +2,7 @@ import React, { useState } from 'react';
+ import { motion, AnimatePresence } from 'motion/react';
+ import { X, Mail, Send, CheckCircle, RefreshCw, Shield, MessageCircle, AlertCircle } from 'lucide-react';
+ import { supabase, ConsultationRequest } from '../../lib/supabase';
+-import { useDashboardStore } from '../../store/useDashboardStore';
++import { useDashboardStore, type TreatmentTemplate, type MessageTemplate } from '../../store/useDashboardStore';
+ 
+ const INDUSTRY_TEMPLATES = {
+     Dental: {
+@@ -19,21 +19,7 @@ const INDUSTRY_TEMPLATES = {
+     }
+ };
+ 
+-interface MessageTemplate {
+-  title: string;
+-  body: string;
+-}
+-
+-interface TreatmentTemplate {
+-  id: string;
+-  name: string;
+-  price: number;
+-  emailContents?: string;
+-  beforeImg?: string;
+-  afterImg?: string;
+-  bookingUrl?: string;
+-  messageTemplates?: MessageTemplate[];
+-}
++// Replaced by imports from useDashboardStore
+ 
+ interface SendPTModalProps {
+   isOpen: boolean;
+@@ -55,6 +41,9 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
+   templates = []
+ }) => {
+   const { clinicType } = useDashboardStore();
++  
++  if (!Array.isArray(templates)) return null;
++
+   const [isSending, setIsSending] = useState(false);
+   const [isSent, setIsSent] = useState(false);
+   
+@@ -68,7 +57,11 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
+     if (isOpen && lead) {
+        setOverridePrice(String(lead.potential_value || ''));
+        
+-       const matchedTemplate = lead.treatment_name ? templates.find(t => t.name === lead.treatment_name) : null;
++       const isTemplatesArray = Array.isArray(templates);
++       const matchedTemplate = isTemplatesArray && lead.treatment_name 
++         ? templates.find(t => t.name === lead.treatment_name) 
++         : null;
++        
+        setSelectedTemplateId(matchedTemplate?.id || '');
+ 
+        const firstName = lead.name?.split(' ')[0] || "Patient";
+@@ -89,7 +82,7 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
+   }, [isOpen, lead, templates, clinicName, clinicType]);
+ 
+   const getProcessingNames = () => {
+-    const template = templates.find(t => t.id === selectedTemplateId);
++    const template = Array.isArray(templates) ? templates.find(t => t.id === selectedTemplateId) : null;
+     return {
+       patientName: lead?.name?.split(' ')[0] || "Patient",
+       treatmentName: template?.name || lead?.service || "Treatment"
+@@ -111,7 +104,7 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
+ 
+   const handleTemplateChange = (id: string) => {
+     setSelectedTemplateId(id);
+-    const template = templates.find(t => t.id === id);
++    const template = Array.isArray(templates) ? templates.find(t => t.id === id) : null;
+     if (template) {
+       setOverridePrice(String(template.price));
+       const { patientName, treatmentName } = getProcessingNames();
+@@ -142,7 +135,7 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
+     let finalTreatmentName = lead?.service || "Treatment";
+ 
+     if (onUpdateLead && lead) {
+-      const template = templates.find(t => t.id === selectedTemplateId);
++      const template = Array.isArray(templates) ? templates.find(t => t.id === selectedTemplateId) : null;
+       finalTreatmentName = template?.name || lead.treatment_name || lead.service || "Treatment";
+       onUpdateLead(lead.id, {
+         potential_value: Number(overridePrice) || lead.potential_value,
+@@ -229,7 +222,7 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
+           {/* Terminal Controls */}
+           <div className="px-10 py-10 space-y-8 max-h-[60vh] overflow-y-auto custom-scrollbar">
+              <div className="space-y-6">
+-              {templates && templates.length > 0 && (
++              {Array.isArray(templates) && templates.length > 0 && (
+                 <div>
+                   <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Target Clinical Protocol</label>
+                   <select 
+@@ -239,7 +232,7 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
+                   >
+                     <option value="" disabled>Select Clinical Mapping...</option>
+                     {templates.map(t => (
+-                      <option key={t.id} value={t.id}>{t.name} ({currency}{t.price.toLocaleString()})</option>
++                      <option key={t.id} value={t.id}>{t.name} ({currency}{t.price?.toLocaleString()})</option>
+                     ))}
+                   </select>
+                 </div>
+diff --git a/src/components/dashboard/tabs/LeadsTab.tsx b/src/components/dashboard/tabs/LeadsTab.tsx
+index 250142b..3a7ae83 100644
+--- a/src/components/dashboard/tabs/LeadsTab.tsx
++++ b/src/components/dashboard/tabs/LeadsTab.tsx
+@@ -8,7 +8,6 @@ import {
+     BarChart3,
+     Target,
+     Clock,
+-    Plus,
+     ArrowRight,
+     TrendingUp,
+     Filter,
+@@ -108,12 +107,6 @@ export function LeadsTab({
+                                     onChange={(e) => setSearchQuery(e.target.value)}
+                                 />
+                             </div>
+-                            <button
+-                                onClick={() => onAddLead?.()}
+-                                className="p-4 bg-gray-900 text-white rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-lg shadow-black/10"
+-                            >
+-                                <Plus className="w-5 h-5" />
+-                            </button>
+                         </div>
+                     </div>
+ 
+diff --git a/src/main.tsx b/src/main.tsx
+index 05a6855..5e4e878 100644
+--- a/src/main.tsx
++++ b/src/main.tsx
+@@ -1,3 +1,4 @@
++localStorage.clear(); // Force clear corrupted state from iframe storage
+ import { StrictMode } from 'react';
+ import { createRoot } from 'react-dom/client';
+ import App from './App.tsx';
+diff --git a/src/store/useDashboardStore.ts b/src/store/useDashboardStore.ts
+index 8d8bcc7..b50cf89 100644
+--- a/src/store/useDashboardStore.ts
++++ b/src/store/useDashboardStore.ts
+@@ -6,6 +6,14 @@ import { DEMO_LEADS } from '../lib/demoData';
+ import { formatAuditTimestamp } from '../lib/utils/formatters';
+ import { SERVICE_CONVERSION_VALUES } from '../lib/constants';
+ 
++// One-time cleanup to remove corrupted "undefined" strings from localStorage
++localStorage.removeItem('clinic_templates');
++
++export interface MessageTemplate {
++  title: string;
++  body: string;
++}
++
+ export interface TreatmentTemplate {
+   id: string;
+   name: string;
+@@ -14,7 +22,8 @@ export interface TreatmentTemplate {
+   beforeImg?: string;
+   afterImg?: string;
+   bookingUrl?: string;
+-  messageTemplates?: string[];
++  emailContents?: string;
++  messageTemplates?: MessageTemplate[] | string[];
+ }
+ 
+ interface DashboardState {
+@@ -45,7 +54,7 @@ interface DashboardState {
+   
+   // Clinic Settings (The Warehouse)
+   templates: TreatmentTemplate[];
+-  setTemplates: (templates: TreatmentTemplate[]) => void;
++  setTemplates: (templates: TreatmentTemplate[] | ((prev: TreatmentTemplate[]) => TreatmentTemplate[])) => void;
+ 
+   // Security & Audit State
+   auditLogs: Record<string, any[]>;
+@@ -120,25 +129,18 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
+     set({ clinicType: type });
+   },
+ 
+-  templates: (() => {
+-    const saved = localStorage.getItem('clinic_templates');
+-    if (saved) {
+-      try {
+-        return JSON.parse(saved);
+-      } catch (e) {
+-        console.error("Error parsing saved templates:", e);
+-      }
+-    }
+-    return Object.entries(SERVICE_CONVERSION_VALUES).map(([name, price], idx) => ({
+-      id: `template-${idx}`,
+-      name,
+-      price
+-    }));
+-  })(),
++  templates: [],
+ 
+-  setTemplates: (templates) => {
+-    localStorage.setItem('clinic_templates', JSON.stringify(templates));
+-    set({ templates });
++  setTemplates: (templatesOrUpdater) => {
++    set((state) => {
++      const newTemplates = typeof templatesOrUpdater === 'function' 
++        ? templatesOrUpdater(state.templates) 
++        : templatesOrUpdater;
++      
++      const safeData = Array.isArray(newTemplates) ? newTemplates : [];
++      // localStorage.setItem('clinic_templates', JSON.stringify(safeData));
++      return { templates: safeData };
++    });
+   },
+ 
+   updateLead: (id, updates) => set((state) => ({

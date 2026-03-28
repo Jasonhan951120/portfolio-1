@@ -1,0 +1,106 @@
+
+> react-example@0.0.0 lint
+> tsc --noEmit
+
+components/AuthForm.tsx(2,26): error TS2307: Cannot find module '../lib/supabase' or its corresponding type declarations.
+components/Booking.tsx(3,26): error TS2307: Cannot find module '../lib/supabase' or its corresponding type declarations.
+legacy_root/index.tsx(3,17): error TS2307: Cannot find module './App' or its corresponding type declarations.
+legacy_root/skills/ui-ux-pro-max/cli/src/commands/init.ts(3,19): error TS2307: Cannot find module 'chalk' or its corresponding type declarations.
+legacy_root/skills/ui-ux-pro-max/cli/src/commands/init.ts(4,17): error TS2307: Cannot find module 'ora' or its corresponding type declarations.
+legacy_root/skills/ui-ux-pro-max/cli/src/commands/init.ts(5,21): error TS2307: Cannot find module 'prompts' or its corresponding type declarations.
+legacy_root/skills/ui-ux-pro-max/cli/src/commands/update.ts(1,19): error TS2307: Cannot find module 'chalk' or its corresponding type declarations.
+legacy_root/skills/ui-ux-pro-max/cli/src/commands/update.ts(2,17): error TS2307: Cannot find module 'ora' or its corresponding type declarations.
+legacy_root/skills/ui-ux-pro-max/cli/src/commands/versions.ts(1,19): error TS2307: Cannot find module 'chalk' or its corresponding type declarations.
+legacy_root/skills/ui-ux-pro-max/cli/src/commands/versions.ts(2,17): error TS2307: Cannot find module 'ora' or its corresponding type declarations.
+legacy_root/skills/ui-ux-pro-max/cli/src/index.ts(3,25): error TS2307: Cannot find module 'commander' or its corresponding type declarations.
+legacy_root/skills/ui-ux-pro-max/cli/src/utils/logger.ts(1,19): error TS2307: Cannot find module 'chalk' or its corresponding type declarations.
+original_expert_mode_content.tsx(9,37): error TS2307: Cannot find module './tabs/StaffROILeaderboard' or its corresponding type declarations.
+original_expert_mode_content.tsx(10,36): error TS2307: Cannot find module './ReputationROIChart' or its corresponding type declarations.
+original_expert_mode_content.tsx(11,38): error TS2307: Cannot find module './RevenueForecastChart' or its corresponding type declarations.
+original_expert_mode_drawer.tsx(4,35): error TS2307: Cannot find module './ExpertModeContent' or its corresponding type declarations.
+src/components/AdminDashboard.tsx(2966,15): error TS2322: Type 'import("C:/Users/Donggyun/.gemini/antigravity/scratch/portfolio-1/src/store/useDashboardStore").TreatmentTemplate[]' is not assignable to type 'TreatmentTemplate[]'.
+  Type 'import("C:/Users/Donggyun/.gemini/antigravity/scratch/portfolio-1/src/store/useDashboardStore").TreatmentTemplate' is not assignable to type 'TreatmentTemplate'.
+    Types of property 'messageTemplates' are incompatible.
+      Type 'string[]' is not assignable to type 'MessageTemplate[]'.
+        Type 'string' is not assignable to type 'MessageTemplate'.
+src/lib/demoData.ts(11,9): error TS2322: Type '"Active / Inquiry"' is not assignable to type '"Proposal Sent" | "New Lead" | "Booked" | "Visited" | "Treated" | "Future Pipeline" | "Consultation Done" | "Waitlist" | "Sale Closed" | "Abandoned" | "Closed Won" | "Archived"'.
+supabase/functions/accept-invite/index.ts(1,30): error TS2307: Cannot find module 'jsr:@supabase/supabase-js@2' or its corresponding type declarations.
+supabase/functions/accept-invite/index.ts(3,21): error TS2304: Cannot find name 'Deno'.
+supabase/functions/accept-invite/index.ts(4,28): error TS2304: Cannot find name 'Deno'.
+supabase/functions/accept-invite/index.ts(6,1): error TS2304: Cannot find name 'Deno'.
+supabase/functions/broadcast-slot/index.ts(1,23): error TS2307: Cannot find module 'https://deno.land/std@0.168.0/http/server.ts' or its corresponding type declarations.
+supabase/functions/broadcast-slot/index.ts(2,30): error TS2307: Cannot find module 'https://esm.sh/@supabase/supabase-js@2' or its corresponding type declarations.
+supabase/functions/broadcast-slot/index.ts(18,13): error TS2304: Cannot find name 'Deno'.
+supabase/functions/broadcast-slot/index.ts(19,13): error TS2304: Cannot find name 'Deno'.
+supabase/functions/broadcast-waitlist/index.ts(1,23): error TS2307: Cannot find module 'https://deno.land/std@0.168.0/http/server.ts' or its corresponding type declarations.
+supabase/functions/broadcast-waitlist/index.ts(2,30): error TS2307: Cannot find module 'https://esm.sh/@supabase/supabase-js@2.39.8' or its corresponding type declarations.
+supabase/functions/broadcast-waitlist/index.ts(23,13): error TS2304: Cannot find name 'Deno'.
+supabase/functions/broadcast-waitlist/index.ts(24,13): error TS2304: Cannot find name 'Deno'.
+supabase/functions/capi-sync/index.ts(1,23): error TS2307: Cannot find module 'https://deno.land/std@0.168.0/http/server.ts' or its corresponding type declarations.
+supabase/functions/enable-auto-tracking/index.ts(11,1): error TS2304: Cannot find name 'Deno'.
+supabase/functions/enable-auto-tracking/index.ts(24,30): error TS2304: Cannot find name 'Deno'.
+supabase/functions/enable-auto-tracking/index.ts(25,38): error TS2304: Cannot find name 'Deno'.
+supabase/functions/google-oauth-callback/index.ts(9,1): error TS2304: Cannot find name 'Deno'.
+supabase/functions/google-oauth-callback/index.ts(15,26): error TS2304: Cannot find name 'Deno'.
+supabase/functions/google-oauth-callback/index.ts(21,23): error TS2304: Cannot find name 'Deno'.
+supabase/functions/google-oauth-callback/index.ts(22,27): error TS2304: Cannot find name 'Deno'.
+supabase/functions/google-oauth-callback/index.ts(23,29): error TS2304: Cannot find name 'Deno'.
+supabase/functions/google-oauth-callback/index.ts(24,26): error TS2304: Cannot find name 'Deno'.
+supabase/functions/google-oauth-callback/index.ts(25,34): error TS2304: Cannot find name 'Deno'.
+supabase/functions/meta-oauth-callback/index.ts(15,1): error TS2304: Cannot find name 'Deno'.
+supabase/functions/meta-oauth-callback/index.ts(21,26): error TS2304: Cannot find name 'Deno'.
+supabase/functions/meta-oauth-callback/index.ts(27,20): error TS2304: Cannot find name 'Deno'.
+supabase/functions/meta-oauth-callback/index.ts(28,24): error TS2304: Cannot find name 'Deno'.
+supabase/functions/meta-oauth-callback/index.ts(29,29): error TS2304: Cannot find name 'Deno'.
+supabase/functions/meta-oauth-callback/index.ts(31,26): error TS2304: Cannot find name 'Deno'.
+supabase/functions/meta-oauth-callback/index.ts(32,34): error TS2304: Cannot find name 'Deno'.
+supabase/functions/oauth-orchestrator/index.ts(2,30): error TS2307: Cannot find module 'https://esm.sh/@supabase/supabase-js@2' or its corresponding type declarations.
+supabase/functions/oauth-orchestrator/index.ts(4,22): error TS2304: Cannot find name 'Deno'.
+supabase/functions/oauth-orchestrator/index.ts(5,35): error TS2304: Cannot find name 'Deno'.
+supabase/functions/oauth-orchestrator/index.ts(8,24): error TS2304: Cannot find name 'Deno'.
+supabase/functions/oauth-orchestrator/index.ts(9,28): error TS2304: Cannot find name 'Deno'.
+supabase/functions/oauth-orchestrator/index.ts(10,26): error TS2304: Cannot find name 'Deno'.
+supabase/functions/oauth-orchestrator/index.ts(11,30): error TS2304: Cannot find name 'Deno'.
+supabase/functions/oauth-orchestrator/index.ts(18,1): error TS2304: Cannot find name 'Deno'.
+supabase/functions/retarget-webhook/index.ts(8,1): error TS2304: Cannot find name 'Deno'.
+supabase/functions/revenue-recovery/index.ts(1,23): error TS2307: Cannot find module 'https://deno.land/std@0.168.0/http/server.ts' or its corresponding type declarations.
+supabase/functions/revenue-recovery/index.ts(2,30): error TS2307: Cannot find module 'https://esm.sh/@supabase/supabase-js@2' or its corresponding type declarations.
+supabase/functions/revenue-recovery/index.ts(17,13): error TS2304: Cannot find name 'Deno'.
+supabase/functions/revenue-recovery/index.ts(18,13): error TS2304: Cannot find name 'Deno'.
+supabase/functions/score-lead-intent/index.ts(1,23): error TS2307: Cannot find module 'https://deno.land/std@0.168.0/http/server.ts' or its corresponding type declarations.
+supabase/functions/score-lead-intent/index.ts(2,30): error TS2307: Cannot find module 'https://esm.sh/@supabase/supabase-js@2' or its corresponding type declarations.
+supabase/functions/score-lead-intent/index.ts(19,13): error TS2304: Cannot find name 'Deno'.
+supabase/functions/score-lead-intent/index.ts(20,13): error TS2304: Cannot find name 'Deno'.
+supabase/functions/score-lead-intent/index.ts(50,44): error TS2304: Cannot find name 'Deno'.
+supabase/functions/send-notification/index.ts(3,24): error TS2304: Cannot find name 'Deno'.
+supabase/functions/send-notification/index.ts(4,21): error TS2304: Cannot find name 'Deno'.
+supabase/functions/send-notification/index.ts(7,1): error TS2304: Cannot find name 'Deno'.
+supabase/functions/send-pt-link/index.ts(3,24): error TS2304: Cannot find name 'Deno'.
+supabase/functions/send-pt-link/index.ts(6,1): error TS2304: Cannot find name 'Deno'.
+supabase/functions/send-review-request/index.ts(1,23): error TS2307: Cannot find module 'https://deno.land/std@0.168.0/http/server.ts' or its corresponding type declarations.
+supabase/functions/send-staff-invite/index.ts(5,1): error TS2304: Cannot find name 'Deno'.
+supabase/functions/send-staff-invite/index.ts(16,28): error TS2304: Cannot find name 'Deno'.
+supabase/functions/stripe-webhook/index.ts(2,30): error TS2307: Cannot find module 'https://esm.sh/@supabase/supabase-js@2.39.0' or its corresponding type declarations.
+supabase/functions/stripe-webhook/index.ts(4,31): error TS2304: Cannot find name 'Deno'.
+supabase/functions/stripe-webhook/index.ts(5,22): error TS2304: Cannot find name 'Deno'.
+supabase/functions/stripe-webhook/index.ts(6,35): error TS2304: Cannot find name 'Deno'.
+supabase/functions/stripe-webhook/index.ts(8,1): error TS2304: Cannot find name 'Deno'.
+supabase/functions/sync-ad-metrics/index.ts(12,1): error TS2304: Cannot find name 'Deno'.
+supabase/functions/sync-ad-metrics/index.ts(13,26): error TS2304: Cannot find name 'Deno'.
+supabase/functions/sync-ad-metrics/index.ts(14,34): error TS2304: Cannot find name 'Deno'.
+supabase/functions/sync-ad-metrics/index.ts(97,30): error TS2304: Cannot find name 'Deno'.
+supabase/functions/sync-ad-metrics/index.ts(98,34): error TS2304: Cannot find name 'Deno'.
+supabase/functions/sync-ad-metrics/index.ts(138,36): error TS2304: Cannot find name 'Deno'.
+supabase/functions/webhook-twilio/index.ts(1,23): error TS2307: Cannot find module 'https://deno.land/std@0.168.0/http/server.ts' or its corresponding type declarations.
+supabase/functions/webhook-twilio/index.ts(2,30): error TS2307: Cannot find module 'https://esm.sh/@supabase/supabase-js@2.39.3' or its corresponding type declarations.
+supabase/functions/webhook-twilio/index.ts(28,29): error TS2304: Cannot find name 'Deno'.
+supabase/functions/webhook-twilio/index.ts(29,36): error TS2304: Cannot find name 'Deno'.
+supabase/functions/webhook-whatsapp/index.ts(1,23): error TS2307: Cannot find module 'https://deno.land/std@0.168.0/http/server.ts' or its corresponding type declarations.
+supabase/functions/webhook-whatsapp/index.ts(2,30): error TS2307: Cannot find module 'https://esm.sh/@supabase/supabase-js@2.39.3' or its corresponding type declarations.
+supabase/functions/webhook-whatsapp/index.ts(25,55): error TS2304: Cannot find name 'Deno'.
+supabase/functions/webhook-whatsapp/index.ts(51,29): error TS2304: Cannot find name 'Deno'.
+supabase/functions/webhook-whatsapp/index.ts(52,36): error TS2304: Cannot find name 'Deno'.
+supabase/functions/whatsapp-ai-scorer/index.ts(1,23): error TS2307: Cannot find module 'https://deno.land/std@0.168.0/http/server.ts' or its corresponding type declarations.
+supabase/functions/whatsapp-ai-scorer/index.ts(2,30): error TS2307: Cannot find module 'https://esm.sh/@supabase/supabase-js@2' or its corresponding type declarations.
+supabase/functions/whatsapp-ai-scorer/index.ts(23,13): error TS2304: Cannot find name 'Deno'.
+supabase/functions/whatsapp-ai-scorer/index.ts(24,13): error TS2304: Cannot find name 'Deno'.
