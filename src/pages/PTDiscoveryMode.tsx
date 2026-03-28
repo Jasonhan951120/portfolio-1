@@ -17,6 +17,19 @@ const PTDiscoveryMode: React.FC = () => {
     const [lead, setLead] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [sliderPosition, setSliderPosition] = useState(50);
+    const [timeLeft, setTimeLeft] = useState(47 * 3600 + 59 * 60 + 59);
+
+    useEffect(() => {
+        const timer = setInterval(() => setTimeLeft(prev => prev > 0 ? prev - 1 : 0), 1000);
+        return () => clearInterval(timer);
+    }, []);
+
+    const formatTime = (seconds: number) => {
+        const h = Math.floor(seconds / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+        const s = seconds % 60;
+        return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    };
 
     const treatmentDetails: Record<string, any> = {
         "Dental Implants": {
@@ -124,7 +137,7 @@ const PTDiscoveryMode: React.FC = () => {
                 </div>
             </header>
 
-            <main className="max-w-[1400px] mx-auto p-4 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-[calc(100vh-88px)]">
+            <main className="max-w-[1400px] mx-auto p-4 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-[calc(100vh-88px)] pb-32">
                 
                 {/* 1. The Hero Visual (Slider) - BENTO BOX */}
                 {hasValidImages && (
@@ -204,7 +217,7 @@ const PTDiscoveryMode: React.FC = () => {
                                     </div>
                                     <div>
                                         <p className="text-[14px] font-bold text-slate-800">{feature}</p>
-                                        <p className="text-xs text-slate-400 mt-1">Lifetime durability and optimal bio-compatibility.</p>
+                                        <p className="text-[10px] text-slate-400 mt-0.5">Lifetime durability and premium bio-compatibility.</p>
                                     </div>
                                 </div>
                             ))}
@@ -269,7 +282,24 @@ const PTDiscoveryMode: React.FC = () => {
                             </span>
                         </div>
 
-                        {/* CTA Section (Moved to Sticky Footer mostly, but keeping a gentle scroll nudge here) */}
+                        {/* Restored CTA Section for Financing Card */}
+                        <motion.button
+                            whileHover={{ scale: 1.01, y: -2 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => {
+                                if (displayBookingUrl) {
+                                  window.open(displayBookingUrl, '_blank');
+                                } else {
+                                  alert("Booking confirmed. Initializing secure payment portal...");
+                                }
+                            }}
+                            className="w-full py-5 bg-slate-950 rounded-2xl text-white font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 shadow-xl hover:shadow-2xl transition-all overflow-hidden relative"
+                        >
+                            <span className="relative z-10 flex items-center justify-center gap-3">
+                                Accept & Book Now <ArrowRight className="w-4 h-4" />
+                            </span>
+                            <div className="absolute inset-0 bg-gradient-to-r from-[#87A96B]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </motion.button>
                         <div className="text-center mt-6">
                             <p className="text-center text-[10px] text-slate-400 font-medium tracking-wide uppercase">Powered by Secure London Protocol</p>
                         </div>
@@ -278,10 +308,13 @@ const PTDiscoveryMode: React.FC = () => {
 
             </main>
 
-            {/* 4. [Call to Action (CTA) - Sticky Bottom Bar] designed for conversion */}
-            <footer className="fixed bottom-0 left-0 right-0 w-full px-6 py-6 bg-white/95 backdrop-blur-2xl border-t border-slate-200 shadow-[0_-20px_40px_rgba(0,0,0,0.05)] z-50 flex flex-col items-center justify-center">
-                <p className="text-sm text-center text-slate-600 mb-3 font-medium">Take the first step towards your new smile.</p>
-                <div className="flex flex-col sm:flex-row items-center gap-6">
+            {/* 4. [Call to Action (CTA) - Sticky Bottom Bar] designed for conversion, slimmed down */}
+            <footer className="fixed bottom-0 left-0 right-0 w-full px-6 py-3 bg-white/95 backdrop-blur-3xl border-t border-slate-100 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-50 flex flex-col items-center justify-center">
+                <div className="flex items-center gap-2 mb-2">
+                    <p className="text-xs text-slate-600 font-medium">Take the first step towards your new smile. Valid for</p>
+                    <span className="text-xs font-bold text-red-500 bg-red-50 px-2 py-0.5 rounded-md flex items-center gap-1">⏰ {formatTime(timeLeft)} remaining</span>
+                </div>
+                <div className="flex flex-col sm:flex-row items-center gap-4">
                     <motion.button
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
@@ -292,11 +325,11 @@ const PTDiscoveryMode: React.FC = () => {
                                 alert("Booking confirmed. Initializing secure payment portal...");
                             }
                         }}
-                        className="px-10 py-5 bg-slate-950 rounded-full text-white font-black uppercase tracking-[0.15em] text-xs flex items-center justify-center shadow-xl hover:shadow-2xl hover:shadow-slate-900/20 transition-all border border-slate-800"
+                        className="px-8 py-3 bg-slate-950 rounded-full text-white font-black uppercase tracking-[0.1em] text-xs flex items-center justify-center shadow-lg hover:shadow-xl transition-all border border-slate-800"
                     >
                         Secure My Priority Slot
                     </motion.button>
-                    <button className="text-[11px] font-bold text-slate-400 uppercase tracking-widest hover:text-slate-900 transition-colors underline underline-offset-4 decoration-slate-300">
+                    <button className="text-[10px] font-bold text-slate-400 uppercase tracking-widest hover:text-slate-900 transition-colors underline underline-offset-4 decoration-slate-300">
                         Download PDF
                     </button>
                 </div>
