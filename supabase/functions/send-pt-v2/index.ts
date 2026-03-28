@@ -126,14 +126,7 @@ Deno.serve(async (req: Request) => {
               ${clinic_logo ? `<img src="${clinic_logo}" alt="${practiceName}" class="clinic-logo">` : `<p class="clinic-name">${practiceName}</p>`}
             </div>
             <div class="content">
-              {/* Mandatory Layout Cleanup: No white box wrapper (contained by body/wrapper directly) */}
-              
               <div class="note-container">
-                {/* 
-                   Dynamic Content Mapping:
-                   The note-text renders the dynamic emailTemplate from the UI.
-                   We stripped the first greeting: only the dynamic input is used.
-                */}
                 <p class="note-text">${(personalized_note || '').replace(/\n/g, '<br>')}</p>
               </div>
 
