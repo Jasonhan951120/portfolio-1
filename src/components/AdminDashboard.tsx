@@ -176,16 +176,7 @@ const OnboardingEmptyState = ({ onInjectSample, currency }: { onInjectSample: ()
   >
     {/* Global Onboarding Hub - Dual Track UI */}
     <div className="w-full grid md:grid-cols-2 gap-8">
-      {/* Primary - The Importer */}
-      <div className="flex flex-col items-center justify-center p-12 border-dashed border-2 border-slate-300 bg-white/50 hover:bg-white hover:border-emerald-400 transition-all duration-300 rounded-[40px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] group">
-        <div className="w-20 h-20 bg-emerald-50 rounded-3xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
-          <Plus className="w-10 h-10 text-emerald-500" strokeWidth={1.5} />
-        </div>
-        <h3 className="text-2xl font-bold text-slate-900 mb-2">Import Your Clinic Data</h3>
-        <p className="text-slate-500 text-sm text-center font-medium leading-relaxed max-w-xs">
-          Drag and drop your patient log here. Supports <span className="text-slate-900 font-bold">EXACT, SOE, Dentrix, Eaglesoft, Zenoti, and CSV.</span>
-        </p>
-      </div>
+
 
       {/* Secondary - The Demo */}
       <div className="flex flex-col items-center justify-center p-12 bg-white/50 border border-black/[0.05] rounded-[40px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] text-center space-y-6">
@@ -217,15 +208,7 @@ const OnboardingEmptyState = ({ onInjectSample, currency }: { onInjectSample: ()
             Download your patient log from your clinical software.
           </p>
         </div>
-        <div className="flex items-start gap-4">
-          <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center shrink-0">
-             <Plus className="w-5 h-5 text-slate-400" />
-          </div>
-          <p className="text-xs font-medium text-slate-500 leading-relaxed">
-            <span className="text-slate-900 font-bold block mb-1 uppercase tracking-wider text-[10px]">2. Drop</span>
-            Slide the file into Hanlan OC.
-          </p>
-        </div>
+
         <div className="flex items-start gap-4">
           <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center shrink-0">
              <TrendingUp className="w-5 h-5 text-emerald-500" />
@@ -302,7 +285,7 @@ const UploadPortal = ({ isAnalyzing, onUpload, currency }: { isAnalyzing: boolea
               className="flex flex-col items-center space-y-6"
             >
               <div className="w-20 h-20 bg-white rounded-3xl shadow-luxury flex items-center justify-center border border-slate-100 group-hover:scale-110 transition-transform duration-500">
-                <Plus className="w-10 h-10 text-slate-300 group-hover:text-emerald-500 transition-colors" strokeWidth={1.5} />
+                <Upload className="w-10 h-10 text-slate-300 group-hover:text-emerald-500 transition-colors" strokeWidth={1.5} />
               </div>
               <div className="space-y-2">
                 <p className="text-slate-600 text-lg font-bold">
@@ -2647,7 +2630,7 @@ export default function AdminDashboard() {
                             : "text-slate-400 hover:text-slate-600"
                             }`}
                         >
-                          [ + More ]
+                          More
                           <ChevronDown className={`w-3 h-3 transition-transform ${isMoreDropdownOpen ? 'rotate-180' : ''}`} />
                         </button>
 
@@ -2800,15 +2783,7 @@ export default function AdminDashboard() {
                       <p className="text-slate-400 font-bold uppercase tracking-[0.2em] text-[10px]">Authoritative Data Processing Engine ↗</p>
                     </div>
                     
-                    {vaultAgreed && (
-                      <button 
-                        onClick={() => setIsImportModalOpen(true)}
-                        className="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-lg shadow-sm hover:bg-slate-50 font-medium text-sm flex items-center gap-2 transition-all active:scale-[0.98]"
-                      >
-                        <Plus className="w-4 h-4" />
-                        Import Data
-                      </button>
-                    )}
+
                   </div>
 
                   {!vaultAgreed ? (
@@ -3039,127 +3014,7 @@ export default function AdminDashboard() {
                     
                     <div className="flex-1 overflow-y-auto p-8 space-y-10 custom-scrollbar">
                       
-                      {/* Treatment Plan Builder */}
-                      <div className="space-y-6">
-                        <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                           <Sparkles className="w-5 h-5 text-emerald-500" /> Draft Treatment Plan
-                        </h3>
-                        
-                        <div className="space-y-4">
-                          {/* Treatment Name & Price */}
-                          <div className="grid grid-cols-2 gap-4">
-                            <div>
-                              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Treatment Strategy</label>
-                              <input 
-                                type="text"
-                                value={selectedLead.service || ""}
-                                onChange={(e) => {
-                                  const val = e.target.value;
-                                  setSelectedLead({ ...selectedLead, service: val });
-                                  updateLead(selectedLead.id, { service: val });
-                                }}
-                                className="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 text-sm font-semibold text-slate-900 focus:ring-2 focus:ring-[#2AF598]/50 focus:border-[#2AF598] outline-none transition-all shadow-sm"
-                                placeholder="E.g. Dental Implants"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Total Investment</label>
-                              <div className="relative">
-                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold">{currency}</span>
-                                <input 
-                                  type="number"
-                                  value={selectedLead.potential_value || ""}
-                                  onChange={(e) => {
-                                    const val = Number(e.target.value);
-                                    setSelectedLead({ ...selectedLead, potential_value: val });
-                                    updateLead(selectedLead.id, { potential_value: val });
-                                  }}
-                                  className="w-full bg-slate-50 border border-slate-200 rounded-lg py-3 pl-8 pr-3 text-sm font-semibold text-slate-900 focus:ring-2 focus:ring-[#2AF598]/50 focus:border-[#2AF598] outline-none transition-all shadow-sm"
-                                  placeholder="0.00"
-                                />
-                              </div>
-                            </div>
-                          </div>
 
-                          {/* Description */}
-                          <div>
-                            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Clinical / Patient Notes</label>
-                            <textarea 
-                              value={selectedLead.notes || ""}
-                              onChange={(e) => {
-                                const val = e.target.value;
-                                setSelectedLead({ ...selectedLead, notes: val });
-                                updateLead(selectedLead.id, { notes: val });
-                              }}
-                              className="w-full h-24 bg-slate-50 border border-slate-200 rounded-lg p-4 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-[#2AF598]/50 focus:border-[#2AF598] outline-none transition-all resize-none shadow-sm"
-                              placeholder="Add personal notes for the patient proposal..."
-                            />
-                          </div>
-                        </div>
-
-                        {/* Visual Assets Upload Zone */}
-                        <div className="pt-2">
-                          <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Visual Assets</label>
-                          <div className="grid grid-cols-2 gap-4">
-                            {/* Before Photo */}
-                            <label className="relative flex flex-col items-center justify-center border-dashed border-2 border-slate-200 bg-slate-50 hover:bg-slate-100 transition-colors rounded-xl p-6 text-center cursor-pointer overflow-hidden group h-32 shadow-sm">
-                              {selectedLead.before_photo ? (
-                                <img src={selectedLead.before_photo} className="absolute inset-0 w-full h-full object-cover" />
-                              ) : (
-                                <>
-                                  <Upload className="w-5 h-5 text-slate-400 mb-2 group-hover:text-emerald-500 transition-colors" />
-                                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider relative z-10">Before Photo</span>
-                                </>
-                              )}
-                              <input 
-                                type="file" 
-                                accept="image/*" 
-                                className="hidden" 
-                                onChange={(e) => {
-                                  if (e.target.files && e.target.files[0]) {
-                                    const reader = new FileReader();
-                                    reader.onload = (event) => {
-                                      const val = event.target?.result as string;
-                                      setSelectedLead({ ...selectedLead, before_photo: val });
-                                      updateLead(selectedLead.id, { before_photo: val });
-                                    };
-                                    reader.readAsDataURL(e.target.files[0]);
-                                  }
-                                }} 
-                              />
-                            </label>
-
-                            {/* Outcome Projection */}
-                            <label className="relative flex flex-col items-center justify-center border-dashed border-2 border-slate-200 bg-slate-50 hover:bg-slate-100 transition-colors rounded-xl p-6 text-center cursor-pointer overflow-hidden group h-32 shadow-sm">
-                              {selectedLead.after_photo ? (
-                                <img src={selectedLead.after_photo} className="absolute inset-0 w-full h-full object-cover" />
-                              ) : (
-                                <>
-                                  <Upload className="w-5 h-5 text-slate-400 mb-2 group-hover:text-emerald-500 transition-colors" />
-                                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider relative z-10">Outcome Projection</span>
-                                </>
-                              )}
-                              <input 
-                                type="file" 
-                                accept="image/*" 
-                                className="hidden" 
-                                onChange={(e) => {
-                                  if (e.target.files && e.target.files[0]) {
-                                    const reader = new FileReader();
-                                    reader.onload = (event) => {
-                                      const val = event.target?.result as string;
-                                      setSelectedLead({ ...selectedLead, after_photo: val });
-                                      updateLead(selectedLead.id, { after_photo: val });
-                                    };
-                                    reader.readAsDataURL(e.target.files[0]);
-                                  }
-                                }} 
-                              />
-                            </label>
-                          </div>
-                        </div>
-
-                      </div>
 
                       <div className="w-full h-px bg-slate-100" />
 

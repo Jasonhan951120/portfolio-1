@@ -50,15 +50,7 @@ export function ClinicSettings({
         localStorage.setItem('clinic-active-tab', activeTab);
     }, [activeTheme, activeTab]);
 
-    const handleAddTreatment = () => {
-        const newTreatment = {
-            id: Date.now().toString(),
-            name: "New Clinical Protocol",
-            price: 0,
-            status: "Draft"
-        };
-        setTemplates(prev => [...prev, newTreatment]);
-    };
+
 
     const handleSaveTemplate = () => {
         if (!editingTemplate || !editingTemplate.name) return;
@@ -223,14 +215,8 @@ export function ClinicSettings({
                                                 </div>
                                             </div>
 
-                                            <div className={`flex items-center justify-between p-6 ${cardBg} border ${borderColor} rounded-[2rem] hover:scale-[1.01] transition-all duration-500`}>
+                                            <div className={`flex items-center p-6 ${cardBg} border ${borderColor} rounded-[2rem] hover:scale-[1.01] transition-all duration-500`}>
                                                 <h3 className={`text-xl font-black ${textColor} uppercase tracking-tight text-inter`}>Signature Menu Builder</h3>
-                                                <button 
-                                                    onClick={handleAddTreatment}
-                                                    className={`px-6 py-4 ${isDark ? 'bg-white text-black' : 'bg-[#0f172a] text-white'} rounded-2xl text-[10px] font-black tracking-widest uppercase transition-all shadow-xl hover:shadow-[#78dcca]/20 active:scale-95 flex items-center gap-3 text-inter`}
-                                                >
-                                                    <Plus className={`w-4 h-4 ${accentColor}`} strokeWidth={4} /> Add Treatment
-                                                </button>
                                             </div>
 
                                             {/* [FIXED]: Mapping strictly from parent props 'templates' */}

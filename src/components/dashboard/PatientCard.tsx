@@ -186,16 +186,19 @@ export const PatientCard = React.memo(function PatientCard({
 
               {/* Dynamic WhatsApp Button */}
               <button
+                onPointerDown={(e) => e.stopPropagation()}
                 onClick={(e) => {
+                  e.preventDefault();
                   e.stopPropagation();
                   if (hasPhone && whatsappUrl) {
-                    window.open(whatsappUrl, '_blank');
+                    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+                  } else {
+                    alert("⚠️ CANNOT CONNECT: This lead is missing a registered phone number. Please update the patient records.");
                   }
                 }}
-                disabled={!hasPhone}
                 className={`p-1.5 rounded-lg transition-all border flex items-center justify-center
                   ${hasPhone 
-                    ? 'text-[#25D366] bg-[#25D366]/10 border-[#25D366]/20 hover:bg-[#25D366]/20 hover:shadow-[0_0_15px_rgba(37,211,102,0.4)]' 
+                    ? 'text-[#25D366] bg-[#25D366]/10 border-[#25D366]/20 hover:bg-[#25D366]/20 hover:shadow-[0_0_15px_rgba(37,211,102,0.4)] cursor-pointer' 
                     : 'text-zinc-600 bg-white/5 border-white/5 cursor-not-allowed opacity-50'
                   }`}
                 title={hasPhone ? "Contact via WhatsApp" : "Phone number required"}
@@ -204,22 +207,26 @@ export const PatientCard = React.memo(function PatientCard({
               </button>
 
               <button
+                onPointerDown={(e) => e.stopPropagation()}
                 onClick={(e) => {
+                  e.preventDefault();
                   e.stopPropagation();
                   onOpenAudit?.(lead);
                 }}
-                className="p-1.5 text-purple-400 hover:text-purple-300 bg-purple-500/10 hover:bg-purple-500/20 rounded-lg transition-all border border-purple-500/20 shadow-lg shadow-purple-500/5"
+                className="p-1.5 text-purple-400 hover:text-purple-300 bg-purple-500/10 hover:bg-purple-500/20 rounded-lg transition-all border border-purple-500/20 shadow-lg shadow-purple-500/5 cursor-pointer"
                 title="View Security Audit Trail"
               >
                 <Shield className="w-3.5 h-3.5" strokeWidth={1.5} />
               </button>
 
               <button
+                onPointerDown={(e) => e.stopPropagation()}
                 onClick={(e) => {
+                  e.preventDefault();
                   e.stopPropagation();
                   onOpenEmailModal?.(lead);
                 }}
-                className="p-1.5 text-[#87A96B] hover:text-[#87A96B]/80 bg-[#87A96B]/10 hover:bg-[#87A96B]/20 rounded-lg transition-all border border-[#87A96B]/20"
+                className="p-1.5 text-[#87A96B] hover:text-[#87A96B]/80 bg-[#87A96B]/10 hover:bg-[#87A96B]/20 rounded-lg transition-all border border-[#87A96B]/20 cursor-pointer"
                 title="Send PT Link via Email"
               >
                 <Send className="w-3.5 h-3.5" strokeWidth={1.5} />

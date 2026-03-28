@@ -108,12 +108,7 @@ export function LeadsTab({
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                 />
                             </div>
-                            <button
-                                onClick={() => onAddLead?.()}
-                                className="p-4 bg-gray-900 text-white rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-lg shadow-black/10"
-                            >
-                                <Plus className="w-5 h-5" />
-                            </button>
+
                         </div>
                     </div>
 
