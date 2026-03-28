@@ -21,12 +21,11 @@ Deno.serve(async (req: Request) => {
       return new Response(JSON.stringify({ error: "RESEND_API_KEY not set" }), { status: 500 });
     }
 
+
     const baseUrl = origin || "https://london-smile-dental.vercel.app";
     const ptLink = `${baseUrl}/pt/${lead_id}`;
     const practiceName = clinic_name || "London Smile Dental";
 
-    // Build the HTML with minimal, high-end, unboxed look.
-    // Dynamic mapping from SendPTModal is preserved here.
     let htmlContent = `
       <!DOCTYPE html>
       <html>
@@ -157,7 +156,6 @@ Deno.serve(async (req: Request) => {
       body: JSON.stringify({
         from: `PT Proposal <${FROM}>`,
         to: [email],
-        // Data Mapping Fix: Use the subject from the payload
         subject: subject || `Your Bespoke ${service} Plan ✨`,
         html: htmlContent,
       }),

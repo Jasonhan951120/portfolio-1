@@ -1,0 +1,18 @@
+
+          {/* Background ring */}
+        {/* Centre label */}
+      {/* Legend */}
+        {/* Pipeline Value Header (Apple-Style Numbers, Tight Tracking) */}
+      {/* Droppable Column Area */}
+        {/* Sophisticated SVG Empty State */}
+          {/* ── CLINICAL LUXURY HERO HEADER ── */}
+              {/* Left: Authority Metric Overlay */}
+              {/* Centre: 3-Tab Nav (Ultimate Glass Capsule) */}
+              {/* Right: Expert Mode + Profile (Tactile Interaction) */}
+          {/* ── MAIN CONTENT ── */}
+              {/* ACTION TAB */}
+              {/* PIPELINE TAB */}
+              {/* VAULT TAB */}
+          {/* ── EXPERT MODE DRAWER ── */}
+          {/* ── TOAST ── */}
+
