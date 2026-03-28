@@ -6,6 +6,8 @@ export const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ childr
     const { session, profile, loading } = useAuth();
     const location = useLocation();
 
+    const isDemoMode = sessionStorage.getItem("demo_mode") === "true";
+
     if (loading) {
         return (
             <div className="min-h-screen bg-slate-50 flex items-center justify-center">
@@ -14,7 +16,7 @@ export const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ childr
         );
     }
 
-    if (!session) {
+    if (!session && !isDemoMode) {
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
