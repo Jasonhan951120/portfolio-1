@@ -134,8 +134,12 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
     if (!lead || !lead.phone) return;
     const { patientName, treatmentName } = getProcessingNames();
     const ptLink = `${window.location.origin}/pt/${lead.id.substring(0, 8)}`;
-    const message = `Dear ${patientName}, your bespoke ${treatmentName} plan from ${activeClinicName} is ready. View your secure proposal here: ${ptLink}`;
-    const whatsappUrl = `https://wa.me/${lead.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
+    
+    const message = `Hello ${patientName}, 👋\n\nYour bespoke ${treatmentName} protocol from *${activeClinicName}* is ready. ✨\n\nView your full proposal here:\n🔗 ${ptLink}\n\nSincerely,\nThe *${activeClinicName}* Team`;
+    
+    const phone = lead.phone.replace(/[^\d]/g, '');
+    const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+    
     window.open(whatsappUrl, '_blank');
     handleSend(false);
   };
