@@ -289,44 +289,19 @@ export function ClinicSettings({
                                                     </div>
                                                 </div>
 
-                                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                                    <div className={`p-6 ${isDark ? 'bg-white/5' : 'bg-white'} border ${borderColor} rounded-[2rem] transition-all hover:scale-[1.02] shadow-inner`}>
-                                                        <h4 className={`text-[10px] font-black uppercase tracking-widest ${subTextColor} mb-5 text-inter`}>Aesthetic Override</h4>
-                                                        <div className="flex gap-2">
-                                                            <button
-                                                                onClick={() => setActiveTheme('white')}
-                                                                className={`flex-1 py-4 px-4 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all duration-500 text-inter ${
-                                                                    activeTheme === 'white' 
-                                                                        ? `${isDark ? 'bg-[#78dcca] text-[#0f172a] shadow-lg' : 'bg-[#0f172a] text-white shadow-xl'} border-transparent` 
-                                                                        : 'bg-white/5 text-slate-500 border border-white/5'
-                                                                }`}
-                                                            >
-                                                                Executive White
-                                                            </button>
-                                                            <button
-                                                                onClick={() => setActiveTheme('dark')}
-                                                                className={`flex-1 py-4 px-4 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all duration-500 text-inter ${
-                                                                    activeTheme === 'dark' 
-                                                                        ? 'bg-[#78dcca] text-[#0f172a] shadow-lg' 
-                                                                        : 'bg-white/5 text-slate-500 border border-white/5'
-                                                                }`}
-                                                            >
-                                                                Matte Dark
-                                                            </button>
-                                                        </div>
-                                                    </div>
-
+                                                <div className="grid grid-cols-1 gap-6">
                                                     <div className="space-y-4">
-                                                        <div className={`p-5 ${isDark ? 'bg-white/5' : 'bg-white'} border ${borderColor} rounded-[1.5rem] shadow-sm shadow-inner`}>
-                                                            <span className="text-[10px] font-black uppercase text-slate-500 mb-2 block tracking-widest text-inter">Global Locale Sync</span>
-                                                            <select value={locale} onChange={e => setLocale(e.target.value)} className={`w-full bg-transparent border-none text-xs font-bold ${textColor} focus:ring-0 cursor-pointer p-0 font-inter tracking-tight`}>
+                                                        <div className={`p-6 ${isDark ? 'bg-white/5' : 'bg-white'} border ${borderColor} rounded-[2rem] shadow-inner`}>
+                                                            <span className="text-[10px] font-black uppercase text-slate-500 mb-3 block tracking-widest text-inter">Global Locale Sync</span>
+                                                            <select value={locale} onChange={e => setLocale(e.target.value)} className={`w-full bg-transparent border-none text-sm font-bold ${textColor} focus:ring-0 cursor-pointer p-0 font-inter tracking-tight`}>
                                                                 <option value="en-GB">UK Private Protocol (GMT)</option>
-                                                                <option value="ko-KR">South Korean Executive (KST)</option>
+                                                                <option value="ko-KR">Korea Standard Protocol (KST)</option>
+                                                                <option value="en-US">US Clinical Protocol (EST/PST)</option>
                                                             </select>
                                                         </div>
-                                                        <div className={`p-5 ${isDark ? 'bg-white/5' : 'bg-white'} border ${borderColor} rounded-[1.5rem] shadow-sm shadow-inner`}>
-                                                            <span className="text-[10px] font-black uppercase text-slate-500 mb-2 block tracking-widest text-inter">AI Communication Tone</span>
-                                                            <select value={communicationTone} onChange={e => setCommunicationTone(e.target.value as any)} className={`w-full bg-transparent border-none text-xs font-bold ${textColor} focus:ring-0 cursor-pointer p-0 font-inter tracking-tight`}>
+                                                        <div className={`p-6 ${isDark ? 'bg-white/5' : 'bg-white'} border ${borderColor} rounded-[2rem] shadow-inner`}>
+                                                            <span className="text-[10px] font-black uppercase text-slate-500 mb-3 block tracking-widest text-inter">AI Communication Tone</span>
+                                                            <select value={communicationTone} onChange={e => setCommunicationTone(e.target.value as any)} className={`w-full bg-transparent border-none text-sm font-bold ${textColor} focus:ring-0 cursor-pointer p-0 font-inter tracking-tight`}>
                                                                 <option value="Refined & Professional">Refined & Professional</option>
                                                                 <option value="Warm & Empathetic">Warm & Empathetic</option>
                                                             </select>
