@@ -15,8 +15,8 @@ export const SendWhatsAppModal: React.FC<SendWhatsAppModalProps> = ({
   onClose,
   lead,
 }) => {
-  const { clinicName: globalClinicName } = useDashboardStore();
-  const activeClinicName = globalClinicName || "Elite Clinic";
+  const { clinicName } = useDashboardStore();
+  const activeClinicName = clinicName || "Our Clinic";
   
   const [message, setMessage] = useState('');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);

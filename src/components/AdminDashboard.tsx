@@ -2971,7 +2971,7 @@ export default function AdminDashboard() {
               }}
               lead={emailLead}
               currency={currency}
-              clinicName={clinicName || "Hanlan OC Dental Clinic"}
+              clinicName={clinicName || "Our Dental Clinic"}
               onUpdateLead={updateLead}
               templates={templates}
             />
@@ -3159,7 +3159,7 @@ export default function AdminDashboard() {
 
             {/* Copyright */}
             <p className="text-sm font-medium text-slate-400">
-              © 2026 {clinicName || "Hanlan OC"}.
+              © 2026 {clinicName || "Our Clinic"}.
             </p>
           </div>
       </footer>
