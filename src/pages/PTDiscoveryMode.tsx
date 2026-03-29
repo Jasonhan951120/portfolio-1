@@ -67,7 +67,7 @@ const PTDiscoveryMode: React.FC = () => {
 
     useEffect(() => {
         if (lead?.name) {
-            document.title = `${lead.name}'s Bespoke Smile Protocol | ${clinicName || 'Hanlan OC'}`;
+            document.title = `${lead.name}'s Bespoke Smile Protocol | ${clinicName || 'Elite Clinic'}`;
         }
     }, [lead?.name, clinicName]);
 
@@ -113,10 +113,10 @@ const PTDiscoveryMode: React.FC = () => {
                         <img src={clinicLogo} alt={clinicName} className="w-10 h-10 rounded-xl object-cover shadow-lg shadow-gray-200" />
                     ) : (
                         <div className="w-10 h-10 bg-gray-900 rounded-xl flex items-center justify-center shadow-lg shadow-gray-200">
-                            <span className="text-white font-bold text-lg">{clinicName ? clinicName.charAt(0) : 'H'}</span>
+                            <span className="text-white font-bold text-lg">{clinicName ? clinicName.charAt(0) : 'E'}</span>
                         </div>
                     )}
-                    <span className="font-bold tracking-tight uppercase text-sm">{clinicName || 'Hanlan OC'}</span>
+                    <span className="font-bold tracking-tight uppercase text-sm">{clinicName || 'Elite Clinic'}</span>
                 </div>
                 <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-widest text-[#87A96B]">
                     <ShieldCheck className="w-4 h-4" /> Clinical Gold Standard | Harley Street Excellence

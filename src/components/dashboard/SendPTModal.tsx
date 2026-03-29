@@ -6,16 +6,16 @@ import { useDashboardStore } from '../../store/useDashboardStore';
 
 const INDUSTRY_TEMPLATES = {
     Dental: {
-        friendly: "Dear {PatientName}, it was a true pleasure meeting you today to discuss your smile transformation. I've prepared a bespoke plan to bring back your confident smile. We use the most advanced, gentle techniques to ensure your journey is as comfortable as it is transformative.\n\nReview your bespoke proposal here: {pt_link}",
-        professional: "Dear {PatientName}, thank you for visiting us today. Based on our clinical assessment, I have finalized your bespoke dental treatment proposal. This plan is designed to deliver optimal long-term outcomes while prioritizing your unique dental health needs.\n\nSecurely access your clinical protocol here: {pt_link}"
+        friendly: "Dear {PatientName}, it was a true pleasure meeting you today to discuss your smile transformation. I've prepared a bespoke plan to bring back your confident smile. We use the most advanced, gentle techniques to ensure your journey is as comfortable as it is transformative.\n\nWarmly,\n{ClinicName}",
+        professional: "Dear {PatientName}, thank you for visiting us today. Based on our clinical assessment, I have finalized your bespoke dental treatment proposal. This plan is designed to deliver optimal long-term outcomes while prioritizing your unique dental health needs.\n\nSincerely,\n{ClinicName}"
     },
     Aesthetic: {
-        friendly: "Dear {PatientName}, we are excited to help you achieve your skin goals at {ClinicName}! I've designed a specialized plan tailored just for you to enhance your natural beauty. We can't wait to see your radiant results.\n\nReview your aesthetic plan here: {pt_link}",
-        professional: "Dear {PatientName}, thank you for your consultation today. I have prepared a comprehensive aesthetic treatment plan tailored specifically to your unique skin profile and desired outcomes. Please review the clinical details below.\n\nYour secure proposal: {pt_link}"
+        friendly: "Dear {PatientName}, we are excited to help you achieve your skin goals at {ClinicName}! I've designed a specialized plan tailored just for you to enhance your natural beauty. We can't wait to see your radiant results.\n\nWarmly,\n{ClinicName}",
+        professional: "Dear {PatientName}, thank you for your consultation today. I have prepared a comprehensive aesthetic treatment plan tailored specifically to your unique skin profile and desired outcomes. Please review the clinical details below.\n\nSincerely,\n{ClinicName}"
     },
     Wellness: {
-        friendly: "Dear {PatientName}, it was wonderful connecting with you today. I've designed a specialized wellness plan to support your holistic journey. We are dedicated to helping you find balance, rejuvenation, and optimal vitality.\n\nView your wellness protocol here: {pt_link}",
-        professional: "Dear {PatientName}, following our consultation, I have developed a bespoke wellness protocol. This comprehensive plan is meticulously designed to optimize your health outcomes and overall well-being. Please find the proposed intervention securely below.\n\nYour clinical protocol: {pt_link}"
+        friendly: "Dear {PatientName}, it was wonderful connecting with you today. I've designed a specialized wellness plan to support your holistic journey. We are dedicated to helping you find balance, rejuvenation, and optimal vitality.\n\nWarmly,\n{ClinicName}",
+        professional: "Dear {PatientName}, following our consultation, I have developed a bespoke wellness protocol. This comprehensive plan is meticulously designed to optimize your health outcomes and overall well-being. Please find the proposed intervention securely below.\n\nSincerely,\n{ClinicName}"
     }
 };
 
@@ -50,7 +50,7 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
   onClose,
   lead,
   currency = '£',
-  clinicName = "Hanlan OC",
+  clinicName = "Elite Clinic",
   onUpdateLead,
   templates = []
 }) => {
@@ -83,8 +83,7 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
        initialNote = initialNote
            .replace(/{PatientName}/g, firstName)
            .replace(/{ClinicName}/g, activeClinicName)
-           .replace(/{TreatmentName}/g, treatmentName)
-           .replace(/{pt_link}/g, ptLink);
+           .replace(/{TreatmentName}/g, treatmentName);
        
        setEmailTemplate(initialNote);
        setErrorMsg(null);
@@ -105,10 +104,10 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
 
     if (tone === 'friendly') {
         setEmailSubject(`Your Transformation Journey: Bespoke ${treatmentName} Proposal`);
-        setEmailTemplate(`Hi ${patientName},\n\nIt was a true pleasure meeting you at the clinic today. I am so excited to help you start your ${treatmentName} journey. I've prepared a bespoke plan just for you to ensure you get the absolute best results.\n\nYou can securely review your clinical proposal and visual mapping right here: ${ptLink}\n\nI can't wait to see your results!\n\nWarmly,\n${activeClinicName}`);
+        setEmailTemplate(`Hi ${patientName},\n\nIt was a true pleasure meeting you at the clinic today. I am so excited to help you start your ${treatmentName} journey. I've prepared a bespoke plan just for you to ensure you get the absolute best results.\n\nI can't wait to see your results!\n\nWarmly,\n${activeClinicName}`);
     } else {
         setEmailSubject(`Clinical Proposal & Digital Protocol: ${treatmentName} - ${patientName}`);
-        setEmailTemplate(`Dear ${patientName},\n\nThank you for choosing our clinic for your ${treatmentName} consultation. Based on our comprehensive clinical evaluation, I have finalized your bespoke protocol and digital proposal.\n\nThis plan is meticulously designed to deliver optimal outcomes while prioritizing your unique requirements. Please access your dedicated patient portal to review the secure details and proceed: ${ptLink}\n\nSincerely,\n${activeClinicName}`);
+        setEmailTemplate(`Dear ${patientName},\n\nThank you for choosing our clinic for your ${treatmentName} consultation. Based on our comprehensive clinical evaluation, I have finalized your bespoke protocol and digital proposal.\n\nThis plan is meticulously designed to deliver optimal outcomes while prioritizing your unique requirements.\n\nSincerely,\n${activeClinicName}`);
     }
   };
 
@@ -125,8 +124,7 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
       const processedBody = rawBody
         .replace(/{PatientName}/g, patientName)
         .replace(/{ClinicName}/g, activeClinicName)
-        .replace(/{TreatmentName}/g, treatmentName)
-        .replace(/{pt_link}/g, ptLink);
+        .replace(/{TreatmentName}/g, treatmentName);
       
       setEmailTemplate(processedBody);
     }
