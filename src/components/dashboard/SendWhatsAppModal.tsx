@@ -21,12 +21,17 @@ export const SendWhatsAppModal: React.FC<SendWhatsAppModalProps> = ({
   const [message, setMessage] = useState('');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
+  const [tone, setTone] = useState<'professional' | 'friendly'>('professional');
+
   useEffect(() => {
     if (isOpen && lead) {
       const patientName = lead.name?.split(' ')[0] || "Patient";
       const ptLink = `${window.location.origin}/pt/${(lead as any).slug || lead.id.substring(0, 8)}`;
       
-      const initialMessage = `✨ *${activeClinicName}*
+      let initialMessage = '';
+
+      if (tone === 'professional') {
+        initialMessage = `✨ *${activeClinicName}*
 
 Hi ${patientName},
 
@@ -34,15 +39,23 @@ Your bespoke Digital Smile Protocol & Treatment Proposal is now ready for review
 
 Following your consultation, we have finalized your personalized implant plan. You can access your secure patient portal to view the full details here:
 
-🔗 View My Full Proposal: ${ptLink}
+🔗 View My Full Proposal: ${ptLink}`;
+      } else {
+        initialMessage = `✨ *${activeClinicName}*
 
-Sincerely,
-The *${activeClinicName}* Team`;
+Hey ${patientName}! 👋
+
+Great news! Your personalized Smile Design Protocol is finished and looking incredible.
+
+We've crafted this plan just for you. Please check out all the exciting details on your private portal here:
+
+🔗 See Your Personal Plan: ${ptLink}`;
+      }
 
       setMessage(initialMessage);
       setErrorMsg(null);
     }
-  }, [isOpen, lead, activeClinicName]);
+  }, [isOpen, lead, activeClinicName, tone]);
 
   const handleSend = () => {
     if (!lead || !lead.phone) {
@@ -91,6 +104,34 @@ The *${activeClinicName}* Team`;
           {/* Terminal Controls */}
           <div className="px-10 py-10 space-y-8 max-h-[60vh] overflow-y-auto custom-scrollbar">
             <div className="space-y-6">
+              <div>
+                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">ATMOSPHERIC SELECTION</label>
+                <div className="grid grid-cols-2 gap-3 mb-6">
+                  <button
+                    onClick={() => setTone('professional')}
+                    className={`py-3 px-4 rounded-2xl flex items-center justify-center gap-2 border transition-all ${
+                      tone === 'professional'
+                        ? 'bg-[#25D366]/10 border-[#25D366] text-[#128C7E] shadow-[0_0_15px_rgba(37,211,102,0.15)]'
+                        : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50 hover:border-slate-300'
+                    }`}
+                  >
+                    <Shield className="w-4 h-4" />
+                    <span className="text-[11px] font-black uppercase tracking-widest">PROFESSIONAL</span>
+                  </button>
+                  <button
+                    onClick={() => setTone('friendly')}
+                    className={`py-3 px-4 rounded-2xl flex items-center justify-center gap-2 border transition-all ${
+                      tone === 'friendly'
+                        ? 'bg-[#25D366]/10 border-[#25D366] text-[#128C7E] shadow-[0_0_15px_rgba(37,211,102,0.15)]'
+                        : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50 hover:border-slate-300'
+                    }`}
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span className="text-[11px] font-black uppercase tracking-widest">FRIENDLY</span>
+                  </button>
+                </div>
+              </div>
+
               <div>
                 <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">WHATSAPP MESSAGE</label>
                 <textarea 
