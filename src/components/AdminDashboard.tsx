@@ -47,6 +47,7 @@ import { ZeroDashboardView } from "./dashboard/ZeroDashboardView";
 import ExpertModeDrawer from "./dashboard/ExpertModeDrawer";
 import { PatientCard } from "./dashboard/PatientCard";
 import { SendPTModal } from "./dashboard/SendPTModal";
+import { SendWhatsAppModal } from "./dashboard/SendWhatsAppModal";
 
 import { PMSLogDrawer } from "./dashboard/backoffice/PMSLogDrawer";
 import { ClinicMetaModal } from "./dashboard/backoffice/ClinicMetaModal";
@@ -621,6 +622,7 @@ function KanbanColumn({
   focusMode,
   onOpenAudit,
   onOpenEmailModal,
+  onOpenWhatsAppModal,
   currency = "£"
 }: any) {
   const { setNodeRef } = useDroppable({ id: columnId });
@@ -678,6 +680,7 @@ function KanbanColumn({
                   onOpenPTMode={onOpenPTMode}
                   onOpenAudit={onOpenAudit}
                   onOpenEmailModal={onOpenEmailModal}
+                  onOpenWhatsAppModal={onOpenWhatsAppModal}
                   focusMode={focusMode}
                   currency={currency}
                 />
@@ -975,6 +978,10 @@ export default function AdminDashboard() {
   // Email Preview Modal State
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
   const [emailLead, setEmailLead] = useState<ConsultationRequest | null>(null);
+
+  // WhatsApp Preview Modal State
+  const [isWhatsAppModalOpen, setIsWhatsAppModalOpen] = useState(false);
+  const [whatsappLead, setWhatsappLead] = useState<ConsultationRequest | null>(null);
 
   // --- Expert Mode Settings (LIFTED) ---
   const [syncInterval, setSyncInterval] = useState(() => localStorage.getItem('expert_syncInterval') || 'Hourly');
@@ -2735,6 +2742,7 @@ export default function AdminDashboard() {
                                 onOpenPTMode={handleOpenPTMode}
                                 onOpenAudit={(lead) => setActiveAuditLead(lead)}
                                 onOpenEmailModal={handleOpenEmailModal}
+                                onOpenWhatsAppModal={(lead) => { setWhatsappLead(lead); setIsWhatsAppModalOpen(true); }}
                                 selectedDate={selectedDate}
                                 focusMode={activeCategory}
                                 currency={currency}
@@ -2837,6 +2845,7 @@ export default function AdminDashboard() {
                                   onOpenPTMode={() => {}}
                                   onOpenAudit={(l) => setActiveAuditLead(l)}
                                   onOpenEmailModal={handleOpenEmailModal}
+                                  onOpenWhatsAppModal={(lead) => { setWhatsappLead(lead); setIsWhatsAppModalOpen(true); }}
                                   focusMode="All"
                                 />
                               </div>
@@ -2965,6 +2974,15 @@ export default function AdminDashboard() {
               clinicName={clinicName || "Hanlan OC Dental Clinic"}
               onUpdateLead={updateLead}
               templates={templates}
+            />
+
+            <SendWhatsAppModal
+              isOpen={isWhatsAppModalOpen}
+              onClose={() => {
+                setIsWhatsAppModalOpen(false);
+                setWhatsappLead(null);
+              }}
+              lead={whatsappLead}
             />
 
             {/* Tablet PT Mode Overlay (AntiGravity) */}

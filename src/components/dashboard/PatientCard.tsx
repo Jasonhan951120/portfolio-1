@@ -20,6 +20,7 @@ interface PatientCardProps {
   onOpenPTMode: (lead: ConsultationRequest) => void;
   onOpenAudit: (lead: ConsultationRequest) => void;
   onOpenEmailModal: (lead: ConsultationRequest) => void;
+  onOpenWhatsAppModal?: (lead: ConsultationRequest) => void;
   focusMode: string;
   currency?: string;
 }
@@ -34,6 +35,7 @@ export const PatientCard = React.memo(function PatientCard({
   onOpenPTMode,
   onOpenAudit,
   onOpenEmailModal,
+  onOpenWhatsAppModal,
   focusMode,
   setDepositModal,
   updateAssignedTo,
@@ -192,8 +194,8 @@ export const PatientCard = React.memo(function PatientCard({
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  if (hasPhone && whatsappUrl) {
-                    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+                  if (hasPhone) {
+                    onOpenWhatsAppModal?.(lead);
                   } else {
                     alert("⚠️ CANNOT CONNECT: This lead is missing a registered phone number. Please update the patient records.");
                   }
