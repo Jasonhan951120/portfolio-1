@@ -37,6 +37,10 @@ import { useEffect, useState } from "react";
 import { supabase } from "./lib/supabase";
 import VerifyUI from "./components/VerifyUI";
 import SecurityComplianceCenter from "./pages/SecurityComplianceCenter";
+import TermsPage from "./pages/TermsPage";
+import DPAPage from "./pages/DPAPage";
+import SecurityPolicyPage from "./pages/SecurityPolicyPage";
+
 
 function LandingPage({ clinic }: { clinic: any }) {
   const { scrollYProgress } = useScroll();
@@ -152,10 +156,13 @@ function LandingPage({ clinic }: { clinic: any }) {
             <p className="text-muted text-xs font-bold uppercase tracking-widest">
               © 2026 {clinic?.name || "London Smile Excellence"}. All rights reserved.
             </p>
-            <div className="flex gap-10 text-muted text-xs font-bold uppercase tracking-widest">
-              <Link to="/privacy" className="hover:text-black transition-colors">Privacy Policy</Link>
-              <a href="#" className="hover:text-black transition-colors">Terms of Service</a>
+            <div className="flex flex-wrap gap-x-10 gap-y-4 text-muted text-[10px] font-bold uppercase tracking-widest">
+              <Link to="/privacy" target="_blank" className="hover:text-black transition-colors">Privacy Policy</Link>
+              <Link to="/terms" target="_blank" className="hover:text-black transition-colors">Terms of Service</Link>
+              <Link to="/dpa" target="_blank" className="hover:text-black transition-colors">DPA</Link>
+              <Link to="/security" target="_blank" className="hover:text-black transition-colors">Security Policy</Link>
             </div>
+
           </div>
         </div>
       </footer>
@@ -227,7 +234,11 @@ export default function App() {
             <Route path="/admin/onboarding" element={<ProtectedRoute><SubscriptionGuard><AdminOnboarding /></SubscriptionGuard></ProtectedRoute>} />
             <Route path="/login" element={<AdminLogin />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<TermsPage />} />
+            <Route path="/dpa" element={<DPAPage />} />
+            <Route path="/security" element={<SecurityPolicyPage />} />
             <Route path="/verify-ui" element={<VerifyUI />} />
+
             {/* Safe Fallbacks to prevent Guard Loops */}
             <Route path="/index.html" element={<Navigate to="/" replace />} />
             <Route path="*" element={<Navigate to="/" replace />} />
