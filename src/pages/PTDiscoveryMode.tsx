@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { supabase } from "../lib/supabase";
 import { DEMO_LEADS } from "../lib/demoData";
+import { TREATMENT_TEMPLATES } from "../lib/treatmentTemplates";
 
 const bentoBoxClass = "bg-white border border-black/5 rounded-[32px] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden transition-all duration-500 hover:shadow-[0_8px_40px_rgb(0,0,0,0.08)]";
 const glassBoxClass = "bg-white/40 backdrop-blur-xl border border-white/60 rounded-[32px] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden";
@@ -29,33 +30,6 @@ const PTDiscoveryMode: React.FC = () => {
         const m = Math.floor((seconds % 3600) / 60);
         const s = seconds % 60;
         return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-    };
-
-    const treatmentDetails: Record<string, any> = {
-        "Dental Implants": {
-            title: "Precision Implantology",
-            investment: "£3,500",
-            monthly: "£145.83",
-            term: "24 Months",
-            features: ["Custom Abutment", "Premium Titanium Post", "Hand-crafted Porcelain Crown", "Lifetime Guarantee"],
-            description: "Dental implants are the gold standard for tooth replacement. This comprehensive procedure ensures maximum durability, aesthetic integration, and restored functional bite strength, providing a permanent solution that looks and feels completely natural.",
-            beforeAfter: {
-                before: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=1200",
-                after: "https://images.unsplash.com/photo-1606811841660-1b51e9ed27ff?auto=format&fit=crop&q=80&w=1200"
-            }
-        },
-        "Invisalign / Aligners": {
-            title: "SmartSmile Simulation",
-            investment: "£3,000",
-            monthly: "£125.00",
-            term: "24 Months",
-            features: ["Full 3D Simulation", "Set of Clear Aligners", "Retainers Included", "Post-treatment Whitening"],
-            description: "Our SmartSmile aligner protocol offers a discreet, comfortable path to your perfect smile. Using advanced 3D scanning, we map the exact movement of your teeth to ensure precision alignment without traditional braces.",
-            beforeAfter: {
-                before: "https://images.unsplash.com/photo-1598256989800-fe5f95da9787?auto=format&fit=crop&q=80&w=1200",
-                after: "https://images.unsplash.com/photo-1516012828019-06ad1742de8a?auto=format&fit=crop&q=80&w=1200"
-            }
-        }
     };
 
     useEffect(() => {
@@ -89,7 +63,7 @@ const PTDiscoveryMode: React.FC = () => {
         fetchLead();
     }, [id]);
 
-    const activeTreatment = treatmentDetails[lead?.treatment_name || lead?.service || 'Dental Implants'] || treatmentDetails["Dental Implants"];
+    const activeTreatment = TREATMENT_TEMPLATES[lead?.treatment_name || lead?.service || 'Dental Implants'] || TREATMENT_TEMPLATES["Dental Implants"];
     
     // Dynamic content from PT Engine (Backoffice)
     const displayBeforeImg = lead?.pt_before_image || null;
