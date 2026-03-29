@@ -5,7 +5,7 @@ export const DEMO_LEADS: Partial<ConsultationRequest>[] = [
         id: "donggyun-live",
         name: "Donggyun Han",
         email: "handonggyun18@gmail.com",
-        phone: "+447950833671",
+        phone: "+82 10 3395 1543",
         service: "Dental Implants",
         potential_value: 3000,
         status: "New Lead",
