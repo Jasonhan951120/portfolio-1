@@ -133,11 +133,11 @@ const PTDiscoveryMode: React.FC = () => {
                     <span className="font-bold tracking-tight uppercase text-sm">Hanlan OC</span>
                 </div>
                 <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-widest text-[#87A96B]">
-                    <ShieldCheck className="w-4 h-4" /> Secure Proposal Terminal - UK Compliance Active
+                    <ShieldCheck className="w-4 h-4" /> Clinical Gold Standard | Harley Street Excellence
                 </div>
             </header>
 
-            <main className="max-w-[1400px] mx-auto p-4 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-[calc(100vh-88px)] pb-32">
+            <main className="max-w-[1400px] mx-auto p-4 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-[calc(100vh-88px)] pb-40">
                 
                 {/* 1. The Hero Visual (Slider) - BENTO BOX */}
                 {hasValidImages && (
@@ -217,7 +217,7 @@ const PTDiscoveryMode: React.FC = () => {
                                     </div>
                                     <div>
                                         <p className="text-[14px] font-bold text-slate-800">{feature}</p>
-                                        <p className="text-[10px] text-slate-400 mt-0.5">Lifetime durability and premium bio-compatibility.</p>
+                                        <p className="text-[10px] text-slate-400 mt-1">Lifetime durability and premium bio-compatibility.</p>
                                     </div>
                                 </div>
                             ))}
@@ -309,10 +309,12 @@ const PTDiscoveryMode: React.FC = () => {
             </main>
 
             {/* 4. [Call to Action (CTA) - Sticky Bottom Bar] designed for conversion, slimmed down */}
-            <footer className="fixed bottom-0 left-0 right-0 w-full px-6 py-3 bg-white/95 backdrop-blur-3xl border-t border-slate-100 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-50 flex flex-col items-center justify-center">
+            <footer className="fixed bottom-0 left-0 right-0 w-full px-6 py-3 bg-white/95 backdrop-blur-3xl border-t border-slate-100 shadow-[0_-12px_40px_rgba(0,0,0,0.08)] z-50 flex flex-col items-center justify-center">
                 <div className="flex items-center gap-2 mb-2">
-                    <p className="text-xs text-slate-600 font-medium">Take the first step towards your new smile. Valid for</p>
-                    <span className="text-xs font-bold text-red-500 bg-red-50 px-2 py-0.5 rounded-md flex items-center gap-1">⏰ {formatTime(timeLeft)} remaining</span>
+                    <p className="text-xs text-slate-700 font-bold">Secure Your Harley Street Priority Slot Today. Valid for</p>
+                    <span className="text-[13px] font-black text-rose-600 bg-rose-50 px-2 py-0.5 rounded flex items-center gap-1.5 shadow-sm border border-rose-100 tracking-wider">
+                        ⏰ {formatTime(timeLeft)}
+                    </span>
                 </div>
                 <div className="flex flex-col sm:flex-row items-center gap-4">
                     <motion.button
