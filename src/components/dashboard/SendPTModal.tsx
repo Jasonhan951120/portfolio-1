@@ -132,10 +132,10 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
 
   const handleWhatsAppSend = () => {
     if (!lead || !lead.phone) return;
-    const { patientName, treatmentName } = getProcessingNames();
-    const ptLink = `${window.location.origin}/pt/${lead.id.substring(0, 8)}`;
+    const { patientName } = getProcessingNames();
+    const ptLink = `${window.location.origin}/pt/${(lead as any).slug || lead.id.substring(0, 8)}`;
     
-    const message = `Hello ${patientName}, 👋\n\nYour bespoke ${treatmentName} protocol from *${activeClinicName}* is ready. ✨\n\nView your full proposal here:\n🔗 ${ptLink}\n\nSincerely,\nThe *${activeClinicName}* Team`;
+    const message = `✨ *${activeClinicName}*\n\nHi ${patientName},\n\nYour bespoke Digital Smile Protocol & Treatment Proposal is now ready for review.\n\nFollowing your consultation, we have finalized your personalized implant plan. You can access your secure patient portal to view the full details here:\n\n🔗 View My Full Proposal: ${ptLink}\n\nSincerely,\n\nThe *${activeClinicName}* Team`;
     
     const phone = lead.phone.replace(/[^\d]/g, '');
     const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
