@@ -815,6 +815,7 @@ export default function AdminDashboard() {
     currency,
     setCurrency,
     updateLead,
+    clinicName,
   } = useDashboardStore();
   
   const patients = leads || []; // Lead Architect Safety: Guaranteed array initialization
@@ -2961,7 +2962,7 @@ export default function AdminDashboard() {
               }}
               lead={emailLead}
               currency={currency}
-              clinicName="Hanlan OC Dental Clinic"
+              clinicName={clinicName || "Hanlan OC Dental Clinic"}
               onUpdateLead={updateLead}
               templates={templates}
             />
@@ -3140,7 +3141,7 @@ export default function AdminDashboard() {
 
             {/* Copyright */}
             <p className="text-sm font-medium text-slate-400">
-              © 2026 Hanlan OC.
+              © 2026 {clinicName || "Hanlan OC"}.
             </p>
           </div>
       </footer>

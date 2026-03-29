@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Building, Check, ShieldCheck, MapPin, ChevronDown, Settings } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { useDashboardStore } from "../../../store/useDashboardStore";
 
 interface DashboardHeaderProps {
     clinic: any;
@@ -30,13 +31,15 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
     currency = '£',
     onToggleCurrency,
 }) => {
+    const { clinicName, clinicLogo } = useDashboardStore();
+
     return (
         <div className="flex items-center gap-6 relative">
             <div className="flex items-center gap-4">
-                {/* Clinic Logo Placeholder */}
+                {/* Clinic Logo */}
                 <div className="w-14 h-14 rounded-full bg-black/5 border border-black/10 flex items-center justify-center overflow-hidden shadow-[inner_0_2px_4px_rgba(0,0,0,0.02)]">
-                    {clinic?.logo_url ? (
-                        <img src={clinic.logo_url} alt={clinic?.name} className="w-full h-full object-cover" />
+                    {clinicLogo || clinic?.logo_url ? (
+                        <img src={clinicLogo || clinic?.logo_url} alt={clinicName || clinic?.name} className="w-full h-full object-cover" />
                     ) : (
                         <Building className="w-6 h-6 text-gray-300" strokeWidth={1} />
                     )}
@@ -56,7 +59,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
 
                     <div className="flex items-center gap-3 mt-1">
                         <h1 className="text-3xl font-display font-medium text-gray-900 tracking-[0.05em] uppercase tabular-nums">
-                            {clinic?.name || "Hanlan OC"}{" "}
+                            {clinicName || clinic?.name || "Hanlan OC"}{" "}
                             <span className="font-light text-slate-400 lowercase tracking-normal italic">Dashboard</span>
                         </h1>
                         <div className="flex items-center justify-center p-1 bg-blue-500/10 rounded-full border border-blue-500/20" title="Verified Revenue Partner">

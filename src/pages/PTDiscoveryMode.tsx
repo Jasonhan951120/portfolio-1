@@ -9,12 +9,14 @@ import {
 import { supabase } from "../lib/supabase";
 import { DEMO_LEADS } from "../lib/demoData";
 import { TREATMENT_TEMPLATES } from "../lib/treatmentTemplates";
+import { useDashboardStore } from "../store/useDashboardStore";
 
 const bentoBoxClass = "bg-white border border-black/5 rounded-[32px] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden transition-all duration-500 hover:shadow-[0_8px_40px_rgb(0,0,0,0.08)]";
 const glassBoxClass = "bg-white/40 backdrop-blur-xl border border-white/60 rounded-[32px] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden";
 
 const PTDiscoveryMode: React.FC = () => {
     const { id } = useParams<{ id: string }>();
+    const { clinicName, clinicLogo } = useDashboardStore();
     const [lead, setLead] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [sliderPosition, setSliderPosition] = useState(50);
@@ -63,6 +65,12 @@ const PTDiscoveryMode: React.FC = () => {
         fetchLead();
     }, [id]);
 
+    useEffect(() => {
+        if (lead?.name) {
+            document.title = `${lead.name}'s Bespoke Smile Protocol | ${clinicName || 'Hanlan OC'}`;
+        }
+    }, [lead?.name, clinicName]);
+
     const activeTreatment = TREATMENT_TEMPLATES[lead?.treatment_name || lead?.service || 'Dental Implants'] || TREATMENT_TEMPLATES["Dental Implants"];
     
     // Dynamic content from PT Engine (Backoffice)
@@ -101,10 +109,14 @@ const PTDiscoveryMode: React.FC = () => {
             {/* Minimal Header */}
             <header className="px-8 py-6 flex justify-between items-center border-b border-gray-100 bg-white sticky top-0 z-[100]">
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gray-900 rounded-xl flex items-center justify-center shadow-lg shadow-gray-200">
-                        <span className="text-white font-bold text-lg">H</span>
-                    </div>
-                    <span className="font-bold tracking-tight uppercase text-sm">Hanlan OC</span>
+                    {clinicLogo ? (
+                        <img src={clinicLogo} alt={clinicName} className="w-10 h-10 rounded-xl object-cover shadow-lg shadow-gray-200" />
+                    ) : (
+                        <div className="w-10 h-10 bg-gray-900 rounded-xl flex items-center justify-center shadow-lg shadow-gray-200">
+                            <span className="text-white font-bold text-lg">{clinicName ? clinicName.charAt(0) : 'H'}</span>
+                        </div>
+                    )}
+                    <span className="font-bold tracking-tight uppercase text-sm">{clinicName || 'Hanlan OC'}</span>
                 </div>
                 <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-widest text-[#87A96B]">
                     <ShieldCheck className="w-4 h-4" /> Clinical Gold Standard | Harley Street Excellence

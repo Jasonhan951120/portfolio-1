@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, MessageCircle, Copy, Check, Loader2, Send } from 'lucide-react';
 import { ConsultationRequest } from '../../lib/supabase';
+import { useDashboardStore } from '../../store/useDashboardStore';
 
 interface RecoveryConciergeProps {
     lead: ConsultationRequest;
@@ -14,6 +15,7 @@ export function RecoveryConcierge({ lead, potentialValue, consultationNotes }: R
     const [generatedMessage, setGeneratedMessage] = useState<string | null>(null);
     const [isCopied, setIsCopied] = useState(false);
     const [isSent, setIsSent] = useState(false);
+    const { clinicName } = useDashboardStore();
 
     // Simulated AI Generation based on strict prompt boundaries
     const handleGenerate = () => {
@@ -24,8 +26,9 @@ export function RecoveryConcierge({ lead, potentialValue, consultationNotes }: R
         setTimeout(() => {
             const firstName = lead.name.split(' ')[0] || 'there';
             const serviceName = lead.service || 'treatment';
+            const activeClinicName = clinicName || 'Hanlan OC';
 
-            let message = `Good morning ${firstName},\n\nThis is Eleanor, Senior Patient Concierge at Hanlan OC.\n\nI noted your interest in our ${serviceName} procedures and wanted to personally reach out. We recently had a priority consultation slot become available this week, which I have tentatively held for you.`;
+            let message = `Good morning ${firstName},\n\nThis is Eleanor, Senior Patient Concierge at ${activeClinicName}.\n\nI noted your interest in our ${serviceName} procedures and wanted to personally reach out. We recently had a priority consultation slot become available this week, which I have tentatively held for you.`;
 
             // Incorporate context if notes exist indicating a cost barrier
             if (consultationNotes?.toLowerCase().includes('cost') || consultationNotes?.toLowerCase().includes('부담') || consultationNotes?.toLowerCase().includes('비용')) {

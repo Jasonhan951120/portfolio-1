@@ -6,16 +6,16 @@ import { useDashboardStore } from '../../store/useDashboardStore';
 
 const INDUSTRY_TEMPLATES = {
     Dental: {
-        friendly: "Dear {PatientName}, it was a true pleasure meeting you today to discuss your smile transformation. I've prepared a bespoke plan to bring back your confident smile. We use the most advanced, gentle techniques to ensure your journey is as comfortable as it is transformative.",
-        professional: "Dear {PatientName}, thank you for visiting us today. Based on our clinical assessment, I have finalized your bespoke dental treatment proposal. This plan is designed to deliver optimal long-term outcomes while prioritizing your unique dental health needs."
+        friendly: "Dear {PatientName}, it was a true pleasure meeting you today to discuss your smile transformation. I've prepared a bespoke plan to bring back your confident smile. We use the most advanced, gentle techniques to ensure your journey is as comfortable as it is transformative.\n\nReview your bespoke proposal here: {pt_link}",
+        professional: "Dear {PatientName}, thank you for visiting us today. Based on our clinical assessment, I have finalized your bespoke dental treatment proposal. This plan is designed to deliver optimal long-term outcomes while prioritizing your unique dental health needs.\n\nSecurely access your clinical protocol here: {pt_link}"
     },
     Aesthetic: {
-        friendly: "Dear {PatientName}, we are excited to help you achieve your skin goals at {ClinicName}! I've designed a specialized plan tailored just for you to enhance your natural beauty. We can't wait to see your radiant results.",
-        professional: "Dear {PatientName}, thank you for your consultation today. I have prepared a comprehensive aesthetic treatment plan tailored specifically to your unique skin profile and desired outcomes. Please review the clinical details below."
+        friendly: "Dear {PatientName}, we are excited to help you achieve your skin goals at {ClinicName}! I've designed a specialized plan tailored just for you to enhance your natural beauty. We can't wait to see your radiant results.\n\nReview your aesthetic plan here: {pt_link}",
+        professional: "Dear {PatientName}, thank you for your consultation today. I have prepared a comprehensive aesthetic treatment plan tailored specifically to your unique skin profile and desired outcomes. Please review the clinical details below.\n\nYour secure proposal: {pt_link}"
     },
     Wellness: {
-        friendly: "Dear {PatientName}, it was wonderful connecting with you today. I've designed a specialized wellness plan to support your holistic journey. We are dedicated to helping you find balance, rejuvenation, and optimal vitality.",
-        professional: "Dear {PatientName}, following our consultation, I have developed a bespoke wellness protocol. This comprehensive plan is meticulously designed to optimize your health outcomes and overall well-being. Please find the proposed intervention below."
+        friendly: "Dear {PatientName}, it was wonderful connecting with you today. I've designed a specialized wellness plan to support your holistic journey. We are dedicated to helping you find balance, rejuvenation, and optimal vitality.\n\nView your wellness protocol here: {pt_link}",
+        professional: "Dear {PatientName}, following our consultation, I have developed a bespoke wellness protocol. This comprehensive plan is meticulously designed to optimize your health outcomes and overall well-being. Please find the proposed intervention securely below.\n\nYour clinical protocol: {pt_link}"
     }
 };
 
@@ -54,7 +54,8 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
   onUpdateLead,
   templates = []
 }) => {
-  const { clinicType } = useDashboardStore();
+  const { clinicType, clinicName: globalClinicName } = useDashboardStore();
+  const activeClinicName = globalClinicName || clinicName;
   const [isSending, setIsSending] = useState(false);
   const [isSent, setIsSent] = useState(false);
   
@@ -75,13 +76,15 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
        const treatmentName = matchedTemplate?.name || lead.service || "Treatment";
 
        // Initial Setup: Professional by default for luxury
-       setEmailSubject(`Bespoke ${treatmentName} Clinical Proposal - ${clinicName}`);
+       setEmailSubject(`Bespoke ${treatmentName} Clinical Proposal - ${activeClinicName}`);
        
+       const ptLink = `${window.location.origin}/pt/${lead.id.substring(0, 8)}`;
        let initialNote = lead.pt_personalized_note || matchedTemplate?.emailContents || INDUSTRY_TEMPLATES[clinicType].professional;
        initialNote = initialNote
            .replace(/{PatientName}/g, firstName)
-           .replace(/{ClinicName}/g, clinicName)
-           .replace(/{TreatmentName}/g, treatmentName);
+           .replace(/{ClinicName}/g, activeClinicName)
+           .replace(/{TreatmentName}/g, treatmentName)
+           .replace(/{pt_link}/g, ptLink);
        
        setEmailTemplate(initialNote);
        setErrorMsg(null);
@@ -98,14 +101,14 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
 
   const applyDualTemplate = (tone: 'friendly' | 'professional') => {
     const { patientName, treatmentName } = getProcessingNames();
-    const ptLink = "{pt_link}"; // The backend will inject the real shortlink
+    const ptLink = `${window.location.origin}/pt/${lead?.id.substring(0, 8)}`;
 
     if (tone === 'friendly') {
         setEmailSubject(`Your Transformation Journey: Bespoke ${treatmentName} Proposal`);
-        setEmailTemplate(`Hi ${patientName},\n\nIt was a true pleasure meeting you at the clinic today. I am so excited to help you start your ${treatmentName} journey. I've prepared a bespoke plan just for you to ensure you get the absolute best results.\n\nYou can securely review your clinical proposal and visual mapping right here: ${ptLink}\n\nI can't wait to see your results!\n\nWarmly,\n${clinicName}`);
+        setEmailTemplate(`Hi ${patientName},\n\nIt was a true pleasure meeting you at the clinic today. I am so excited to help you start your ${treatmentName} journey. I've prepared a bespoke plan just for you to ensure you get the absolute best results.\n\nYou can securely review your clinical proposal and visual mapping right here: ${ptLink}\n\nI can't wait to see your results!\n\nWarmly,\n${activeClinicName}`);
     } else {
         setEmailSubject(`Clinical Proposal & Digital Protocol: ${treatmentName} - ${patientName}`);
-        setEmailTemplate(`Dear ${patientName},\n\nThank you for choosing our clinic for your ${treatmentName} consultation. Based on our comprehensive clinical evaluation, I have finalized your bespoke protocol and digital proposal.\n\nThis plan is meticulously designed to deliver optimal outcomes while prioritizing your unique requirements. Please access your dedicated patient portal to review the secure details and proceed: ${ptLink}\n\nSincerely,\n${clinicName}`);
+        setEmailTemplate(`Dear ${patientName},\n\nThank you for choosing our clinic for your ${treatmentName} consultation. Based on our comprehensive clinical evaluation, I have finalized your bespoke protocol and digital proposal.\n\nThis plan is meticulously designed to deliver optimal outcomes while prioritizing your unique requirements. Please access your dedicated patient portal to review the secure details and proceed: ${ptLink}\n\nSincerely,\n${activeClinicName}`);
     }
   };
 
@@ -115,13 +118,15 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
     if (template) {
       setOverridePrice(String(template.price));
       const { patientName, treatmentName } = getProcessingNames();
-      setEmailSubject(`Your Bespoke ${treatmentName} Proposal - ${clinicName}`);
+      setEmailSubject(`Your Bespoke ${treatmentName} Proposal - ${activeClinicName}`);
       
+      const ptLink = `${window.location.origin}/pt/${lead?.id.substring(0, 8)}`;
       const rawBody = template.emailContents || INDUSTRY_TEMPLATES[clinicType].professional;
       const processedBody = rawBody
         .replace(/{PatientName}/g, patientName)
-        .replace(/{ClinicName}/g, clinicName)
-        .replace(/{TreatmentName}/g, treatmentName);
+        .replace(/{ClinicName}/g, activeClinicName)
+        .replace(/{TreatmentName}/g, treatmentName)
+        .replace(/{pt_link}/g, ptLink);
       
       setEmailTemplate(processedBody);
     }
@@ -131,7 +136,7 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
     if (!lead || !lead.phone) return;
     const { patientName, treatmentName } = getProcessingNames();
     const ptLink = `${window.location.origin}/pt/${lead.id.substring(0, 8)}`;
-    const message = `Dear ${patientName}, your bespoke ${treatmentName} plan from ${clinicName} is ready. View your secure proposal here: ${ptLink}`;
+    const message = `Dear ${patientName}, your bespoke ${treatmentName} plan from ${activeClinicName} is ready. View your secure proposal here: ${ptLink}`;
     const whatsappUrl = `https://wa.me/${lead.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
     handleSend(false);
@@ -169,7 +174,7 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
             subject: emailSubject,
             service: finalTreatmentName,
             origin: window.location.origin,
-            clinic_name: clinicName,
+            clinic_name: activeClinicName,
             personalized_note: emailTemplate
           }
         });

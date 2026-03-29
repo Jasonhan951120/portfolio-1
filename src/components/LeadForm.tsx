@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { CheckCircle2, Loader2, Sparkles, ChevronDown, ArrowRight, ArrowLeft, ShieldCheck, Star } from "lucide-react";
 import { supabase } from "../lib/supabase";
 import { trackEvent } from "../lib/analytics";
+import { useDashboardStore } from "../store/useDashboardStore";
 
 const SERVICES = [
   "General Inquiry",
@@ -23,7 +24,8 @@ const QUESTIONS = [
 ];
 
 export default function LeadForm({ clinic }: { clinic: any }) {
-  const clinicName = clinic?.name || "Hanlan OC";
+  const { clinicName: storeClinicName } = useDashboardStore();
+  const clinicName = storeClinicName || clinic?.name || "Hanlan OC";
   const [formData, setFormData] = useState({
     name: "",
     email: "",

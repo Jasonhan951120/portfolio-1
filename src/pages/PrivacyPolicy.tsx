@@ -2,8 +2,12 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { Shield, Lock, Database, CreditCard, ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useDashboardStore } from '../store/useDashboardStore';
 
 const PrivacyPolicy: React.FC = () => {
+    const { clinicName } = useDashboardStore();
+    const activeClinicName = clinicName || 'Hanlan OC';
+
     return (
         <div className="min-h-screen bg-[#FBFBFB] text-slate-900 font-sans selection:bg-sage-100 selection:text-sage-900">
             {/* Header / Navigation */}
@@ -45,9 +49,9 @@ const PrivacyPolicy: React.FC = () => {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.2 }}
-                            className="max-w-2xl mx-auto text-slate-500 text-lg font-medium leading-relaxed"
+                            className="text-sm font-medium text-slate-600 leading-relaxed mb-4"
                         >
-                            Hanlan OC is built on a "Privacy-by-Design" foundation, ensuring British clinics remain fully compliant with ICO and UK GDPR standards while optimising client engagement.
+                            {activeClinicName} is built on a "Privacy-by-Design" foundation, ensuring British clinics remain fully compliant with ICO and UK GDPR standards while optimising client engagement.
                         </motion.p>
                     </header>
 
@@ -60,8 +64,8 @@ const PrivacyPolicy: React.FC = () => {
                                 <div className="md:w-1/3">
                                     <h2 className="font-serif text-3xl text-slate-900 mb-6">Zero-EMR <br />Architecture</h2>
                                     <div className="h-1 w-12 bg-[#87A96B] rounded-full mb-8"></div>
-                                    <p className="text-slate-500 text-sm leading-relaxed font-normal">
-                                        Unlike traditional client portals, Hanlan OC does not store clinical records. We operate purely on a marketing and administrative layer to protect your clinic from data liability.
+                                    <p className="text-sm text-slate-500 font-medium leading-relaxed">
+                                        Unlike traditional client portals, {activeClinicName} does not store clinical records. We operate purely on a marketing and administrative layer to protect your clinic from data liability.
                                     </p>
                                 </div>
                                 <div className="md:w-2/3 grid gap-8">
@@ -85,8 +89,8 @@ const PrivacyPolicy: React.FC = () => {
                                         </div>
                                         <div>
                                             <h3 className="text-lg font-bold text-slate-900 mb-2">B. System Role Separation</h3>
-                                            <p className="text-slate-500 text-sm leading-relaxed">
-                                                Your existing EMR (e.g., EXACT, R4, Dentally) remains your secure "System of Record". Hanlan OC acts purely as a "System of Engagement" for marketing automation. By decoupling these layers, we eliminate the risk of clinical data leaks during marketing activities.
+                                            <p className="text-sm text-slate-600 font-medium">
+                                                Your existing EMR (e.g., EXACT, R4, Dentally) remains your secure "System of Record". {activeClinicName} acts purely as a "System of Engagement" for marketing automation. By decoupling these layers, we eliminate the risk of clinical data leaks during marketing activities.
                                             </p>
                                         </div>
                                     </div>
@@ -163,7 +167,9 @@ const PrivacyPolicy: React.FC = () => {
 
                     {/* Footer / Contact */}
                     <footer className="pt-12 border-t border-slate-100 text-center">
-                        <p className="text-slate-400 text-xs font-medium uppercase tracking-widest mb-4">Hanlan OC • UK Compliance Team</p>
+                        <div className="text-center pt-8 border-t border-slate-200">
+                            <p className="text-slate-400 text-xs font-medium uppercase tracking-widest mb-4">{activeClinicName} • UK Compliance Team</p>
+                        </div>
                         <p className="text-slate-500 text-sm leading-relaxed max-w-lg mx-auto italic font-serif">
                             For any queries regarding Data Processing Agreements (DPA) or clinic-specific compliance audits, please contact our Data Protection Officer.
                         </p>

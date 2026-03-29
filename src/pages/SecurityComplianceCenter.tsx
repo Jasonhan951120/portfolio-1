@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Shield, Lock, Trash2, EyeOff, Globe, CheckCircle2, AlertCircle, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useDashboardStore } from "../store/useDashboardStore";
 
 export default function SecurityComplianceCenter() {
     const navigate = useNavigate();
+    const { clinicName } = useDashboardStore();
     const [complianceMode, setComplianceMode] = useState<'UK' | 'US'>('UK');
 
     // Basic JS timezone logic for default setting
@@ -59,7 +61,7 @@ export default function SecurityComplianceCenter() {
                     transition={{ delay: 0.1 }}
                     className="max-w-2xl mx-auto text-slate-500 text-lg leading-relaxed font-medium"
                 >
-                    Hanlan OC operates on a strict 'Privacy-First, Zero-Retention' architecture. 
+                    {clinicName || 'Hanlan OC'} operates on a strict 'Privacy-First, Zero-Retention' architecture. 
                     Because we never transmit, collect, or store any sensitive patient data on our servers, 
                     your liability for data breaches through our platform is <span className="text-slate-900 font-bold">mathematically zero.</span>
                 </motion.p>
@@ -258,7 +260,7 @@ export default function SecurityComplianceCenter() {
                     <div className="mt-8 p-4 bg-amber-50 rounded-2xl border border-amber-100 flex gap-3">
                         <AlertCircle className="w-4 h-4 text-amber-500 shrink-0" />
                         <p className="text-[9px] text-amber-700 font-bold uppercase tracking-tight leading-normal">
-                            Note: This dashboard serves as a visualization tool. No patient data is sent to Hanlan OC's backend servers at any stage.
+                            Note: This dashboard serves as a visualization tool. No patient data is sent to {clinicName || 'Hanlan OC'}'s backend servers at any stage.
                         </p>
                     </div>
                 </motion.div>

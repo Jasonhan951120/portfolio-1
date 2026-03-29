@@ -4,6 +4,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Send, MessageCircle, Shield, AlertTriangle, Sparkles, Users } from 'lucide-react';
 import { type ConsultationRequest } from "../../lib/supabase";
+import { useDashboardStore } from "../../store/useDashboardStore";
 
 interface PatientCardProps {
   id: string;
@@ -40,6 +41,7 @@ export const PatientCard = React.memo(function PatientCard({
 }: PatientCardProps) {
   const [timeLeft, setTimeLeft] = useState<number>(15 * 60);
   const [isExiting, setIsExiting] = useState(false);
+  const { clinicName } = useDashboardStore();
 
   useEffect(() => {
     const created = new Date(lead.created_at).getTime();
@@ -89,7 +91,7 @@ export const PatientCard = React.memo(function PatientCard({
         message = `Hi ${firstName}, hope you are recovering well! If you loved your experience, we'd appreciate a quick Google review: https://g.page/r/hanlan-oc/review`;
         break;
       default:
-        message = `Hi ${firstName}, checking in from Hanlan OC. How can we help you today?`;
+        message = `Hi ${firstName}, checking in from ${clinicName || "Hanlan OC"}. How can we help you today?`;
     }
     
     return `https://wa.me/${lead.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;

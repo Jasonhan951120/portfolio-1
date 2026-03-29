@@ -42,6 +42,10 @@ interface DashboardState {
   // Clinic Profile
   clinicType: 'Dental' | 'Aesthetic' | 'Wellness';
   setClinicType: (type: 'Dental' | 'Aesthetic' | 'Wellness') => void;
+  clinicName: string;
+  setClinicName: (name: string) => void;
+  clinicLogo: string;
+  setClinicLogo: (url: string) => void;
   
   // Clinic Settings (The Warehouse)
   templates: TreatmentTemplate[];
@@ -118,6 +122,18 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
   setClinicType: (type) => {
     localStorage.setItem('clinic_type', type);
     set({ clinicType: type });
+  },
+
+  clinicName: localStorage.getItem('clinic_name') || 'Hanlan OC',
+  setClinicName: (name) => {
+    localStorage.setItem('clinic_name', name);
+    set({ clinicName: name });
+  },
+
+  clinicLogo: localStorage.getItem('clinic_logo') || '',
+  setClinicLogo: (url) => {
+    localStorage.setItem('clinic_logo', url);
+    set({ clinicLogo: url });
   },
 
   templates: (() => {

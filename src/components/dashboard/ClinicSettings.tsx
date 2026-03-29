@@ -29,7 +29,7 @@ export function ClinicSettings({
     templates = [],
     setTemplates 
 }: ClinicSettingsProps) {
-    const { clinicType, setClinicType } = useDashboardStore();
+    const { clinicType, setClinicType, clinicName, setClinicName, clinicLogo, setClinicLogo } = useDashboardStore();
     const [activeTab, setActiveTab] = useState<'menu' | 'general' | 'support'>('menu');
     const [editingTemplate, setEditingTemplate] = useState<TreatmentTemplate | null>(null);
     const [activeTheme, setActiveTheme] = useState<'white' | 'dark'>('white');
@@ -266,6 +266,29 @@ export function ClinicSettings({
                                                     </div>
                                                 </div>
 
+                                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                                                    <div className={`p-6 ${isDark ? 'bg-white/5' : 'bg-white'} border ${borderColor} rounded-[2rem] transition-all hover:scale-[1.02] shadow-inner`}>
+                                                        <label className={`text-[10px] font-black uppercase tracking-widest ${subTextColor} mb-3 block text-inter`}>Practice / Clinic Name</label>
+                                                        <input 
+                                                            type="text" 
+                                                            value={clinicName} 
+                                                            onChange={e => setClinicName(e.target.value)}
+                                                            placeholder="e.g. The Harley Elite"
+                                                            className={`w-full bg-transparent border-b ${borderColor} pb-2 text-sm font-bold ${textColor} focus:outline-none focus:border-[#78dcca] transition-colors font-inter`}
+                                                        />
+                                                    </div>
+                                                    <div className={`p-6 ${isDark ? 'bg-white/5' : 'bg-white'} border ${borderColor} rounded-[2rem] transition-all hover:scale-[1.02] shadow-inner`}>
+                                                        <label className={`text-[10px] font-black uppercase tracking-widest ${subTextColor} mb-3 block text-inter`}>Logo URL</label>
+                                                        <input 
+                                                            type="text" 
+                                                            value={clinicLogo} 
+                                                            onChange={e => setClinicLogo(e.target.value)}
+                                                            placeholder="https://example.com/logo.png"
+                                                            className={`w-full bg-transparent border-b ${borderColor} pb-2 text-sm font-bold ${textColor} focus:outline-none focus:border-[#78dcca] transition-colors font-inter`}
+                                                        />
+                                                    </div>
+                                                </div>
+
                                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                                     <div className={`p-6 ${isDark ? 'bg-white/5' : 'bg-white'} border ${borderColor} rounded-[2rem] transition-all hover:scale-[1.02] shadow-inner`}>
                                                         <h4 className={`text-[10px] font-black uppercase tracking-widest ${subTextColor} mb-5 text-inter`}>Aesthetic Override</h4>
@@ -345,9 +368,9 @@ export function ClinicSettings({
                                             </div>
 
                                             {/* Subtle Branding Bottom */}
-                                            <div className="flex justify-end pr-4 opacity-40">
+                                            <div className="flex justify-end pr-4 opacity-40 mt-8">
                                                 <div className="text-right">
-                                                    <span className={`text-[10px] font-black uppercase tracking-[0.6em] ${textColor} text-inter`}>Hanlan OC</span>
+                                                    <span className={`text-[10px] font-black uppercase tracking-[0.6em] ${textColor} text-inter`}>{clinicName || 'Hanlan OC'}</span>
                                                     <div className={`h-[1px] w-14 ${accentBg} mt-2 ml-auto shadow-inner`} />
                                                 </div>
                                             </div>

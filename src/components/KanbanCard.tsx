@@ -7,6 +7,7 @@ import { VirtualConsultModal } from './dashboard/backoffice/VirtualConsultModal'
 import { AI_InsightCard } from './dashboard/backoffice/AI_InsightCard';
 import { ConsultationRequest } from '../lib/supabase';
 import { STATUS_COLORS, SERVICE_CONVERSION_VALUES } from '../lib/constants';
+import { useDashboardStore } from '../store/useDashboardStore';
 
 interface KanbanCardProps {
     lead: ConsultationRequest;
@@ -17,6 +18,7 @@ export function KanbanCard({ lead, onClick }: KanbanCardProps) {
     const [isModalOpen, setIsModalOpen] = React.useState(false);
     const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
     const [anchorRect, setAnchorRect] = React.useState<DOMRect | null>(null);
+    const { clinicName } = useDashboardStore();
 
     const {
         attributes,
@@ -99,7 +101,7 @@ export function KanbanCard({ lead, onClick }: KanbanCardProps) {
                                     message = `Hi ${firstName}, hope you are recovering well! If you loved your experience, we'd appreciate a quick Google review: https://g.page/r/hanlan-oc/review`;
                                     break;
                                 default:
-                                    message = `Hi ${firstName}, checking in from Hanlan OC. How can we help you today?`;
+                                    message = `Hi ${firstName}, checking in from ${clinicName || 'Hanlan OC'}. How can we help you today?`;
                             }
                             const whatsappUrl = `https://wa.me/${phoneNum.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
                             window.open(whatsappUrl, '_blank');
