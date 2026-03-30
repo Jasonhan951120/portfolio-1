@@ -319,23 +319,47 @@ export function ClinicSettings({
                                                 <p className="text-base text-slate-500 font-medium tracking-tight text-inter">Dedicated optimization support.</p>
                                             </div>
                                             
-                                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pb-12">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-12">
                                                 {[
-                                                    { icon: User, label: '24/7 Concierge', desc: 'Direct access to your manager.' },
-                                                    { icon: ShieldCheck, label: 'Compliance Vault', desc: 'Isolated data encryption.' },
-                                                    { icon: Zap, label: 'Strategic Insights', desc: 'Market analysis & growth.' },
-                                                    { icon: Calendar, label: 'Book Session', desc: 'Dedicated strategy optimization consultation.', isAction: true }
+                                                    { 
+                                                        icon: MessageSquare, 
+                                                        label: '24/7 AI HEALTH CONCIERGE', 
+                                                        desc: 'Instant clinical & growth insights powered by Hanlan.',
+                                                        isAction: true,
+                                                        actionLabel: 'Consult AI Now',
+                                                        onClick: () => {
+                                                            const { setIsAIChatOpen } = useDashboardStore.getState();
+                                                            setIsAIChatOpen(true);
+                                                            onClose();
+                                                        }
+                                                    },
+                                                    { 
+                                                        icon: ShieldCheck, 
+                                                        label: 'Compliance Vault', 
+                                                        desc: 'Isolated data encryption & protocol logs.',
+                                                        isAction: true,
+                                                        actionLabel: 'Open Vault',
+                                                        onClick: () => window.open('/security', '_blank')
+                                                    },
+                                                    { 
+                                                        icon: Zap, 
+                                                        label: 'Strategic Insights', 
+                                                        desc: 'Market analysis & growth acceleration.',
+                                                        isAction: false 
+                                                    }
                                                 ].map((card, i) => (
-                                                    <div key={i} className={`${cardBg} border ${borderColor} p-6 rounded-[2.5rem] hover:scale-[1.03] transition-all duration-500 flex flex-col items-center text-center relative overflow-hidden group h-full shadow-lg hover:shadow-xl shadow-inner`}>
-                                                        <div className="w-14 h-14 rounded-full bg-[#78dcca]/10 border border-[#78dcca]/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-all duration-500 shadow-inner">
-                                                            <card.icon className={`w-6 h-6 ${accentColor}`} strokeWidth={2} />
+                                                    <div key={i} className={`${cardBg} border ${borderColor} p-8 rounded-[2.5rem] hover:scale-[1.03] transition-all duration-500 flex flex-col items-center text-center relative overflow-hidden group h-full shadow-lg hover:shadow-xl shadow-inner`}>
+                                                        <div className="w-16 h-16 rounded-full bg-[#78dcca]/10 border border-[#78dcca]/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-all duration-500 shadow-inner">
+                                                            <card.icon className={`w-7 h-7 ${accentColor}`} strokeWidth={1.5} />
                                                         </div>
                                                         <h4 className={`text-base font-black ${textColor} mb-3 uppercase tracking-tight text-inter`}>{card.label}</h4>
                                                         <p className={`text-[10px] ${subTextColor} leading-[1.6] font-bold mb-8 flex-1 text-inter uppercase tracking-[0.05em]`}>{card.desc}</p>
                                                         
                                                         {card.isAction && (
-                                                            <button className={`w-full py-4 ${isDark ? 'bg-[#78dcca] text-[#0f172a]' : 'bg-[#0f172a] text-white'} rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:scale-[1.05] transition-all active:scale-95 text-inter`}>
-                                                                Book Now
+                                                            <button 
+                                                               onClick={card.onClick}
+                                                               className={`w-full py-4 ${isDark ? 'bg-[#78dcca] text-[#0f172a]' : 'bg-[#0f172a] text-white'} rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:scale-[1.05] transition-all active:scale-95 text-inter`}>
+                                                                {card.actionLabel}
                                                             </button>
                                                         )}
                                                     </div>

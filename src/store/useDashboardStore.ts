@@ -64,6 +64,10 @@ interface DashboardState {
     unsecuredPipeline: number;
     pipelineValue: number;
   };
+
+  // AI Chat
+  isAIChatOpen: boolean;
+  setIsAIChatOpen: (isOpen: boolean) => void;
 }
 
 export const useDashboardStore = create<DashboardState>((set, get) => ({
@@ -289,5 +293,9 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
     }, 0);
 
     return { totalRevenue, unsecuredPipeline, pipelineValue };
-  }
+  },
+
+  // AI Chat Implementation
+  isAIChatOpen: false,
+  setIsAIChatOpen: (isOpen) => set({ isAIChatOpen: isOpen }),
 }));

@@ -40,6 +40,7 @@ import SecurityComplianceCenter from "./pages/SecurityComplianceCenter";
 import TermsPage from "./pages/TermsPage";
 import DPAPage from "./pages/DPAPage";
 import SecurityPolicyPage from "./pages/SecurityPolicyPage";
+import { AIChatWidget } from "./components/dashboard/AIChatWidget";
 
 
 function LandingPage({ clinic }: { clinic: any }) {
@@ -208,6 +209,7 @@ export default function App() {
         <Router>
           <ScrollToTop />
           <CookieConsent />
+          <AIChatWidget />
           <Routes>
             <Route path="/" element={<ProtectedRoute><SubscriptionGuard><AdminDashboard /></SubscriptionGuard></ProtectedRoute>} />
             <Route path="/landing" element={<LandingPage clinic={clinic} />} />
