@@ -201,7 +201,7 @@ export const PatientCard = React.memo(function PatientCard({
             )}
           </div>
           
-          <div className="mt-4 pt-4 border-t border-slate-100 flex flex-col gap-2 pointer-events-auto opacity-0 group-hover:opacity-100 transition-all duration-300">
+          <div className="mt-4 pt-4 border-t border-slate-100 flex flex-col gap-2 pointer-events-auto transition-all duration-300">
             <div className="flex flex-col gap-2 w-full">
               {/* Context-Aware WhatsApp Button */}
               <button
