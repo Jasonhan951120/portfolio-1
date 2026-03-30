@@ -326,7 +326,7 @@ export function ClinicSettings({
                                                         label: '24/7 AI HEALTH CONCIERGE', 
                                                         desc: 'Instant clinical & growth insights powered by Hanlan.',
                                                         isAction: true,
-                                                        actionLabel: 'Consult AI Now',
+                                                        actionLabel: 'Launch AI Chat',
                                                         onClick: () => {
                                                             const { setIsAIChatOpen } = useDashboardStore.getState();
                                                             setIsAIChatOpen(true);
@@ -348,9 +348,9 @@ export function ClinicSettings({
                                                         isAction: false 
                                                     }
                                                 ].map((card, i) => (
-                                                    <div key={i} className={`${cardBg} border ${borderColor} p-8 rounded-[2.5rem] hover:scale-[1.03] transition-all duration-500 flex flex-col items-center text-center relative overflow-hidden group h-full shadow-lg hover:shadow-xl shadow-inner`}>
-                                                        <div className="w-16 h-16 rounded-full bg-[#78dcca]/10 border border-[#78dcca]/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-all duration-500 shadow-inner">
-                                                            <card.icon className={`w-7 h-7 ${accentColor}`} strokeWidth={1.5} />
+                                                    <div key={i} className={`${cardBg} border border-[#c5a059]/20 p-8 rounded-[2.5rem] hover:scale-[1.03] transition-all duration-500 flex flex-col items-center text-center relative overflow-hidden group h-full shadow-lg hover:shadow-xl shadow-inner bg-gradient-to-b from-white to-[#88b399]/10`}>
+                                                        <div className="w-16 h-16 rounded-full bg-[#88b399]/20 border border-[#88b399]/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-all duration-500 shadow-inner">
+                                                            <card.icon className={`w-7 h-7 text-[#004d40]`} strokeWidth={1.5} />
                                                         </div>
                                                         <h4 className={`text-base font-black ${textColor} mb-3 uppercase tracking-tight text-inter`}>{card.label}</h4>
                                                         <p className={`text-[10px] ${subTextColor} leading-[1.6] font-bold mb-8 flex-1 text-inter uppercase tracking-[0.05em]`}>{card.desc}</p>
@@ -358,7 +358,7 @@ export function ClinicSettings({
                                                         {card.isAction && (
                                                             <button 
                                                                onClick={card.onClick}
-                                                               className={`w-full py-4 ${isDark ? 'bg-[#78dcca] text-[#0f172a]' : 'bg-[#0f172a] text-white'} rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:scale-[1.05] transition-all active:scale-95 text-inter`}>
+                                                               className={`w-full py-4 bg-transparent border-2 border-[#c5a059] text-[#1a1a1a] hover:bg-[#c5a059] hover:text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:scale-[1.05] transition-all active:scale-95 text-inter`}>
                                                                 {card.actionLabel}
                                                             </button>
                                                         )}
@@ -370,7 +370,7 @@ export function ClinicSettings({
                                             <div className="flex justify-end pr-4 opacity-40 mt-8">
                                                 <div className="text-right">
                                                     <span className={`text-[10px] font-black uppercase tracking-[0.6em] ${textColor} text-inter`}>{clinicName || 'Hanlan OC'}</span>
-                                                    <div className={`h-[1px] w-14 ${accentBg} mt-2 ml-auto shadow-inner`} />
+                                                    <div className={`h-[1px] w-14 bg-[#c5a059] mt-2 ml-auto shadow-inner`} />
                                                 </div>
                                             </div>
                                         </div>
