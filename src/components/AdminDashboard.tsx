@@ -2468,12 +2468,13 @@ export default function AdminDashboard() {
             <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between gap-6">
 
               {/* Left: Authority Metric Overlay (Dynamic Focus) */}
-              <div className="flex items-center gap-6">
-                <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 px-4 py-2 bg-white rounded-xl border border-[#1a1a1a]/5 shadow-sm transition-all hover:shadow-md cursor-default">
                   <div className="h-6 w-[2px] bg-red-400 rounded-full" />
                   <div className="flex flex-col">
-                    <span className="text-[10px] font-medium text-slate-400 uppercase tracking-widest leading-none mb-1">
+                    <span className="text-[10px] font-medium text-slate-400 uppercase tracking-widest leading-none flex items-center gap-1 mb-1">
                       Unsecured
+                      <TrendingUp className="w-3 h-3 text-red-400 rotate-180" strokeWidth={3} />
                     </span>
                     <div className="flex items-baseline gap-1">
                       <span className="text-xl font-black tabular-nums text-slate-900 tracking-tighter">
@@ -2483,11 +2484,12 @@ export default function AdminDashboard() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 px-4 py-2 bg-white rounded-xl border border-[#1a1a1a]/5 shadow-sm transition-all hover:shadow-md cursor-default">
                   <div className="h-6 w-[2px] bg-emerald-500 rounded-full" />
                   <div className="flex flex-col">
-                    <span className="text-[10px] font-medium text-slate-400 uppercase tracking-widest leading-none mb-1">
+                    <span className="text-[10px] font-medium text-slate-400 uppercase tracking-widest leading-none flex items-center gap-1 mb-1">
                       Secured
+                      <TrendingUp className="w-3 h-3 text-emerald-500" strokeWidth={3} />
                     </span>
                     <div className="flex items-baseline gap-1">
                       <span className="text-xl font-black tabular-nums text-slate-900 tracking-tighter">
@@ -2536,7 +2538,7 @@ export default function AdminDashboard() {
                       {activeTab === tab && (
                         <motion.div
                           layoutId="activeTabGlobal"
-                          className="absolute inset-0 bg-white rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] z-[-1]"
+                          className="absolute inset-0 bg-slate-50/80 rounded-xl shadow-[0_1px_0_rgba(0,0,0,0.05)] z-[-1]"
                           transition={{ type: "spring", stiffness: 400, damping: 30 }}
                         />
                       )}

@@ -157,6 +157,14 @@ export const PatientCard = React.memo(function PatientCard({
       >
         <div {...attributes} {...listeners} className="absolute inset-0 z-0 outline-none rounded-2xl" />
 
+        {/* Patient Journey Viz */}
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-slate-100 rounded-t-2xl overflow-hidden z-0">
+          <div 
+            className="h-full bg-gradient-to-r from-slate-300 to-[#88b399]" 
+            style={{ width: `${lead.intent_score || Math.min(100, (lead.potential_value || 1000) / 100)}%` }}
+          />
+        </div>
+
         <div className="relative z-10 pointer-events-none">
           <div className="flex justify-between items-start mb-2">
             <div>
@@ -219,14 +227,15 @@ export const PatientCard = React.memo(function PatientCard({
                     alert("⚠️ CANNOT CONNECT: This lead is missing a registered phone number. Please update the patient records.");
                   }
                 }}
-                className={`w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl transition-all border
+                className={`group/main flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl transition-all border backdrop-blur-sm relative overflow-hidden w-full
                   ${hasPhone 
                     ? `${getActionConfig(lead.status).text} ${getActionConfig(lead.status).bg} hover:text-white ${getActionConfig(lead.status).hoverBg} ${getActionConfig(lead.status).border}` 
                     : 'text-[#4f4f4f] bg-slate-50 border-slate-200 cursor-not-allowed opacity-50'
                   }`}
               >
-                {React.createElement(getActionConfig(lead.status).icon, { className: "w-3.5 h-3.5", strokeWidth: 1.5 })}
-                <span className="text-[10px] font-bold uppercase tracking-tight font-inter">
+                <div className="absolute inset-0 bg-white/40 pointer-events-none group-hover/main:opacity-0 transition-opacity" />
+                {React.createElement(getActionConfig(lead.status).icon, { className: "w-3.5 h-3.5 relative z-10", strokeWidth: 1.5 })}
+                <span className="text-[10px] font-bold uppercase tracking-tight font-inter relative z-10">
                   {getActionConfig(lead.status).label}
                 </span>
               </button>
@@ -240,10 +249,11 @@ export const PatientCard = React.memo(function PatientCard({
                        e.stopPropagation();
                        onOpenEmailModal?.(lead);
                      }}
-                     className="flex-1 flex items-center justify-center gap-2 px-3 py-1.5 bg-transparent border border-slate-200 rounded-xl text-[#004d40] border-[#004d40]/30 hover:border-[#004d40] hover:bg-[#004d40]/5 transition-all duration-300 font-inter"
+                     className="group/btn flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 bg-transparent border border-slate-200 rounded-xl text-[#004d40] border-[#004d40]/30 hover:border-[#004d40] hover:bg-[#004d40]/5 transition-all duration-300 font-inter backdrop-blur-sm relative overflow-hidden"
                    >
-                     <Mail className="w-3.5 h-3.5" strokeWidth={1.5} />
-                     <span className="text-[10px] font-bold uppercase tracking-tight">Post-Op</span>
+                     <div className="absolute inset-0 bg-white/40 pointer-events-none group-hover/btn:opacity-0 transition-opacity" />
+                     <Mail className="w-3.5 h-3.5 relative z-10" strokeWidth={1.5} />
+                     <span className="text-[10px] font-bold uppercase tracking-tight relative z-10">Post-Op</span>
                    </button>
                 )}
                 {/* Context-Aware Email Button */}
@@ -257,10 +267,11 @@ export const PatientCard = React.memo(function PatientCard({
                       console.log(`[ACTION] Email triggering: ${label}`);
                       onOpenEmailModal?.(lead);
                     }}
-                    className="flex-1 flex items-center justify-center gap-2 px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all duration-300 group/email"
+                    className="group/email flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all duration-300 backdrop-blur-sm relative overflow-hidden"
                   >
-                    <Mail className="w-3.5 h-3.5 text-slate-400 group-hover/email:text-slate-700 transition-colors" strokeWidth={1.5} />
-                    <span className="text-[10px] font-bold uppercase tracking-tight font-inter">
+                    <div className="absolute inset-0 bg-white/30 pointer-events-none group-hover/email:opacity-0 transition-opacity" />
+                    <Mail className="w-3.5 h-3.5 text-slate-400 group-hover/email:text-slate-700 transition-colors relative z-10" strokeWidth={1.5} />
+                    <span className="text-[10px] font-bold uppercase tracking-tight font-inter relative z-10">
                       Email
                     </span>
                   </button>
@@ -274,10 +285,10 @@ export const PatientCard = React.memo(function PatientCard({
                     e.stopPropagation();
                     onOpenAudit?.(lead);
                   }}
-                  className="px-3 py-1.5 text-slate-400 hover:text-[#1a1a1a] bg-white rounded-xl transition-all border border-slate-200 hover:border-slate-300 flex items-center justify-center"
+                  className="px-3 py-1.5 text-slate-400 hover:text-[#1a1a1a] bg-white rounded-xl transition-all border border-slate-200 hover:border-slate-300 flex items-center justify-center relative overflow-hidden"
                   title="View Security Audit Trail"
                 >
-                  <Shield className="w-3.5 h-3.5" strokeWidth={1.5} />
+                  <Shield className="w-3.5 h-3.5 relative z-10" strokeWidth={1.5} />
                 </button>
               </div>
             </div>
