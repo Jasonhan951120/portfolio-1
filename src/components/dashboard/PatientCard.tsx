@@ -142,10 +142,10 @@ export const PatientCard = React.memo(function PatientCard({
         <div className="relative z-10 pointer-events-none">
           <div className="flex justify-between items-start mb-3">
             <div>
-              <h4 className="font-bold text-[14px] tracking-[-0.02em] text-black truncate mr-2 flex items-center gap-2" data-hj-suppress>
+              <h4 className="font-black text-base tracking-tight text-slate-900 truncate mr-2 flex items-center gap-2" data-hj-suppress>
                 {lead.name}
               </h4>
-              <p className="text-[10px] text-slate-900 font-bold mt-1 lowercase">Joined {timeAgo(lead.created_at)}</p>
+              <p className="text-[11px] text-slate-500 font-bold mt-0.5 uppercase tracking-tighter">Joined {timeAgo(lead.created_at)}</p>
             </div>
 
             <div className="flex flex-col items-end gap-1">
@@ -169,11 +169,11 @@ export const PatientCard = React.memo(function PatientCard({
                 <Sparkles className="w-2 h-2" /> AI {lead.intent_score}%
               </span>
             )}
-            <span className="text-[10px] font-black text-black bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200 uppercase tracking-tighter">
+            <span className="text-[11px] font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 uppercase tracking-tighter">
               {lead.service}
             </span>
             {lead.appointment_date && !isNaN(new Date(lead.appointment_date).getTime()) && (
-              <span className="text-[10px] font-black text-slate-900 bg-emerald-100 px-2 py-0.5 rounded-md border border-emerald-200">
+              <span className="text-[11px] font-bold text-slate-900 bg-emerald-100 px-2 py-0.5 rounded border border-emerald-200 uppercase tracking-tighter">
                 {new Date(lead.appointment_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
               </span>
             )}

@@ -63,7 +63,7 @@ export function KanbanCard({ lead, onClick }: KanbanCardProps) {
             `}
         >
             <div className="flex justify-between items-start mb-3">
-                <h4 className="font-bold text-gray-900 text-sm tracking-tight group-hover:text-[#87A96B] transition-colors" data-hj-suppress>{lead.name}</h4>
+                <h4 className="font-black text-slate-900 text-sm tracking-tight group-hover:text-emerald-600 transition-colors" data-hj-suppress>{lead.name}</h4>
                 <div className="flex flex-col items-end gap-1.5">
                     <div className={`px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-tighter border ${STATUS_COLORS[lead.status] || 'bg-gray-50 text-gray-400'}`}>
                         {lead.status}
@@ -79,7 +79,7 @@ export function KanbanCard({ lead, onClick }: KanbanCardProps) {
                 </div>
             </div>
 
-            <p className="text-[10px] text-gray-500 font-medium mb-4 uppercase tracking-tighter line-clamp-1">{lead.service}</p>
+            <p className="text-[11px] text-slate-500 font-bold mb-4 uppercase tracking-tighter line-clamp-1">{lead.service}</p>
 
             <div className="flex items-center justify-between pt-4 border-t border-gray-50">
                 <div className="flex items-center gap-2">
@@ -139,8 +139,8 @@ export function KanbanCard({ lead, onClick }: KanbanCardProps) {
                     </div>
                 </div>
                 <div className="flex items-center gap-1.5">
-                    <Clock className="w-3 h-3 text-gray-300" />
-                    <span className="text-[8px] text-gray-400 font-bold uppercase tracking-tighter">
+                    <Clock className="w-3 h-3 text-slate-400" />
+                    <span className="text-[10px] text-slate-500 font-bold uppercase tracking-tighter">
                         {new Date(lead.created_at).toLocaleDateString()}
                     </span>
                 </div>
