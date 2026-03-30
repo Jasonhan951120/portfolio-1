@@ -132,9 +132,9 @@ export const PatientCard = React.memo(function PatientCard({
         }}
         transition={{ type: "spring", stiffness: 80, damping: 20 }}
         className={`rounded-2xl p-4 relative group focus:outline-none transition-all
-          ${isDragging ? 'border-emerald-500/30 cursor-grabbing bg-[#0A0F1E]/80 backdrop-blur-3xl shadow-2xl' :
-            isOverdue ? 'border-[#E63946]/50 hover:border-[#E63946]/80 cursor-grab animate-pulse bg-white/5 backdrop-blur-xl' :
-              'border-white/10 hover:border-emerald-500/20 cursor-grab hover:bg-white/[0.08] bg-white/5 backdrop-blur-xl shadow-lg'
+          ${isDragging ? 'border-emerald-500/30 cursor-grabbing bg-white shadow-2xl' :
+            isOverdue ? 'border-[#E63946]/50 hover:border-[#E63946]/80 cursor-grab animate-pulse bg-white shadow-lg' :
+              'border-slate-200/60 hover:border-emerald-500/20 cursor-grab bg-white shadow-sm'
           }`}
       >
         <div {...attributes} {...listeners} className="absolute inset-0 z-0 outline-none rounded-2xl" />
@@ -142,10 +142,10 @@ export const PatientCard = React.memo(function PatientCard({
         <div className="relative z-10 pointer-events-none">
           <div className="flex justify-between items-start mb-3">
             <div>
-              <h4 className="font-bold text-[14px] tracking-[-0.02em] text-white truncate mr-2 flex items-center gap-2" data-hj-suppress>
+              <h4 className="font-bold text-[14px] tracking-[-0.02em] text-black truncate mr-2 flex items-center gap-2" data-hj-suppress>
                 {lead.name}
               </h4>
-              <p className="text-[10px] text-zinc-400 font-medium mt-1 lowercase">Joined {timeAgo(lead.created_at)}</p>
+              <p className="text-[10px] text-slate-900 font-bold mt-1 lowercase">Joined {timeAgo(lead.created_at)}</p>
             </div>
 
             <div className="flex flex-col items-end gap-1">
@@ -169,11 +169,11 @@ export const PatientCard = React.memo(function PatientCard({
                 <Sparkles className="w-2 h-2" /> AI {lead.intent_score}%
               </span>
             )}
-            <span className="text-[10px] font-bold text-zinc-300 bg-white/5 px-2 py-0.5 rounded-md border border-white/10 uppercase tracking-tighter">
+            <span className="text-[10px] font-black text-black bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200 uppercase tracking-tighter">
               {lead.service}
             </span>
             {lead.appointment_date && !isNaN(new Date(lead.appointment_date).getTime()) && (
-              <span className="text-[10px] font-bold text-[#87A96B] bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">
+              <span className="text-[10px] font-black text-slate-900 bg-emerald-100 px-2 py-0.5 rounded-md border border-emerald-200">
                 {new Date(lead.appointment_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
               </span>
             )}
