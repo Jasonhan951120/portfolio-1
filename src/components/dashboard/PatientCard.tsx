@@ -2,9 +2,26 @@ import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Send, MessageCircle, Shield, AlertTriangle, Sparkles, Users } from 'lucide-react';
+import { Send, MessageCircle, Shield, AlertTriangle, Sparkles, Users, Hand, CalendarCheck, ShieldCheck, FileText, Mail } from 'lucide-react';
 import { type ConsultationRequest } from "../../lib/supabase";
 import { useDashboardStore } from "../../store/useDashboardStore";
+
+const getActionConfig = (status: string) => {
+  switch (status) {
+    case "New Lead":
+      return { label: "Send Welcome", icon: Hand, color: "bg-[#10B981]" };
+    case "Booked":
+      return { label: "Confirm Appt", icon: CalendarCheck, color: "bg-[#6366F1]" };
+    case "Visited":
+    case "Proposal Sent":
+      return { label: "Send PT (Plan)", icon: FileText, color: "bg-[#87A96B]" };
+    case "Treated":
+    case "Closed Won":
+      return { label: "Send Care Instructions", icon: ShieldCheck, color: "bg-[#0F172A]" };
+    default:
+      return { label: "Contact Now", icon: MessageCircle, color: "bg-slate-800" };
+  }
+};
 
 interface PatientCardProps {
   id: string;
@@ -184,57 +201,71 @@ export const PatientCard = React.memo(function PatientCard({
             )}
           </div>
           
-          <div className="mt-4 pt-4 border-t border-white/[0.05] flex justify-between items-center pointer-events-auto opacity-0 group-hover:opacity-100 transition-all duration-300">
-            <div className="flex gap-4 w-full justify-end">
-
-
-              {/* Dynamic WhatsApp Button */}
+          <div className="mt-4 pt-4 border-t border-slate-100 flex flex-col gap-2 pointer-events-auto opacity-0 group-hover:opacity-100 transition-all duration-300">
+            <div className="flex flex-col gap-2 w-full">
+              {/* Context-Aware WhatsApp Button */}
               <button
                 onPointerDown={(e) => e.stopPropagation()}
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
+                  const { label } = getActionConfig(lead.status);
+                  console.log(`[ACTION] WhatsApp triggering: ${label}`);
+                  
                   if (hasPhone) {
                     onOpenWhatsAppModal?.(lead);
                   } else {
                     alert("⚠️ CANNOT CONNECT: This lead is missing a registered phone number. Please update the patient records.");
                   }
                 }}
-                className={`p-1.5 rounded-lg transition-all border flex items-center justify-center
+                className={`w-full flex items-center justify-between px-4 py-2 rounded-xl transition-all border
                   ${hasPhone 
-                    ? 'text-[#25D366] bg-[#25D366]/10 border-[#25D366]/20 hover:bg-[#25D366]/20 hover:shadow-[0_0_15px_rgba(37,211,102,0.4)] cursor-pointer' 
-                    : 'text-zinc-600 bg-white/5 border-white/5 cursor-not-allowed opacity-50'
+                    ? `${getActionConfig(lead.status).color} text-white border-transparent hover:scale-[1.02] active:scale-95 shadow-md shadow-black/5` 
+                    : 'text-zinc-400 bg-slate-50 border-slate-200 cursor-not-allowed opacity-50'
                   }`}
-                title={hasPhone ? "Contact via WhatsApp" : "Phone number required"}
               >
-                <MessageCircle className="w-3.5 h-3.5" strokeWidth={1.5} />
+                <div className="flex items-center gap-2.5">
+                  {React.createElement(getActionConfig(lead.status).icon, { className: "w-3.5 h-3.5", strokeWidth: 2.5 })}
+                  <span className="text-[10px] font-black uppercase tracking-widest font-inter">
+                    {getActionConfig(lead.status).label}
+                  </span>
+                </div>
+                <MessageCircle className="w-3.5 h-3.5 opacity-50" strokeWidth={2} />
               </button>
 
-              <button
-                onPointerDown={(e) => e.stopPropagation()}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  onOpenAudit?.(lead);
-                }}
-                className="p-1.5 text-purple-400 hover:text-purple-300 bg-purple-500/10 hover:bg-purple-500/20 rounded-lg transition-all border border-purple-500/20 shadow-lg shadow-purple-500/5 cursor-pointer"
-                title="View Security Audit Trail"
-              >
-                <Shield className="w-3.5 h-3.5" strokeWidth={1.5} />
-              </button>
+              <div className="flex gap-2">
+                {/* Context-Aware Email Button */}
+                <button
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const { label } = getActionConfig(lead.status);
+                    console.log(`[ACTION] Email triggering: ${label}`);
+                    onOpenEmailModal?.(lead);
+                  }}
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl text-slate-900 hover:bg-slate-50 hover:border-slate-300 transition-all duration-300 group/email"
+                >
+                  <Mail className="w-3.5 h-3.5 text-slate-400 group-hover/email:text-slate-900 transition-colors" strokeWidth={2} />
+                  <span className="text-[9px] font-black uppercase tracking-widest text-slate-900 font-inter">
+                    Email {getActionConfig(lead.status).label.replace("Send ", "")}
+                  </span>
+                </button>
 
-              <button
-                onPointerDown={(e) => e.stopPropagation()}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  onOpenEmailModal?.(lead);
-                }}
-                className="p-1.5 text-[#87A96B] hover:text-[#87A96B]/80 bg-[#87A96B]/10 hover:bg-[#87A96B]/20 rounded-lg transition-all border border-[#87A96B]/20 cursor-pointer"
-                title="Send PT Link via Email"
-              >
-                <Send className="w-3.5 h-3.5" strokeWidth={1.5} />
-              </button>
+                {/* Audit Button */}
+                <button
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onOpenAudit?.(lead);
+                  }}
+                  className="p-2 text-slate-400 hover:text-purple-600 bg-slate-50 hover:bg-purple-50 rounded-xl transition-all border border-slate-200 hover:border-purple-200"
+                  title="View Security Audit Trail"
+                >
+                  <Shield className="w-3.5 h-3.5" strokeWidth={1.5} />
+                </button>
+              </div>
             </div>
           </div>
         </div>
