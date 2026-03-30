@@ -9,18 +9,18 @@ import { useDashboardStore } from "../../store/useDashboardStore";
 const getActionConfig = (status: string) => {
   switch (status) {
     case "New Lead":
-      return { label: "Send Welcome", icon: Hand, color: "bg-[#004d40]" };
+      return { label: "Send Welcome", icon: Hand, text: "text-[#004d40]", bg: "bg-[#004d40]/5", hoverBg: "hover:bg-[#004d40]", border: "border-[#004d40]/10" };
     case "Booked":
     case "Consultation Done":
-      return { label: "Confirm Appt", icon: CalendarCheck, color: "bg-[#004d40]" };
+      return { label: "Confirm Appt", icon: CalendarCheck, text: "text-[#004d40]", bg: "bg-[#004d40]/5", hoverBg: "hover:bg-[#004d40]", border: "border-[#004d40]/10" };
     case "Visited":
     case "Proposal Sent":
-      return { label: "Resend/Follow-up PT", icon: FileText, color: "bg-[#88b399]" };
+      return { label: "Resend PT", icon: FileText, text: "text-[#88b399]", bg: "bg-[#88b399]/10", hoverBg: "hover:bg-[#88b399]", border: "border-[#88b399]/20" };
     case "Treated":
     case "Closed Won":
-      return { label: "Send Care Instructions", icon: ShieldCheck, color: "bg-[#1a1a1a]" };
+      return { label: "Send Care", icon: ShieldCheck, text: "text-[#1a1a1a]", bg: "bg-[#1a1a1a]/5", hoverBg: "hover:bg-[#1a1a1a]", border: "border-[#1a1a1a]/10" };
     default:
-      return { label: "Contact Now", icon: MessageCircle, color: "bg-[#1a1a1a]" };
+      return { label: "Contact Now", icon: MessageCircle, text: "text-[#1a1a1a]", bg: "bg-[#1a1a1a]/5", hoverBg: "hover:bg-[#1a1a1a]", border: "border-[#1a1a1a]/10" };
   }
 };
 
@@ -140,19 +140,19 @@ export const PatientCard = React.memo(function PatientCard({
           scale: isDragging ? 1.02 : 1,
           rotate: isDragging ? 2 : 0,
           boxShadow: isDragging
-            ? "0 30px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1)"
+            ? "0 10px 30px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.5)"
             : isOverdue
-              ? "0 0 15px rgba(230,57,70,0.6)"
-              : "0 10px 30px -10px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(0,0,0,0.05)",
+              ? "0 0 10px rgba(230,57,70,0.2)"
+              : "0 2px 10px rgba(0,0,0,0.02), 0 4px 20px rgba(0,0,0,0.02)",
           opacity: isDragging ? 0.95 : 1,
           backgroundColor: isDragging ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,1)",
           y: isDragging ? -10 : 0
         }}
         transition={{ type: "spring", stiffness: 80, damping: 20 }}
-        className={`rounded-2xl p-6 relative group focus:outline-none transition-all shadow-lg border-[#1a1a1a]/10
-          ${isDragging ? 'border-[#1a1a1a]/30 cursor-grabbing bg-white shadow-2xl' :
+        className={`rounded-2xl p-6 relative group focus:outline-none transition-all shadow-[0_2px_10px_rgba(0,0,0,0.03)] border
+          ${isDragging ? 'border-[#1a1a1a]/10 cursor-grabbing bg-white' :
             isOverdue ? 'border-[#E63946]/50 hover:border-[#E63946]/80 cursor-grab animate-pulse bg-white' :
-              'border-[#1a1a1a]/10 hover:border-[#88b399]/30 cursor-grab bg-white'
+              'border-[#1a1a1a]/5 hover:border-[#88b399]/20 cursor-grab bg-white'
           }`}
       >
         <div {...attributes} {...listeners} className="absolute inset-0 z-0 outline-none rounded-2xl" />
@@ -180,38 +180,38 @@ export const PatientCard = React.memo(function PatientCard({
 
           <div className="flex flex-wrap gap-2 mb-1 items-center">
             {lead.intent_score && (
-              <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider flex items-center gap-1 border ${lead.intent_score >= 80 ? 'text-[#1a1a1a] bg-[#88b399]/20 border-transparent' :
+              <span className={`text-[9px] font-bold px-2 py-1 rounded uppercase tracking-tight flex items-center gap-1 border ${lead.intent_score >= 80 ? 'text-[#1a1a1a] bg-[#88b399]/20 border-transparent' :
                 lead.intent_score >= 50 ? 'text-[#1a1a1a] bg-[#c5a059]/30 border-transparent' :
                   'text-[#FF3B30] bg-[#FF3B30]/10 border-[#FF3B30]/20'
                 }`}>
-                <Sparkles className="w-2 h-2" /> AI {lead.intent_score}%
+                <Sparkles className="w-2.5 h-2.5" strokeWidth={1.5} /> AI {lead.intent_score}%
               </span>
             )}
-            <span className="text-[11px] font-semibold text-[#1a1a1a] font-inter px-2 py-0.5 rounded uppercase tracking-tight">
+            <span className="text-[11px] font-semibold text-[#1a1a1a] font-inter px-2 py-1 rounded uppercase tracking-tight bg-slate-50 border border-slate-100">
               {lead.service}
             </span>
             {lead.appointment_date && !isNaN(new Date(lead.appointment_date).getTime()) && (
-              <span className="text-[11px] font-semibold text-[#004d40] bg-[#88b399]/10 px-2 py-0.5 rounded uppercase tracking-tight">
+              <span className="text-[11px] font-semibold text-[#004d40] bg-[#004d40]/5 px-2 py-1 border border-[#004d40]/10 rounded uppercase tracking-tight">
                 {new Date(lead.appointment_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
               </span>
             )}
             {lead.status === "Consultation Done" && (
-              <span className="text-[11px] font-semibold text-white bg-[#004d40] px-2 py-0.5 rounded shadow-lg tracking-tight">
+              <span className="text-[11px] font-semibold text-[#004d40] bg-[#004d40]/10 border border-[#004d40]/20 px-2 py-1 rounded tracking-tight">
                 Consulted
               </span>
             )}
           </div>
           
-          <div className="mt-3 pt-3 border-t border-[#1a1a1a]/10 flex flex-col gap-2 pointer-events-auto transition-all duration-300">
+          <div className="mt-5 pt-5 border-t border-[#1a1a1a]/[0.03] flex flex-col gap-2 pointer-events-auto transition-all duration-300">
             <div className="flex flex-col gap-2 w-full">
-              {/* Context-Aware WhatsApp Button */}
+              {/* Context-Aware Primary Action Button */}
               <button
                 onPointerDown={(e) => e.stopPropagation()}
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
                   const { label } = getActionConfig(lead.status);
-                  console.log(`[ACTION] WhatsApp triggering: ${label}`);
+                  console.log(`[ACTION] Top Button triggering: ${label}`);
                   
                   if (hasPhone) {
                     onOpenWhatsAppModal?.(lead);
@@ -219,19 +219,16 @@ export const PatientCard = React.memo(function PatientCard({
                     alert("⚠️ CANNOT CONNECT: This lead is missing a registered phone number. Please update the patient records.");
                   }
                 }}
-                className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg transition-all border
+                className={`w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl transition-all border
                   ${hasPhone 
-                    ? `${getActionConfig(lead.status).color} text-white border-transparent hover:scale-[1.02] active:scale-95 shadow-md` 
+                    ? `${getActionConfig(lead.status).text} ${getActionConfig(lead.status).bg} hover:text-white ${getActionConfig(lead.status).hoverBg} ${getActionConfig(lead.status).border}` 
                     : 'text-[#4f4f4f] bg-slate-50 border-slate-200 cursor-not-allowed opacity-50'
                   }`}
               >
-                <div className="flex items-center gap-2">
-                  {React.createElement(getActionConfig(lead.status).icon, { className: "w-3.5 h-3.5", strokeWidth: 2.5 })}
-                  <span className="text-[10px] font-bold uppercase tracking-widest font-inter">
-                    {getActionConfig(lead.status).label}
-                  </span>
-                </div>
-                <MessageCircle className="w-3.5 h-3.5 opacity-50" strokeWidth={2} />
+                {React.createElement(getActionConfig(lead.status).icon, { className: "w-3.5 h-3.5", strokeWidth: 1.5 })}
+                <span className="text-[10px] font-bold uppercase tracking-tight font-inter">
+                  {getActionConfig(lead.status).label}
+                </span>
               </button>
 
               <div className="flex gap-2">
@@ -243,13 +240,13 @@ export const PatientCard = React.memo(function PatientCard({
                        e.stopPropagation();
                        onOpenEmailModal?.(lead);
                      }}
-                     className="flex-1 flex items-center justify-center gap-2 px-3 py-1.5 bg-transparent border border-[#004d40] rounded-lg text-[#004d40] hover:bg-[#004d40] hover:text-white transition-all duration-300 font-inter"
+                     className="flex-1 flex items-center justify-center gap-2 px-3 py-1.5 bg-transparent border border-slate-200 rounded-xl text-[#004d40] border-[#004d40]/30 hover:border-[#004d40] hover:bg-[#004d40]/5 transition-all duration-300 font-inter"
                    >
-                     <Mail className="w-3.5 h-3.5" strokeWidth={2} />
-                     <span className="text-[9px] font-bold uppercase tracking-widest">Post-Op Instructions</span>
+                     <Mail className="w-3.5 h-3.5" strokeWidth={1.5} />
+                     <span className="text-[10px] font-bold uppercase tracking-tight">Post-Op</span>
                    </button>
                 )}
-                {/* Context-Aware Email Button (Hidden if Post-Op is shown to save space, or shown as primary) */}
+                {/* Context-Aware Email Button */}
                 {!(lead.status === "Treated" || lead.status === "Closed Won") && (
                   <button
                     onPointerDown={(e) => e.stopPropagation()}
@@ -260,11 +257,11 @@ export const PatientCard = React.memo(function PatientCard({
                       console.log(`[ACTION] Email triggering: ${label}`);
                       onOpenEmailModal?.(lead);
                     }}
-                    className="flex-1 flex items-center justify-center gap-2 px-3 py-1.5 bg-white border border-[#1a1a1a]/10 rounded-lg text-[#1a1a1a] hover:bg-slate-50 hover:border-[#88b399]/30 transition-all duration-300 group/email"
+                    className="flex-1 flex items-center justify-center gap-2 px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all duration-300 group/email"
                   >
-                    <Mail className="w-3.5 h-3.5 text-[#4f4f4f] group-hover/email:text-[#1a1a1a] transition-colors" strokeWidth={2} />
-                    <span className="text-[9px] font-bold uppercase tracking-widest text-[#1a1a1a] font-inter">
-                      Email {getActionConfig(lead.status).label.replace("Send ", "")}
+                    <Mail className="w-3.5 h-3.5 text-slate-400 group-hover/email:text-slate-700 transition-colors" strokeWidth={1.5} />
+                    <span className="text-[10px] font-bold uppercase tracking-tight font-inter">
+                      Email
                     </span>
                   </button>
                 )}
@@ -277,7 +274,7 @@ export const PatientCard = React.memo(function PatientCard({
                     e.stopPropagation();
                     onOpenAudit?.(lead);
                   }}
-                  className="p-1.5 text-[#4f4f4f] hover:text-[#c5a059] bg-white rounded-lg transition-all border border-[#1a1a1a]/10 hover:border-[#c5a059]/30"
+                  className="px-3 py-1.5 text-slate-400 hover:text-[#1a1a1a] bg-white rounded-xl transition-all border border-slate-200 hover:border-slate-300 flex items-center justify-center"
                   title="View Security Audit Trail"
                 >
                   <Shield className="w-3.5 h-3.5" strokeWidth={1.5} />
