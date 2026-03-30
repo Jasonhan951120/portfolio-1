@@ -158,12 +158,12 @@ export const PatientCard = React.memo(function PatientCard({
         <div {...attributes} {...listeners} className="absolute inset-0 z-0 outline-none rounded-2xl" />
 
         <div className="relative z-10 pointer-events-none">
-          <div className="flex justify-between items-start mb-3">
+          <div className="flex justify-between items-start mb-2">
             <div>
-              <h4 className="font-extrabold text-[#1a1a1a] text-lg tracking-tight truncate mr-2 flex items-center gap-2" data-hj-suppress>
+              <h4 className="font-black text-[#1a1a1a] text-sm tracking-tighter truncate mr-2 flex items-center gap-2" data-hj-suppress>
                 {lead.name}
               </h4>
-              <p className="text-xs text-[#4f4f4f] font-medium mt-0.5 tracking-tight">Joined {timeAgo(lead.created_at)}</p>
+              <p className="text-[11px] text-[#4f4f4f] font-semibold mt-0 tracking-tight">Joined {timeAgo(lead.created_at)}</p>
             </div>
 
             <div className="flex flex-col items-end gap-1">
@@ -187,22 +187,22 @@ export const PatientCard = React.memo(function PatientCard({
                 <Sparkles className="w-2 h-2" /> AI {lead.intent_score}%
               </span>
             )}
-            <span className="text-[11px] font-semibold text-[#1a1a1a] font-inter px-2 py-0.5 rounded uppercase tracking-tighter">
+            <span className="text-[11px] font-semibold text-[#1a1a1a] font-inter px-2 py-0.5 rounded uppercase tracking-tight">
               {lead.service}
             </span>
             {lead.appointment_date && !isNaN(new Date(lead.appointment_date).getTime()) && (
-              <span className="text-[11px] font-semibold text-[#004d40] bg-[#88b399]/10 px-2 py-0.5 rounded uppercase tracking-tighter">
+              <span className="text-[11px] font-semibold text-[#004d40] bg-[#88b399]/10 px-2 py-0.5 rounded uppercase tracking-tight">
                 {new Date(lead.appointment_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
               </span>
             )}
             {lead.status === "Consultation Done" && (
-              <span className="text-[10px] font-bold text-white bg-[#004d40] px-2 py-0.5 rounded-md shadow-lg">
+              <span className="text-[11px] font-semibold text-white bg-[#004d40] px-2 py-0.5 rounded shadow-lg tracking-tight">
                 Consulted
               </span>
             )}
           </div>
           
-          <div className="mt-4 pt-4 border-t border-[#1a1a1a]/10 flex flex-col gap-2 pointer-events-auto transition-all duration-300">
+          <div className="mt-3 pt-3 border-t border-[#1a1a1a]/10 flex flex-col gap-2 pointer-events-auto transition-all duration-300">
             <div className="flex flex-col gap-2 w-full">
               {/* Context-Aware WhatsApp Button */}
               <button
@@ -219,13 +219,13 @@ export const PatientCard = React.memo(function PatientCard({
                     alert("⚠️ CANNOT CONNECT: This lead is missing a registered phone number. Please update the patient records.");
                   }
                 }}
-                className={`w-full flex items-center justify-between px-4 py-2 rounded-xl transition-all border
+                className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg transition-all border
                   ${hasPhone 
                     ? `${getActionConfig(lead.status).color} text-white border-transparent hover:scale-[1.02] active:scale-95 shadow-md` 
                     : 'text-[#4f4f4f] bg-slate-50 border-slate-200 cursor-not-allowed opacity-50'
                   }`}
               >
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-2">
                   {React.createElement(getActionConfig(lead.status).icon, { className: "w-3.5 h-3.5", strokeWidth: 2.5 })}
                   <span className="text-[10px] font-bold uppercase tracking-widest font-inter">
                     {getActionConfig(lead.status).label}
@@ -243,7 +243,7 @@ export const PatientCard = React.memo(function PatientCard({
                        e.stopPropagation();
                        onOpenEmailModal?.(lead);
                      }}
-                     className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-transparent border border-[#004d40] rounded-xl text-[#004d40] hover:bg-[#004d40] hover:text-white transition-all duration-300 font-inter"
+                     className="flex-1 flex items-center justify-center gap-2 px-3 py-1.5 bg-transparent border border-[#004d40] rounded-lg text-[#004d40] hover:bg-[#004d40] hover:text-white transition-all duration-300 font-inter"
                    >
                      <Mail className="w-3.5 h-3.5" strokeWidth={2} />
                      <span className="text-[9px] font-bold uppercase tracking-widest">Post-Op Instructions</span>
@@ -260,7 +260,7 @@ export const PatientCard = React.memo(function PatientCard({
                       console.log(`[ACTION] Email triggering: ${label}`);
                       onOpenEmailModal?.(lead);
                     }}
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-white border border-[#1a1a1a]/10 rounded-xl text-[#1a1a1a] hover:bg-slate-50 hover:border-[#88b399]/30 transition-all duration-300 group/email"
+                    className="flex-1 flex items-center justify-center gap-2 px-3 py-1.5 bg-white border border-[#1a1a1a]/10 rounded-lg text-[#1a1a1a] hover:bg-slate-50 hover:border-[#88b399]/30 transition-all duration-300 group/email"
                   >
                     <Mail className="w-3.5 h-3.5 text-[#4f4f4f] group-hover/email:text-[#1a1a1a] transition-colors" strokeWidth={2} />
                     <span className="text-[9px] font-bold uppercase tracking-widest text-[#1a1a1a] font-inter">
@@ -277,7 +277,7 @@ export const PatientCard = React.memo(function PatientCard({
                     e.stopPropagation();
                     onOpenAudit?.(lead);
                   }}
-                  className="p-2 text-[#4f4f4f] hover:text-[#c5a059] bg-white rounded-xl transition-all border border-[#1a1a1a]/10 hover:border-[#c5a059]/30"
+                  className="p-1.5 text-[#4f4f4f] hover:text-[#c5a059] bg-white rounded-lg transition-all border border-[#1a1a1a]/10 hover:border-[#c5a059]/30"
                   title="View Security Audit Trail"
                 >
                   <Shield className="w-3.5 h-3.5" strokeWidth={1.5} />
