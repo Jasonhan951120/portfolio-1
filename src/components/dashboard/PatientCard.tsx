@@ -7,6 +7,7 @@ import { type ConsultationRequest } from "../../lib/supabase";
 import { useDashboardStore } from "../../store/useDashboardStore";
 import { INDUSTRY_TEMPLATES } from "../../lib/treatmentTemplates";
 import { AnimatePresence } from 'motion/react';
+import { calculateFuzzyMatch } from "../../lib/autoMatcher";
 
 const getActionConfig = (status: string) => {
   switch (status) {
@@ -64,17 +65,17 @@ export const PatientCard = React.memo(function PatientCard({
   const [timeLeft, setTimeLeft] = useState<number>(15 * 60);
   const [isExiting, setIsExiting] = useState(false);
   const [isAIGenerating, setIsAIGenerating] = useState(false);
-  const { clinicName, clinicType } = useDashboardStore();
+  const { clinicName, activeTreatments, templates, updateLead } = useDashboardStore();
 
-  const safeType = ['Dental', 'Aesthetic', 'Wellness'].includes(clinicType as string) ? clinicType : 'Dental';
-  const activeIndustryData = INDUSTRY_TEMPLATES[safeType as keyof typeof INDUSTRY_TEMPLATES];
   const searchService = (lead.service || '').toLowerCase();
   
-  // Dynamic Detection of Unmapped Treatments
-  const isUnmapped = !Object.keys(activeIndustryData).find(k => 
-    k.toLowerCase().includes(searchService) || searchService.includes(k.toLowerCase())
-  );
-
+  // High-End Auto-Matching Logic (Fuzzy Match)
+  // Fallback to local templates if DB activeTreatments hasn't loaded
+  const matcherSource = activeTreatments?.length > 0 ? activeTreatments : templates;
+  const matchedTemplate = calculateFuzzyMatch(searchService, matcherSource);
+  const isUnmapped = !matchedTemplate;
+  const officialPrice = matchedTemplate?.potential_revenue || matchedTemplate?.price;
+  const isPriceMismatch = matchedTemplate && lead.potential_value !== officialPrice && lead.potential_value != null && officialPrice != null;
   useEffect(() => {
     const created = new Date(lead.created_at).getTime();
     const now = Date.now();
@@ -211,12 +212,30 @@ export const PatientCard = React.memo(function PatientCard({
                 <span className="text-[11px] font-semibold text-[#1a1a1a] font-inter px-2 py-1 rounded uppercase tracking-tight bg-slate-50 border border-slate-100 flex items-center gap-1.5">
                   {lead.service}
                   <span className="text-[9px] font-black uppercase tracking-wider text-amber-800 bg-amber-100 border border-amber-200 px-1 py-0.5 rounded shadow-sm flex items-center gap-0.5">
-                    <Sparkles className="w-2.5 h-2.5" /> NEW
+                    <Sparkles className="w-2.5 h-2.5" /> NEW AI DRAFT
                   </span>
                 </span>
+            ) : isPriceMismatch ? (
+                <div className="flex flex-col gap-1 items-start">
+                  <span className="text-[11px] font-semibold text-[#1a1a1a] font-inter px-2 py-1 rounded uppercase tracking-tight bg-slate-50 border border-slate-100 flex items-center gap-1.5">
+                    {matchedTemplate?.service_name || matchedTemplate?.name || lead.service}
+                    <span className="text-[9px] font-black uppercase tracking-wider text-rose-800 bg-rose-100 border border-rose-200 px-1 py-0.5 rounded shadow-sm flex items-center gap-0.5">
+                      <AlertTriangle className="w-2.5 h-2.5" /> PRICE MISMATCH
+                    </span>
+                  </span>
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      updateLead(lead.id, { potential_value: officialPrice });
+                    }}
+                    className="text-[9px] font-bold text-blue-600 hover:text-blue-700 bg-blue-50 px-2 py-1 flex items-center gap-1 rounded border border-blue-100 hover:border-blue-200 transition-all ml-1"
+                  >
+                    Sync to {currency}{(officialPrice || 0).toLocaleString()}
+                  </button>
+                </div>
             ) : (
                 <span className="text-[11px] font-semibold text-[#1a1a1a] font-inter px-2 py-1 rounded uppercase tracking-tight bg-slate-50 border border-slate-100">
-                  {lead.service}
+                  {matchedTemplate?.service_name || matchedTemplate?.name || lead.service}
                 </span>
             )}
             {lead.appointment_date && !isNaN(new Date(lead.appointment_date).getTime()) && (

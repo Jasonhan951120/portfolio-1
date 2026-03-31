@@ -78,7 +78,8 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
                 k.toLowerCase().includes(sRawStr) || sRawStr.includes(k.toLowerCase())
             );
             
-            const service = serviceMatch || "Premium Consultation";
+            // Pass raw service if no match, letting PatientCard fuzzy matcher handle it
+            const service = serviceMatch || serviceRaw || "Premium Consultation";
 
             // Determine status fallback if nonsensical
             const validStatuses = ["New Lead", "Booked", "Visited", "Treated", "Sale Closed"];

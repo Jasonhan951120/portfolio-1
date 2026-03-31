@@ -15,10 +15,11 @@ const PTDraftMode: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const [searchParams] = useSearchParams();
     const treatmentQuery = searchParams.get('treatment') || 'Unknown Treatment';
-    const { clinicName, clinicLogo, clinicType } = useDashboardStore();
+    const { clinicName, clinicLogo, clinicType, clinicId } = useDashboardStore();
     const [lead, setLead] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [saved, setSaved] = useState(false);
+    const [saveToSettings, setSaveToSettings] = useState(true);
 
     useEffect(() => {
         const fetchLead = async () => {
@@ -47,7 +48,24 @@ const PTDraftMode: React.FC = () => {
         fetchLead();
     }, [id]);
 
-    const handleSave = () => {
+    const dynamicTotalValue = lead?.pt_price_override ? Number(lead.pt_price_override) : (lead?.potential_value ? Number(lead.potential_value) : 2500);
+    const dynamicMonthly = Math.round(dynamicTotalValue / 24);
+
+    const handleSave = async () => {
+        if (saveToSettings) {
+            try {
+                const { error } = await supabase.from('clinic_treatments').insert({
+                    clinic_id: lead?.clinic_id || clinicId || 'hanlan-clinical-01',
+                    service_name: treatmentQuery,
+                    potential_revenue: dynamicTotalValue,
+                    color: '#F4D03F', // Default Gold for AI injected
+                    order_index: 99
+                });
+                if (error) throw error;
+            } catch (err) {
+                console.error("Failed to save to global settings:", err);
+            }
+        }
         setSaved(true);
         setTimeout(() => setSaved(false), 3000);
     };
@@ -77,10 +95,6 @@ const PTDraftMode: React.FC = () => {
     // Fallback logic for TypeScript typing & dynamic injection
     const safeType = ['Dental', 'Aesthetic', 'Wellness'].includes(clinicType as string) ? clinicType : 'Dental';
     const fallback = genericAssets[safeType as keyof typeof genericAssets];
-    
-    // Fallback Total Value Logic
-    const dynamicTotalValue = lead?.pt_price_override ? Number(lead.pt_price_override) : (lead?.potential_value ? Number(lead.potential_value) : 2500);
-    const dynamicMonthly = Math.round(dynamicTotalValue / 24);
 
     if (loading) return (
         <div className="min-h-screen bg-white flex items-center justify-center">
@@ -106,28 +120,42 @@ const PTDraftMode: React.FC = () => {
                 </div>
                 
                 {/* Save & Learn CTA for the Doctor */}
-                <div className="hidden md:flex items-center gap-4">
-                    <AnimatePresence>
-                        {saved && (
-                            <motion.span 
-                                initial={{ opacity: 0, x: 10 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0 }}
-                                className="text-[11px] font-bold text-emerald-600 flex items-center gap-1.5 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-200"
-                            >
-                                <Check className="w-3.5 h-3.5" /> Template Engine Updated
-                            </motion.span>
-                        )}
-                    </AnimatePresence>
-                    <button 
-                        onClick={handleSave}
-                        className="px-5 py-2.5 bg-amber-50 rounded-full text-amber-700 font-bold uppercase tracking-widest text-[10px] flex items-center gap-2 border border-amber-200 hover:bg-amber-100 transition-colors shadow-sm cursor-pointer"
-                    >
-                        <PlusCircle className="w-4 h-4" /> Save as New Template
-                    </button>
-                    <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-1.5">
-                        <Sparkles className="w-4 h-4 text-amber-500" /> AI Draft Mode
+                <div className="hidden md:flex flex-col items-end gap-2">
+                    <div className="flex items-center gap-4">
+                        <AnimatePresence>
+                            {saved && (
+                                <motion.span 
+                                    initial={{ opacity: 0, x: 10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0 }}
+                                    className="text-[11px] font-bold text-emerald-600 flex items-center gap-1.5 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-200"
+                                >
+                                    <Check className="w-3.5 h-3.5" /> Template Engine Updated
+                                </motion.span>
+                            )}
+                        </AnimatePresence>
+                        <button 
+                            onClick={handleSave}
+                            className="px-5 py-2.5 bg-amber-50 rounded-full text-amber-700 font-bold uppercase tracking-widest text-[10px] flex items-center gap-2 border border-amber-200 hover:bg-amber-100 transition-colors shadow-sm cursor-pointer"
+                        >
+                            <PlusCircle className="w-4 h-4" /> Save as New Template
+                        </button>
+                        <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-1.5">
+                            <Sparkles className="w-4 h-4 text-amber-500" /> AI Draft Mode
+                        </div>
                     </div>
+                    
+                    <label className="flex items-center gap-2 cursor-pointer group mt-1">
+                        <input 
+                            type="checkbox" 
+                            checked={saveToSettings}
+                            onChange={(e) => setSaveToSettings(e.target.checked)}
+                            className="w-3.5 h-3.5 rounded border-gray-300 text-amber-600 focus:ring-amber-500 transition-colors"
+                        />
+                        <span className="text-[10px] uppercase font-bold tracking-tight text-slate-500 group-hover:text-amber-700 transition-colors">
+                            Add this new treatment & price to global settings
+                        </span>
+                    </label>
                 </div>
             </header>
 

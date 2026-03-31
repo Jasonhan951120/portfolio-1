@@ -50,6 +50,8 @@ interface DashboardState {
   // Clinic Settings (The Warehouse)
   templates: TreatmentTemplate[];
   setTemplates: (templates: TreatmentTemplate[]) => void;
+  activeTreatments: any[];
+  setActiveTreatments: (treatments: any[]) => void;
 
   // Security & Audit State
   auditLogs: Record<string, any[]>;
@@ -160,6 +162,9 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
     localStorage.setItem('clinic_templates', JSON.stringify(templates));
     set({ templates });
   },
+
+  activeTreatments: [],
+  setActiveTreatments: (treatments) => set({ activeTreatments: treatments }),
 
   updateLead: (id, updates) => set((state) => ({
     leads: state.leads.map((l) => l.id === id ? { ...l, ...updates } : l)

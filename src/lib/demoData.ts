@@ -31,7 +31,7 @@ export const DEMO_LEADS: Partial<ConsultationRequest>[] = [
     {
         id: "demo-1",
         name: "James Carter",
-        service: "Dental Implants",
+        service: "Quantum Laser Therapy",
         potential_value: 8500,
         status: "New Lead",
         intent_score: 94,

@@ -803,11 +803,11 @@ export default function AdminDashboard() {
     clinicType,
   } = useDashboardStore();
   
-  const patients = (leads || []).map(l => 
-    (l.name.includes('James') || l.name.includes('Donggyun'))
-      ? { ...l, service: 'Quantum Laser Therapy', status: 'New Lead' } 
-      : l
-  ) as ConsultationRequest[]; // Lead Architect Safety: Guaranteed array initialization
+  const patients = (leads || []).map(l => {
+    if (l.name.includes('James')) return { ...l, service: 'Quantum Laser', potential_value: 5000, status: 'New Lead' };
+    if (l.name.includes('Donggyun')) return { ...l, service: 'Dental Implant', potential_value: 3800, status: 'New Lead' };
+    return l;
+  }) as ConsultationRequest[]; // Lead Architect Safety: Guaranteed array initialization
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const handleSimulatedUpload = () => {
@@ -1549,8 +1549,10 @@ export default function AdminDashboard() {
       const { data: teamData } = clinicData ? await supabase.from('profiles').select('*').eq('clinic_id', clinicData.id) : { data: null };
 
       if (clinicData) setClinic(clinicData);
-      if (treatmentsData) setTreatments(treatmentsData);
-      if (resourcesData) setResources(resourcesData);
+      if (treatmentsData) {
+        setTreatments(treatmentsData);
+        useDashboardStore.getState().setActiveTreatments(treatmentsData);
+      }      if (resourcesData) setResources(resourcesData);
       if (teamData) {
         setTeamMembers(teamData);
         setDoctors(teamData);
