@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Send, MessageCircle, Shield, AlertTriangle, Sparkles, Users, Hand, CalendarCheck, ShieldCheck, FileText, Mail } from 'lucide-react';
+import { Send, MessageCircle, Shield, AlertTriangle, Sparkles, Users, Hand, CalendarCheck, ShieldCheck, FileText, Mail, FileCog } from 'lucide-react';
 import { type ConsultationRequest } from "../../lib/supabase";
 import { useDashboardStore } from "../../store/useDashboardStore";
+import { INDUSTRY_TEMPLATES } from "../../lib/treatmentTemplates";
+import { AnimatePresence } from 'motion/react';
 
 const getActionConfig = (status: string) => {
   switch (status) {
@@ -61,7 +63,17 @@ export const PatientCard = React.memo(function PatientCard({
 }: PatientCardProps) {
   const [timeLeft, setTimeLeft] = useState<number>(15 * 60);
   const [isExiting, setIsExiting] = useState(false);
-  const { clinicName } = useDashboardStore();
+  const [isAIGenerating, setIsAIGenerating] = useState(false);
+  const { clinicName, clinicType } = useDashboardStore();
+
+  const safeType = ['Dental', 'Aesthetic', 'Wellness'].includes(clinicType as string) ? clinicType : 'Dental';
+  const activeIndustryData = INDUSTRY_TEMPLATES[safeType as keyof typeof INDUSTRY_TEMPLATES];
+  const searchService = (lead.service || '').toLowerCase();
+  
+  // Dynamic Detection of Unmapped Treatments
+  const isUnmapped = !Object.keys(activeIndustryData).find(k => 
+    k.toLowerCase().includes(searchService) || searchService.includes(k.toLowerCase())
+  );
 
   useEffect(() => {
     const created = new Date(lead.created_at).getTime();
@@ -195,9 +207,18 @@ export const PatientCard = React.memo(function PatientCard({
                 <Sparkles className="w-2.5 h-2.5" strokeWidth={1.5} /> AI {lead.intent_score}%
               </span>
             )}
-            <span className="text-[11px] font-semibold text-[#1a1a1a] font-inter px-2 py-1 rounded uppercase tracking-tight bg-slate-50 border border-slate-100">
-              {lead.service}
-            </span>
+            {isUnmapped ? (
+                <span className="text-[11px] font-semibold text-[#1a1a1a] font-inter px-2 py-1 rounded uppercase tracking-tight bg-slate-50 border border-slate-100 flex items-center gap-1.5">
+                  {lead.service}
+                  <span className="text-[9px] font-black uppercase tracking-wider text-amber-800 bg-amber-100 border border-amber-200 px-1 py-0.5 rounded shadow-sm flex items-center gap-0.5">
+                    <Sparkles className="w-2.5 h-2.5" /> NEW
+                  </span>
+                </span>
+            ) : (
+                <span className="text-[11px] font-semibold text-[#1a1a1a] font-inter px-2 py-1 rounded uppercase tracking-tight bg-slate-50 border border-slate-100">
+                  {lead.service}
+                </span>
+            )}
             {lead.appointment_date && !isNaN(new Date(lead.appointment_date).getTime()) && (
               <span className="text-[11px] font-semibold text-[#004d40] bg-[#004d40]/5 px-2 py-1 border border-[#004d40]/10 rounded uppercase tracking-tight">
                 {new Date(lead.appointment_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
@@ -218,6 +239,17 @@ export const PatientCard = React.memo(function PatientCard({
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
+
+                  // Intercept logic for unmapped AI fallbacks
+                  if (isUnmapped) {
+                    setIsAIGenerating(true);
+                    setTimeout(() => {
+                        setIsAIGenerating(false);
+                        window.open(`/pt/draft/${lead.id}?treatment=${encodeURIComponent(lead.service || 'New Treatment')}`);
+                    }, 2500);
+                    return;
+                  }
+
                   const { label } = getActionConfig(lead.status);
                   console.log(`[ACTION] Top Button triggering: ${label}`);
                   
@@ -228,17 +260,43 @@ export const PatientCard = React.memo(function PatientCard({
                   }
                 }}
                 className={`group/main flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl transition-all border backdrop-blur-sm relative overflow-hidden w-full
-                  ${hasPhone 
+                  ${isUnmapped ? 'bg-amber-500 text-white border-amber-600 hover:bg-amber-600' :
+                  hasPhone 
                     ? `${getActionConfig(lead.status).text} ${getActionConfig(lead.status).bg} hover:text-white ${getActionConfig(lead.status).hoverBg} ${getActionConfig(lead.status).border}` 
                     : 'text-[#4f4f4f] bg-slate-50 border-slate-200 cursor-not-allowed opacity-50'
                   }`}
               >
                 <div className="absolute inset-0 bg-white/40 pointer-events-none group-hover/main:opacity-0 transition-opacity" />
-                {React.createElement(getActionConfig(lead.status).icon, { className: "w-3.5 h-3.5 relative z-10", strokeWidth: 1.5 })}
+                {isUnmapped ? (
+                  <FileCog className="w-4 h-4 relative z-10 animate-pulse" strokeWidth={1.5} />
+                ) : (
+                  React.createElement(getActionConfig(lead.status).icon, { className: "w-3.5 h-3.5 relative z-10", strokeWidth: 1.5 })
+                )}
                 <span className="text-[10px] font-bold uppercase tracking-tight font-inter relative z-10">
-                  {getActionConfig(lead.status).label}
+                  {isUnmapped ? "AI GENERATE PT" : getActionConfig(lead.status).label}
                 </span>
               </button>
+
+              <AnimatePresence>
+                {isAIGenerating && (
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-white/40 backdrop-blur-md"
+                    >
+                        <div className="bg-white border text-left border-black/5 rounded-[24px] p-8 shadow-[0_8px_40px_rgb(0,0,0,0.12)] flex flex-col items-center justify-center gap-4 max-w-sm w-full">
+                            <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1.5 }}>
+                                <Sparkles className="w-8 h-8 text-amber-500" />
+                            </motion.div>
+                            <p className="text-sm font-bold text-slate-800 text-center uppercase tracking-widest mt-2 px-4 leading-relaxed">
+                                ✨ AI is generating a new PT template for<br/>
+                                <span className="text-amber-600 mt-1 block px-2 py-1 bg-amber-50 rounded-lg">{lead.service}</span>
+                            </p>
+                        </div>
+                    </motion.div>
+                )}
+              </AnimatePresence>
 
               <div className="flex gap-2">
                 {(lead.status === "Treated" || lead.status === "Closed Won") && (
