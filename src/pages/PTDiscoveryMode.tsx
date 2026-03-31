@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { supabase } from "../lib/supabase";
 import { DEMO_LEADS } from "../lib/demoData";
-import { TREATMENT_TEMPLATES } from "../lib/treatmentTemplates";
+import { getTreatmentTemplate, INDUSTRY_TEMPLATES } from "../lib/treatmentTemplates";
 import { useDashboardStore } from "../store/useDashboardStore";
 
 const bentoBoxClass = "bg-white border border-black/5 rounded-[32px] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden transition-all duration-500 hover:shadow-[0_8px_40px_rgb(0,0,0,0.08)]";
@@ -16,7 +16,7 @@ const glassBoxClass = "bg-white/40 backdrop-blur-xl border border-white/60 round
 
 const PTDiscoveryMode: React.FC = () => {
     const { id } = useParams<{ id: string }>();
-    const { clinicName, clinicLogo } = useDashboardStore();
+    const { clinicName, clinicLogo, clinicType } = useDashboardStore();
     const [lead, setLead] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [sliderPosition, setSliderPosition] = useState(50);
@@ -71,7 +71,7 @@ const PTDiscoveryMode: React.FC = () => {
         }
     }, [lead?.name, clinicName]);
 
-    const activeTreatment = TREATMENT_TEMPLATES[lead?.treatment_name || lead?.service || 'Dental Implants'] || TREATMENT_TEMPLATES["Dental Implants"];
+    const activeTreatment = getTreatmentTemplate(clinicType, lead?.treatment_name || lead?.service || Object.keys(INDUSTRY_TEMPLATES[clinicType] || {})[0] || 'Dental Implants');
     
     // Dynamic content from PT Engine (Backoffice)
     const displayBeforeImg = lead?.pt_before_image || null;
