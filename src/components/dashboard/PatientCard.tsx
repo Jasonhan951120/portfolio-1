@@ -156,16 +156,16 @@ export const PatientCard = React.memo(function PatientCard({
             ? "0 10px 30px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.5)"
             : isOverdue
               ? "0 0 10px rgba(230,57,70,0.2)"
-              : "0 2px 10px rgba(0,0,0,0.02), 0 4px 20px rgba(0,0,0,0.02)",
+              : "0 8px 30px rgba(0,0,0,0.02)",
           opacity: isDragging ? 0.95 : 1,
           backgroundColor: isDragging ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,1)",
           y: isDragging ? -10 : 0
         }}
         transition={{ type: "spring", stiffness: 80, damping: 20 }}
-        className={`rounded-2xl p-6 relative group focus:outline-none transition-all shadow-[0_2px_10px_rgba(0,0,0,0.03)] border
-          ${isDragging ? 'border-[#1a1a1a]/10 cursor-grabbing bg-white' :
+        className={`rounded-xl p-6 relative group focus:outline-none transition-all shadow-[0_8px_30px_rgb(0,0,0,0.02)] border
+          ${isDragging ? 'border-slate-200 cursor-grabbing bg-white' :
             isOverdue ? 'border-[#E63946]/50 hover:border-[#E63946]/80 cursor-grab animate-pulse bg-white' :
-              'border-[#1a1a1a]/5 hover:border-[#88b399]/20 cursor-grab bg-white'
+              'border-slate-50 hover:border-slate-200 cursor-grab bg-white'
           }`}
       >
         <div {...attributes} {...listeners} className="absolute inset-0 z-0 outline-none rounded-2xl" />
@@ -211,7 +211,7 @@ export const PatientCard = React.memo(function PatientCard({
             {isUnmapped ? (
                 <span className="text-[11px] font-semibold text-[#1a1a1a] font-inter px-2 py-1 rounded uppercase tracking-tight bg-slate-50 border border-slate-100 flex items-center gap-1.5">
                   {lead.service}
-                  <span className="text-[9px] font-black uppercase tracking-wider text-amber-800 bg-amber-100 border border-amber-200 px-1 py-0.5 rounded shadow-sm flex items-center gap-0.5">
+                  <span className="text-[9px] px-1.5 py-0.5 font-medium uppercase tracking-[0.15em] text-slate-500 bg-transparent border border-slate-200 rounded flex items-center gap-0.5">
                     <Sparkles className="w-2.5 h-2.5" /> NEW AI DRAFT
                   </span>
                 </span>
@@ -279,7 +279,7 @@ export const PatientCard = React.memo(function PatientCard({
                   }
                 }}
                 className={`group/main flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl transition-all border backdrop-blur-sm relative overflow-hidden w-full
-                  ${isUnmapped ? 'bg-amber-500 text-white border-amber-600 hover:bg-amber-600' :
+                  ${isUnmapped ? 'bg-white text-indigo-600 border-indigo-100 hover:bg-indigo-50/50 shadow-[0_0_15px_rgba(79,70,229,0.08)] transition-colors duration-300' :
                   hasPhone 
                     ? `${getActionConfig(lead.status).text} ${getActionConfig(lead.status).bg} hover:text-white ${getActionConfig(lead.status).hoverBg} ${getActionConfig(lead.status).border}` 
                     : 'text-[#4f4f4f] bg-slate-50 border-slate-200 cursor-not-allowed opacity-50'
@@ -291,7 +291,7 @@ export const PatientCard = React.memo(function PatientCard({
                 ) : (
                   React.createElement(getActionConfig(lead.status).icon, { className: "w-3.5 h-3.5 relative z-10", strokeWidth: 1.5 })
                 )}
-                <span className="text-[10px] font-bold uppercase tracking-tight font-inter relative z-10">
+                <span className="text-[10px] font-semibold uppercase tracking-tight font-inter relative z-10">
                   {isUnmapped ? "AI GENERATE PT" : getActionConfig(lead.status).label}
                 </span>
               </button>
