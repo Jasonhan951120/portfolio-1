@@ -2700,7 +2700,7 @@ export default function AdminDashboard() {
                       className="w-full h-full flex flex-col p-6 flex-1 min-h-0"
                     >
                         {/* ── North Star Summary Metrics (Cognitive Anchor) ── */}
-                        <div className="shrink-0 mb-6">
+                        <div className="shrink-0 mb-12">
                           <NorthStarSummaryCards currency={currency} />
                         </div>
 

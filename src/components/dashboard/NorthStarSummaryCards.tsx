@@ -88,12 +88,14 @@ export const NorthStarSummaryCards: React.FC<{ currency?: string }> = ({ currenc
 
                     <div className="space-y-1">
                         <div className="flex items-baseline gap-1">
-                            <span className="text-4xl font-extrabold text-slate-900 tracking-tight">
+                            <span className="text-4xl font-light text-slate-900 tracking-tight">
                                 {typeof card.value === 'number' && card.title !== "Reputation Power" ? (
                                     <SlotNumber value={card.value} prefix={card.prefix} />
                                 ) : (
                                     <>
-                                        {card.prefix}{card.value}{card.suffix}
+                                        <span className="text-2xl text-slate-400 font-light mr-1">{card.prefix}</span>
+                                        {card.value}
+                                        <span className="text-xl text-slate-400 font-light ml-1">{card.suffix}</span>
                                     </>
                                 )}
                             </span>

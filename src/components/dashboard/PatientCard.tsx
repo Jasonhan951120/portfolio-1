@@ -148,7 +148,8 @@ export const PatientCard = React.memo(function PatientCard({
       <motion.div
         layout
         initial={{ opacity: 1, scale: 1 }}
-        whileHover={{ scale: 1.02 }}
+        whileHover={{ y: -2 }}
+        whileDrag={{ rotate: 2, scale: 1.02 }}
         animate={isExiting ? { opacity: 0, scale: 0.8, x: 50, filter: "blur(4px)" } : {
           scale: isDragging ? 1.02 : 1,
           rotate: isDragging ? 2 : 0,
@@ -161,8 +162,8 @@ export const PatientCard = React.memo(function PatientCard({
           backgroundColor: isDragging ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,1)",
           y: isDragging ? -10 : 0
         }}
-        transition={{ type: "spring", stiffness: 80, damping: 20 }}
-        className={`rounded-xl p-6 relative group focus:outline-none transition-all shadow-[0_8px_30px_rgb(0,0,0,0.02)] border
+        transition={{ duration: 0.3, ease: "easeOut" }}
+        className={`rounded-xl p-6 relative group focus:outline-none transition-all shadow-[0_8px_30px_rgb(0,0,0,0.02)] border hover:shadow-md
           ${isDragging ? 'border-slate-200 cursor-grabbing bg-white' :
             isOverdue ? 'border-[#E63946]/50 hover:border-[#E63946]/80 cursor-grab animate-pulse bg-white' :
               'border-slate-50 hover:border-slate-200 cursor-grab bg-white'
@@ -211,17 +212,25 @@ export const PatientCard = React.memo(function PatientCard({
             {isUnmapped ? (
                 <span className="text-[11px] font-semibold text-[#1a1a1a] font-inter px-2 py-1 rounded uppercase tracking-tight bg-slate-50 border border-slate-100 flex items-center gap-1.5">
                   {lead.service}
-                  <span className="text-[9px] px-1.5 py-0.5 font-medium uppercase tracking-[0.15em] text-slate-500 bg-transparent border border-slate-200 rounded flex items-center gap-0.5">
+                  <motion.span 
+                    animate={{ opacity: [1, 0.7, 1] }} 
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    className="text-[9px] px-1.5 py-0.5 font-medium uppercase tracking-[0.15em] text-slate-500 bg-transparent border border-slate-200 rounded flex items-center gap-0.5"
+                  >
                     <Sparkles className="w-2.5 h-2.5" /> NEW AI DRAFT
-                  </span>
+                  </motion.span>
                 </span>
             ) : isPriceMismatch ? (
                 <div className="flex flex-col gap-1 items-start">
                   <span className="text-[11px] font-semibold text-[#1a1a1a] font-inter px-2 py-1 rounded uppercase tracking-tight bg-slate-50 border border-slate-100 flex items-center gap-1.5">
                     {matchedTemplate?.service_name || matchedTemplate?.name || lead.service}
-                    <span className="text-[9px] font-black uppercase tracking-wider text-rose-800 bg-rose-100 border border-rose-200 px-1 py-0.5 rounded shadow-sm flex items-center gap-0.5">
+                    <motion.span 
+                      animate={{ opacity: [1, 0.7, 1] }} 
+                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                      className="text-[9px] font-black uppercase tracking-wider text-rose-800 bg-rose-100 border border-rose-200 px-1 py-0.5 rounded shadow-sm flex items-center gap-0.5"
+                    >
                       <AlertTriangle className="w-2.5 h-2.5" /> PRICE MISMATCH
-                    </span>
+                    </motion.span>
                   </span>
                   <button 
                     onClick={(e) => {
