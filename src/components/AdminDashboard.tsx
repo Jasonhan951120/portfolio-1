@@ -803,11 +803,71 @@ export default function AdminDashboard() {
     clinicType,
   } = useDashboardStore();
   
-  const patients = (leads || []).map(l => {
-    if (l.name.includes('James')) return { ...l, service: 'Quantum Laser', potential_value: 5000, status: 'New Lead' };
-    if (l.name.includes('Donggyun')) return { ...l, service: 'Dental Implant', potential_value: 3800, status: 'New Lead' };
-    return l;
-  }) as ConsultationRequest[]; // Lead Architect Safety: Guaranteed array initialization
+  const vvipLead = {
+    name: "Donggyun Han",
+    email: "handonggyun18@gmail.com",
+    phone: "+82 10-3395-1543",
+    value: 3000,
+    category: "DENTAL IMPLANTS",
+    joined: "Just now",
+    aiScore: 99,
+    status: "active"
+  };
+
+  const patients = [
+    ...(leads || []).filter(l => !l.name.includes('Donggyun') && !l.name.includes('James')),
+    // Dedicated VVIP Presentation Leads (One for each core column)
+    { 
+      id: 'vvip-1', 
+      name: vvipLead.name, 
+      email: vvipLead.email, 
+      phone: vvipLead.phone, 
+      service: vvipLead.category, 
+      potential_value: vvipLead.value, 
+      intent_score: vvipLead.aiScore, 
+      status: 'New Lead', 
+      created_at: new Date().toISOString(),
+      is_vip: true 
+    },
+    { 
+      id: 'vvip-2', 
+      name: vvipLead.name, 
+      email: vvipLead.email, 
+      phone: vvipLead.phone, 
+      service: vvipLead.category, 
+      potential_value: vvipLead.value, 
+      intent_score: vvipLead.aiScore, 
+      status: 'Booked', 
+      created_at: new Date().toISOString(),
+      is_vip: true 
+    },
+    { 
+      id: 'vvip-3', 
+      name: vvipLead.name, 
+      email: vvipLead.email, 
+      phone: vvipLead.phone, 
+      service: vvipLead.category, 
+      potential_value: vvipLead.value, 
+      intent_score: vvipLead.aiScore, 
+      status: 'Visited', 
+      created_at: new Date().toISOString(),
+      is_vip: true 
+    },
+    { 
+      id: 'vvip-4', 
+      name: vvipLead.name, 
+      email: vvipLead.email, 
+      phone: vvipLead.phone, 
+      service: vvipLead.category, 
+      potential_value: vvipLead.value, 
+      intent_score: vvipLead.aiScore, 
+      status: 'Treated', 
+      created_at: new Date().toISOString(),
+      is_vip: true 
+    },
+    // James demo lead
+    ...(leads || []).filter(l => l.name.includes('James')).map(l => ({ ...l, service: 'Quantum Laser', potential_value: 5000, status: 'New Lead' }))
+  ] as ConsultationRequest[];
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const handleSimulatedUpload = () => {
