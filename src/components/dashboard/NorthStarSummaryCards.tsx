@@ -64,26 +64,26 @@ export const NorthStarSummaryCards: React.FC<{ currency?: string }> = ({ currenc
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: idx * 0.1, duration: 0.4, ease: "easeOut" }}
-                    className="relative group bg-white shadow-[0_1px_2px_rgba(0,0,0,0.05),0_0_0_1px_rgba(0,0,0,0.05)] rounded-2xl p-6 md:p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
+                    className="relative group bg-white shadow-[0_1px_3px_rgba(0,0,0,0.02),0_4px_12px_rgba(0,0,0,0.03)] rounded-2xl p-6 md:p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
                 >
                     <div className="flex justify-between items-start mb-6">
                         <card.icon className="w-5 h-5 text-slate-400" strokeWidth={1.2} />
-                        <div className="bg-emerald-50/50 text-emerald-700 uppercase tracking-[0.15em] text-[10px] font-medium px-2 py-1 rounded-md flex items-center justify-center">
+                        <div className="bg-slate-50 text-slate-500 uppercase tracking-[0.15em] text-[10px] font-medium px-2 py-1 rounded-md flex items-center justify-center">
                             {card.trend.toUpperCase()}
                         </div>
                     </div>
 
                     <div className="space-y-1">
-                        <h3 className="text-[10px] font-medium uppercase tracking-[0.15em] text-slate-500">{card.title}</h3>
+                        <h3 className="text-[10px] font-medium uppercase tracking-[0.2em] text-slate-500">{card.title}</h3>
                         <div className="flex items-baseline gap-1">
                             <span className="text-4xl font-semibold text-slate-900 tracking-tight">
                                 {typeof card.value === 'number' && card.title !== "Reputation Power" ? (
                                     <SlotNumber value={card.value} prefix={card.prefix} />
                                 ) : (
                                     <>
-                                        <span className="text-2xl text-slate-400 font-semibold mr-1">{card.prefix}</span>
+                                        <span className="text-2xl text-slate-400 font-medium mr-1">{card.prefix}</span>
                                         {card.value}
-                                        <span className="text-xl text-slate-400 font-semibold ml-1">{card.suffix}</span>
+                                        <span className="text-xl text-slate-400 font-medium ml-1">{card.suffix}</span>
                                     </>
                                 )}
                             </span>
@@ -92,7 +92,7 @@ export const NorthStarSummaryCards: React.FC<{ currency?: string }> = ({ currenc
 
                     <div className="mt-8 flex items-center justify-between">
                         <p className="text-sm font-medium text-slate-400 group-hover:text-slate-600 transition-colors">{card.description}</p>
-                        <ArrowUpRight className="w-4 h-4 text-slate-300 group-hover:text-emerald-500 transition-colors" strokeWidth={1.5} />
+                        <ArrowUpRight className="w-4 h-4 text-slate-300 group-hover:text-slate-400 transition-colors" strokeWidth={1.5} />
                     </div>
                 </motion.div>
             ))}

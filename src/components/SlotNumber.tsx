@@ -16,7 +16,7 @@ export const SlotNumber: React.FC<SlotNumberProps> = ({ value, prefix, className
 
   return (
     <div className={`flex items-baseline ${className}`}>
-      <span className="text-2xl text-slate-400 font-semibold mr-1">{prefix !== undefined ? prefix : currencySymbol}</span>
+      <span className="text-2xl text-slate-400 font-medium mr-1">{prefix !== undefined ? prefix : currencySymbol}</span>
       <span>{displayValue}</span>
     </div>
   );
