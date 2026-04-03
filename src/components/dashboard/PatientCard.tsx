@@ -173,19 +173,19 @@ export const PatientCard = React.memo(function PatientCard({
 
         <div className="relative z-10 pointer-events-none">
           <div className="flex justify-between items-start mb-4">
-            <div className="space-y-1 flex-1 pr-2">
-              <h4 className="font-bold text-slate-900 text-[16px] tracking-tight leading-none truncate" data-hj-suppress>
+            <div className="flex-1 pr-2">
+              <h4 className="font-bold text-slate-900 text-sm tracking-tighter leading-none truncate mb-1" data-hj-suppress>
                 {lead.name}
               </h4>
               <div className="flex items-center gap-2">
-                 <p className="text-slate-400 text-[10px] uppercase font-bold tracking-[0.15em] leading-none">
+                 <p className="text-slate-400 text-[10px] uppercase font-bold tracking-widest leading-none">
                    Joined {timeAgo(lead.created_at).replace(' ago', '')} &nbsp;&bull;&nbsp; <span className="truncate max-w-[100px] inline-block align-bottom">{lead.service}</span>
                  </p>
               </div>
             </div>
 
             <div className="flex flex-col items-end shrink-0">
-              <span className="text-[15px] font-bold text-slate-900 tracking-tight tabular-nums">
+              <span className="text-sm font-bold text-slate-900 tracking-tighter tabular-nums">
                 {currency}{(lead.potential_value ? lead.potential_value : (1000)).toLocaleString()}
               </span>
             </div>
@@ -226,9 +226,9 @@ export const PatientCard = React.memo(function PatientCard({
                 }
                 onOpenPTMode?.(lead);
               }}
-              className="w-full flex items-center justify-center gap-2 py-3 bg-white border border-slate-200/60 rounded-full hover:bg-slate-50 hover:border-slate-300 hover:shadow-sm transition-all duration-200 group/pt"
+              className="w-full flex items-center justify-center gap-2 py-2.5 bg-white border border-slate-100 rounded-full hover:border-slate-300 hover:shadow-sm transition-all duration-200 group/pt hover:bg-white"
             >
-              <Sparkles className="w-4 h-4 text-indigo-500" strokeWidth={1.2} />
+              <Sparkles className="w-4 h-4 text-indigo-500" strokeWidth={1.5} />
               <span className="text-[10px] font-bold text-slate-700 uppercase tracking-widest">
                 {isUnmapped ? "Draft Treatment Plan" : "Send Premium PT"}
               </span>
@@ -242,9 +242,9 @@ export const PatientCard = React.memo(function PatientCard({
                   e.stopPropagation();
                   onOpenEmailModal?.(lead);
                 }}
-                className="flex-1 flex items-center justify-center gap-2 py-3 bg-white border border-slate-200/60 rounded-full hover:bg-slate-50 hover:border-slate-300 hover:shadow-sm transition-all duration-200"
+                className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-white border border-slate-100 rounded-full hover:border-slate-300 hover:shadow-sm transition-all duration-200 hover:bg-white"
               >
-                <Mail className="w-4 h-4 text-emerald-600/80" strokeWidth={1.2} />
+                <Mail className="w-4 h-4 text-emerald-600/80" strokeWidth={1.5} />
                 <span className="text-[10px] font-bold text-slate-700 uppercase tracking-widest leading-none">
                   Email
                 </span>
@@ -257,9 +257,9 @@ export const PatientCard = React.memo(function PatientCard({
                   e.stopPropagation();
                   onOpenAudit?.(lead);
                 }}
-                className="w-12 flex items-center justify-center bg-white border border-slate-200/60 rounded-full hover:bg-slate-50 hover:border-slate-300 hover:shadow-sm transition-all duration-200"
+                className="w-12 flex items-center justify-center py-2.5 bg-white border border-slate-100 rounded-full hover:border-slate-300 hover:shadow-sm transition-all duration-200 hover:bg-white"
               >
-                <Shield className="w-4 h-4 text-emerald-600/80" strokeWidth={1.2} />
+                <Shield className="w-4 h-4 text-emerald-600/80" strokeWidth={1.5} />
               </button>
             </div>
           </div>

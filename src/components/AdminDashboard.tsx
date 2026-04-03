@@ -622,7 +622,7 @@ function KanbanColumn({
   return (
     <div className="flex flex-col h-full transition-all duration-500 min-w-0">
       <div className="flex flex-col mb-6 px-1">
-        <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-1 flex items-center justify-between group relative">
+        <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.25em] mb-1.5 flex items-center justify-between group relative">
           <span className="flex items-center gap-2">
             {COLUMN_METRICS[columnId]?.title || columnId}
             <HelpCircle className="w-3.5 h-3.5 text-slate-300 hover:text-slate-400 cursor-help transition-colors" />
@@ -632,9 +632,9 @@ function KanbanColumn({
               {COLUMN_METRICS[columnId]?.tooltip}
             </div>
           </span>
-          <span className="opacity-40">{columnLeads.length}</span>
+          <span className="opacity-40 font-mono text-[9px]">{columnLeads.length}</span>
         </h3>
-        <span className="text-xl font-black text-slate-900 tabular-nums tracking-tight">
+        <span className="text-[20px] font-bold text-slate-900 font-mono tracking-tight tabular-nums mt-0.5">
           {currency}
           {columnLeads.reduce((sum, l) => sum + (l.expectedRevenue || SERVICE_CONVERSION_VALUES[l.service] || 1000), 0).toLocaleString()}
         </span>
@@ -2733,7 +2733,7 @@ export default function AdminDashboard() {
                   className="w-full flex-1 flex flex-col min-h-0"
                 >
                   {!isInitialLoad && (leads ?? []).length === 0 ? (
-                    <div className="flex-1 flex flex-col items-center justify-center p-8">
+                    <div className="flex-1 flex flex-col items-center justify-center p-8 bg-slate-50/50 rounded-tl-[40px]">
                        <OnboardingEmptyState 
                           onInjectSample={() => handleActivateAI?.()} 
                           currency={currency}
@@ -2743,24 +2743,24 @@ export default function AdminDashboard() {
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className="w-full h-full flex flex-col p-6 flex-1 min-h-0"
+                      className="w-full h-full flex flex-col p-6 flex-1 min-h-0 bg-slate-50/50 rounded-tl-[40px] relative before:absolute before:inset-0 before:bg-gradient-to-b before:from-white/50 before:to-transparent before:pointer-events-none before:rounded-tl-[40px]"
                     >
                         {/* ── North Star Summary Metrics (Cognitive Anchor) ── */}
-                        <div className="shrink-0 mb-12">
+                        <div className="shrink-0 mb-10 relative z-10">
                           <NorthStarSummaryCards currency={currency} />
                         </div>
 
-                        <div className="flex justify-between items-end border-t border-slate-200/60 pt-6 pb-4 shrink-0">
+                        <div className="flex justify-between items-end border-t border-slate-200/60 pt-6 pb-4 shrink-0 relative z-10">
                           <div className="space-y-1">
                             <h2 className="text-3xl font-bold text-slate-900 tracking-tighter uppercase italic">Lead Flow Board</h2>
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Visualizing Clinical Conversion Pipeline ↗</p>
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] leading-none">Visualizing Clinical Conversion Pipeline ↗</p>
                           </div>
-                          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest bg-white border border-slate-100 px-3 py-1 rounded-full shadow-sm">
+                          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest bg-white border border-slate-200/60 px-3 py-1 rounded-full shadow-sm tabular-nums">
                             {(leads ?? []).length} total leads
                           </p>
                         </div>
 
-                        <div className="flex-1 min-h-0 w-full mt-2">
+                        <div className="flex-1 min-h-0 w-full mt-2 relative z-10">
                           <div className="grid grid-cols-4 gap-6 w-full h-full">
                             {KANBAN_COLUMNS.map(col => (
                               <KanbanColumn
