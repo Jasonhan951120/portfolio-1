@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -335,76 +336,79 @@ export const PatientCard = React.memo(function PatientCard({
       </motion.div>
 
       {/* ── Quiet Luxury AI Preview Modal ── */}
-      <AnimatePresence>
-        {aiModal.isOpen && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-auto">
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="absolute inset-0 bg-slate-900/10 backdrop-blur-sm"
-              onClick={(e) => { e.stopPropagation(); setAiModal(prev => ({ ...prev, isOpen: false })); }}
-            />
-            {/* Modal Content */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="relative w-full max-w-lg bg-white/95 backdrop-blur-xl border border-slate-200/60 shadow-[0_20px_40px_rgba(0,0,0,0.06),_0_0_0_1px_rgba(0,0,0,0.02)] rounded-[24px] p-6 flex flex-col overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex justify-between items-center mb-4">
-                <div className="flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-indigo-500" strokeWidth={1.5} />
-                  <h3 className="text-sm font-bold text-slate-900 tracking-tighter uppercase">
-                    {aiModal.type === 'DRAFT' && 'AI Consultation Draft'}
-                    {aiModal.type === 'PROPOSAL' && 'AI Premium Proposal'}
-                    {aiModal.type === 'FOLLOWUP' && 'AI Reassurance Guide'}
-                    {aiModal.type === 'POSTCARE' && 'AI Post-Care Protocol'}
-                  </h3>
-                </div>
-                <button
-                  onClick={(e) => { e.stopPropagation(); setAiModal(prev => ({ ...prev, isOpen: false })); }}
-                  className="p-1 rounded-full hover:bg-slate-100 transition-colors"
-                >
-                  <X className="w-4 h-4 text-slate-400" />
-                </button>
-              </div>
-
-              <div className="flex-1 min-h-[250px] relative">
-                {aiModal.isLoading ? (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-                    <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" strokeWidth={1.5} />
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest text-center animate-pulse">
-                      Synthesizing Knowledge...<br/>
-                      <span className="text-[9px] text-slate-300">Targeting {lead.service || 'Treatment'} Details</span>
-                    </p>
+      {typeof document !== 'undefined' && createPortal(
+        <AnimatePresence>
+          {aiModal.isOpen && (
+            <div className="fixed inset-0 z-[9999] flex items-center justify-center pointer-events-auto p-4 sm:p-6" onClick={(e) => e.stopPropagation()}>
+              {/* Backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="absolute inset-0 bg-slate-900/40 backdrop-blur-md"
+                onClick={(e) => { e.stopPropagation(); setAiModal(prev => ({ ...prev, isOpen: false })); }}
+              />
+              {/* Modal Content */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                className="relative w-full max-w-lg bg-white/95 backdrop-blur-xl border border-slate-200/60 shadow-2xl rounded-[24px] p-6 flex flex-col overflow-hidden"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex justify-between items-center mb-4">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-indigo-500" strokeWidth={1.5} />
+                    <h3 className="text-sm font-bold text-slate-900 tracking-tighter uppercase">
+                      {aiModal.type === 'DRAFT' && 'AI Consultation Draft'}
+                      {aiModal.type === 'PROPOSAL' && 'AI Premium Proposal'}
+                      {aiModal.type === 'FOLLOWUP' && 'AI Reassurance Guide'}
+                      {aiModal.type === 'POSTCARE' && 'AI Post-Care Protocol'}
+                    </h3>
                   </div>
-                ) : (
-                  <textarea
-                    value={aiModal.content}
-                    onChange={(e) => setAiModal(prev => ({ ...prev, content: e.target.value }))}
-                    className="w-full h-[250px] bg-slate-50 border border-slate-100 rounded-xl p-4 text-sm text-slate-700 font-medium resize-none focus:outline-none focus:ring-1 focus:ring-indigo-500/50 transition-all custom-scrollbar leading-relaxed"
-                  />
-                )}
-              </div>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setAiModal(prev => ({ ...prev, isOpen: false })); }}
+                    className="p-1 rounded-full hover:bg-slate-100 transition-colors"
+                  >
+                    <X className="w-4 h-4 text-slate-400" />
+                  </button>
+                </div>
 
-              <div className="mt-4 pt-4 border-t border-slate-100 flex justify-end">
-                <button
-                  onClick={(e) => { e.stopPropagation(); setAiModal(prev => ({ ...prev, isOpen: false })); }}
-                  className="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-full font-bold text-[10px] tracking-widest uppercase transition-colors flex items-center justify-center min-w-[120px]"
-                  disabled={aiModal.isLoading}
-                >
-                  {aiModal.type === 'DRAFT' ? 'Save Draft' : 'Save & Send'}
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+                <div className="flex-1 min-h-[250px] relative">
+                  {aiModal.isLoading ? (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+                      <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" strokeWidth={1.5} />
+                      <p className="text-xs font-bold text-slate-400 uppercase tracking-widest text-center animate-pulse">
+                        Synthesizing Knowledge...<br/>
+                        <span className="text-[9px] text-slate-300">Targeting {lead.service || 'Treatment'} Details</span>
+                      </p>
+                    </div>
+                  ) : (
+                    <textarea
+                      value={aiModal.content}
+                      onChange={(e) => setAiModal(prev => ({ ...prev, content: e.target.value }))}
+                      className="w-full h-[250px] bg-slate-50 border border-slate-100 rounded-xl p-4 text-sm text-slate-700 font-medium resize-none focus:outline-none focus:ring-1 focus:ring-indigo-500/50 transition-all custom-scrollbar leading-relaxed"
+                    />
+                  )}
+                </div>
+
+                <div className="mt-4 pt-4 border-t border-slate-100 flex justify-end">
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setAiModal(prev => ({ ...prev, isOpen: false })); }}
+                    className="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-full font-bold text-[10px] tracking-widest uppercase transition-colors flex items-center justify-center min-w-[120px]"
+                    disabled={aiModal.isLoading}
+                  >
+                    {aiModal.type === 'DRAFT' ? 'Save Draft' : 'Save & Send'}
+                  </button>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </div>
   );
 }, (prev, next) => (
