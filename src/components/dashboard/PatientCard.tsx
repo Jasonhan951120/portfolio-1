@@ -1,13 +1,29 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Send, MessageCircle, Shield, AlertTriangle, Sparkles, Users, Hand, CalendarCheck, ShieldCheck, FileText, Mail, FileCog, HeartPulse, MessageSquare, Heart } from 'lucide-react';
+import { Send, MessageCircle, Shield, AlertTriangle, Sparkles, Users, Hand, CalendarCheck, ShieldCheck, FileText, Mail, FileCog, HeartPulse, MessageSquare, Heart, X, Loader2 } from 'lucide-react';
 import { type ConsultationRequest } from "../../lib/supabase";
 import { useDashboardStore } from "../../store/useDashboardStore";
 import { INDUSTRY_TEMPLATES } from "../../lib/treatmentTemplates";
-import { AnimatePresence } from 'motion/react';
 import { calculateFuzzyMatch } from "../../lib/autoMatcher";
+
+const generateUniversalAIPrompt = (type: string, service: string, patientName: string) => {
+  const baseInstruction = `You are an elite medical concierge AI. Use your expert medical knowledge to provide highly accurate, specialty-specific advice. For example: If '${service}' involves surgery (like Wisdom Tooth), mention cold packs and soft food. If it involves skin (like Acne Laser), mention sunblock and hydration.`;
+
+  switch (type) {
+    case 'DRAFT':
+      return `${baseInstruction}\n\n[INTERNAL USE]\nAnalyze the case for ${patientName} regarding '${service}'. Generate a preliminary clinical strategy and a concise "Consultation Cheat Sheet" for the doctor/staff to use during the consultation.`;
+    case 'PROPOSAL':
+      return `${baseInstruction}\n\n[EXTERNAL USE]\nGenerate a high-end, premium patient-facing proposal for ${patientName} regarding '${service}'. Focus on the treatment benefits and articulate "The Dream" vision (e.g., renewed confidence, perfect smile, flawless skin).`;
+    case 'FOLLOWUP':
+      return `${baseInstruction}\n\n[EXTERNAL USE]\nGenerate a reassuring follow-up guide for ${patientName} after their consultation for '${service}'. Address common fears (pain, cost, downtime) with empathy, and instill absolute medical confidence.`;
+    case 'POSTCARE':
+      return `${baseInstruction}\n\n[EXTERNAL USE]\nGenerate a personalized thank-you note and a strict, treatment-specific recovery protocol (precautions) for ${patientName} safely recovering from '${service}'.`;
+    default:
+      return '';
+  }
+};
 
 const getActionConfig = (status: string) => {
   switch (status) {
@@ -65,6 +81,37 @@ export const PatientCard = React.memo(function PatientCard({
   const [timeLeft, setTimeLeft] = useState<number>(15 * 60);
   const [isExiting, setIsExiting] = useState(false);
   const [isAIGenerating, setIsAIGenerating] = useState(false);
+  
+  // AI Preview Modal State
+  const [aiModal, setAiModal] = useState<{ isOpen: boolean, type: string, content: string, isLoading: boolean }>({
+    isOpen: false,
+    type: '',
+    content: '',
+    isLoading: false
+  });
+
+  const handleOpenAIModal = (type: string) => {
+    setAiModal({ isOpen: true, type, content: '', isLoading: true });
+    
+    // Simulate AI Generation
+    setTimeout(() => {
+      const generatedPrompt = generateUniversalAIPrompt(type, lead.service || 'General Treatment', lead.name);
+      
+      // We simulate sending exactly this prompt to the AI and getting a response back.
+      let mockResponse = '';
+      if (type === 'DRAFT') {
+        mockResponse = `[CONFIDENTIAL - INTERNAL STRATEGY]\n\nPatient: ${lead.name}\nTreatment: ${lead.service || 'General Treatment'}\n\n1. Clinical Objective: Assess candidacy for the procedure.\n2. Key Value Points to Emphasize:\n   - Rapid recovery timeline\n   - Long-term aesthetic and functional benefits\n3. Anticipated Questions:\n   - "How much will this hurt?" -> Reassure with modern anesthetic protocols.\n   - "What is the total cost?" -> Present financing options immediately.\n\n[RECOMMENDATION]: Build rapport quickly, as intent score indicates high readiness to proceed.`;
+      } else if (type === 'PROPOSAL') {
+        mockResponse = `Dear ${lead.name.split(' ')[0]},\n\nFollowing our review of your case, we are thrilled to present your personalized treatment plan for ${lead.service || 'your treatment'}.\n\nOur goal is to help you achieve the absolute best results. This highly specialized procedure uses state-of-the-art technology to ensure precision, minimal discomfort, and an exceptional outcome.\n\nBy moving forward, you are investing in a lasting transformation that will restore your confidence and enhance your well-being.\n\nWarmly,\nDr. Hanlan & Team`;
+      } else if (type === 'FOLLOWUP') {
+        mockResponse = `Hi ${lead.name.split(' ')[0]},\n\nIt was a pleasure seeing you for your consultation regarding ${lead.service || 'your treatment'}.\n\nWe understand that making a medical decision involves careful consideration. Please rest assured that our clinic uses the most advanced techniques to minimize any discomfort and ensure a swift recovery.\n\nIf you have any lingering concerns about the procedure or financing options, we are here to support you every step of the way.\n\nBest regards,\nThe Hanlan OC Care Team`;
+      } else if (type === 'POSTCARE') {
+        mockResponse = `Dear ${lead.name.split(' ')[0]},\n\nThank you for trusting Hanlan OC with your care! We are delighted with the success of your ${lead.service || 'procedure'}.\n\n**Vital Recovery Protocol:**\n- Please get plenty of rest for the next 24-48 hours.\n- Maintain hydration and avoid strenuous activity.\n- Follow the custom medication schedule provided to you.\n- If your procedure involved sensitive areas or surgery, utilize cold compresses as directed.\n\nShould you need anything, please do not hesitate to contact us. We look forward to seeing your final results!\n\nWith gratitude,\nDr. Hanlan`;
+      }
+
+      setAiModal(prev => ({ ...prev, content: mockResponse, isLoading: false }));
+    }, 1200);
+  };
   const { clinicName, activeTreatments, templates, updateLead } = useDashboardStore();
 
   const searchService = (lead.service || '').toLowerCase();
@@ -220,29 +267,21 @@ export const PatientCard = React.memo(function PatientCard({
               let label = "AI DRAFT PT";
               let Icon = Sparkles;
               let action = () => {
-                 if (isUnmapped) {
-                   setIsAIGenerating(true);
-                   setTimeout(() => {
-                       setIsAIGenerating(false);
-                       window.open(`/pt/draft/${lead.id}?treatment=${encodeURIComponent(lead.service || 'New Treatment')}`);
-                   }, 1500);
-                 } else {
-                   onOpenPTMode?.(lead);
-                 }
+                 handleOpenAIModal('DRAFT');
               };
 
               if (lead.status === "Booked") {
                  label = "SEND PT PLAN";
                  Icon = Send;
-                 action = () => onOpenPTMode?.(lead);
+                 action = () => handleOpenAIModal('PROPOSAL');
               } else if (lead.status === "Visited") {
                  label = "FOLLOW-UP CARE";
                  Icon = HeartPulse;
-                 action = () => onOpenAudit?.(lead);
+                 action = () => handleOpenAIModal('FOLLOWUP');
               } else if (lead.status === "Treated" || lead.status === "Closed Won") {
                  label = "POST-CARE & THANKS";
                  Icon = Heart;
-                 action = () => onOpenEmailModal?.(lead);
+                 action = () => handleOpenAIModal('POSTCARE');
               }
 
               return (
@@ -294,6 +333,78 @@ export const PatientCard = React.memo(function PatientCard({
           </div>
         </div>
       </motion.div>
+
+      {/* ── Quiet Luxury AI Preview Modal ── */}
+      <AnimatePresence>
+        {aiModal.isOpen && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-auto">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="absolute inset-0 bg-slate-900/10 backdrop-blur-sm"
+              onClick={(e) => { e.stopPropagation(); setAiModal(prev => ({ ...prev, isOpen: false })); }}
+            />
+            {/* Modal Content */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="relative w-full max-w-lg bg-white/95 backdrop-blur-xl border border-slate-200/60 shadow-[0_20px_40px_rgba(0,0,0,0.06),_0_0_0_1px_rgba(0,0,0,0.02)] rounded-[24px] p-6 flex flex-col overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex justify-between items-center mb-4">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-indigo-500" strokeWidth={1.5} />
+                  <h3 className="text-sm font-bold text-slate-900 tracking-tighter uppercase">
+                    {aiModal.type === 'DRAFT' && 'AI Consultation Draft'}
+                    {aiModal.type === 'PROPOSAL' && 'AI Premium Proposal'}
+                    {aiModal.type === 'FOLLOWUP' && 'AI Reassurance Guide'}
+                    {aiModal.type === 'POSTCARE' && 'AI Post-Care Protocol'}
+                  </h3>
+                </div>
+                <button
+                  onClick={(e) => { e.stopPropagation(); setAiModal(prev => ({ ...prev, isOpen: false })); }}
+                  className="p-1 rounded-full hover:bg-slate-100 transition-colors"
+                >
+                  <X className="w-4 h-4 text-slate-400" />
+                </button>
+              </div>
+
+              <div className="flex-1 min-h-[250px] relative">
+                {aiModal.isLoading ? (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+                    <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" strokeWidth={1.5} />
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest text-center animate-pulse">
+                      Synthesizing Knowledge...<br/>
+                      <span className="text-[9px] text-slate-300">Targeting {lead.service || 'Treatment'} Details</span>
+                    </p>
+                  </div>
+                ) : (
+                  <textarea
+                    value={aiModal.content}
+                    onChange={(e) => setAiModal(prev => ({ ...prev, content: e.target.value }))}
+                    className="w-full h-[250px] bg-slate-50 border border-slate-100 rounded-xl p-4 text-sm text-slate-700 font-medium resize-none focus:outline-none focus:ring-1 focus:ring-indigo-500/50 transition-all custom-scrollbar leading-relaxed"
+                  />
+                )}
+              </div>
+
+              <div className="mt-4 pt-4 border-t border-slate-100 flex justify-end">
+                <button
+                  onClick={(e) => { e.stopPropagation(); setAiModal(prev => ({ ...prev, isOpen: false })); }}
+                  className="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-full font-bold text-[10px] tracking-widest uppercase transition-colors flex items-center justify-center min-w-[120px]"
+                  disabled={aiModal.isLoading}
+                >
+                  {aiModal.type === 'DRAFT' ? 'Save Draft' : 'Save & Send'}
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }, (prev, next) => (
