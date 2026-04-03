@@ -172,15 +172,14 @@ export const PatientCard = React.memo(function PatientCard({
         <div {...attributes} {...listeners} className="absolute inset-0 z-0 outline-none rounded-[24px]" />
 
         <div className="relative z-10 pointer-events-none">
-          <div className="flex justify-between items-start mb-4">
+          <div className="flex justify-between items-start mb-3">
             <div className="flex-1 pr-2">
-              <h4 className="font-bold text-slate-900 text-sm tracking-tighter leading-none truncate mb-1" data-hj-suppress>
+              <h4 className="font-bold text-slate-900 text-sm tracking-tighter leading-none truncate mb-1.5" data-hj-suppress>
                 {lead.name}
               </h4>
-              <div className="flex items-center gap-2">
-                 <p className="text-slate-400 text-[10px] uppercase font-bold tracking-widest leading-none">
-                   Joined {timeAgo(lead.created_at).replace(' ago', '')} &nbsp;&bull;&nbsp; <span className="truncate max-w-[100px] inline-block align-bottom">{lead.service}</span>
-                 </p>
+              <div className="flex items-center gap-1.5">
+                 <div className="w-1 h-1 rounded-full bg-slate-300" />
+                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none truncate max-w-[140px]">{lead.service}</span>
               </div>
             </div>
 
