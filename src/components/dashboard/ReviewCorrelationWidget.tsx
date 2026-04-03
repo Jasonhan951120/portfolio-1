@@ -47,22 +47,22 @@ export const ReviewCorrelationWidget: React.FC = () => {
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="h-full rounded-[44px] bg-white border border-slate-200 overflow-hidden shadow-luxury p-10 flex flex-col"
+            className="h-full rounded-[44px] bg-white/90 backdrop-blur-xl border border-slate-200/60 overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-10 flex flex-col"
         >
             <div className="flex justify-between items-start mb-10">
                 <div className="space-y-1">
                     <h3 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
                         Reputation Correlation
-                        <span className="px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black uppercase tracking-widest rounded-full border border-emerald-100">AI Verified</span>
+                        <span className="px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-bold uppercase tracking-widest rounded-full border border-emerald-100">AI Verified</span>
                     </h3>
-                    <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">Revenue Flow vs. Review Velocity</p>
+                    <p className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em]">Revenue Flow vs Review Velocity</p>
                 </div>
                 <div className="flex flex-col items-end">
                     <div className="flex items-center gap-1.5 mb-1">
-                        <Star className="w-5 h-5 text-amber-400" fill="currentColor" />
+                        <Star className="w-5 h-5 text-amber-500" fill="currentColor" />
                         <span className="text-2xl font-black text-slate-900">{googleProfile?.rating}</span>
                     </div>
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Avg Rating ({googleProfile?.reviewCount} Reviews)</span>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Avg Rating ({googleProfile?.reviewCount} Reviews)</span>
                 </div>
             </div>
 
@@ -85,12 +85,14 @@ export const ReviewCorrelationWidget: React.FC = () => {
                         />
                         <Tooltip 
                             contentStyle={{ 
+                                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                                backdropFilter: 'blur(12px)',
                                 borderRadius: '20px', 
-                                border: 'none', 
-                                boxShadow: '0 20px 40px rgba(0,0,0,0.08)',
+                                border: '1px solid rgba(0,0,0,0.05)', 
+                                boxShadow: '0 20px 40px rgba(0,0,0,0.04)',
                                 padding: '16px'
                             }}
-                            itemStyle={{ fontSize: '12px', fontWeight: 800 }}
+                            itemStyle={{ fontSize: '12px', fontWeight: 800, color: '#1e293b' }}
                             labelStyle={{ color: '#94a3b8', fontSize: '10px', textTransform: 'uppercase', fontWeight: 900, marginBottom: '8px' }}
                         />
                         <Area 
@@ -114,37 +116,37 @@ export const ReviewCorrelationWidget: React.FC = () => {
                 </ResponsiveContainer>
             </div>
 
-            <div className="grid grid-cols-3 gap-6 pt-10 border-t border-slate-50">
+            <div className="grid grid-cols-3 gap-6 pt-10 border-t border-slate-100">
                 <div className="space-y-3">
                     <div className="flex items-center gap-2 text-slate-400">
                         <Zap className="w-4 h-4" />
-                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Review Freshness</span>
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Freshness Index</span>
                     </div>
                     <div>
-                        <div className="text-xl font-black text-slate-900">4 New</div>
-                        <div className="text-[10px] font-bold text-emerald-500 uppercase">+100% vs last week</div>
+                        <div className="text-xl font-bold text-slate-900">4 New</div>
+                        <div className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">+100% Volume</div>
                     </div>
                 </div>
 
                 <div className="space-y-3">
                     <div className="flex items-center gap-2 text-slate-400">
                         <MessageSquare className="w-4 h-4" />
-                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Response Rate</span>
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Response KPIs</span>
                     </div>
                     <div>
-                        <div className="text-xl font-black text-slate-900">100%</div>
-                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Avg Response: 42m</div>
+                        <div className="text-xl font-bold text-slate-900">100%</div>
+                        <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Avg Speed: 42m</div>
                     </div>
                 </div>
 
                 <div className="space-y-3">
                     <div className="flex items-center gap-2 text-slate-400">
                         <Target className="w-4 h-4" />
-                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Conversion Multiplier</span>
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Impact Multiplier</span>
                     </div>
                     <div>
-                        <div className="text-xl font-black text-slate-900">1.42x</div>
-                        <div className="text-[10px] font-bold text-blue-500 uppercase">Impact of 5★ Reviews</div>
+                        <div className="text-xl font-bold text-slate-900">1.42x</div>
+                        <div className="text-[10px] font-bold text-blue-600 uppercase tracking-widest">Trust Effect</div>
                     </div>
                 </div>
             </div>

@@ -99,16 +99,15 @@ export function LeadsTab({
 
                         <div className="flex items-center gap-4 w-full md:w-auto">
                             <div className="relative flex-grow md:w-80">
-                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                                 <input
                                     type="text"
                                     placeholder="Query client name or treatment..."
-                                    className="w-full pl-11 pr-4 py-4 bg-white border border-gray-100 rounded-2xl text-xs font-medium focus:ring-2 focus:ring-black/5 transition-all outline-none shadow-sm"
+                                    className="w-full pl-11 pr-4 py-4 bg-white/50 backdrop-blur-md border border-slate-200/60 rounded-2xl text-[10px] font-bold uppercase tracking-widest focus:ring-2 focus:ring-emerald-500/10 transition-all outline-none shadow-sm placeholder:text-slate-300"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                 />
                             </div>
-
                         </div>
                     </div>
 
@@ -164,8 +163,8 @@ export function LeadsTab({
                     </AnimatePresence>
 
                     {/* Revenue Potential Card */}
-                    <div className="bg-white border border-[rgba(0,0,0,0.04)] rounded-[40px] p-10 shadow-[0_1px_2px_rgba(0,0,0,0.02),_0_8px_24px_-4px_rgba(0,0,0,0.04)]">
-                        <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-8">Revenue Distribution</h3>
+                    <div className="bg-white/90 backdrop-blur-xl border border-slate-200/60 rounded-[40px] p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+                        <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-8">Revenue Distribution</h3>
                         <DonutChart
                             segments={DONUT_SEGMENTS}
                             total={activeLeads.length}
@@ -176,39 +175,39 @@ export function LeadsTab({
                     {/* Smart Waitlist CTA */}
                     <button
                         onClick={() => setIsWaitlistOpen?.(true)}
-                        className="w-full card-light p-8 text-left group hover:bg-gray-900 transition-all duration-500"
+                        className="w-full bg-white/90 backdrop-blur-xl border border-slate-200/60 rounded-[32px] p-8 text-left group hover:bg-slate-900 transition-all duration-500 shadow-sm"
                     >
                         <div className="flex justify-between items-start mb-6">
-                            <div className="w-12 h-12 bg-blue-50 group-hover:bg-white/10 rounded-2xl flex items-center justify-center transition-colors">
-                                <Clock className="w-6 h-6 text-blue-500 group-hover:text-blue-200" strokeWidth={1.5} />
+                            <div className="w-12 h-12 bg-emerald-50 group-hover:bg-white/10 rounded-2xl flex items-center justify-center transition-colors">
+                                <Clock className="w-6 h-6 text-emerald-600 group-hover:text-emerald-200" strokeWidth={1.5} />
                             </div>
-                            <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-white/40 group-hover:translate-x-1 transition-all" />
+                            <ChevronRight className="w-5 h-5 text-slate-300 group-hover:text-white/40 group-hover:translate-x-1 transition-all" />
                         </div>
-                        <h4 className="text-lg font-bold text-gray-900 group-hover:text-white mb-2 tracking-tight">Open Waitlist</h4>
-                        <p className="text-[11px] text-gray-500 group-hover:text-gray-400 leading-relaxed font-medium capitalize">
-                            {activeLeads.filter(l => (l.status as string) === "Waitlist").length} Patients currently in standby for auto-fill.
+                        <h4 className="text-lg font-bold text-slate-900 group-hover:text-white mb-2 tracking-tight uppercase">Open Waitlist</h4>
+                        <p className="text-[10px] text-slate-500 group-hover:text-slate-400 leading-relaxed font-bold uppercase tracking-widest">
+                            {activeLeads.filter(l => (l.status as string) === "Waitlist").length} Patients in standby.
                         </p>
                     </button>
 
                     {/* Quick Insights Activity */}
-                    <div className="card-light p-8">
+                    <div className="bg-white/90 backdrop-blur-xl border border-slate-200/60 rounded-[32px] p-8 shadow-sm">
                         <div className="flex items-center gap-3 mb-6">
-                            <TrendingUp className="w-4 h-4 text-[#87A96B]" />
-                            <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Today's Focus</h4>
+                            <TrendingUp className="w-4 h-4 text-emerald-500" />
+                            <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Today's Focus</h4>
                         </div>
                         <div className="space-y-4">
-                            <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                                <p className="text-[9px] text-gray-400 font-bold uppercase tracking-widest mb-1">Clinic Appointments</p>
+                            <div className="p-4 bg-slate-50/50 rounded-2xl border border-slate-200/60">
+                                <p className="text-[9px] text-slate-400 font-bold uppercase tracking-[0.2em] mb-1">Clinic Appointments</p>
                                 <div className="flex justify-between items-end">
-                                    <span className="text-xl font-bold text-gray-900">{todayAppointments.length}</span>
-                                    <span className="text-[10px] text-emerald-500 font-bold bg-emerald-50 px-2 py-0.5 rounded-full mb-1">+12% vs avg</span>
+                                    <span className="text-xl font-bold text-slate-900">{todayAppointments.length}</span>
+                                    <span className="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-full mb-1 border border-emerald-100">+12% vs avg</span>
                                 </div>
                             </div>
-                            <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                                <p className="text-[9px] text-gray-400 font-bold uppercase tracking-widest mb-1">Avg Contact Time</p>
+                            <div className="p-4 bg-slate-50/50 rounded-2xl border border-slate-200/60">
+                                <p className="text-[9px] text-slate-400 font-bold uppercase tracking-[0.2em] mb-1">Avg Contact Time</p>
                                 <div className="flex justify-between items-end">
-                                    <span className="text-xl font-bold text-gray-900">4.2m</span>
-                                    <span className="text-[10px] text-blue-500 font-bold bg-blue-50 px-2 py-0.5 rounded-full mb-1">Optimized</span>
+                                    <span className="text-xl font-bold text-slate-900">4.2m</span>
+                                    <span className="text-[10px] text-blue-600 font-bold bg-blue-50 px-2 py-0.5 rounded-full mb-1 border border-blue-100">Optimized</span>
                                 </div>
                             </div>
                         </div>

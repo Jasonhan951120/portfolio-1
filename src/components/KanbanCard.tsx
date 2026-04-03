@@ -74,15 +74,15 @@ export function KanbanCard({ lead, onClick }: KanbanCardProps) {
                 damping: 20
             }}
             animate={isDragging ? { opacity: 0.5 } : { opacity: 1 }}
-            className={`group h-full glass-premium p-5 overflow-hidden group transition-all duration-300 cursor-grab active:cursor-grabbing relative
-                ${isDragging ? 'ring-2 ring-emerald-500/50' : ''}
-                ${lead.intent_score > 90 ? 'glow-high-intent ring-1 ring-emerald-400/30' : ''}
+            className={`group h-full bg-white/95 backdrop-blur-md border border-slate-200/60 shadow-sm p-5 rounded-2xl overflow-hidden transition-all duration-300 cursor-grab active:cursor-grabbing relative
+                ${isDragging ? 'ring-2 ring-emerald-500/50 shadow-xl' : 'hover:shadow-md hover:-translate-y-0.5'}
+                ${lead.intent_score > 90 ? 'ring-1 ring-emerald-500/20 shadow-[0_0_20px_rgba(16,185,129,0.05)]' : ''}
             `}
         >
             <div className="flex justify-between items-start mb-3">
-                <h4 className="font-black text-slate-900 text-sm tracking-tight group-hover:text-emerald-600 transition-colors" data-hj-suppress>{lead.name}</h4>
+                <h4 className="font-bold text-slate-900 text-sm tracking-tight group-hover:text-emerald-600 transition-colors" data-hj-suppress>{lead.name}</h4>
                 <div className="flex flex-col items-end gap-1.5">
-                    <div className={`px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-tighter border ${STATUS_COLORS[lead.status] || 'bg-gray-50 text-gray-400'}`}>
+                    <div className={`px-2 py-0.5 rounded-md text-[8px] font-bold uppercase tracking-widest border ${STATUS_COLORS[lead.status] || 'bg-slate-50 text-slate-400 border-slate-200'}`}>
                         {lead.status}
                     </div>
                     {lead.intent_score && (
@@ -149,13 +149,12 @@ export function KanbanCard({ lead, onClick }: KanbanCardProps) {
                             e.stopPropagation();
                             const { label } = getActionConfig(lead.status);
                             console.log(`[ACTION] Email triggering: ${label}`);
-                            // Forwarding to specific modal logic if exists, or logging context
                         }}
-                        className="w-full flex items-center justify-between px-4 py-2 bg-white border border-slate-200 rounded-2xl text-slate-900 hover:bg-slate-50 hover:border-slate-300 transition-all duration-300 group/email"
+                        className="w-full flex items-center justify-between px-4 py-2 bg-white/50 border border-slate-200/60 shadow-sm rounded-2xl text-slate-900 hover:bg-white hover:border-slate-300 transition-all duration-300 group/email"
                     >
                         <div className="flex items-center gap-2.5">
                             <Mail className="w-3.5 h-3.5 text-slate-400 group-hover/email:text-slate-900 transition-colors" strokeWidth={2} />
-                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-900 font-inter">
+                            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-900 font-inter">
                                 {getActionConfig(lead.status).label} via Email
                             </span>
                         </div>
@@ -164,14 +163,14 @@ export function KanbanCard({ lead, onClick }: KanbanCardProps) {
                 </div>
 
                 <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 bg-slate-50 p-1 rounded-xl border border-slate-100">
+                    <div className="flex items-center gap-2 bg-slate-50/50 p-1 rounded-xl border border-slate-200/60">
                         <span className="text-[10px] font-black text-slate-900 px-2 tabular-nums">
                             £{value.toLocaleString()}
                         </span>
                         <div className="w-[1px] h-3 bg-slate-200" />
                         <div className="flex items-center gap-1.5 px-2 py-1">
                             <Clock className="w-3 h-3 text-slate-400" />
-                            <span className="text-[9px] text-slate-500 font-bold uppercase tracking-tighter">
+                            <span className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">
                                 {new Date(lead.created_at).toLocaleDateString()}
                             </span>
                         </div>

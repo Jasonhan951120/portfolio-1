@@ -622,23 +622,23 @@ function KanbanColumn({
   return (
     <div className="flex flex-col h-full transition-all duration-500 min-w-0">
       <div className="flex flex-col mb-6 px-1">
-        <h3 className="metric-label-muted mb-1 flex items-center justify-between group relative">
+        <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-1 flex items-center justify-between group relative">
           <span className="flex items-center gap-2">
             {COLUMN_METRICS[columnId]?.title || columnId}
             <HelpCircle className="w-3.5 h-3.5 text-slate-300 hover:text-slate-400 cursor-help transition-colors" />
             
             {/* Premium Glassmorphism Tooltip */}
-            <div className="absolute left-0 top-full z-50 w-64 p-3 mt-2 text-sm font-medium text-white bg-slate-800/90 backdrop-blur-md rounded-xl shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+            <div className="absolute left-0 top-full z-50 w-64 p-3 mt-2 text-sm font-medium text-white bg-slate-900/90 backdrop-blur-md rounded-xl shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
               {COLUMN_METRICS[columnId]?.tooltip}
             </div>
           </span>
           <span className="opacity-40">{columnLeads.length}</span>
         </h3>
-        <span className="text-xl metric-authority">
+        <span className="text-xl font-black text-slate-900 tabular-nums tracking-tight">
           {currency}
           {columnLeads.reduce((sum, l) => sum + (l.expectedRevenue || SERVICE_CONVERSION_VALUES[l.service] || 1000), 0).toLocaleString()}
         </span>
-        <div className="h-[2px] w-full bg-slate-100 mt-3 rounded-full" />
+        <div className="h-[1px] w-full bg-slate-200/60 mt-3 rounded-full" />
       </div>
 
       <div className="flex-1 min-h-0 overflow-hidden" ref={setNodeRef}>
@@ -667,10 +667,10 @@ function KanbanColumn({
                 />
               ))
             ) : (
-              <div className="h-64 rounded-[44px] flex flex-col items-center justify-center border-[0.5px] border-slate-200/60 bg-white shadow-luxury relative overflow-hidden group">
+              <div className="h-64 rounded-[32px] flex flex-col items-center justify-center border border-slate-200/60 bg-white/50 shadow-[0_8px_30px_rgb(0,0,0,0.02)] relative overflow-hidden group">
                 {/* Ascending dynamic trend line (opacity-10 watermark) */}
-                <div className="absolute inset-0 opacity-10 pointer-events-none flex items-end justify-center">
-                  <svg className="w-full h-40 text-slate-400" viewBox="0 0 400 200" fill="none">
+                <div className="absolute inset-0 opacity-5 pointer-events-none flex items-end justify-center">
+                  <svg className="w-full h-40 text-slate-200" viewBox="0 0 400 200" fill="none">
                     <motion.path 
                       initial={{ pathLength: 0, opacity: 0 }}
                       animate={{ pathLength: 1, opacity: 1 }}
@@ -682,7 +682,7 @@ function KanbanColumn({
                   </svg>
                 </div>
                 
-                <div className="w-14 h-14 mb-4 rounded-2xl bg-slate-50 border-[0.5px] border-slate-200/60 flex items-center justify-center group-hover:scale-110 transition-transform relative z-10 shadow-sm">
+                <div className="w-14 h-14 mb-4 rounded-2xl bg-white border border-slate-200/60 flex items-center justify-center group-hover:scale-110 transition-transform relative z-10 shadow-sm">
                   <Sparkles className="w-7 h-7 text-emerald-500 animate-pulse" />
                 </div>
                 
@@ -2517,10 +2517,10 @@ export default function AdminDashboard() {
 
               {/* Left: Authority Metric Overlay (Dynamic Focus) */}
               <div className="flex items-center gap-3">
-                <div className="flex items-center gap-3 px-4 py-2 bg-white rounded-xl border border-[#1a1a1a]/5 shadow-sm transition-all hover:shadow-md cursor-default">
+                <div className="flex items-center gap-3 px-4 py-2 bg-white/90 backdrop-blur-md rounded-xl border border-slate-200/60 shadow-sm transition-all hover:shadow-md cursor-default">
                   <div className="h-6 w-[2px] bg-red-400 rounded-full" />
                   <div className="flex flex-col">
-                    <span className="text-[10px] font-medium text-slate-400 uppercase tracking-widest leading-none flex items-center gap-1 mb-1">
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] leading-none flex items-center gap-1 mb-1">
                       Unsecured
                       <TrendingUp className="w-3 h-3 text-red-400 rotate-180" strokeWidth={3} />
                     </span>
@@ -2532,10 +2532,10 @@ export default function AdminDashboard() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 px-4 py-2 bg-white rounded-xl border border-[#1a1a1a]/5 shadow-sm transition-all hover:shadow-md cursor-default">
+                <div className="flex items-center gap-3 px-4 py-2 bg-white/90 backdrop-blur-md rounded-xl border border-slate-200/60 shadow-sm transition-all hover:shadow-md cursor-default">
                   <div className="h-6 w-[2px] bg-emerald-500 rounded-full" />
                   <div className="flex flex-col">
-                    <span className="text-[10px] font-medium text-slate-400 uppercase tracking-widest leading-none flex items-center gap-1 mb-1">
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] leading-none flex items-center gap-1 mb-1">
                       Secured
                       <TrendingUp className="w-3 h-3 text-emerald-500" strokeWidth={3} />
                     </span>

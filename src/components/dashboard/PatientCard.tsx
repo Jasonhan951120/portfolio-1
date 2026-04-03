@@ -154,19 +154,19 @@ export const PatientCard = React.memo(function PatientCard({
           scale: isDragging ? 1.02 : 1,
           rotate: isDragging ? 2 : 0,
           boxShadow: isDragging
-            ? "0 10px 30px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.5)"
+            ? "0 10px 30px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.5)"
             : isOverdue
-              ? "0 0 10px rgba(230,57,70,0.2)"
+              ? "0 0 10px rgba(230,57,70,0.1)"
               : "0 8px 30px rgba(0,0,0,0.02)",
           opacity: isDragging ? 0.95 : 1,
-          backgroundColor: isDragging ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,1)",
+          backgroundColor: isDragging ? "rgba(255,255,255,0.98)" : "rgba(255,255,255,0.95)",
           y: isDragging ? -10 : 0
         }}
         transition={{ duration: 0.3, ease: "easeOut" }}
-        className={`rounded-xl p-6 relative group focus:outline-none transition-all shadow-[0_8px_30px_rgb(0,0,0,0.02)] border hover:shadow-md
-          ${isDragging ? 'border-slate-200 cursor-grabbing bg-white' :
-            isOverdue ? 'border-[#E63946]/50 hover:border-[#E63946]/80 cursor-grab animate-pulse bg-white' :
-              'border-slate-50 hover:border-slate-200 cursor-grab bg-white'
+        className={`rounded-2xl p-6 relative group focus:outline-none transition-all border backdrop-blur-xl
+          ${isDragging ? 'border-slate-300 cursor-grabbing shadow-xl' :
+            isOverdue ? 'border-rose-200 hover:border-rose-300 cursor-grab bg-white/95 shadow-sm' :
+              'border-slate-200/60 hover:border-slate-300 hover:shadow-md cursor-grab bg-white/95 shadow-sm'
           }`}
       >
         <div {...attributes} {...listeners} className="absolute inset-0 z-0 outline-none rounded-2xl" />
@@ -182,10 +182,10 @@ export const PatientCard = React.memo(function PatientCard({
         <div className="relative z-10 pointer-events-none">
           <div className="flex justify-between items-start mb-2">
             <div>
-              <h4 className="font-black text-[#1a1a1a] text-sm tracking-tighter truncate mr-2 flex items-center gap-2" data-hj-suppress>
+              <h4 className="font-bold text-slate-900 text-sm tracking-tight truncate mr-2 flex items-center gap-2" data-hj-suppress>
                 {lead.name}
               </h4>
-              <p className="text-[11px] text-[#4f4f4f] font-semibold mt-0 tracking-tight">Joined {timeAgo(lead.created_at)}</p>
+              <p className="text-[10px] font-bold text-slate-400 mt-0 uppercase tracking-widest">Joined {timeAgo(lead.created_at)}</p>
             </div>
 
             <div className="flex flex-col items-end gap-1">
@@ -202,32 +202,32 @@ export const PatientCard = React.memo(function PatientCard({
 
           <div className="flex flex-wrap gap-2 mb-1 items-center">
             {lead.intent_score && (
-              <span className={`text-[9px] font-bold px-2 py-1 rounded uppercase tracking-tight flex items-center gap-1 border ${lead.intent_score >= 80 ? 'text-[#1a1a1a] bg-[#88b399]/20 border-transparent' :
-                lead.intent_score >= 50 ? 'text-[#1a1a1a] bg-[#c5a059]/30 border-transparent' :
-                  'text-[#FF3B30] bg-[#FF3B30]/10 border-[#FF3B30]/20'
+              <span className={`text-[9px] font-bold px-2 py-1 rounded-md uppercase tracking-widest flex items-center gap-1 border ${lead.intent_score >= 80 ? 'text-emerald-700 bg-emerald-50 border-emerald-100' :
+                lead.intent_score >= 50 ? 'text-blue-700 bg-blue-50 border-blue-100' :
+                  'text-rose-700 bg-rose-50 border-rose-100'
                 }`}>
                 <Sparkles className="w-2.5 h-2.5" strokeWidth={1.5} /> AI {lead.intent_score}%
               </span>
             )}
             {isUnmapped ? (
-                <span className="text-[11px] font-semibold text-[#1a1a1a] font-inter px-2 py-1 rounded uppercase tracking-tight bg-slate-50 border border-slate-100 flex items-center gap-1.5">
+                <span className="text-[10px] font-bold text-slate-900 font-inter px-2 py-1 rounded-md uppercase tracking-widest bg-slate-50 border border-slate-200/60 flex items-center gap-1.5">
                   {lead.service}
                   <motion.span 
                     animate={{ opacity: [1, 0.7, 1] }} 
                     transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                    className="text-[9px] px-1.5 py-0.5 font-medium uppercase tracking-[0.15em] text-slate-500 bg-transparent border border-slate-200 rounded flex items-center gap-0.5"
+                    className="text-[8px] px-1.5 py-0.5 font-bold uppercase tracking-widest text-indigo-600 bg-indigo-50 border border-indigo-100 rounded flex items-center gap-0.5"
                   >
                     <Sparkles className="w-2.5 h-2.5" /> NEW AI DRAFT
                   </motion.span>
                 </span>
             ) : isPriceMismatch ? (
                 <div className="flex flex-col gap-1 items-start">
-                  <span className="text-[11px] font-semibold text-[#1a1a1a] font-inter px-2 py-1 rounded uppercase tracking-tight bg-slate-50 border border-slate-100 flex items-center gap-1.5">
+                  <span className="text-[10px] font-bold text-slate-900 font-inter px-2 py-1 rounded-md uppercase tracking-widest bg-slate-50 border border-slate-200/60 flex items-center gap-1.5">
                     {matchedTemplate?.service_name || matchedTemplate?.name || lead.service}
                     <motion.span 
                       animate={{ opacity: [1, 0.7, 1] }} 
                       transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                      className="text-[9px] font-black uppercase tracking-wider text-rose-800 bg-rose-100 border border-rose-200 px-1 py-0.5 rounded shadow-sm flex items-center gap-0.5"
+                      className="text-[8px] font-bold uppercase tracking-widest text-rose-700 bg-rose-50 border border-rose-100 px-1.5 py-0.5 rounded flex items-center gap-0.5"
                     >
                       <AlertTriangle className="w-2.5 h-2.5" /> PRICE MISMATCH
                     </motion.span>
@@ -237,13 +237,13 @@ export const PatientCard = React.memo(function PatientCard({
                       e.stopPropagation();
                       updateLead(lead.id, { potential_value: officialPrice });
                     }}
-                    className="text-[9px] font-bold text-blue-600 hover:text-blue-700 bg-blue-50 px-2 py-1 flex items-center gap-1 rounded border border-blue-100 hover:border-blue-200 transition-all ml-1"
+                    className="text-[9px] font-bold text-blue-600 hover:text-blue-700 bg-blue-50/50 px-2 py-1 flex items-center gap-1 rounded-lg border border-blue-100 transition-all ml-1"
                   >
                     Sync to {currency}{(officialPrice || 0).toLocaleString()}
                   </button>
                 </div>
             ) : (
-                <span className="text-[11px] font-semibold text-[#1a1a1a] font-inter px-2 py-1 rounded uppercase tracking-tight bg-slate-50 border border-slate-100">
+                <span className="text-[10px] font-bold text-slate-900 font-inter px-2 py-1 rounded-md uppercase tracking-widest bg-slate-50 border border-slate-200/60">
                   {matchedTemplate?.service_name || matchedTemplate?.name || lead.service}
                 </span>
             )}
@@ -328,20 +328,21 @@ export const PatientCard = React.memo(function PatientCard({
 
               <div className="flex gap-2">
                 {(lead.status === "Treated" || lead.status === "Closed Won") && (
-                   <button
-                     onPointerDown={(e) => e.stopPropagation()}
-                     onClick={(e) => {
-                       e.preventDefault();
-                       e.stopPropagation();
-                       onOpenEmailModal?.(lead);
-                     }}
-                     className="group/btn flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 bg-transparent border border-slate-200 rounded-xl text-[#004d40] border-[#004d40]/30 hover:border-[#004d40] hover:bg-[#004d40]/5 transition-all duration-300 font-inter backdrop-blur-sm relative overflow-hidden"
-                   >
-                     <div className="absolute inset-0 bg-white/40 pointer-events-none group-hover/btn:opacity-0 transition-opacity" />
-                     <Mail className="w-3.5 h-3.5 relative z-10" strokeWidth={1.5} />
-                     <span className="text-[10px] font-bold uppercase tracking-tight relative z-10">Post-Op</span>
-                   </button>
+                  <button
+                    onPointerDown={(e) => e.stopPropagation()}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      onOpenEmailModal?.(lead);
+                    }}
+                    className="group/btn flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white/50 border border-slate-200/60 rounded-xl text-emerald-700 hover:bg-white hover:border-slate-300 transition-all duration-300 font-inter backdrop-blur-sm relative overflow-hidden shadow-sm"
+                  >
+                    <div className="absolute inset-0 bg-white/40 pointer-events-none group-hover/btn:opacity-0 transition-opacity" />
+                    <Mail className="w-3.5 h-3.5 relative z-10" strokeWidth={1.5} />
+                    <span className="text-[10px] font-bold uppercase tracking-tight relative z-10">Post-Op</span>
+                  </button>
                 )}
+
                 {/* Context-Aware Email Button */}
                 {!(lead.status === "Treated" || lead.status === "Closed Won") && (
                   <button
@@ -349,15 +350,13 @@ export const PatientCard = React.memo(function PatientCard({
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      const { label } = getActionConfig(lead.status);
-                      console.log(`[ACTION] Email triggering: ${label}`);
                       onOpenEmailModal?.(lead);
                     }}
-                    className="group/email flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all duration-300 backdrop-blur-sm relative overflow-hidden"
+                    className="group/email flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white/50 border border-slate-200/60 rounded-xl text-slate-700 hover:bg-white hover:border-slate-300 transition-all duration-300 backdrop-blur-sm relative overflow-hidden shadow-sm"
                   >
                     <div className="absolute inset-0 bg-white/30 pointer-events-none group-hover/email:opacity-0 transition-opacity" />
-                    <Mail className="w-3.5 h-3.5 text-slate-400 group-hover/email:text-slate-700 transition-colors relative z-10" strokeWidth={1.5} />
-                    <span className="text-[10px] font-bold uppercase tracking-tight font-inter relative z-10">
+                    <Mail className="w-3.5 h-3.5 text-slate-400 group-hover/email:text-slate-900 transition-colors relative z-10" strokeWidth={1.5} />
+                    <span className="text-[10px] font-bold uppercase tracking-widest font-inter relative z-10">
                       Email
                     </span>
                   </button>
@@ -371,7 +370,7 @@ export const PatientCard = React.memo(function PatientCard({
                     e.stopPropagation();
                     onOpenAudit?.(lead);
                   }}
-                  className="px-3 py-1.5 text-slate-400 hover:text-[#1a1a1a] bg-white rounded-xl transition-all border border-slate-200 hover:border-slate-300 flex items-center justify-center relative overflow-hidden"
+                  className="px-3 py-1.5 text-slate-400 hover:text-slate-900 bg-white/50 rounded-xl transition-all border border-slate-200/60 hover:border-slate-300 flex items-center justify-center relative shadow-sm"
                   title="View Security Audit Trail"
                 >
                   <Shield className="w-3.5 h-3.5 relative z-10" strokeWidth={1.5} />

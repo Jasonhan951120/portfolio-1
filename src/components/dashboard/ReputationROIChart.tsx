@@ -18,16 +18,16 @@ const mockData = [
 const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
         return (
-            <div className="bg-slate-900/95 border border-slate-700/50 p-4 rounded-2xl shadow-2xl backdrop-blur-xl">
-                <p className="text-white font-bold mb-2 text-sm">{label}</p>
+            <div className="bg-white/95 border border-slate-200/60 p-4 rounded-2xl shadow-xl backdrop-blur-xl">
+                <p className="text-slate-900 font-bold mb-2 text-sm">{label}</p>
                 {Array.isArray(payload) && payload?.map((entry: any, index: number) => (
                     <div key={index} className="flex items-center gap-2 text-sm font-medium mb-1">
                         <span
                             className="w-2 h-2 rounded-full"
                             style={{ backgroundColor: entry.color }}
                         />
-                        <span className="text-slate-400 capitalize">{entry.name}:</span>
-                        <span className="text-white font-black tabular-nums">
+                        <span className="text-slate-500 capitalize">{entry.name}:</span>
+                        <span className="text-slate-900 font-black tabular-nums">
                             {entry.name === "revenue"
                                 ? `£${entry.value.toLocaleString()}`
                                 : `${entry.value} ★`}
@@ -42,15 +42,15 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 export function ReputationROIChart({ className = "" }: ReputationROIChartProps) {
     return (
-        <div className={`bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-[32px] p-8 ${className}`}>
+        <div className={`bg-white/90 backdrop-blur-xl border border-slate-200/60 rounded-[32px] p-8 shadow-sm ${className}`}>
             <div className="flex items-center justify-between mb-8">
                 <div>
-                    <h3 className="text-xl font-display font-bold text-white tracking-tight flex items-center gap-2">
-                        <Star className="w-5 h-5 text-[#C5A059] fill-[#C5A059]" />
-                        Reputation vs. Revenue
+                    <h3 className="text-xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
+                        <Star className="w-5 h-5 text-amber-500 fill-amber-500" />
+                        Reputation Performance
                     </h3>
-                    <p className="text-[12px] text-slate-400 mt-1 font-medium">
-                        Correlation between Google Business rating and monthly closed revenue
+                    <p className="text-[12px] text-slate-500 mt-1 font-bold uppercase tracking-widest">
+                        Rating vs Revenue Correlation
                     </p>
                 </div>
             </div>

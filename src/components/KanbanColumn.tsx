@@ -15,16 +15,16 @@ export function KanbanColumn({ id, title, leads, onLeadClick }: KanbanColumnProp
     const { setNodeRef } = useDroppable({ id });
 
     return (
-        <div className="flex-shrink-0 w-80 flex flex-col h-full">
+        <div className="flex-shrink-0 w-80 flex flex-col h-full transition-all duration-300">
             <div className="flex items-center justify-between mb-4 px-2">
-                <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
-                    {title} <span className="bg-black/5 px-2 py-0.5 rounded-full">{leads.length}</span>
+                <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] flex items-center gap-2">
+                    {title} <span className="bg-slate-100 text-slate-900 px-2 py-0.5 rounded-full border border-slate-200/60">{leads.length}</span>
                 </h3>
             </div>
 
             <div
                 ref={setNodeRef}
-                className="flex-grow bg-gray-50/50 rounded-[32px] p-3 border border-dashed border-gray-200 min-h-[500px] space-y-3"
+                className="flex-grow bg-white/50 backdrop-blur-md rounded-[32px] p-3 border border-slate-200/60 shadow-sm min-h-[500px] space-y-3 transition-colors"
             >
                 <SortableContext items={(leads ?? []).map(l => l.id)} strategy={verticalListSortingStrategy}>
                     {(leads ?? []).map((lead) => (
