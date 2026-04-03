@@ -83,38 +83,67 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
       status: "New Lead",
       potential_value: 3000,
       intent_score: 99,
-      created_at: new Date().toISOString(),
-      pt_personalized_note: "Donggyun, your live PT test lead is ready. Click the paper plane to begin."
+      created_at: new Date().toISOString()
     } as ConsultationRequest,
     {
-      id: "sarah-jenkins",
+      id: "demo-james",
+      name: "James Wilson",
+      email: "handonggyun18@gmail.com",
+      service: "Dental Implants",
+      potential_value: 8500,
+      status: "Booked",
+      intent_score: 99,
+      created_at: new Date().toISOString()
+    } as ConsultationRequest,
+    {
+      id: "demo-sarah",
       name: "Sarah Jenkins",
       email: "handonggyun18@gmail.com",
-      phone: "+44 7712 345678",
-      service: "Invisalign",
-      status: "Booked",
-      potential_value: 5000,
-      created_at: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
+      service: "Invisalign / Aligners",
+      potential_value: 3500,
+      status: "New Lead",
+      intent_score: 88,
+      created_at: new Date(Date.now() - 1000 * 60 * 120).toISOString()
     } as ConsultationRequest,
     {
-      id: "michael-ross",
+      id: "demo-michael",
       name: "Michael Ross",
       email: "handonggyun18@gmail.com",
-      phone: "+44 7723 456789",
       service: "Veneers",
+      potential_value: 12000,
       status: "Visited",
-      potential_value: 2500,
-      created_at: new Date(Date.now() - 7200000).toISOString(), // 2 hours ago
+      intent_score: 91,
+      created_at: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString()
     } as ConsultationRequest,
     {
-      id: "olivia-colman",
+      id: "demo-david",
+      name: "David Beckham",
+      email: "handonggyun18@gmail.com",
+      service: "Dental Implants",
+      potential_value: 5500,
+      status: "New Lead",
+      intent_score: 82,
+      created_at: new Date(Date.now() - 1000 * 60 * 30).toISOString()
+    } as ConsultationRequest,
+    {
+      id: "demo-olivia",
       name: "Olivia Colman",
       email: "handonggyun18@gmail.com",
-      phone: "+44 7734 567890",
-      service: "Dental Implants",
+      service: "Veneers",
+      potential_value: 9500,
       status: "Treated",
-      potential_value: 1200,
-      created_at: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
+      intent_score: 96,
+      created_at: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString()
+    } as ConsultationRequest,
+    {
+      id: "demo-benedict",
+      name: "Benedict Cumberbatch",
+      email: "handonggyun18@gmail.com",
+      service: "Invisalign / Aligners",
+      potential_value: 4000,
+      status: "Visited",
+      intent_score: 75,
+      created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString()
     } as ConsultationRequest
   ],
   activeCategory: 'All',
@@ -234,35 +263,67 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
           status: "New Lead",
           potential_value: 3000,
           intent_score: 99,
-          created_at: new Date().toISOString(),
-          pt_personalized_note: "Donggyun, your live PT test lead is ready. Click the paper plane to begin."
+          created_at: new Date().toISOString()
         } as ConsultationRequest,
         {
-          id: "sarah-jenkins",
+          id: "demo-james",
+          name: "James Wilson",
+          email: "handonggyun18@gmail.com",
+          service: "Dental Implants",
+          potential_value: 8500,
+          status: "Booked",
+          intent_score: 99,
+          created_at: new Date().toISOString()
+        } as ConsultationRequest,
+        {
+          id: "demo-sarah",
           name: "Sarah Jenkins",
           email: "handonggyun18@gmail.com",
-          service: "Invisalign",
-          status: "Booked",
-          potential_value: 5000,
-          created_at: new Date(Date.now() - 3600000).toISOString(),
+          service: "Invisalign / Aligners",
+          potential_value: 3500,
+          status: "New Lead",
+          intent_score: 88,
+          created_at: new Date(Date.now() - 1000 * 60 * 120).toISOString()
         } as ConsultationRequest,
         {
-          id: "michael-ross",
+          id: "demo-michael",
           name: "Michael Ross",
           email: "handonggyun18@gmail.com",
           service: "Veneers",
+          potential_value: 12000,
           status: "Visited",
-          potential_value: 2500,
-          created_at: new Date(Date.now() - 7200000).toISOString(),
+          intent_score: 91,
+          created_at: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString()
         } as ConsultationRequest,
         {
-          id: "olivia-colman",
-          name: "Olivia Colman",
+          id: "demo-david",
+          name: "David Beckham",
           email: "handonggyun18@gmail.com",
           service: "Dental Implants",
+          potential_value: 5500,
+          status: "New Lead",
+          intent_score: 82,
+          created_at: new Date(Date.now() - 1000 * 60 * 30).toISOString()
+        } as ConsultationRequest,
+        {
+          id: "demo-olivia",
+          name: "Olivia Colman",
+          email: "handonggyun18@gmail.com",
+          service: "Veneers",
+          potential_value: 9500,
           status: "Treated",
-          potential_value: 1200,
-          created_at: new Date(Date.now() - 86400000).toISOString(),
+          intent_score: 96,
+          created_at: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString()
+        } as ConsultationRequest,
+        {
+          id: "demo-benedict",
+          name: "Benedict Cumberbatch",
+          email: "handonggyun18@gmail.com",
+          service: "Invisalign / Aligners",
+          potential_value: 4000,
+          status: "Visited",
+          intent_score: 75,
+          created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString()
         } as ConsultationRequest
       ];
 

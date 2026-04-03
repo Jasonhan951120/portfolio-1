@@ -5,71 +5,47 @@ export const DEMO_LEADS: Partial<ConsultationRequest>[] = [
         id: "donggyun-live",
         name: "Donggyun Han",
         email: "handonggyun18@gmail.com",
-        phone: "+82 10-3395-1543",
+        phone: "820133951543",
         service: "Dental Implants",
         potential_value: 3000,
         status: "New Lead",
         intent_score: 95,
-        created_at: new Date().toISOString(),
-        pt_personalized_note: "Donggyun, here is your bespoke Dental Implants proposal."
+        created_at: new Date().toISOString()
     },
     {
-        id: "demo-e2e",
-        name: "James",
+        id: "demo-james",
+        name: "James Wilson",
+        email: "handonggyun18@gmail.com",
         service: "Dental Implants",
         potential_value: 8500,
-        pt_price_override: 3000,
-        status: "Proposal Sent",
+        status: "Booked",
         intent_score: 99,
-        created_at: new Date().toISOString(),
-        phone: "+447700900123",
-        pt_booking_url: "https://calendly.com/hanlan-oc",
-        pt_before_image: null,
-        pt_after_image: null,
-        pt_personalized_note: "James, it was a pleasure. Here is your bespoke plan at the special rate we discussed."
+        created_at: new Date().toISOString()
     },
     {
-        id: "demo-1",
-        name: "James Carter",
-        service: "Quantum Laser Therapy",
-        potential_value: 8500,
-        status: "New Lead",
-        intent_score: 94,
-        created_at: new Date(Date.now() - 1000 * 60 * 45).toISOString(), // 45 mins ago
-        phone: "+447700900123",
-        pt_before_image: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=1200",
-        pt_after_image: "https://images.unsplash.com/photo-1606811841660-1b51e9ed27ff?auto=format&fit=crop&q=80&w=1200",
-        pt_personalized_note: "James, it was a pleasure discussing your implant transformation today. As visualized, we can achieve total aesthetic restoration."
-    },
-    {
-        id: "demo-2",
-        name: "Emma Watson",
+        id: "demo-sarah",
+        name: "Sarah Jenkins",
+        email: "handonggyun18@gmail.com",
         service: "Invisalign / Aligners",
         potential_value: 3500,
         status: "New Lead",
         intent_score: 88,
-        created_at: new Date(Date.now() - 1000 * 60 * 120).toISOString(),
-        phone: "+447700900456",
-        pt_before_image: "https://example.com/placeholder.jpg",
-        pt_after_image: "https://example.com/dummy.jpg",
-        pt_personalized_note: "Emma, here is a placeholder simulation."
+        created_at: new Date(Date.now() - 1000 * 60 * 120).toISOString()
     },
     {
-        id: "demo-3",
-        name: "Oliver Smith",
+        id: "demo-michael",
+        name: "Michael Ross",
+        email: "handonggyun18@gmail.com",
         service: "Veneers",
         potential_value: 12000,
-        status: "Booked",
+        status: "Visited",
         intent_score: 91,
-        created_at: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString(),
-        appointment_date: new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString(), // Tomorrow
-        pt_before_image: null,
-        pt_after_image: null,
-        pt_personalized_note: "Oliver, your plan is ready but images are pending."
+        created_at: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString()
     },
     {
-        id: "demo-4",
-        name: "Isabella Jones",
+        id: "demo-david",
+        name: "David Beckham",
+        email: "handonggyun18@gmail.com",
         service: "Dental Implants",
         potential_value: 5500,
         status: "New Lead",
@@ -77,60 +53,24 @@ export const DEMO_LEADS: Partial<ConsultationRequest>[] = [
         created_at: new Date(Date.now() - 1000 * 60 * 30).toISOString()
     },
     {
-        id: "demo-5",
-        name: "William Brown",
+        id: "demo-olivia",
+        name: "Olivia Colman",
+        email: "handonggyun18@gmail.com",
         service: "Veneers",
         potential_value: 9500,
-        status: "Booked",
+        status: "Treated",
         intent_score: 96,
-        created_at: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
-        appointment_date: new Date(Date.now() + 1000 * 60 * 60 * 48).toISOString()
+        created_at: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString()
     },
     {
-        id: "demo-6",
-        name: "Sophia Taylor",
+        id: "demo-benedict",
+        name: "Benedict Cumberbatch",
+        email: "handonggyun18@gmail.com",
         service: "Invisalign / Aligners",
         potential_value: 4000,
         status: "Visited",
         intent_score: 75,
         created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString()
-    },
-    {
-        id: "demo-7",
-        name: "Harry Williams",
-        service: "Dental Implants",
-        potential_value: 15000,
-        status: "New Lead",
-        intent_score: 98,
-        created_at: new Date(Date.now() - 1000 * 60 * 15).toISOString()
-    },
-    {
-        id: "demo-8",
-        name: "Amelia Evans",
-        service: "Composite Bonding",
-        potential_value: 2500,
-        status: "New Lead",
-        intent_score: 65,
-        created_at: new Date(Date.now() - 1000 * 60 * 90).toISOString()
-    },
-    {
-        id: "demo-9",
-        name: "George Davies",
-        service: "Veneers",
-        potential_value: 7500,
-        status: "Treated",
-        intent_score: 100,
-        created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5).toISOString(),
-        treated_at: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString()
-    },
-    {
-        id: "demo-10",
-        name: "Charlotte Wilson",
-        service: "Invisalign / Aligners",
-        potential_value: 3800,
-        status: "Booked",
-        intent_score: 85,
-        created_at: new Date(Date.now() - 1000 * 60 * 180).toISOString()
     },
     // Adding 40 more mixed records to hit the ~£85,400 pipeline goal (excluding treated)
     ...Array.from({ length: 40 }).map((_, i) => ({
@@ -139,6 +79,7 @@ export const DEMO_LEADS: Partial<ConsultationRequest>[] = [
             "Thomas Miller", "Jack Wright", "Emily Thompson", "Jessica White", "Alice Walker", 
             "Lucas Robinson", "Grace Green", "Edward Hall", "Ruby Young", "Oscar King"
         ][i % 10] + " " + (i + 11),
+        email: "handonggyun18@gmail.com",
         service: ["Dental Implants", "Invisalign / Aligners", "Veneers", "Composite Bonding"][i % 4],
         potential_value: [3500, 4500, 1500, 2500, 5000, 2000, 800, 1200][i % 8],
         status: ["New Lead", "Booked", "Visited", "New Lead", "Booked"][i % 5] as any,
