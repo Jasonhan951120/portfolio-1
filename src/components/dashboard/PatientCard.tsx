@@ -163,219 +163,112 @@ export const PatientCard = React.memo(function PatientCard({
           y: isDragging ? -10 : 0
         }}
         transition={{ duration: 0.3, ease: "easeOut" }}
-        className={`rounded-2xl p-6 relative group focus:outline-none transition-all border backdrop-blur-xl
+        className={`rounded-2xl p-5 relative group focus:outline-none transition-all border backdrop-blur-xl
           ${isDragging ? 'border-slate-300 cursor-grabbing shadow-xl' :
-            isOverdue ? 'border-rose-200 hover:border-rose-300 cursor-grab bg-white/95 shadow-sm' :
-              'border-slate-200/60 hover:border-slate-300 hover:shadow-md cursor-grab bg-white/95 shadow-sm'
+            isOverdue ? 'border-rose-200 hover:border-rose-300 cursor-grab bg-white shadow-sm' :
+              'border-slate-200/60 hover:border-slate-300 hover:shadow-md cursor-grab bg-white shadow-sm'
           }`}
       >
         <div {...attributes} {...listeners} className="absolute inset-0 z-0 outline-none rounded-2xl" />
 
-        {/* Patient Journey Viz */}
-        <div className="absolute top-0 left-0 right-0 h-[2px] bg-slate-100 rounded-t-2xl overflow-hidden z-0">
-          <div 
-            className="h-full bg-gradient-to-r from-slate-300 to-[#88b399]" 
-            style={{ width: `${lead.intent_score || Math.min(100, (lead.potential_value || 1000) / 100)}%` }}
-          />
-        </div>
-
         <div className="relative z-10 pointer-events-none">
-          <div className="flex justify-between items-start mb-2">
-            <div>
-              <h4 className="font-bold text-slate-900 text-sm tracking-tight truncate mr-2 flex items-center gap-2" data-hj-suppress>
+          <div className="flex justify-between items-start mb-4">
+            <div className="space-y-0.5">
+              <h4 className="font-black text-slate-900 text-sm tracking-tight truncate mr-2 flex items-center gap-2" data-hj-suppress>
                 {lead.name}
               </h4>
-              <p className="text-[10px] font-bold text-slate-400 mt-0 uppercase tracking-widest">Joined {timeAgo(lead.created_at)}</p>
+              <p className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.15em]">Joined {timeAgo(lead.created_at)}</p>
             </div>
 
             <div className="flex flex-col items-end gap-1">
-              <span className="text-[14px] font-bold text-[#1a1a1a] tracking-tight tabular-nums font-montserrat">
+              <span className="text-[15px] font-black text-slate-900 tracking-tighter tabular-nums">
                 {currency}{(lead.potential_value ? lead.potential_value : (1000)).toLocaleString()}
               </span>
-              {isOverdue && (
-                <span className="text-[9px] font-bold text-[#FF3B30] bg-[#FF3B30]/10 border border-[#FF3B30]/20 px-1.5 py-0.5 rounded uppercase tracking-wider flex items-center gap-1">
-                  <AlertTriangle className="w-2 h-2" strokeWidth={1.5} /> Urgent
-                </span>
-              )}
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-2 mb-1 items-center">
-            {lead.intent_score && (
-              <span className={`text-[9px] font-bold px-2 py-1 rounded-md uppercase tracking-widest flex items-center gap-1 border ${lead.intent_score >= 80 ? 'text-emerald-700 bg-emerald-50 border-emerald-100' :
-                lead.intent_score >= 50 ? 'text-blue-700 bg-blue-50 border-blue-100' :
-                  'text-rose-700 bg-rose-50 border-rose-100'
-                }`}>
-                <Sparkles className="w-2.5 h-2.5" strokeWidth={1.5} /> AI {lead.intent_score}%
-              </span>
-            )}
+          <div className="flex flex-wrap gap-2 mb-4 items-center">
             {isUnmapped ? (
-                <span className="text-[10px] font-bold text-slate-900 font-inter px-2 py-1 rounded-md uppercase tracking-widest bg-slate-50 border border-slate-200/60 flex items-center gap-1.5">
-                  {lead.service}
-                  <motion.span 
-                    animate={{ opacity: [1, 0.7, 1] }} 
-                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                    className="text-[8px] px-1.5 py-0.5 font-bold uppercase tracking-widest text-indigo-600 bg-indigo-50 border border-indigo-100 rounded flex items-center gap-0.5"
-                  >
-                    <Sparkles className="w-2.5 h-2.5" /> NEW AI DRAFT
-                  </motion.span>
-                </span>
-            ) : isPriceMismatch ? (
-                <div className="flex flex-col gap-1 items-start">
-                  <span className="text-[10px] font-bold text-slate-900 font-inter px-2 py-1 rounded-md uppercase tracking-widest bg-slate-50 border border-slate-200/60 flex items-center gap-1.5">
-                    {matchedTemplate?.service_name || matchedTemplate?.name || lead.service}
-                    <motion.span 
-                      animate={{ opacity: [1, 0.7, 1] }} 
-                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                      className="text-[8px] font-bold uppercase tracking-widest text-rose-700 bg-rose-50 border border-rose-100 px-1.5 py-0.5 rounded flex items-center gap-0.5"
-                    >
-                      <AlertTriangle className="w-2.5 h-2.5" /> PRICE MISMATCH
-                    </motion.span>
+                <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-50 border border-slate-200/60">
+                  <span className="text-[10px] font-bold text-slate-900 uppercase tracking-widest leading-none">
+                    {lead.service}
                   </span>
-                  <button 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      updateLead(lead.id, { potential_value: officialPrice });
-                    }}
-                    className="text-[9px] font-bold text-blue-600 hover:text-blue-700 bg-blue-50/50 px-2 py-1 flex items-center gap-1 rounded-lg border border-blue-100 transition-all ml-1"
-                  >
-                    Sync to {currency}{(officialPrice || 0).toLocaleString()}
-                  </button>
+                  <div className="h-2 w-[1px] bg-slate-200" />
+                  <span className="text-[8px] font-black text-indigo-600 uppercase tracking-widest flex items-center gap-1">
+                    <Sparkles className="w-2.5 h-2.5" /> NEW AI DRAFT
+                  </span>
                 </div>
             ) : (
-                <span className="text-[10px] font-bold text-slate-900 font-inter px-2 py-1 rounded-md uppercase tracking-widest bg-slate-50 border border-slate-200/60">
-                  {matchedTemplate?.service_name || matchedTemplate?.name || lead.service}
-                </span>
+                <div className="px-2.5 py-1.5 rounded-lg bg-slate-50 border border-slate-200/60">
+                  <span className="text-[10px] font-bold text-slate-900 uppercase tracking-widest leading-none">
+                    {matchedTemplate?.service_name || matchedTemplate?.name || lead.service}
+                  </span>
+                </div>
             )}
-            {lead.appointment_date && !isNaN(new Date(lead.appointment_date).getTime()) && (
-              <span className="text-[11px] font-semibold text-[#004d40] bg-[#004d40]/5 px-2 py-1 border border-[#004d40]/10 rounded uppercase tracking-tight">
-                {new Date(lead.appointment_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
-              </span>
-            )}
-            {lead.status === "Consultation Done" && (
-              <span className="text-[11px] font-semibold text-[#004d40] bg-[#004d40]/10 border border-[#004d40]/20 px-2 py-1 rounded tracking-tight">
-                Consulted
-              </span>
+            
+            {lead.appointment_date && (
+               <div className="px-2.5 py-1.5 rounded-lg bg-emerald-50 border border-emerald-100/50">
+                 <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest leading-none">
+                    {new Date(lead.appointment_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
+                 </span>
+               </div>
             )}
           </div>
           
-          <div className="mt-5 pt-5 border-t border-[#1a1a1a]/[0.03] flex flex-col gap-2 pointer-events-auto transition-all duration-300">
-            <div className="flex flex-col gap-2 w-full">
-              {/* Context-Aware Primary Action Button */}
+          <div className="space-y-2 pointer-events-auto">
+            {/* AI GENERATE PT (Primary) */}
+            <button
+              onPointerDown={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (isUnmapped) {
+                  setIsAIGenerating(true);
+                  setTimeout(() => {
+                      setIsAIGenerating(false);
+                      window.open(`/pt/draft/${lead.id}?treatment=${encodeURIComponent(lead.service || 'New Treatment')}`);
+                  }, 1500);
+                  return;
+                }
+                onOpenPTMode?.(lead);
+              }}
+              className="w-full flex items-center justify-center gap-2 py-2.5 bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md hover:bg-slate-50 transition-all group/pt"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-indigo-500 group-hover:scale-110 transition-transform" />
+              <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest">
+                AI Generate PT
+              </span>
+            </button>
+
+            <div className="flex gap-2">
+              {/* EMAIL */}
               <button
                 onPointerDown={(e) => e.stopPropagation()}
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-
-                  // Intercept logic for unmapped AI fallbacks
-                  if (isUnmapped) {
-                    setIsAIGenerating(true);
-                    setTimeout(() => {
-                        setIsAIGenerating(false);
-                        window.open(`/pt/draft/${lead.id}?treatment=${encodeURIComponent(lead.service || 'New Treatment')}`);
-                    }, 2500);
-                    return;
-                  }
-
-                  const { label } = getActionConfig(lead.status);
-                  console.log(`[ACTION] Top Button triggering: ${label}`);
-                  
-                  if (hasPhone) {
-                    onOpenWhatsAppModal?.(lead);
-                  } else {
-                    alert("⚠️ CANNOT CONNECT: This lead is missing a registered phone number. Please update the patient records.");
-                  }
+                  onOpenEmailModal?.(lead);
                 }}
-                className={`group/main flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl transition-all border backdrop-blur-sm relative overflow-hidden w-full
-                  ${isUnmapped ? 'bg-white text-indigo-600 border-indigo-100 hover:bg-indigo-50/50 shadow-[0_0_15px_rgba(79,70,229,0.08)] transition-colors duration-300' :
-                  hasPhone 
-                    ? `${getActionConfig(lead.status).text} ${getActionConfig(lead.status).bg} hover:text-white ${getActionConfig(lead.status).hoverBg} ${getActionConfig(lead.status).border}` 
-                    : 'text-[#4f4f4f] bg-slate-50 border-slate-200 cursor-not-allowed opacity-50'
-                  }`}
+                className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md hover:bg-slate-50 transition-all opacity-80 hover:opacity-100"
               >
-                <div className="absolute inset-0 bg-white/40 pointer-events-none group-hover/main:opacity-0 transition-opacity" />
-                {isUnmapped ? (
-                  <FileCog className="w-4 h-4 relative z-10 animate-pulse" strokeWidth={1.5} />
-                ) : (
-                  React.createElement(getActionConfig(lead.status).icon, { className: "w-3.5 h-3.5 relative z-10", strokeWidth: 1.5 })
-                )}
-                <span className="text-[10px] font-semibold uppercase tracking-tight font-inter relative z-10">
-                  {isUnmapped ? "AI GENERATE PT" : getActionConfig(lead.status).label}
+                <Mail className="w-3.5 h-3.5 text-slate-400" />
+                <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest">
+                  Email
                 </span>
               </button>
 
-              <AnimatePresence>
-                {isAIGenerating && (
-                    <motion.div 
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.95 }}
-                        className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-white/40 backdrop-blur-md"
-                    >
-                        <div className="bg-white border text-left border-black/5 rounded-[24px] p-8 shadow-[0_8px_40px_rgb(0,0,0,0.12)] flex flex-col items-center justify-center gap-4 max-w-sm w-full">
-                            <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1.5 }}>
-                                <Sparkles className="w-8 h-8 text-amber-500" />
-                            </motion.div>
-                            <p className="text-sm font-bold text-slate-800 text-center uppercase tracking-widest mt-2 px-4 leading-relaxed">
-                                ✨ AI is generating a new PT template for<br/>
-                                <span className="text-amber-600 mt-1 block px-2 py-1 bg-amber-50 rounded-lg">{lead.service}</span>
-                            </p>
-                        </div>
-                    </motion.div>
-                )}
-              </AnimatePresence>
-
-              <div className="flex gap-2">
-                {(lead.status === "Treated" || lead.status === "Closed Won") && (
-                  <button
-                    onPointerDown={(e) => e.stopPropagation()}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      onOpenEmailModal?.(lead);
-                    }}
-                    className="group/btn flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white/50 border border-slate-200/60 rounded-xl text-emerald-700 hover:bg-white hover:border-slate-300 transition-all duration-300 font-inter backdrop-blur-sm relative overflow-hidden shadow-sm"
-                  >
-                    <div className="absolute inset-0 bg-white/40 pointer-events-none group-hover/btn:opacity-0 transition-opacity" />
-                    <Mail className="w-3.5 h-3.5 relative z-10" strokeWidth={1.5} />
-                    <span className="text-[10px] font-bold uppercase tracking-tight relative z-10">Post-Op</span>
-                  </button>
-                )}
-
-                {/* Context-Aware Email Button */}
-                {!(lead.status === "Treated" || lead.status === "Closed Won") && (
-                  <button
-                    onPointerDown={(e) => e.stopPropagation()}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      onOpenEmailModal?.(lead);
-                    }}
-                    className="group/email flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white/50 border border-slate-200/60 rounded-xl text-slate-700 hover:bg-white hover:border-slate-300 transition-all duration-300 backdrop-blur-sm relative overflow-hidden shadow-sm"
-                  >
-                    <div className="absolute inset-0 bg-white/30 pointer-events-none group-hover/email:opacity-0 transition-opacity" />
-                    <Mail className="w-3.5 h-3.5 text-slate-400 group-hover/email:text-slate-900 transition-colors relative z-10" strokeWidth={1.5} />
-                    <span className="text-[10px] font-bold uppercase tracking-widest font-inter relative z-10">
-                      Email
-                    </span>
-                  </button>
-                )}
-
-                {/* Audit Button */}
-                <button
-                  onPointerDown={(e) => e.stopPropagation()}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    onOpenAudit?.(lead);
-                  }}
-                  className="px-3 py-1.5 text-slate-400 hover:text-slate-900 bg-white/50 rounded-xl transition-all border border-slate-200/60 hover:border-slate-300 flex items-center justify-center relative shadow-sm"
-                  title="View Security Audit Trail"
-                >
-                  <Shield className="w-3.5 h-3.5 relative z-10" strokeWidth={1.5} />
-                </button>
-              </div>
+              {/* AUDIT */}
+              <button
+                onPointerDown={(e) => e.stopPropagation()}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onOpenAudit?.(lead);
+                }}
+                className="px-3 py-2.5 bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md hover:bg-slate-50 transition-all opacity-60 hover:opacity-100"
+              >
+                <Shield className="w-3.5 h-3.5 text-slate-400" />
+              </button>
             </div>
           </div>
         </div>
