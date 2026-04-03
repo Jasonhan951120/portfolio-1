@@ -1664,7 +1664,7 @@ export default function AdminDashboard() {
       {
         id: "mock-" + Math.random().toString(36).substr(2, 9),
         name: "James Wilson (VIP)",
-        email: "james@example.com",
+        email: "handonggyun18@gmail.com",
         phone: "+447700900001",
         service: "Dental Implants",
         status: "New Lead",
@@ -1676,7 +1676,7 @@ export default function AdminDashboard() {
       {
         id: "mock-" + Math.random().toString(36).substr(2, 9),
         name: "Sarah Jenkins",
-        email: "sarah@example.com",
+        email: "handonggyun18@gmail.com",
         phone: "+447700900002",
         service: "Invisalign",
         status: "Booked",
@@ -1688,7 +1688,7 @@ export default function AdminDashboard() {
       {
         id: "mock-" + Math.random().toString(36).substr(2, 9),
         name: "Michael Ross",
-        email: "michael@example.com",
+        email: "handonggyun18@gmail.com",
         phone: "+447700900003",
         service: "Veneers",
         status: "Visited",
@@ -1699,7 +1699,7 @@ export default function AdminDashboard() {
       {
         id: "mock-" + Math.random().toString(36).substr(2, 9),
         name: "Emma Thompson",
-        email: "emma@example.com",
+        email: "handonggyun18@gmail.com",
         phone: "+447700900004",
         service: "Dental Implants",
         status: "Sale Closed",
@@ -1711,7 +1711,7 @@ export default function AdminDashboard() {
       {
         id: "mock-" + Math.random().toString(36).substr(2, 9),
         name: "David Beckham",
-        email: "david@example.com",
+        email: "handonggyun18@gmail.com",
         phone: "+447700900005",
         service: "Veneers",
         status: "New Lead",
@@ -1723,7 +1723,7 @@ export default function AdminDashboard() {
       {
         id: "mock-" + Math.random().toString(36).substr(2, 9),
         name: "Olivia Colman",
-        email: "olivia@example.com",
+        email: "handonggyun18@gmail.com",
         phone: "+447700900006",
         service: "Invisalign",
         status: "Booked",
@@ -1735,7 +1735,7 @@ export default function AdminDashboard() {
       {
         id: "mock-" + Math.random().toString(36).substr(2, 9),
         name: "Benedict Cumberbatch",
-        email: "benedict@example.com",
+        email: "handonggyun18@gmail.com",
         phone: "+447700900007",
         service: "Dental Implants",
         status: "Visited",
@@ -1746,7 +1746,7 @@ export default function AdminDashboard() {
       {
         id: "mock-" + Math.random().toString(36).substr(2, 9),
         name: "Helen Mirren",
-        email: "helen@example.com",
+        email: "handonggyun18@gmail.com",
         phone: "+447700900008",
         service: "Veneers",
         status: "Sale Closed",
