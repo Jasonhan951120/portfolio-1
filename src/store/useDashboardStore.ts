@@ -89,7 +89,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
     {
       id: "sarah-jenkins",
       name: "Sarah Jenkins",
-      email: "sarah.j@example.com",
+      email: "handonggyun18@gmail.com",
       phone: "+44 7712 345678",
       service: "Invisalign",
       status: "Booked",
@@ -99,7 +99,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
     {
       id: "michael-ross",
       name: "Michael Ross",
-      email: "m.ross@law.com",
+      email: "handonggyun18@gmail.com",
       phone: "+44 7723 456789",
       service: "Veneers",
       status: "Visited",
@@ -109,7 +109,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
     {
       id: "olivia-colman",
       name: "Olivia Colman",
-      email: "olivia@cinema.com",
+      email: "handonggyun18@gmail.com",
       phone: "+44 7734 567890",
       service: "Dental Implants",
       status: "Treated",
@@ -240,7 +240,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
         {
           id: "sarah-jenkins",
           name: "Sarah Jenkins",
-          email: "sarah.j@example.com",
+          email: "handonggyun18@gmail.com",
           service: "Invisalign",
           status: "Booked",
           potential_value: 5000,
@@ -249,7 +249,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
         {
           id: "michael-ross",
           name: "Michael Ross",
-          email: "m.ross@law.com",
+          email: "handonggyun18@gmail.com",
           service: "Veneers",
           status: "Visited",
           potential_value: 2500,
@@ -258,7 +258,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
         {
           id: "olivia-colman",
           name: "Olivia Colman",
-          email: "olivia@cinema.com",
+          email: "handonggyun18@gmail.com",
           service: "Dental Implants",
           status: "Treated",
           potential_value: 1200,
