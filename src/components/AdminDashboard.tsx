@@ -2743,7 +2743,7 @@ export default function AdminDashboard() {
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className="w-full h-full flex flex-col p-6 flex-1 min-h-0 bg-slate-50/50 rounded-tl-[40px] relative before:absolute before:inset-0 before:bg-gradient-to-b before:from-white/50 before:to-transparent before:pointer-events-none before:rounded-tl-[40px]"
+                      className="w-full h-full flex flex-col p-6 flex-1 min-h-0 bg-[#F8FAFC] rounded-tl-[40px] relative before:absolute before:inset-0 before:bg-gradient-to-b before:from-white/50 before:to-transparent before:pointer-events-none before:rounded-tl-[40px]"
                     >
                         {/* ── North Star Summary Metrics (Cognitive Anchor) ── */}
                         <div className="shrink-0 mb-10 relative z-10">

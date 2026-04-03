@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Send, MessageCircle, Shield, AlertTriangle, Sparkles, Users, Hand, CalendarCheck, ShieldCheck, FileText, Mail, FileCog } from 'lucide-react';
+import { Send, MessageCircle, Shield, AlertTriangle, Sparkles, Users, Hand, CalendarCheck, ShieldCheck, FileText, Mail, FileCog, HeartPulse, MessageSquare, Heart } from 'lucide-react';
 import { type ConsultationRequest } from "../../lib/supabase";
 import { useDashboardStore } from "../../store/useDashboardStore";
 import { INDUSTRY_TEMPLATES } from "../../lib/treatmentTemplates";
@@ -179,7 +179,7 @@ export const PatientCard = React.memo(function PatientCard({
               </h4>
               <div className="flex items-center gap-1.5">
                  <div className="w-1 h-1 rounded-full bg-slate-300" />
-                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none truncate max-w-[140px]">{lead.service}</span>
+                 <span className="text-[10px] uppercase tracking-[0.15em] text-slate-400 font-bold leading-none truncate max-w-[140px]">{lead.service}</span>
               </div>
             </div>
 
@@ -209,29 +209,53 @@ export const PatientCard = React.memo(function PatientCard({
           </div>
           
           <div className="space-y-2.5 pointer-events-auto">
-            {/* AI GENERATE PT (Primary) */}
-            <button
-              onPointerDown={(e) => e.stopPropagation()}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                if (isUnmapped) {
-                  setIsAIGenerating(true);
-                  setTimeout(() => {
-                      setIsAIGenerating(false);
-                      window.open(`/pt/draft/${lead.id}?treatment=${encodeURIComponent(lead.service || 'New Treatment')}`);
-                  }, 1500);
-                  return;
-                }
-                onOpenPTMode?.(lead);
-              }}
-              className="w-full flex items-center justify-center gap-2 py-2.5 bg-white border border-slate-100 rounded-full hover:border-slate-300 hover:shadow-sm transition-all duration-200 group/pt hover:bg-white"
-            >
-              <Sparkles className="w-4 h-4 text-indigo-500" strokeWidth={1.5} />
-              <span className="text-[10px] font-bold text-slate-700 uppercase tracking-widest">
-                {isUnmapped ? "Draft Treatment Plan" : "Send Premium PT"}
-              </span>
-            </button>
+            {/* Contextual Revenue-Driving Primary Button */}
+            {(() => {
+              let label = "AI DRAFT PT";
+              let Icon = Sparkles;
+              let action = () => {
+                 if (isUnmapped) {
+                   setIsAIGenerating(true);
+                   setTimeout(() => {
+                       setIsAIGenerating(false);
+                       window.open(`/pt/draft/${lead.id}?treatment=${encodeURIComponent(lead.service || 'New Treatment')}`);
+                   }, 1500);
+                 } else {
+                   onOpenPTMode?.(lead);
+                 }
+              };
+
+              if (lead.status === "Booked") {
+                 label = "SEND PT PLAN";
+                 Icon = Send;
+                 action = () => onOpenPTMode?.(lead);
+              } else if (lead.status === "Visited") {
+                 label = "FOLLOW-UP CARE";
+                 Icon = HeartPulse;
+                 action = () => onOpenAudit?.(lead);
+              } else if (lead.status === "Treated" || lead.status === "Closed Won") {
+                 label = "POST-CARE & THANKS";
+                 Icon = Heart;
+                 action = () => onOpenEmailModal?.(lead);
+              }
+
+              return (
+                <button
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    action();
+                  }}
+                  className="w-full flex items-center justify-center gap-2 py-2.5 bg-transparent border border-slate-200/60 rounded-full hover:bg-slate-50 transition-colors duration-200 group/pt"
+                >
+                  <Icon className="w-4 h-4 text-slate-700" strokeWidth={1.5} />
+                  <span className="text-[11px] font-medium text-slate-700 uppercase tracking-widest">
+                    {label}
+                  </span>
+                </button>
+              );
+            })()}
 
             <div className="flex gap-2.5">
               <button
@@ -241,9 +265,9 @@ export const PatientCard = React.memo(function PatientCard({
                   e.stopPropagation();
                   onOpenEmailModal?.(lead);
                 }}
-                className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-white border border-slate-100 rounded-full hover:border-slate-300 hover:shadow-sm transition-all duration-200 hover:bg-white"
+                className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-transparent border border-slate-200/60 rounded-full hover:bg-slate-50 transition-colors duration-200"
               >
-                <Mail className="w-4 h-4 text-emerald-600/80" strokeWidth={1.5} />
+                <Mail className="w-4 h-4 text-slate-400" strokeWidth={1.5} />
                 <span className="text-[10px] font-bold text-slate-700 uppercase tracking-widest leading-none">
                   Email
                 </span>
@@ -256,9 +280,9 @@ export const PatientCard = React.memo(function PatientCard({
                   e.stopPropagation();
                   onOpenAudit?.(lead);
                 }}
-                className="w-12 flex items-center justify-center py-2.5 bg-white border border-slate-100 rounded-full hover:border-slate-300 hover:shadow-sm transition-all duration-200 hover:bg-white"
+                className="w-12 flex items-center justify-center py-2.5 bg-transparent border border-slate-200/60 rounded-full hover:bg-slate-50 transition-colors duration-200"
               >
-                <Shield className="w-4 h-4 text-emerald-600/80" strokeWidth={1.5} />
+                <Shield className="w-4 h-4 text-slate-400" strokeWidth={1.5} />
               </button>
             </div>
           </div>
