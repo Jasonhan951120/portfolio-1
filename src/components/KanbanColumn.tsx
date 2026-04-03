@@ -16,9 +16,9 @@ export function KanbanColumn({ id, title, leads, onLeadClick }: KanbanColumnProp
 
     return (
         <div className="flex-shrink-0 w-84 flex flex-col h-full transition-all duration-300">
-            <div className="flex items-center justify-between px-3 pb-4 mb-4 border-b border-slate-100/80">
+            <div className="flex items-center justify-between px-2 pb-3 mb-3 border-b border-slate-100">
                 <div className="flex items-center gap-3">
-                    <h3 className="text-[12px] font-bold text-slate-900 uppercase tracking-[0.15em] leading-none">
+                    <h3 className="text-[12px] font-bold text-slate-500 uppercase tracking-[0.15em] leading-none">
                         {title}
                     </h3>
                     <div className="px-2 py-0.5 bg-slate-50 text-slate-400 rounded-md border border-slate-200/50 text-[10px] font-bold tabular-nums">

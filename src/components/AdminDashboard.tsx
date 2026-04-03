@@ -667,28 +667,14 @@ function KanbanColumn({
                 />
               ))
             ) : (
-              <div className="h-64 rounded-[32px] flex flex-col items-center justify-center border border-slate-200/60 bg-white/50 shadow-[0_8px_30px_rgb(0,0,0,0.02)] relative overflow-hidden group">
-                {/* Ascending dynamic trend line (opacity-10 watermark) */}
-                <div className="absolute inset-0 opacity-5 pointer-events-none flex items-end justify-center">
-                  <svg className="w-full h-40 text-slate-200" viewBox="0 0 400 200" fill="none">
-                    <motion.path 
-                      initial={{ pathLength: 0, opacity: 0 }}
-                      animate={{ pathLength: 1, opacity: 1 }}
-                      transition={{ duration: 2, ease: "easeOut" }}
-                      d="M0 180 C 100 170, 150 150, 200 100 C 250 50, 300 30, 400 20" 
-                      stroke="currentColor" 
-                      strokeWidth="3" 
-                    />
-                  </svg>
+              <div className="h-64 rounded-[32px] flex flex-col items-center justify-center border border-slate-100 bg-white shadow-[0_8px_30px_rgb(0,0,0,0.02)] relative overflow-hidden group">
+                <div className="w-16 h-16 mb-4 rounded-[20px] bg-white border border-slate-100 shadow-[0_1px_2px_rgba(0,0,0,0.05),0_0_0_1px_rgba(0,0,0,0.05)] flex items-center justify-center group-hover:scale-110 transition-transform relative z-10">
+                  <Sparkles className="w-6 h-6 text-emerald-600/80" strokeWidth={1.5} />
                 </div>
                 
-                <div className="w-14 h-14 mb-4 rounded-2xl bg-white border border-slate-200/60 flex items-center justify-center group-hover:scale-110 transition-transform relative z-10 shadow-sm">
-                  <Sparkles className="w-7 h-7 text-emerald-500 animate-pulse" />
-                </div>
-                
-                <div className="text-center relative z-10 space-y-1">
-                   <p className="text-[10px] font-black text-slate-900 uppercase tracking-widest italic">Position Zero</p>
-                   <p className="text-[9px] text-slate-400 font-bold uppercase tracking-tighter">Awaiting Clinical Momentum</p>
+                <div className="text-center relative z-10 space-y-1.5">
+                   <p className="text-[11px] font-black text-slate-900 uppercase tracking-widest italic">Position Zero</p>
+                   <p className="text-[9px] text-[#88b399] font-bold uppercase tracking-[0.15em] leading-none">Awaiting Clinical Momentum</p>
                 </div>
               </div>
             )}

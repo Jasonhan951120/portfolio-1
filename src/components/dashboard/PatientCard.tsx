@@ -163,29 +163,29 @@ export const PatientCard = React.memo(function PatientCard({
           y: isDragging ? -10 : 0
         }}
         transition={{ duration: 0.3, ease: "easeOut" }}
-        className={`rounded-2xl p-6 relative group focus:outline-none transition-all border backdrop-blur-xl
-          ${isDragging ? 'border-slate-300 cursor-grabbing shadow-xl' :
-            isOverdue ? 'border-rose-200 hover:border-rose-300 cursor-grab bg-white shadow-sm' :
-              'border-slate-200/60 hover:border-slate-300 hover:shadow-md cursor-grab bg-white shadow-sm'
+        className={`rounded-[24px] p-6 relative group focus:outline-none transition-all border
+          ${isDragging ? 'border-transparent shadow-[0_20px_40px_rgba(0,0,0,0.1)] scale-105 z-50' :
+            isOverdue ? 'border-rose-100 bg-white shadow-[0_1px_2px_rgba(230,57,70,0.05),0_0_0_1px_rgba(230,57,70,0.1)]' :
+              'border-slate-100 bg-white shadow-[0_1px_2px_rgba(0,0,0,0.05),0_0_0_1px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] cursor-grab'
           }`}
       >
-        <div {...attributes} {...listeners} className="absolute inset-0 z-0 outline-none rounded-2xl" />
+        <div {...attributes} {...listeners} className="absolute inset-0 z-0 outline-none rounded-[24px]" />
 
         <div className="relative z-10 pointer-events-none">
-          <div className="flex justify-between items-start mb-5">
-            <div className="space-y-1">
-              <h4 className="font-bold text-slate-900 text-[15px] tracking-tight leading-tight truncate mr-2" data-hj-suppress>
+          <div className="flex justify-between items-start mb-4">
+            <div className="space-y-1.5 flex-1 pr-2">
+              <h4 className="font-semibold text-slate-900 text-[16px] tracking-tight leading-none truncate" data-hj-suppress>
                 {lead.name}
               </h4>
               <div className="flex items-center gap-2">
-                 <p className="text-slate-400 text-[10px] uppercase font-semibold tracking-wider">Joined {timeAgo(lead.created_at)}</p>
-                 <div className="w-1 h-1 rounded-full bg-slate-200" />
-                 <p className="text-slate-400 text-[10px] uppercase font-semibold tracking-wider truncate max-w-[80px]">{lead.service}</p>
+                 <p className="text-[#88b399] text-[10px] uppercase font-bold tracking-[0.15em] leading-none">
+                   Joined {timeAgo(lead.created_at).replace(' ago', '')} &nbsp;&bull;&nbsp; <span className="truncate max-w-[100px] inline-block align-bottom">{lead.service}</span>
+                 </p>
               </div>
             </div>
 
-            <div className="flex flex-col items-end">
-              <span className="text-[14px] font-bold text-slate-900 tracking-tighter tabular-nums">
+            <div className="flex flex-col items-end shrink-0">
+              <span className="text-[15px] font-semibold text-slate-900 tracking-tight tabular-nums">
                 {currency}{(lead.potential_value ? lead.potential_value : (1000)).toLocaleString()}
               </span>
             </div>
@@ -193,23 +193,23 @@ export const PatientCard = React.memo(function PatientCard({
 
           <div className="flex flex-wrap gap-2 mb-6 items-center">
             {isUnmapped && (
-                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-50 border border-indigo-100/50">
-                  <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest leading-none">
+                <div className="flex items-center px-3 py-1.5 rounded-full bg-indigo-50/50">
+                  <span className="text-[9px] font-bold text-indigo-600 uppercase tracking-widest leading-none">
                     AI DRAFT
                   </span>
                 </div>
             )}
             
             {lead.appointment_date && (
-               <div className="px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-100/50">
-                 <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest leading-none">
-                    Confirmed: {new Date(lead.appointment_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
+               <div className="px-3 py-1.5 rounded-full bg-emerald-50/50">
+                 <span className="text-[9px] font-bold text-emerald-600 uppercase tracking-widest leading-none">
+                    Confirmed: {new Date(lead.appointment_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }).toUpperCase()}
                  </span>
                </div>
             )}
           </div>
           
-          <div className="space-y-2 pointer-events-auto">
+          <div className="space-y-2.5 pointer-events-auto">
             {/* AI GENERATE PT (Primary) */}
             <button
               onPointerDown={(e) => e.stopPropagation()}
@@ -226,15 +226,15 @@ export const PatientCard = React.memo(function PatientCard({
                 }
                 onOpenPTMode?.(lead);
               }}
-              className="w-full flex items-center justify-center gap-2 py-2.5 bg-white border border-slate-200/60 rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-colors duration-200 group/pt"
+              className="w-full flex items-center justify-center gap-2 py-3 bg-white border border-slate-200/60 rounded-full hover:bg-slate-50 transition-colors duration-200 group/pt"
             >
-              <Sparkles className="w-3.5 h-3.5 text-indigo-500 group-hover:scale-110 transition-transform" />
-              <span className="text-[11px] font-bold text-slate-900 uppercase tracking-widest">
+              <Sparkles className="w-4 h-4 text-indigo-500" strokeWidth={1.2} />
+              <span className="text-[10px] font-bold text-slate-700 uppercase tracking-widest">
                 {isUnmapped ? "Draft Treatment Plan" : "Send Premium PT"}
               </span>
             </button>
 
-            <div className="flex gap-2">
+            <div className="flex gap-2.5">
               <button
                 onPointerDown={(e) => e.stopPropagation()}
                 onClick={(e) => {
@@ -242,10 +242,10 @@ export const PatientCard = React.memo(function PatientCard({
                   e.stopPropagation();
                   onOpenEmailModal?.(lead);
                 }}
-                className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-white border border-slate-200/60 rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-colors duration-200"
+                className="flex-1 flex items-center justify-center gap-2 py-3 bg-white border border-slate-200/60 rounded-full hover:bg-slate-50 transition-colors duration-200"
               >
-                <Mail className="w-3.5 h-3.5 text-slate-400" />
-                <span className="text-[11px] font-bold text-slate-900 uppercase tracking-widest leading-none">
+                <Mail className="w-4 h-4 text-emerald-600/80" strokeWidth={1.2} />
+                <span className="text-[10px] font-bold text-slate-700 uppercase tracking-widest leading-none">
                   Email
                 </span>
               </button>
@@ -257,9 +257,9 @@ export const PatientCard = React.memo(function PatientCard({
                   e.stopPropagation();
                   onOpenAudit?.(lead);
                 }}
-                className="px-3.5 py-2.5 bg-white border border-slate-200/60 rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-colors duration-200"
+                className="w-12 flex items-center justify-center bg-white border border-slate-200/60 rounded-full hover:bg-slate-50 transition-colors duration-200"
               >
-                <Shield className="w-3.5 h-3.5 text-slate-400" />
+                <Shield className="w-4 h-4 text-emerald-600/80" strokeWidth={1.2} />
               </button>
             </div>
           </div>
