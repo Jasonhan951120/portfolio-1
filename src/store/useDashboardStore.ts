@@ -78,13 +78,43 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
       id: "donggyun-live",
       name: "Donggyun Han",
       email: "handonggyun18@gmail.com",
-      phone: "+82 10-3395-1543",
+      phone: "820133951543",
       service: "Dental Implants",
       status: "New Lead",
       potential_value: 3000,
       intent_score: 99,
       created_at: new Date().toISOString(),
       pt_personalized_note: "Donggyun, your live PT test lead is ready. Click the paper plane to begin."
+    } as ConsultationRequest,
+    {
+      id: "sarah-jenkins",
+      name: "Sarah Jenkins",
+      email: "sarah.j@example.com",
+      phone: "+44 7712 345678",
+      service: "Invisalign",
+      status: "Booked",
+      potential_value: 5000,
+      created_at: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
+    } as ConsultationRequest,
+    {
+      id: "michael-ross",
+      name: "Michael Ross",
+      email: "m.ross@law.com",
+      phone: "+44 7723 456789",
+      service: "Veneers",
+      status: "Visited",
+      potential_value: 2500,
+      created_at: new Date(Date.now() - 7200000).toISOString(), // 2 hours ago
+    } as ConsultationRequest,
+    {
+      id: "olivia-colman",
+      name: "Olivia Colman",
+      email: "olivia@cinema.com",
+      phone: "+44 7734 567890",
+      service: "Dental Implants",
+      status: "Treated",
+      potential_value: 1200,
+      created_at: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
     } as ConsultationRequest
   ],
   activeCategory: 'All',
@@ -194,20 +224,49 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
           updated_at: data.updated_at?.toDate?.()?.toISOString() || data.updated_at,
         } as ConsultationRequest);
       });
-      const liveDonggyun: ConsultationRequest = {
-        id: "donggyun-live",
-        name: "Donggyun Han",
-        email: "handonggyun18@gmail.com",
-        phone: "+82 10-3395-1543",
-        service: "Dental Implants",
-        status: "New Lead",
-        potential_value: 3000,
-        intent_score: 99,
-        created_at: new Date().toISOString(),
-        pt_personalized_note: "Donggyun, your live PT test lead is ready. Click the paper plane to begin."
-      } as ConsultationRequest;
+      const mockLeads: ConsultationRequest[] = [
+        {
+          id: "donggyun-live",
+          name: "Donggyun Han",
+          email: "handonggyun18@gmail.com",
+          phone: "820133951543",
+          service: "Dental Implants",
+          status: "New Lead",
+          potential_value: 3000,
+          intent_score: 99,
+          created_at: new Date().toISOString(),
+          pt_personalized_note: "Donggyun, your live PT test lead is ready. Click the paper plane to begin."
+        } as ConsultationRequest,
+        {
+          id: "sarah-jenkins",
+          name: "Sarah Jenkins",
+          email: "sarah.j@example.com",
+          service: "Invisalign",
+          status: "Booked",
+          potential_value: 5000,
+          created_at: new Date(Date.now() - 3600000).toISOString(),
+        } as ConsultationRequest,
+        {
+          id: "michael-ross",
+          name: "Michael Ross",
+          email: "m.ross@law.com",
+          service: "Veneers",
+          status: "Visited",
+          potential_value: 2500,
+          created_at: new Date(Date.now() - 7200000).toISOString(),
+        } as ConsultationRequest,
+        {
+          id: "olivia-colman",
+          name: "Olivia Colman",
+          email: "olivia@cinema.com",
+          service: "Dental Implants",
+          status: "Treated",
+          potential_value: 1200,
+          created_at: new Date(Date.now() - 86400000).toISOString(),
+        } as ConsultationRequest
+      ];
 
-      set({ leads: [liveDonggyun, ...leads] });
+      set({ leads: [...mockLeads, ...leads] });
     }, (error) => {
       console.error("Firestore Subscription Error:", error);
     });

@@ -177,10 +177,16 @@ export const PatientCard = React.memo(function PatientCard({
               <h4 className="font-bold text-slate-900 text-sm tracking-tighter leading-none truncate mb-1.5" data-hj-suppress>
                 {lead.name}
               </h4>
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1.5 mb-1.5">
                  <div className="w-1 h-1 rounded-full bg-slate-300" />
                  <span className="text-[10px] uppercase tracking-[0.15em] text-slate-400 font-bold leading-none truncate max-w-[140px]">{lead.service}</span>
               </div>
+              {(lead.email || lead.phone) && (
+                <div className="flex flex-col gap-0.5 mt-2 opacity-60 group-hover:opacity-100 transition-opacity">
+                  {lead.email && <span className="text-[9px] text-slate-400 font-medium lowercase tracking-tight truncate leading-none">{lead.email}</span>}
+                  {lead.phone && <span className="text-[9px] text-slate-400 font-medium tracking-tight leading-none">{lead.phone}</span>}
+                </div>
+              )}
             </div>
 
             <div className="flex flex-col items-end shrink-0">
