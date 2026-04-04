@@ -72,6 +72,7 @@ const PatientProposalPage: React.FC = () => {
 
     const dynamicTotalValue = lead?.pt_price_override ? Number(lead.pt_price_override) : (lead?.potential_value || matchedTemplate?.price || 3500);
     const dynamicMonthly = Math.round(dynamicTotalValue / 24);
+    const hasPricing = Boolean(lead?.pt_price_override || lead?.potential_value);
 
     if (loading) return (
         <div className="min-h-screen bg-white flex flex-col items-center justify-center gap-4">
@@ -272,6 +273,7 @@ const PatientProposalPage: React.FC = () => {
                             </div>
 
                             <div className={`p-10 md:p-14 flex flex-col justify-center ${glassBoxClass}`}>
+                                {hasPricing && (
                                 <div className="text-center mb-12">
                                     <h3 className="text-[12px] font-black uppercase tracking-[0.3em] text-slate-400 mb-8">Secure Investment Overview</h3>
                                     <div className="flex items-baseline justify-center gap-3 mb-3">
@@ -282,17 +284,20 @@ const PatientProposalPage: React.FC = () => {
                                         24 Mo Protocol • 0% Interest Facilitated
                                     </p>
                                 </div>
+                                )}
                                 <div className="flex flex-col gap-5">
                                     <motion.button 
                                         whileHover={{ scale: 1.02 }}
                                         whileTap={{ scale: 0.98 }}
                                         onClick={() => {
-                                            if (displayBookingUrl) window.open(displayBookingUrl, '_blank');
-                                            else alert('Priority access confirmed. Our clinical lead will contact you via WhatsApp or Call within 15 minutes.');
+                                            const patientName = lead?.name || 'a patient';
+                                            const treatmentName = lead?.treatment_name || lead?.service || 'treatment';
+                                            const message = `Hello Hanlanoc Clinic, this is ${patientName}. ✨\nI have reviewed my clinical strategy for ${treatmentName} at https://www.hanlanoc.com and I am ready to start my transformation! \nPlease let me know the next steps for scheduling my first appointment.`;
+                                            window.open(`https://wa.me/821033951543?text=${encodeURIComponent(message)}`, '_blank');
                                         }}
                                         className="w-full py-7 bg-slate-950 hover:bg-slate-900 text-white rounded-full font-black uppercase tracking-[0.2em] text-[12px] shadow-2xl transition-all shadow-indigo-200/20"
                                     >
-                                        Authorize Clinical Protocol
+                                        ACCEPT & START TREATMENT
                                     </motion.button>
                                     <button className="w-full py-7 bg-white/50 hover:bg-slate-50 text-slate-900 border border-slate-200 rounded-full font-black uppercase tracking-[0.2em] text-[12px] transition-all backdrop-blur-xl">
                                         Consult with Clinical Lead

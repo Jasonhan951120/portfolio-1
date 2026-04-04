@@ -109,14 +109,14 @@ export const PatientCard = React.memo(function PatientCard({
       // We simulate sending exactly this prompt to the AI and getting a response back.
       let mockResponse = '';
       const patientAge = lead.age || 40;
-      
+
       let toneAdaptation = '';
       if (patientAge < 40) {
-          toneAdaptation = 'Focusing on fast, confident results to fit your busy, modern lifestyle.';
+        toneAdaptation = 'Focusing on fast, confident results to fit your busy, modern lifestyle.';
       } else if (patientAge < 60) {
-          toneAdaptation = 'Focusing on long-term durability, efficiency, and restoring your optimal quality of life.';
+        toneAdaptation = 'Focusing on long-term durability, efficiency, and restoring your optimal quality of life.';
       } else {
-          toneAdaptation = 'Focusing on your health, safety, and ensuring a gentle, comfortable experience with long-lasting benefits.';
+        toneAdaptation = 'Focusing on your health, safety, and ensuring a gentle, comfortable experience with long-lasting benefits.';
       }
 
       if (type === 'DRAFT') {
@@ -124,10 +124,10 @@ export const PatientCard = React.memo(function PatientCard({
       } else if (type === 'PROPOSAL') {
         const firstName = lead.name.split(' ')[0];
         const draft = lead.ai_draft_context || '';
-        
+
         // Simulation of the "Anchor" Logic: Extracting pain points and translating
         let customOpener = `Following our review of your case, we are thrilled to present your personalized treatment plan for ${lead.service || 'your treatment'}. ${toneAdaptation}`;
-        
+
         if (draft.toLowerCase().includes("recovery")) {
           customOpener = `We've tailored a plan to ensure your recovery is as fast and comfortable as possible, as we discussed. Our focus is on getting you back to your routine with a perfect result. ${toneAdaptation}`;
         } else if (draft.toLowerCase().includes("pain") || draft.toLowerCase().includes("anxiety")) {
@@ -429,10 +429,10 @@ export const PatientCard = React.memo(function PatientCard({
                 <div className="mt-4 pt-4 border-t border-slate-100 flex justify-end w-full">
                   {aiModal.type === 'DRAFT' ? (
                     <button
-                      onClick={(e) => { 
-                        e.stopPropagation(); 
+                      onClick={(e) => {
+                        e.stopPropagation();
                         updateLead(lead.id, { ai_draft_context: aiModal.content });
-                        setAiModal(prev => ({ ...prev, isOpen: false })); 
+                        setAiModal(prev => ({ ...prev, isOpen: false }));
                       }}
                       className="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-full font-bold text-[10px] tracking-widest uppercase transition-colors flex items-center justify-center min-w-[120px]"
                       disabled={aiModal.isLoading}
@@ -441,53 +441,53 @@ export const PatientCard = React.memo(function PatientCard({
                     </button>
                   ) : (
                     <div className="flex gap-3 w-full sm:w-auto">
-                        <button
-                          onClick={(e) => {
-                              e.stopPropagation();
-                              if (aiModal.isLoading) return;
-                              const testPhone = "821033951543";
-                              const whatsappUrl = `https://wa.me/${testPhone}?text=${encodeURIComponent(aiModal.content)}`;
-                              window.open(whatsappUrl, '_blank');
-                              setAiModal(prev => ({ ...prev, isOpen: false }));
-                          }}
-                          className="flex-1 sm:flex-none px-6 py-2.5 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-full font-bold text-[10px] tracking-widest uppercase transition-colors flex items-center justify-center gap-2 shadow-sm"
-                          disabled={aiModal.isLoading}
-                        >
-                          <MessageCircle className="w-3.5 h-3.5" /> 💬 Send via WhatsApp
-                        </button>
-                        <button
-                          onClick={async (e) => {
-                              e.stopPropagation();
-                              if (aiModal.isLoading) return;
-                              const testEmail = "handonggyun18@gmail.com";
-                              let subject = "";
-                              if (aiModal.type === 'PROPOSAL') subject = `Bespoke Clinical Protocol - ${lead.name}`;
-                              else if (aiModal.type === 'FOLLOWUP') subject = `Clinical Follow-up & Care Guide - ${lead.name}`;
-                              else if (aiModal.type === 'POSTCARE') subject = `Recovery Protocol & Thank You - ${lead.name}`;
-                      
-                              try {
-                                  await supabase.functions.invoke('send-pt-v2', {
-                                    body: {
-                                      lead_id: lead.id,
-                                      name: lead.name,
-                                      email: testEmail,
-                                      subject: subject,
-                                      service: lead.service || "Treatment",
-                                      origin: window.location.origin,
-                                      clinic_name: clinicData?.name || "Hanlan OC",
-                                      personalized_note: aiModal.content
-                                    }
-                                  });
-                              } catch (err) {
-                                  console.error("Email send error", err);
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (aiModal.isLoading) return;
+                          const testPhone = "821033951543";
+                          const whatsappUrl = `https://wa.me/${testPhone}?text=${encodeURIComponent(aiModal.content)}`;
+                          window.open(whatsappUrl, '_blank');
+                          setAiModal(prev => ({ ...prev, isOpen: false }));
+                        }}
+                        className="flex-1 sm:flex-none px-6 py-2.5 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-full font-bold text-[10px] tracking-widest uppercase transition-colors flex items-center justify-center gap-2 shadow-sm"
+                        disabled={aiModal.isLoading}
+                      >
+                        <MessageCircle className="w-3.5 h-3.5" /> 💬 Send via WhatsApp
+                      </button>
+                      <button
+                        onClick={async (e) => {
+                          e.stopPropagation();
+                          if (aiModal.isLoading) return;
+                          const testEmail = "handonggyun18@gmail.com";
+                          let subject = "";
+                          if (aiModal.type === 'PROPOSAL') subject = `Bespoke Clinical Protocol - ${lead.name}`;
+                          else if (aiModal.type === 'FOLLOWUP') subject = `Clinical Follow-up & Care Guide - ${lead.name}`;
+                          else if (aiModal.type === 'POSTCARE') subject = `Recovery Protocol & Thank You - ${lead.name}`;
+
+                          try {
+                            await supabase.functions.invoke('send-pt-v2', {
+                              body: {
+                                lead_id: lead.id,
+                                name: lead.name,
+                                email: testEmail,
+                                subject: subject,
+                                service: lead.service || "Treatment",
+                                origin: window.location.origin,
+                                clinic_name: clinicData?.name || "Hanlan OC",
+                                personalized_note: aiModal.content
                               }
-                              setAiModal(prev => ({ ...prev, isOpen: false }));
-                          }}
-                          className="flex-1 sm:flex-none px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-full font-bold text-[10px] tracking-widest uppercase transition-colors flex items-center justify-center gap-2 shadow-sm"
-                          disabled={aiModal.isLoading}
-                        >
-                          <Mail className="w-3.5 h-3.5" /> 📧 Send via Email
-                        </button>
+                            });
+                          } catch (err) {
+                            console.error("Email send error", err);
+                          }
+                          setAiModal(prev => ({ ...prev, isOpen: false }));
+                        }}
+                        className="flex-1 sm:flex-none px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-full font-bold text-[10px] tracking-widest uppercase transition-colors flex items-center justify-center gap-2 shadow-sm"
+                        disabled={aiModal.isLoading}
+                      >
+                        <Mail className="w-3.5 h-3.5" /> 📧 Send via Email
+                      </button>
                     </div>
                   )}
                 </div>
