@@ -29,7 +29,7 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
   onSendWhatsApp,
   onSendEmail
 }) => {
-  const { clinicLogo, signatureImage, activeTreatments, templates } = useDashboardStore();
+  const { clinicLogo, clinicSignatureImage, activeTreatments, templates } = useDashboardStore();
   
   if (!isOpen) return null;
 
@@ -43,7 +43,7 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
       return matchedTemplate?.afterImg || clinicLogo || 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=2070';
     }
     if (type === 'FOLLOWUP') {
-      return signatureImage || 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=2053'; // default warm office
+      return clinicSignatureImage || null; // Use null to trigger gradient if no custom photo
     }
     return clinicLogo;
   };
@@ -51,13 +51,13 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
   const contextualImage = getContextualImage();
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6" onClick={(e) => { e.stopPropagation(); onClose(); }}>
-      {/* Backdrop */}
+    <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 sm:p-6 overflow-hidden" onClick={(e) => { e.stopPropagation(); onClose(); }}>
+      {/* Backdrop: Full Focus Overlay */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="absolute inset-0 bg-slate-900/60 backdrop-blur-xl"
+        className="absolute inset-0 bg-black/40 backdrop-blur-[10px] w-full h-full"
       />
       
       {/* Modal Container */}
@@ -69,13 +69,17 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Left: Chameleon Visual UI */}
-        <div className="w-full lg:w-2/5 relative h-48 lg:h-auto bg-slate-100 overflow-hidden">
-          <img 
-            src={contextualImage} 
-            alt="Contextual Visual" 
-            className="absolute inset-0 w-full h-full object-cover transition-all duration-[2s] hover:scale-110"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent lg:bg-gradient-to-r" />
+        <div className="w-full lg:w-2/5 relative h-48 lg:h-auto bg-slate-900 overflow-hidden">
+          {contextualImage ? (
+            <img 
+              src={contextualImage} 
+              alt="Contextual Visual" 
+              className="absolute inset-0 w-full h-full object-cover transition-all duration-[2s] hover:scale-110"
+            />
+          ) : (
+            <div className="absolute inset-0 bg-gradient-to-br from-[#1a1c2c] via-[#4a192c] to-[#121212] animate-gradient-slow opacity-100" />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent lg:bg-gradient-to-r" />
           
           <div className="absolute bottom-8 left-8 right-8">
             <div className="flex items-center gap-3 mb-3">

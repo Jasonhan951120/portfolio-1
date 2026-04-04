@@ -29,7 +29,7 @@ export function ClinicSettings({
     templates = [],
     setTemplates 
 }: ClinicSettingsProps) {
-    const { clinicType, setClinicType, clinicName, setClinicName, clinicLogo, setClinicLogo, signatureImage, setSignatureImage } = useDashboardStore();
+    const { clinicType, setClinicType, clinicName, setClinicName, clinicLogo, setClinicLogo, clinicSignatureImage, setClinicSignatureImage } = useDashboardStore();
     const [activeTab, setActiveTab] = useState<'menu' | 'general' | 'support'>('menu');
     const [editingTemplate, setEditingTemplate] = useState<TreatmentTemplate | null>(null);
     const [activeTheme, setActiveTheme] = useState<'white' | 'dark'>('white');
@@ -277,15 +277,64 @@ export function ClinicSettings({
                                                             className={`w-full bg-transparent border-b ${borderColor} pb-2 text-sm font-bold ${textColor} focus:outline-none focus:border-[#78dcca] transition-colors font-inter`}
                                                         />
                                                     </div>
-                                                    <div className={`p-6 ${isDark ? 'bg-white/5' : 'bg-white'} border ${borderColor} rounded-[2rem] transition-all hover:scale-[1.02] shadow-inner`}>
-                                                        <label className={`text-[10px] font-black uppercase tracking-widest ${subTextColor} mb-3 block text-inter`}>Signature Image URL (Clinic Interior/Warmth)</label>
-                                                        <input 
-                                                            type="text" 
-                                                            value={signatureImage} 
-                                                            onChange={e => setSignatureImage(e.target.value)}
-                                                            placeholder="https://example.com/clinic-warmth.png"
-                                                            className={`w-full bg-transparent border-b ${borderColor} pb-2 text-sm font-bold ${textColor} focus:outline-none focus:border-[#78dcca] transition-colors font-inter`}
-                                                        />
+                                                    <div className={`p-6 ${isDark ? 'bg-white/5' : 'bg-white'} border ${borderColor} rounded-[2rem] transition-all hover:scale-[1.02] shadow-inner col-span-1 lg:col-span-2`}>
+                                                        <div className="flex flex-col gap-4">
+                                                            <div className="flex items-center justify-between">
+                                                                <label className={`text-[10px] font-black uppercase tracking-widest ${subTextColor} block text-inter`}>Signature Clinic Photo (Follow-up Background)</label>
+                                                                <div className="flex items-center gap-2">
+                                                                    <div className="w-2 h-2 rounded-full bg-[#78dcca] animate-pulse" />
+                                                                    <span className="text-[10px] font-bold text-[#78dcca] uppercase tracking-widest">Premium Visual</span>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div 
+                                                                onDragOver={(e) => { e.preventDefault(); e.currentTarget.style.borderColor = "#78dcca"; }}
+                                                                onDragLeave={(e) => { e.preventDefault(); e.currentTarget.style.borderColor = ""; }}
+                                                                onDrop={(e) => {
+                                                                    e.preventDefault();
+                                                                    const file = e.dataTransfer.files[0];
+                                                                    if (file && file.type.startsWith('image/')) {
+                                                                        const reader = new FileReader();
+                                                                        reader.onload = (event) => setClinicSignatureImage(event.target?.result as string);
+                                                                        reader.readAsDataURL(file);
+                                                                    }
+                                                                }}
+                                                                className={`w-full h-40 border-2 border-dashed ${borderColor} rounded-3xl flex flex-col items-center justify-center gap-3 group transition-all hover:border-[#78dcca]/50 relative overflow-hidden`}
+                                                            >
+                                                                {clinicSignatureImage ? (
+                                                                    <>
+                                                                        <img src={clinicSignatureImage} className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity" alt="" />
+                                                                        <div className="relative z-10 flex flex-col items-center gap-2">
+                                                                            <div className="p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20"><Camera className="w-6 h-6 text-white" /></div>
+                                                                            <span className="text-[10px] font-black text-white uppercase tracking-widest drop-shadow-md">Click to Replace Signature Image</span>
+                                                                        </div>
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        <div className="p-4 rounded-full bg-[#78dcca]/10 border border-[#78dcca]/20 group-hover:scale-110 transition-transform duration-500">
+                                                                            <Camera className={`w-8 h-8 ${accentColor}`} />
+                                                                        </div>
+                                                                        <div className="text-center">
+                                                                            <p className={`text-xs font-bold ${textColor} uppercase tracking-[0.2em] mb-1 font-inter`}>Drag & Drop Hospital Photo</p>
+                                                                            <p className={`text-[10px] ${subTextColor} uppercase tracking-widest font-inter font-medium`}>Instantly sync with patient follow-ups</p>
+                                                                        </div>
+                                                                    </>
+                                                                )}
+                                                                <input 
+                                                                    type="file" 
+                                                                    className="absolute inset-0 opacity-0 cursor-pointer"
+                                                                    accept="image/*"
+                                                                    onChange={(e) => {
+                                                                        const file = e.target.files?.[0];
+                                                                        if (file) {
+                                                                            const reader = new FileReader();
+                                                                            reader.onload = (event) => setClinicSignatureImage(event.target?.result as string);
+                                                                            reader.readAsDataURL(file);
+                                                                        }
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
 
