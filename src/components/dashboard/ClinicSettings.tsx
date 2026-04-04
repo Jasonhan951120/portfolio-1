@@ -29,7 +29,7 @@ export function ClinicSettings({
     templates = [],
     setTemplates 
 }: ClinicSettingsProps) {
-    const { clinicType, setClinicType, clinicName, setClinicName, clinicLogo, setClinicLogo } = useDashboardStore();
+    const { clinicType, setClinicType, clinicName, setClinicName, clinicLogo, setClinicLogo, signatureImage, setSignatureImage } = useDashboardStore();
     const [activeTab, setActiveTab] = useState<'menu' | 'general' | 'support'>('menu');
     const [editingTemplate, setEditingTemplate] = useState<TreatmentTemplate | null>(null);
     const [activeTheme, setActiveTheme] = useState<'white' | 'dark'>('white');
@@ -278,12 +278,12 @@ export function ClinicSettings({
                                                         />
                                                     </div>
                                                     <div className={`p-6 ${isDark ? 'bg-white/5' : 'bg-white'} border ${borderColor} rounded-[2rem] transition-all hover:scale-[1.02] shadow-inner`}>
-                                                        <label className={`text-[10px] font-black uppercase tracking-widest ${subTextColor} mb-3 block text-inter`}>Logo URL</label>
+                                                        <label className={`text-[10px] font-black uppercase tracking-widest ${subTextColor} mb-3 block text-inter`}>Signature Image URL (Clinic Interior/Warmth)</label>
                                                         <input 
                                                             type="text" 
-                                                            value={clinicLogo} 
-                                                            onChange={e => setClinicLogo(e.target.value)}
-                                                            placeholder="https://example.com/logo.png"
+                                                            value={signatureImage} 
+                                                            onChange={e => setSignatureImage(e.target.value)}
+                                                            placeholder="https://example.com/clinic-warmth.png"
                                                             className={`w-full bg-transparent border-b ${borderColor} pb-2 text-sm font-bold ${textColor} focus:outline-none focus:border-[#78dcca] transition-colors font-inter`}
                                                         />
                                                     </div>

@@ -8,27 +8,31 @@ import { supabase, type ConsultationRequest } from "../../lib/supabase";
 import { useDashboardStore } from "../../store/useDashboardStore";
 import { INDUSTRY_TEMPLATES } from "../../lib/treatmentTemplates";
 import { calculateFuzzyMatch } from "../../lib/autoMatcher";
+import { DraftPreviewModal } from "./DraftPreviewModal";
 
 const generateUniversalAIPrompt = (type: string, service: string, patientName: string, draftContext: string = '', age?: number) => {
   const agePrompt = age ? `\nCurrent Patient Age: [${age}].\nMandate: You MUST adjust your tone of voice and the psychological benefits you highlight based on this age. \nExample: For a 70-year-old, don't talk about 'looking cool on social media'; talk about 'enjoying meals with family comfortably'.` : '';
-  const baseInstruction = `You are an elite medical concierge AI. Use your expert medical knowledge to provide highly accurate, specialty-specific advice. For example: If '${service}' involves surgery (like Wisdom Tooth), mention cold packs and soft food. If it involves skin (like Acne Laser), mention sunblock and hydration.${agePrompt}`;
+  const baseInstruction = `You are an elite medical concierge AI. Use your expert medical knowledge to provide highly accurate, specialty-specific advice.${agePrompt}`;
 
   switch (type) {
     case 'DRAFT':
-      return `${baseInstruction}\n\n[INTERNAL USE]\nAnalyze the case for ${patientName} regarding '${service}'. Generate a preliminary clinical strategy and a concise "Consultation Cheat Sheet" for the doctor/staff to use during the consultation.`;
+      return `${baseInstruction}\n\n[INTERNAL USE]\nAnalyze the case for ${patientName} regarding '${service}'. Generate a preliminary clinical strategy and a concise "Consultation Cheat Sheet" for the doctor/staff to use during the consultation. Focus on identifying clinical risks and opportunities for excellence.`;
     case 'PROPOSAL':
-      if (draftContext) {
-        return `You are writing a high-end, personalized medical email. 
-      SOURCE MATERIAL: [${draftContext}]${agePrompt}
-      MANDATE: Every recommendation in this email must be a 'translation' of the internal strategy into patient-friendly language. 
-      DO NOT use generic templates. Use the specific clinical objectives and patient concerns found in the SOURCE MATERIAL.
-      IMPORTANT: You must include a call-to-action to "View Your Personal Proposal" which links to the following secure clinical portal: ${window.location.origin}/proposal/[id]`;
-      }
-      return `${baseInstruction}\n\n[EXTERNAL USE]\nGenerate a high-end, premium patient-facing proposal for ${patientName} regarding '${service}'. Focus on the treatment benefits and articulate "The Dream" vision (e.g., renewed confidence, perfect smile, flawless skin). Include the secure proposal link: ${window.location.origin}/proposal/[id]`;
+      return `${baseInstruction}\n\n[PSYCHOLOGICAL TRIGGER: AUTHORITY]\nFocus on "Personalized Strategy," "Clinical Precision," and "Visual Simulation." Build absolute trust through clinical logic. 
+      Style: Formal, authoritative, structured with clear headers. 
+      Goal: Make the patient feel, "This clinic has the only solution for me."
+      Patient Name/Service: ${patientName} / ${service}
+      MANDATE: Include clinical rationale for every step. 
+      Include proposal link: ${window.location.origin}/proposal/[id]`;
     case 'FOLLOWUP':
-      return `${baseInstruction}\n\n[EXTERNAL USE]\nGenerate a reassuring follow-up guide for ${patientName} after their consultation for '${service}'. Address common fears (pain, cost, downtime) with empathy, and instill absolute medical confidence.`;
+      return `${baseInstruction}\n\n[PSYCHOLOGICAL TRIGGER: EMPATHY]\nStrategy: Remove friction (Cost, Fear, Doubt). DO NOT repeat the clinical plan verbatim. 
+      Tone: Shorter, warmer, "Quiet Luxury" letter style. High white-space. 
+      MANDATE: Use phrases like "I noticed you haven't started yet—is there anything we can clarify regarding pain management or financing?" 
+      End with a soft question: "What is the biggest hurdle for you right now?"`;
     case 'POSTCARE':
-      return `${baseInstruction}\n\n[EXTERNAL USE]\nGenerate a personalized thank-you note and a strict, treatment-specific recovery protocol (precautions) for ${patientName} safely recovering from '${service}'.`;
+      return `${baseInstruction}\n\n[PSYCHOLOGICAL TRIGGER: DELIGHT]\nStrategy: Lifetime Value & Referral. Recovery tips + Deep gratitude. 
+      Emotional, celebratory, high-end appreciation. 
+      MANDATE: Include "Your transformation is our pride." Reflect on the excellence of the results achieved for ${service}.`;
     default:
       return '';
   }
@@ -120,26 +124,14 @@ export const PatientCard = React.memo(function PatientCard({
       }
 
       if (type === 'DRAFT') {
-        mockResponse = `[CONFIDENTIAL - INTERNAL STRATEGY]\n\nPatient: ${lead.name} ${lead.age ? `(${lead.age}y)` : ''}\nTreatment: ${lead.service || 'General Treatment'}\n\n1. Clinical Objective: Assess candidacy for the procedure. ${toneAdaptation}\n2. Key Value Points to Emphasize:\n   - Rapid recovery timeline\n   - Long-term aesthetic and functional benefits\n3. Anticipated Questions:\n   - "How much will this hurt?" -> Reassure with modern anesthetic protocols.\n   - "What is the total cost?" -> Present financing options immediately.\n\n[RECOMMENDATION]: Build rapport quickly, as intent score indicates high readiness to proceed.`;
+        mockResponse = `[CONFIDENTIAL - INTERNAL STRATEGY]\n\nPatient: ${lead.name} ${lead.age ? `(${lead.age}y)` : ''}\nTreatment: ${lead.service || 'General Treatment'}\n\nClinical Precision Engine Initialized. Priority: Accuracy & Authority.`;
       } else if (type === 'PROPOSAL') {
-        const firstName = lead.name.split(' ')[0];
-        const draft = lead.ai_draft_context || '';
-
-        // Simulation of the "Anchor" Logic: Extracting pain points and translating
-        let customOpener = `Following our review of your case, we are thrilled to present your personalized treatment plan for ${lead.service || 'your treatment'}. ${toneAdaptation}`;
-
-        if (draft.toLowerCase().includes("recovery")) {
-          customOpener = `We've tailored a plan to ensure your recovery is as fast and comfortable as possible, as we discussed. Our focus is on getting you back to your routine with a perfect result. ${toneAdaptation}`;
-        } else if (draft.toLowerCase().includes("pain") || draft.toLowerCase().includes("anxiety")) {
-          customOpener = `Based on our consultation, we have designed a protocol that prioritizes your absolute comfort. We use modern anesthetic protocols to ensure a gentle and worry-free experience for your ${lead.service || 'treatment'}. ${toneAdaptation}`;
-        }
-
         const proposalUrl = `${window.location.origin}/proposal/${lead.id.substring(0, 8)}`;
-        mockResponse = `Dear ${firstName},\n\n${customOpener}\n\nOur goal is to help you achieve the absolute best results. This highly specialized procedure uses state-of-the-art technology to ensure precision, minimal discomfort, and an exceptional outcome.\n\nWe have prepared a dedicated, high-fidelity landing page detailing every aspect of your case, from clinical diagnostics to my predicted aesthetic outcomes.\n\n✨ [View Your Personal Proposal: ${proposalUrl}]\n\nBy moving forward, you are investing in a lasting transformation that will restore your confidence and enhance your well-being.\n\nBest regards,\nThe Hanlanoc Team`;
+        mockResponse = `Dear ${lead.name.split(' ')[0]},\n\n### Clinical Strategic Approach\nFollowing our review, we have prioritized a bespoke intervention for your ${lead.service || 'treatment'}. This protocol utilizes state-of-the-art diagnostic mapping to ensure absolute precision.\n\n### Visual Protocol Simulation\nWe have prepared a dedicated clinical portal detailing the predicted aesthetic outcomes and structural integrity of your transformation.\n\n✨ [Authorize My Clinical Protocol: ${proposalUrl}]\n\nBest regards,\nThe Hanlan Medical Team`;
       } else if (type === 'FOLLOWUP') {
-        mockResponse = `Hi ${lead.name.split(' ')[0]},\n\nIt was a pleasure seeing you for your consultation regarding ${lead.service || 'your treatment'}. ${toneAdaptation}\n\nWe understand that making a medical decision involves careful consideration. Please rest assured that our clinic uses the most advanced techniques to minimize any discomfort and ensure a swift recovery.\n\nIf you have any lingering concerns about the procedure or financing options, we are here to support you every step of the way.\n\nBest regards,\nThe Hanlan OC Care Team`;
+        mockResponse = `Hi ${lead.name.split(' ')[0]},\n\nI noticed you haven't started your ${lead.service || 'transformation'} yet—is there anything we can clarify regarding pain management or financing? We believe in a Supportive Path that removes all friction.\n\nWhat is the biggest hurdle for you right now?\n\nWarmly, The Hanlan Care Team`;
       } else if (type === 'POSTCARE') {
-        mockResponse = `Dear ${lead.name.split(' ')[0]},\n\nThank you for trusting Hanlan OC with your care! We are delighted with the success of your ${lead.service || 'procedure'}. ${toneAdaptation}\n\n**Vital Recovery Protocol:**\n- Please get plenty of rest for the next 24-48 hours.\n- Maintain hydration and avoid strenuous activity.\n- Follow the custom medication schedule provided to you.\n- If your procedure involved sensitive areas or surgery, utilize cold compresses as directed.\n\nShould you need anything, please do not hesitate to contact us. We look forward to seeing your final results!\n\nWith gratitude,\nDr. Hanlan`;
+        mockResponse = `Dear ${lead.name.split(' ')[0]},\n\nYour transformation is our pride! We are absolutely delighted with the excellence achieved during your ${lead.service || 'procedure'}.\n\nDeepest gratitude for trusting us, we look forward to your global radiance.\n\nWith celebratory care, The Hanlan Elite Team`;
       }
 
       setAiModal(prev => ({ ...prev, content: mockResponse, isLoading: false }));
@@ -367,136 +359,63 @@ export const PatientCard = React.memo(function PatientCard({
         </div>
       </motion.div>
 
-      {/* ── Quiet Luxury AI Preview Modal ── */}
-      {typeof document !== 'undefined' && createPortal(
-        <AnimatePresence>
-          {aiModal.isOpen && (
-            <div className="fixed inset-0 z-[9999] flex items-center justify-center pointer-events-auto p-4 sm:p-6" onClick={(e) => e.stopPropagation()}>
-              {/* Backdrop */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                className="absolute inset-0 bg-slate-900/40 backdrop-blur-md"
-                onClick={(e) => { e.stopPropagation(); setAiModal(prev => ({ ...prev, isOpen: false })); }}
-              />
-              {/* Modal Content */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95, y: 10 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                className="relative w-full max-w-lg bg-white/95 backdrop-blur-xl border border-slate-200/60 shadow-2xl rounded-[24px] p-6 flex flex-col overflow-hidden"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div className="flex justify-between items-center mb-4">
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="w-5 h-5 text-indigo-500" strokeWidth={1.5} />
-                    <h3 className="text-sm font-bold text-slate-900 tracking-tighter uppercase">
-                      {aiModal.type === 'DRAFT' && `AI Consultation Draft - ${lead.name} ${lead.age ? `(${lead.age}y)` : ''}`}
-                      {aiModal.type === 'PROPOSAL' && `AI Premium Proposal - ${lead.name} ${lead.age ? `(${lead.age}y)` : ''}`}
-                      {aiModal.type === 'FOLLOWUP' && `AI Reassurance Guide - ${lead.name} ${lead.age ? `(${lead.age}y)` : ''}`}
-                      {aiModal.type === 'POSTCARE' && `AI Post-Care Protocol - ${lead.name} ${lead.age ? `(${lead.age}y)` : ''}`}
-                    </h3>
-                  </div>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); setAiModal(prev => ({ ...prev, isOpen: false })); }}
-                    className="p-1 rounded-full hover:bg-slate-100 transition-colors"
-                  >
-                    <X className="w-4 h-4 text-slate-400" />
-                  </button>
-                </div>
+      <DraftPreviewModal 
+        isOpen={aiModal.isOpen}
+        onClose={() => setAiModal(prev => ({ ...prev, isOpen: false }))}
+        lead={lead}
+        type={aiModal.type}
+        content={aiModal.content}
+        isLoading={aiModal.isLoading}
+        onContentChange={(content) => setAiModal(prev => ({ ...prev, content }))}
+        onSave={() => {
+          updateLead(lead.id, { ai_draft_context: aiModal.content });
+          setAiModal(prev => ({ ...prev, isOpen: false }));
+        }}
+        onSendWhatsApp={() => {
+          const testPhone = "821033951543";
+          const patientName = lead.name || 'a patient';
+          const treatmentName = lead.service || lead.treatment_name || 'treatment';
+          
+          let message = "";
+          if (aiModal.type === 'PROPOSAL') {
+            message = `Hello Hanlanoc Clinic, this is ${patientName}. ✨ I have reviewed my clinical strategy for ${treatmentName} at https://www.hanlanoc.com and I am ready to start my transformation! Please let me know the next steps for scheduling my first appointment.`;
+          } else if (aiModal.type === 'FOLLOWUP') {
+            message = `Hello Hanlanoc Clinic, this is ${patientName}. ✨ I noticed I haven't scheduled my follow-up yet for ${treatmentName}. I have a few questions regarding pain management or financing. Could we chat?`;
+          } else if (aiModal.type === 'POSTCARE') {
+            message = `Hello Hanlanoc Clinic, this is ${patientName}. ✨ Thank you for the amazing care during my ${treatmentName}! I'm recovering well and so happy with the results. See you for my check-up!`;
+          } else {
+            message = aiModal.content;
+          }
+          
+          window.open(`https://wa.me/${testPhone}?text=${encodeURIComponent(message)}`, '_blank');
+          setAiModal(prev => ({ ...prev, isOpen: false }));
+        }}
+        onSendEmail={async () => {
+          const testEmail = "handonggyun18@gmail.com";
+          let subject = "";
+          if (aiModal.type === 'PROPOSAL') subject = `Bespoke Clinical Protocol - ${lead.name}`;
+          else if (aiModal.type === 'FOLLOWUP') subject = `Clinical Follow-up & Care Guide - ${lead.name}`;
+          else if (aiModal.type === 'POSTCARE') subject = `Recovery Protocol & Thank You - ${lead.name}`;
 
-                <div className="flex-1 min-h-[250px] relative">
-                  {aiModal.isLoading ? (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-                      <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" strokeWidth={1.5} />
-                      <p className="text-xs font-bold text-slate-400 uppercase tracking-widest text-center animate-pulse">
-                        Synthesizing Knowledge...<br />
-                        <span className="text-[9px] text-slate-300">Targeting {lead.service || 'Treatment'} Details</span>
-                      </p>
-                    </div>
-                  ) : (
-                    <textarea
-                      value={aiModal.content}
-                      onChange={(e) => setAiModal(prev => ({ ...prev, content: e.target.value }))}
-                      className="w-full h-[250px] bg-slate-50 border border-slate-100 rounded-xl p-4 text-sm text-slate-700 font-medium resize-none focus:outline-none focus:ring-1 focus:ring-indigo-500/50 transition-all custom-scrollbar leading-relaxed"
-                    />
-                  )}
-                </div>
-
-                <div className="mt-4 pt-4 border-t border-slate-100 flex justify-end w-full">
-                  {aiModal.type === 'DRAFT' ? (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        updateLead(lead.id, { ai_draft_context: aiModal.content });
-                        setAiModal(prev => ({ ...prev, isOpen: false }));
-                      }}
-                      className="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-full font-bold text-[10px] tracking-widest uppercase transition-colors flex items-center justify-center min-w-[120px]"
-                      disabled={aiModal.isLoading}
-                    >
-                      Save Draft
-                    </button>
-                  ) : (
-                    <div className="flex gap-3 w-full sm:w-auto">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (aiModal.isLoading) return;
-                          const testPhone = "821033951543";
-                          const whatsappUrl = `https://wa.me/${testPhone}?text=${encodeURIComponent(aiModal.content)}`;
-                          window.open(whatsappUrl, '_blank');
-                          setAiModal(prev => ({ ...prev, isOpen: false }));
-                        }}
-                        className="flex-1 sm:flex-none px-6 py-2.5 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-full font-bold text-[10px] tracking-widest uppercase transition-colors flex items-center justify-center gap-2 shadow-sm"
-                        disabled={aiModal.isLoading}
-                      >
-                        <MessageCircle className="w-3.5 h-3.5" /> 💬 Send via WhatsApp
-                      </button>
-                      <button
-                        onClick={async (e) => {
-                          e.stopPropagation();
-                          if (aiModal.isLoading) return;
-                          const testEmail = "handonggyun18@gmail.com";
-                          let subject = "";
-                          if (aiModal.type === 'PROPOSAL') subject = `Bespoke Clinical Protocol - ${lead.name}`;
-                          else if (aiModal.type === 'FOLLOWUP') subject = `Clinical Follow-up & Care Guide - ${lead.name}`;
-                          else if (aiModal.type === 'POSTCARE') subject = `Recovery Protocol & Thank You - ${lead.name}`;
-
-                          try {
-                            await supabase.functions.invoke('send-pt-v2', {
-                              body: {
-                                lead_id: lead.id,
-                                name: lead.name,
-                                email: testEmail,
-                                subject: subject,
-                                service: lead.service || "Treatment",
-                                origin: window.location.origin,
-                                clinic_name: clinicData?.name || "Hanlan OC",
-                                personalized_note: aiModal.content
-                              }
-                            });
-                          } catch (err) {
-                            console.error("Email send error", err);
-                          }
-                          setAiModal(prev => ({ ...prev, isOpen: false }));
-                        }}
-                        className="flex-1 sm:flex-none px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-full font-bold text-[10px] tracking-widest uppercase transition-colors flex items-center justify-center gap-2 shadow-sm"
-                        disabled={aiModal.isLoading}
-                      >
-                        <Mail className="w-3.5 h-3.5" /> 📧 Send via Email
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </motion.div>
-            </div>
-          )}
-        </AnimatePresence>,
-        document.body
-      )}
+          try {
+            await supabase.functions.invoke('send-pt-v2', {
+              body: {
+                lead_id: lead.id,
+                name: lead.name,
+                email: testEmail,
+                subject: subject,
+                service: lead.service || "Treatment",
+                origin: window.location.origin,
+                clinic_name: clinicData?.name || "Hanlan OC",
+                personalized_note: aiModal.content
+              }
+            });
+          } catch (err) {
+            console.error("Email send error", err);
+          }
+          setAiModal(prev => ({ ...prev, isOpen: false }));
+        }}
+      />
     </div>
   );
 }, (prev, next) => (

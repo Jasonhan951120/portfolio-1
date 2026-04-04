@@ -46,6 +46,8 @@ interface DashboardState {
   setClinicName: (name: string) => void;
   clinicLogo: string;
   setClinicLogo: (url: string) => void;
+  signatureImage: string;
+  setSignatureImage: (url: string) => void;
   
   // Clinic Settings (The Warehouse)
   templates: TreatmentTemplate[];
@@ -212,6 +214,11 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
   setClinicLogo: (url) => {
     localStorage.setItem('clinic_logo', url);
     set({ clinicLogo: url });
+  },
+  signatureImage: localStorage.getItem('signature_image') || 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=2070',
+  setSignatureImage: (url) => {
+    localStorage.setItem('signature_image', url);
+    set({ signatureImage: url });
   },
 
   templates: (() => {
