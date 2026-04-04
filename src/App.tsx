@@ -27,6 +27,7 @@ import TestimonialsPage from "./pages/TestimonialsPage";
 import TreatmentDetailPage from "./pages/TreatmentDetailPage";
 import PTDiscoveryMode from "./pages/PTDiscoveryMode";
 import PTDraftMode from "./pages/PTDraftMode";
+import PatientProposalPage from "./pages/PatientProposalPage";
 import VisitTrackingPage from "./pages/VisitTrackingPage";
 import MobileStickyCTA from "./components/MobileStickyCTA";
 import WhatsAppWidget from "./components/WhatsAppWidget";
@@ -226,6 +227,7 @@ export default function App() {
             <Route path="/treatment/:slug" element={<TreatmentDetailPage clinic={clinic} />} />
             <Route path="/pt/:id" element={<PTDiscoveryMode />} />
             <Route path="/pt/draft/:id" element={<PTDraftMode />} />
+            <Route path="/proposal/:id" element={<PatientProposalPage />} />
             <Route path="/view/:id" element={<PTDiscoveryMode />} />
             <Route path="/visit/:clinicId" element={<VisitTrackingPage />} />
             <Route path="/pricing" element={<PricingPage />} />

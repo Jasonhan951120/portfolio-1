@@ -21,9 +21,10 @@ const generateUniversalAIPrompt = (type: string, service: string, patientName: s
         return `You are writing a high-end, personalized medical email. 
       SOURCE MATERIAL: [${draftContext}]${agePrompt}
       MANDATE: Every recommendation in this email must be a 'translation' of the internal strategy into patient-friendly language. 
-      DO NOT use generic templates. Use the specific clinical objectives and patient concerns found in the SOURCE MATERIAL.`;
+      DO NOT use generic templates. Use the specific clinical objectives and patient concerns found in the SOURCE MATERIAL.
+      IMPORTANT: You must include a call-to-action to "View Your Personal Proposal" which links to the following secure clinical portal: ${window.location.origin}/proposal/[id]`;
       }
-      return `${baseInstruction}\n\n[EXTERNAL USE]\nGenerate a high-end, premium patient-facing proposal for ${patientName} regarding '${service}'. Focus on the treatment benefits and articulate "The Dream" vision (e.g., renewed confidence, perfect smile, flawless skin).`;
+      return `${baseInstruction}\n\n[EXTERNAL USE]\nGenerate a high-end, premium patient-facing proposal for ${patientName} regarding '${service}'. Focus on the treatment benefits and articulate "The Dream" vision (e.g., renewed confidence, perfect smile, flawless skin). Include the secure proposal link: ${window.location.origin}/proposal/[id]`;
     case 'FOLLOWUP':
       return `${baseInstruction}\n\n[EXTERNAL USE]\nGenerate a reassuring follow-up guide for ${patientName} after their consultation for '${service}'. Address common fears (pain, cost, downtime) with empathy, and instill absolute medical confidence.`;
     case 'POSTCARE':
@@ -133,7 +134,8 @@ export const PatientCard = React.memo(function PatientCard({
           customOpener = `Based on our consultation, we have designed a protocol that prioritizes your absolute comfort. We use modern anesthetic protocols to ensure a gentle and worry-free experience for your ${lead.service || 'treatment'}. ${toneAdaptation}`;
         }
 
-        mockResponse = `Dear ${firstName},\n\n${customOpener}\n\nOur goal is to help you achieve the absolute best results. This highly specialized procedure uses state-of-the-art technology to ensure precision, minimal discomfort, and an exceptional outcome.\n\nBy moving forward, you are investing in a lasting transformation that will restore your confidence and enhance your well-being.\n\nBest regards,\nThe Hanlanoc Team`;
+        const proposalUrl = `${window.location.origin}/proposal/${lead.id.substring(0, 8)}`;
+        mockResponse = `Dear ${firstName},\n\n${customOpener}\n\nOur goal is to help you achieve the absolute best results. This highly specialized procedure uses state-of-the-art technology to ensure precision, minimal discomfort, and an exceptional outcome.\n\nWe have prepared a dedicated, high-fidelity landing page detailing every aspect of your case, from clinical diagnostics to my predicted aesthetic outcomes.\n\n✨ [View Your Personal Proposal: ${proposalUrl}]\n\nBy moving forward, you are investing in a lasting transformation that will restore your confidence and enhance your well-being.\n\nBest regards,\nThe Hanlanoc Team`;
       } else if (type === 'FOLLOWUP') {
         mockResponse = `Hi ${lead.name.split(' ')[0]},\n\nIt was a pleasure seeing you for your consultation regarding ${lead.service || 'your treatment'}. ${toneAdaptation}\n\nWe understand that making a medical decision involves careful consideration. Please rest assured that our clinic uses the most advanced techniques to minimize any discomfort and ensure a swift recovery.\n\nIf you have any lingering concerns about the procedure or financing options, we are here to support you every step of the way.\n\nBest regards,\nThe Hanlan OC Care Team`;
       } else if (type === 'POSTCARE') {
