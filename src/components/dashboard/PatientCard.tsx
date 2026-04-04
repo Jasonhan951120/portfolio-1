@@ -17,7 +17,10 @@ const generateUniversalAIPrompt = (type: string, service: string, patientName: s
       return `${baseInstruction}\n\n[INTERNAL USE]\nAnalyze the case for ${patientName} regarding '${service}'. Generate a preliminary clinical strategy and a concise "Consultation Cheat Sheet" for the doctor/staff to use during the consultation.`;
     case 'PROPOSAL':
       if (draftContext) {
-        return `Context: The internal strategy for this patient is [${draftContext}]. \nTask: Generate a patient-facing email. DO NOT repeat the internal strategy verbatim. Instead, use it to personalize the message. \nIf the strategy mentions 'High pain anxiety', emphasize our gentle approach. If it mentions 'Time sensitivity', emphasize our fast-track recovery.`;
+        return `You are writing a high-end, personalized medical email. 
+      SOURCE MATERIAL: [${draftContext}]
+      MANDATE: Every recommendation in this email must be a 'translation' of the internal strategy into patient-friendly language. 
+      DO NOT use generic templates. Use the specific clinical objectives and patient concerns found in the SOURCE MATERIAL.`;
       }
       return `${baseInstruction}\n\n[EXTERNAL USE]\nGenerate a high-end, premium patient-facing proposal for ${patientName} regarding '${service}'. Focus on the treatment benefits and articulate "The Dream" vision (e.g., renewed confidence, perfect smile, flawless skin).`;
     case 'FOLLOWUP':
@@ -106,7 +109,19 @@ export const PatientCard = React.memo(function PatientCard({
       if (type === 'DRAFT') {
         mockResponse = `[CONFIDENTIAL - INTERNAL STRATEGY]\n\nPatient: ${lead.name}\nTreatment: ${lead.service || 'General Treatment'}\n\n1. Clinical Objective: Assess candidacy for the procedure.\n2. Key Value Points to Emphasize:\n   - Rapid recovery timeline\n   - Long-term aesthetic and functional benefits\n3. Anticipated Questions:\n   - "How much will this hurt?" -> Reassure with modern anesthetic protocols.\n   - "What is the total cost?" -> Present financing options immediately.\n\n[RECOMMENDATION]: Build rapport quickly, as intent score indicates high readiness to proceed.`;
       } else if (type === 'PROPOSAL') {
-        mockResponse = `Dear ${lead.name.split(' ')[0]},\n\nFollowing our review of your case, we are thrilled to present your personalized treatment plan for ${lead.service || 'your treatment'}.\n\nOur goal is to help you achieve the absolute best results. This highly specialized procedure uses state-of-the-art technology to ensure precision, minimal discomfort, and an exceptional outcome.\n\nBy moving forward, you are investing in a lasting transformation that will restore your confidence and enhance your well-being.\n\nWarmly,\nDr. Hanlan & Team`;
+        const firstName = lead.name.split(' ')[0];
+        const draft = lead.ai_draft_context || '';
+        
+        // Simulation of the "Anchor" Logic: Extracting pain points and translating
+        let customOpener = `Following our review of your case, we are thrilled to present your personalized treatment plan for ${lead.service || 'your treatment'}.`;
+        
+        if (draft.toLowerCase().includes("recovery")) {
+          customOpener = `We've tailored a plan to ensure your recovery is as fast and comfortable as possible, as we discussed. Our focus is on getting you back to your routine with a perfect result.`;
+        } else if (draft.toLowerCase().includes("pain") || draft.toLowerCase().includes("anxiety")) {
+          customOpener = `Based on our consultation, we have designed a protocol that prioritizes your absolute comfort. We use modern anesthetic protocols to ensure a gentle and worry-free experience for your ${lead.service || 'treatment'}.`;
+        }
+
+        mockResponse = `Dear ${firstName},\n\n${customOpener}\n\nOur goal is to help you achieve the absolute best results. This highly specialized procedure uses state-of-the-art technology to ensure precision, minimal discomfort, and an exceptional outcome.\n\nBy moving forward, you are investing in a lasting transformation that will restore your confidence and enhance your well-being.\n\nBest regards,\nThe Hanlanoc Team`;
       } else if (type === 'FOLLOWUP') {
         mockResponse = `Hi ${lead.name.split(' ')[0]},\n\nIt was a pleasure seeing you for your consultation regarding ${lead.service || 'your treatment'}.\n\nWe understand that making a medical decision involves careful consideration. Please rest assured that our clinic uses the most advanced techniques to minimize any discomfort and ensure a swift recovery.\n\nIf you have any lingering concerns about the procedure or financing options, we are here to support you every step of the way.\n\nBest regards,\nThe Hanlan OC Care Team`;
       } else if (type === 'POSTCARE') {
