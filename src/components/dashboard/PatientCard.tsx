@@ -9,13 +9,16 @@ import { useDashboardStore } from "../../store/useDashboardStore";
 import { INDUSTRY_TEMPLATES } from "../../lib/treatmentTemplates";
 import { calculateFuzzyMatch } from "../../lib/autoMatcher";
 
-const generateUniversalAIPrompt = (type: string, service: string, patientName: string) => {
+const generateUniversalAIPrompt = (type: string, service: string, patientName: string, draftContext: string = '') => {
   const baseInstruction = `You are an elite medical concierge AI. Use your expert medical knowledge to provide highly accurate, specialty-specific advice. For example: If '${service}' involves surgery (like Wisdom Tooth), mention cold packs and soft food. If it involves skin (like Acne Laser), mention sunblock and hydration.`;
 
   switch (type) {
     case 'DRAFT':
       return `${baseInstruction}\n\n[INTERNAL USE]\nAnalyze the case for ${patientName} regarding '${service}'. Generate a preliminary clinical strategy and a concise "Consultation Cheat Sheet" for the doctor/staff to use during the consultation.`;
     case 'PROPOSAL':
+      if (draftContext) {
+        return `Context: The internal strategy for this patient is [${draftContext}]. \nTask: Generate a patient-facing email. DO NOT repeat the internal strategy verbatim. Instead, use it to personalize the message. \nIf the strategy mentions 'High pain anxiety', emphasize our gentle approach. If it mentions 'Time sensitivity', emphasize our fast-track recovery.`;
+      }
       return `${baseInstruction}\n\n[EXTERNAL USE]\nGenerate a high-end, premium patient-facing proposal for ${patientName} regarding '${service}'. Focus on the treatment benefits and articulate "The Dream" vision (e.g., renewed confidence, perfect smile, flawless skin).`;
     case 'FOLLOWUP':
       return `${baseInstruction}\n\n[EXTERNAL USE]\nGenerate a reassuring follow-up guide for ${patientName} after their consultation for '${service}'. Address common fears (pain, cost, downtime) with empathy, and instill absolute medical confidence.`;
@@ -82,7 +85,7 @@ export const PatientCard = React.memo(function PatientCard({
   const [timeLeft, setTimeLeft] = useState<number>(15 * 60);
   const [isExiting, setIsExiting] = useState(false);
   const [isAIGenerating, setIsAIGenerating] = useState(false);
-  
+
   // AI Preview Modal State
   const [aiModal, setAiModal] = useState<{ isOpen: boolean, type: string, content: string, isLoading: boolean }>({
     isOpen: false,
@@ -93,11 +96,11 @@ export const PatientCard = React.memo(function PatientCard({
 
   const handleOpenAIModal = (type: string) => {
     setAiModal({ isOpen: true, type, content: '', isLoading: true });
-    
+
     // Simulate AI Generation
     setTimeout(() => {
-      const generatedPrompt = generateUniversalAIPrompt(type, lead.service || 'General Treatment', lead.name);
-      
+      const generatedPrompt = generateUniversalAIPrompt(type, lead.service || 'General Treatment', lead.name, lead.ai_draft_context || '');
+
       // We simulate sending exactly this prompt to the AI and getting a response back.
       let mockResponse = '';
       if (type === 'DRAFT') {
@@ -116,7 +119,7 @@ export const PatientCard = React.memo(function PatientCard({
   const { clinicName, activeTreatments, templates, updateLead } = useDashboardStore();
 
   const searchService = (lead.service || '').toLowerCase();
-  
+
   // High-End Auto-Matching Logic (Fuzzy Match)
   // Fallback to local templates if DB activeTreatments hasn't loaded
   const matcherSource = activeTreatments?.length > 0 ? activeTreatments : templates;
@@ -156,10 +159,10 @@ export const PatientCard = React.memo(function PatientCard({
 
   const getWhatsAppLink = () => {
     if (!lead.phone) return null;
-    
+
     let message = "";
     const firstName = lead.name.split(' ')[0];
-    
+
     switch (lead.status) {
       case "New Lead":
         message = `Hi ${firstName}, we received your inquiry. Would you like to schedule a quick consultation with Dr. Hanlan?`;
@@ -174,7 +177,7 @@ export const PatientCard = React.memo(function PatientCard({
       default:
         message = `Hi ${firstName}, checking in from ${clinicName || "Hanlan OC"}. How can we help you today?`;
     }
-    
+
     return `https://wa.me/${lead.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
   };
 
@@ -226,8 +229,8 @@ export const PatientCard = React.memo(function PatientCard({
                 {lead.name}
               </h4>
               <div className="flex items-center gap-1.5 mb-1.5">
-                 <div className="w-1 h-1 rounded-full bg-slate-300" />
-                 <span className="text-[10px] uppercase tracking-[0.15em] text-slate-400 font-bold leading-none truncate max-w-[140px]">{lead.service}</span>
+                <div className="w-1 h-1 rounded-full bg-slate-300" />
+                <span className="text-[10px] uppercase tracking-[0.15em] text-slate-400 font-bold leading-none truncate max-w-[140px]">{lead.service}</span>
               </div>
               {(lead.email || lead.phone) && (
                 <div className="flex flex-col gap-0.5 mt-2 opacity-60 group-hover:opacity-100 transition-opacity">
@@ -246,43 +249,43 @@ export const PatientCard = React.memo(function PatientCard({
 
           <div className="flex flex-wrap gap-2 mb-6 items-center">
             {isUnmapped && (
-                <div className="flex items-center px-3 py-1.5 rounded-full bg-indigo-50/50">
-                  <span className="text-[9px] font-bold text-indigo-500 uppercase tracking-widest leading-none">
-                    AI DRAFT
-                  </span>
-                </div>
+              <div className="flex items-center px-3 py-1.5 rounded-full bg-indigo-50/50">
+                <span className="text-[9px] font-bold text-indigo-500 uppercase tracking-widest leading-none">
+                  AI DRAFT
+                </span>
+              </div>
             )}
-            
+
             {lead.appointment_date && (
-               <div className="px-3 py-1.5 rounded-full bg-emerald-50/50">
-                 <span className="text-[9px] font-bold text-emerald-600 uppercase tracking-widest leading-none">
-                    Confirmed: {new Date(lead.appointment_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }).toUpperCase()}
-                 </span>
-               </div>
+              <div className="px-3 py-1.5 rounded-full bg-emerald-50/50">
+                <span className="text-[9px] font-bold text-emerald-600 uppercase tracking-widest leading-none">
+                  Confirmed: {new Date(lead.appointment_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }).toUpperCase()}
+                </span>
+              </div>
             )}
           </div>
-          
+
           <div className="space-y-2.5 pointer-events-auto">
             {/* Contextual Revenue-Driving Primary Button */}
             {(() => {
               let label = "AI DRAFT PT";
               let Icon = Sparkles;
               let action = () => {
-                 handleOpenAIModal('DRAFT');
+                handleOpenAIModal('DRAFT');
               };
 
               if (lead.status === "Booked") {
-                 label = "SEND PT PLAN";
-                 Icon = Send;
-                 action = () => handleOpenAIModal('PROPOSAL');
+                label = "SEND PT PLAN";
+                Icon = Send;
+                action = () => handleOpenAIModal('PROPOSAL');
               } else if (lead.status === "Visited") {
-                 label = "FOLLOW-UP CARE";
-                 Icon = HeartPulse;
-                 action = () => handleOpenAIModal('FOLLOWUP');
+                label = "FOLLOW-UP CARE";
+                Icon = HeartPulse;
+                action = () => handleOpenAIModal('FOLLOWUP');
               } else if (lead.status === "Treated" || lead.status === "Closed Won") {
-                 label = "POST-CARE & THANKS";
-                 Icon = Heart;
-                 action = () => handleOpenAIModal('POSTCARE');
+                label = "POST-CARE & THANKS";
+                Icon = Heart;
+                action = () => handleOpenAIModal('POSTCARE');
               }
 
               return (
@@ -381,7 +384,7 @@ export const PatientCard = React.memo(function PatientCard({
                     <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
                       <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" strokeWidth={1.5} />
                       <p className="text-xs font-bold text-slate-400 uppercase tracking-widest text-center animate-pulse">
-                        Synthesizing Knowledge...<br/>
+                        Synthesizing Knowledge...<br />
                         <span className="text-[9px] text-slate-300">Targeting {lead.service || 'Treatment'} Details</span>
                       </p>
                     </div>
@@ -396,7 +399,13 @@ export const PatientCard = React.memo(function PatientCard({
 
                 <div className="mt-4 pt-4 border-t border-slate-100 flex justify-end">
                   <button
-                    onClick={(e) => { e.stopPropagation(); setAiModal(prev => ({ ...prev, isOpen: false })); }}
+                    onClick={(e) => { 
+                      e.stopPropagation(); 
+                      if (aiModal.type === 'DRAFT') {
+                        updateLead(lead.id, { ai_draft_context: aiModal.content });
+                      }
+                      setAiModal(prev => ({ ...prev, isOpen: false })); 
+                    }}
                     className="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-full font-bold text-[10px] tracking-widest uppercase transition-colors flex items-center justify-center min-w-[120px]"
                     disabled={aiModal.isLoading}
                   >
@@ -412,8 +421,8 @@ export const PatientCard = React.memo(function PatientCard({
     </div>
   );
 }, (prev, next) => (
-  prev.lead === next.lead && 
-  prev.clinic === next.clinic && 
+  prev.lead === next.lead &&
+  prev.clinic === next.clinic &&
   prev.id === next.id &&
   prev.currency === next.currency &&
   prev.lead.status === next.lead.status &&

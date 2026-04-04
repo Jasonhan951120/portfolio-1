@@ -80,6 +80,7 @@ export type ConsultationRequest = {
     pt_before_image?: string;
     pt_after_image?: string;
     pt_booking_url?: string;
+    ai_draft_context?: string;
 };
 
 export type Resource = {

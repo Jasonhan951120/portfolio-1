@@ -6,16 +6,16 @@ import { useDashboardStore } from '../../store/useDashboardStore';
 
 const INDUSTRY_TEMPLATES = {
     Dental: {
-        friendly: "Dear {PatientName}, it was a true pleasure meeting you today to discuss your smile transformation. I've prepared a bespoke plan to bring back your confident smile. We use the most advanced, gentle techniques to ensure your journey is as comfortable as it is transformative.\n\nWarmly,\n{ClinicName}",
-        professional: "Dear {PatientName}, thank you for visiting us today. Based on our clinical assessment, I have finalized your bespoke dental treatment proposal. This plan is designed to deliver optimal long-term outcomes while prioritizing your unique dental health needs.\n\nSincerely,\n{ClinicName}"
+        friendly: "Dear {PatientName}, it was a true pleasure meeting you today to discuss your smile transformation. I've prepared a bespoke plan to bring back your confident smile. We use the most advanced, gentle techniques to ensure your journey is as comfortable as it is transformative.\n\nBest regards, The Hanlanoc Team",
+        professional: "Dear {PatientName}, thank you for visiting us today. Based on our clinical assessment, I have finalized your bespoke dental treatment proposal. This plan is designed to deliver optimal long-term outcomes while prioritizing your unique dental health needs.\n\nBest regards, The Hanlanoc Team"
     },
     Aesthetic: {
-        friendly: "Dear {PatientName}, we are excited to help you achieve your skin goals at {ClinicName}! I've designed a specialized plan tailored just for you to enhance your natural beauty. We can't wait to see your radiant results.\n\nWarmly,\n{ClinicName}",
-        professional: "Dear {PatientName}, thank you for your consultation today. I have prepared a comprehensive aesthetic treatment plan tailored specifically to your unique skin profile and desired outcomes. Please review the clinical details below.\n\nSincerely,\n{ClinicName}"
+        friendly: "Dear {PatientName}, we are excited to help you achieve your skin goals at {ClinicName}! I've designed a specialized plan tailored just for you to enhance your natural beauty. We can't wait to see your radiant results.\n\nBest regards, The Hanlanoc Team",
+        professional: "Dear {PatientName}, thank you for your consultation today. I have prepared a comprehensive aesthetic treatment plan tailored specifically to your unique skin profile and desired outcomes. Please review the clinical details below.\n\nBest regards, The Hanlanoc Team"
     },
     Wellness: {
-        friendly: "Dear {PatientName}, it was wonderful connecting with you today. I've designed a specialized wellness plan to support your holistic journey. We are dedicated to helping you find balance, rejuvenation, and optimal vitality.\n\nWarmly,\n{ClinicName}",
-        professional: "Dear {PatientName}, following our consultation, I have developed a bespoke wellness protocol. This comprehensive plan is meticulously designed to optimize your health outcomes and overall well-being. Please find the proposed intervention securely below.\n\nSincerely,\n{ClinicName}"
+        friendly: "Dear {PatientName}, it was wonderful connecting with you today. I've designed a specialized wellness plan to support your holistic journey. We are dedicated to helping you find balance, rejuvenation, and optimal vitality.\n\nBest regards, The Hanlanoc Team",
+        professional: "Dear {PatientName}, following our consultation, I have developed a bespoke wellness protocol. This comprehensive plan is meticulously designed to optimize your health outcomes and overall well-being. Please find the proposed intervention securely below.\n\nBest regards, The Hanlanoc Team"
     }
 };
 
@@ -104,10 +104,10 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
 
     if (tone === 'friendly') {
         setEmailSubject(`Your Transformation Journey: Bespoke ${treatmentName} Proposal`);
-        setEmailTemplate(`Hi ${patientName},\n\nIt was a true pleasure meeting you at the clinic today. I am so excited to help you start your ${treatmentName} journey. I've prepared a bespoke plan just for you to ensure you get the absolute best results.\n\nI can't wait to see your results!\n\nWarmly,\n${activeClinicName}`);
+        setEmailTemplate(`Hi ${patientName},\n\nIt was a true pleasure meeting you at the clinic today. I am so excited to help you start your ${treatmentName} journey. I've prepared a bespoke plan just for you to ensure you get the absolute best results.\n\nI can't wait to see your results!\n\nBest regards, The Hanlanoc Team`);
     } else {
         setEmailSubject(`Clinical Proposal & Digital Protocol: ${treatmentName} - ${patientName}`);
-        setEmailTemplate(`Dear ${patientName},\n\nThank you for choosing our clinic for your ${treatmentName} consultation. Based on our comprehensive clinical evaluation, I have finalized your bespoke protocol and digital proposal.\n\nThis plan is meticulously designed to deliver optimal outcomes while prioritizing your unique requirements.\n\nSincerely,\n${activeClinicName}`);
+        setEmailTemplate(`Dear ${patientName},\n\nThank you for choosing our clinic for your ${treatmentName} consultation. Based on our comprehensive clinical evaluation, I have finalized your bespoke protocol and digital proposal.\n\nThis plan is meticulously designed to deliver optimal outcomes while prioritizing your unique requirements.\n\nBest regards, The Hanlanoc Team`);
     }
   };
 
@@ -277,11 +277,16 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
                  {/* [OPTION 2] EMAIL TEMPLATE Renamed Note Area */}
                  <div>
                     <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">EMAIL TEMPLATE</label>
+                    {lead.ai_draft_context && (
+                        <div className="text-slate-500 bg-slate-100/50 rounded-full px-3 py-1 text-[10px] font-medium tracking-wide w-fit mb-4">
+                            ✨ Personalized based on AI Strategy
+                        </div>
+                    )}
                     <textarea 
                        value={emailTemplate}
                        onChange={(e) => setEmailTemplate(e.target.value)}
                        placeholder="Compose bespoke patient copy..."
-                       className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-5 text-sm font-medium text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all h-64 resize-none shadow-inner font-inter leading-relaxed"
+                       className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-5 text-sm font-medium text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all h-64 resize-none shadow-inner font-inter tracking-tight leading-relaxed"
                     />
                  </div>
               </div>

@@ -189,7 +189,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
     set({ clinicType: type });
   },
 
-  clinicName: localStorage.getItem('clinic_name') || 'Your Clinic',
+  clinicName: localStorage.getItem('clinic_name') || 'Hanlanoc Clinic',
   setClinicName: (name) => {
     localStorage.setItem('clinic_name', name);
     set({ clinicName: name });
