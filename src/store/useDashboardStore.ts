@@ -83,6 +83,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
       status: "New Lead",
       potential_value: 3000,
       intent_score: 99,
+      age: 28,
       created_at: new Date().toISOString()
     } as ConsultationRequest,
     {
@@ -93,6 +94,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
       potential_value: 8500,
       status: "Booked",
       intent_score: 99,
+      age: 72,
       created_at: new Date().toISOString()
     } as ConsultationRequest,
     {
@@ -103,6 +105,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
       potential_value: 3500,
       status: "New Lead",
       intent_score: 88,
+      age: 32,
       created_at: new Date(Date.now() - 1000 * 60 * 120).toISOString()
     } as ConsultationRequest,
     {
@@ -113,6 +116,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
       potential_value: 12000,
       status: "Visited",
       intent_score: 91,
+      age: 45,
       created_at: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString()
     } as ConsultationRequest,
     {
@@ -123,6 +127,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
       potential_value: 5500,
       status: "New Lead",
       intent_score: 82,
+      age: 55,
       created_at: new Date(Date.now() - 1000 * 60 * 30).toISOString()
     } as ConsultationRequest,
     {
@@ -133,6 +138,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
       potential_value: 9500,
       status: "Treated",
       intent_score: 96,
+      age: 64,
       created_at: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString()
     } as ConsultationRequest,
     {
@@ -143,6 +149,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
       potential_value: 4000,
       status: "Visited",
       intent_score: 75,
+      age: 38,
       created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString()
     } as ConsultationRequest
   ],
@@ -263,6 +270,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
           status: "New Lead",
           potential_value: 3000,
           intent_score: 99,
+          age: 28,
           created_at: new Date().toISOString()
         } as ConsultationRequest,
         {
@@ -273,6 +281,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
           potential_value: 8500,
           status: "Booked",
           intent_score: 99,
+          age: 72,
           created_at: new Date().toISOString()
         } as ConsultationRequest,
         {
@@ -283,6 +292,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
           potential_value: 3500,
           status: "New Lead",
           intent_score: 88,
+          age: 32,
           created_at: new Date(Date.now() - 1000 * 60 * 120).toISOString()
         } as ConsultationRequest,
         {
@@ -293,6 +303,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
           potential_value: 12000,
           status: "Visited",
           intent_score: 91,
+          age: 45,
           created_at: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString()
         } as ConsultationRequest,
         {
@@ -303,6 +314,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
           potential_value: 5500,
           status: "New Lead",
           intent_score: 82,
+          age: 55,
           created_at: new Date(Date.now() - 1000 * 60 * 30).toISOString()
         } as ConsultationRequest,
         {
@@ -313,6 +325,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
           potential_value: 9500,
           status: "Treated",
           intent_score: 96,
+          age: 64,
           created_at: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString()
         } as ConsultationRequest,
         {
@@ -323,6 +336,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
           potential_value: 4000,
           status: "Visited",
           intent_score: 75,
+          age: 38,
           created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString()
         } as ConsultationRequest
       ];

@@ -9,8 +9,9 @@ import { useDashboardStore } from "../../store/useDashboardStore";
 import { INDUSTRY_TEMPLATES } from "../../lib/treatmentTemplates";
 import { calculateFuzzyMatch } from "../../lib/autoMatcher";
 
-const generateUniversalAIPrompt = (type: string, service: string, patientName: string, draftContext: string = '') => {
-  const baseInstruction = `You are an elite medical concierge AI. Use your expert medical knowledge to provide highly accurate, specialty-specific advice. For example: If '${service}' involves surgery (like Wisdom Tooth), mention cold packs and soft food. If it involves skin (like Acne Laser), mention sunblock and hydration.`;
+const generateUniversalAIPrompt = (type: string, service: string, patientName: string, draftContext: string = '', age?: number) => {
+  const agePrompt = age ? `\nCurrent Patient Age: [${age}].\nMandate: You MUST adjust your tone of voice and the psychological benefits you highlight based on this age. \nExample: For a 70-year-old, don't talk about 'looking cool on social media'; talk about 'enjoying meals with family comfortably'.` : '';
+  const baseInstruction = `You are an elite medical concierge AI. Use your expert medical knowledge to provide highly accurate, specialty-specific advice. For example: If '${service}' involves surgery (like Wisdom Tooth), mention cold packs and soft food. If it involves skin (like Acne Laser), mention sunblock and hydration.${agePrompt}`;
 
   switch (type) {
     case 'DRAFT':
@@ -18,7 +19,7 @@ const generateUniversalAIPrompt = (type: string, service: string, patientName: s
     case 'PROPOSAL':
       if (draftContext) {
         return `You are writing a high-end, personalized medical email. 
-      SOURCE MATERIAL: [${draftContext}]
+      SOURCE MATERIAL: [${draftContext}]${agePrompt}
       MANDATE: Every recommendation in this email must be a 'translation' of the internal strategy into patient-friendly language. 
       DO NOT use generic templates. Use the specific clinical objectives and patient concerns found in the SOURCE MATERIAL.`;
       }
@@ -102,30 +103,41 @@ export const PatientCard = React.memo(function PatientCard({
 
     // Simulate AI Generation
     setTimeout(() => {
-      const generatedPrompt = generateUniversalAIPrompt(type, lead.service || 'General Treatment', lead.name, lead.ai_draft_context || '');
+      const generatedPrompt = generateUniversalAIPrompt(type, lead.service || 'General Treatment', lead.name, lead.ai_draft_context || '', lead.age);
 
       // We simulate sending exactly this prompt to the AI and getting a response back.
       let mockResponse = '';
+      const patientAge = lead.age || 40;
+      
+      let toneAdaptation = '';
+      if (patientAge < 40) {
+          toneAdaptation = 'Focusing on fast, confident results to fit your busy, modern lifestyle.';
+      } else if (patientAge < 60) {
+          toneAdaptation = 'Focusing on long-term durability, efficiency, and restoring your optimal quality of life.';
+      } else {
+          toneAdaptation = 'Focusing on your health, safety, and ensuring a gentle, comfortable experience with long-lasting benefits.';
+      }
+
       if (type === 'DRAFT') {
-        mockResponse = `[CONFIDENTIAL - INTERNAL STRATEGY]\n\nPatient: ${lead.name}\nTreatment: ${lead.service || 'General Treatment'}\n\n1. Clinical Objective: Assess candidacy for the procedure.\n2. Key Value Points to Emphasize:\n   - Rapid recovery timeline\n   - Long-term aesthetic and functional benefits\n3. Anticipated Questions:\n   - "How much will this hurt?" -> Reassure with modern anesthetic protocols.\n   - "What is the total cost?" -> Present financing options immediately.\n\n[RECOMMENDATION]: Build rapport quickly, as intent score indicates high readiness to proceed.`;
+        mockResponse = `[CONFIDENTIAL - INTERNAL STRATEGY]\n\nPatient: ${lead.name} ${lead.age ? `(${lead.age}y)` : ''}\nTreatment: ${lead.service || 'General Treatment'}\n\n1. Clinical Objective: Assess candidacy for the procedure. ${toneAdaptation}\n2. Key Value Points to Emphasize:\n   - Rapid recovery timeline\n   - Long-term aesthetic and functional benefits\n3. Anticipated Questions:\n   - "How much will this hurt?" -> Reassure with modern anesthetic protocols.\n   - "What is the total cost?" -> Present financing options immediately.\n\n[RECOMMENDATION]: Build rapport quickly, as intent score indicates high readiness to proceed.`;
       } else if (type === 'PROPOSAL') {
         const firstName = lead.name.split(' ')[0];
         const draft = lead.ai_draft_context || '';
         
         // Simulation of the "Anchor" Logic: Extracting pain points and translating
-        let customOpener = `Following our review of your case, we are thrilled to present your personalized treatment plan for ${lead.service || 'your treatment'}.`;
+        let customOpener = `Following our review of your case, we are thrilled to present your personalized treatment plan for ${lead.service || 'your treatment'}. ${toneAdaptation}`;
         
         if (draft.toLowerCase().includes("recovery")) {
-          customOpener = `We've tailored a plan to ensure your recovery is as fast and comfortable as possible, as we discussed. Our focus is on getting you back to your routine with a perfect result.`;
+          customOpener = `We've tailored a plan to ensure your recovery is as fast and comfortable as possible, as we discussed. Our focus is on getting you back to your routine with a perfect result. ${toneAdaptation}`;
         } else if (draft.toLowerCase().includes("pain") || draft.toLowerCase().includes("anxiety")) {
-          customOpener = `Based on our consultation, we have designed a protocol that prioritizes your absolute comfort. We use modern anesthetic protocols to ensure a gentle and worry-free experience for your ${lead.service || 'treatment'}.`;
+          customOpener = `Based on our consultation, we have designed a protocol that prioritizes your absolute comfort. We use modern anesthetic protocols to ensure a gentle and worry-free experience for your ${lead.service || 'treatment'}. ${toneAdaptation}`;
         }
 
         mockResponse = `Dear ${firstName},\n\n${customOpener}\n\nOur goal is to help you achieve the absolute best results. This highly specialized procedure uses state-of-the-art technology to ensure precision, minimal discomfort, and an exceptional outcome.\n\nBy moving forward, you are investing in a lasting transformation that will restore your confidence and enhance your well-being.\n\nBest regards,\nThe Hanlanoc Team`;
       } else if (type === 'FOLLOWUP') {
-        mockResponse = `Hi ${lead.name.split(' ')[0]},\n\nIt was a pleasure seeing you for your consultation regarding ${lead.service || 'your treatment'}.\n\nWe understand that making a medical decision involves careful consideration. Please rest assured that our clinic uses the most advanced techniques to minimize any discomfort and ensure a swift recovery.\n\nIf you have any lingering concerns about the procedure or financing options, we are here to support you every step of the way.\n\nBest regards,\nThe Hanlan OC Care Team`;
+        mockResponse = `Hi ${lead.name.split(' ')[0]},\n\nIt was a pleasure seeing you for your consultation regarding ${lead.service || 'your treatment'}. ${toneAdaptation}\n\nWe understand that making a medical decision involves careful consideration. Please rest assured that our clinic uses the most advanced techniques to minimize any discomfort and ensure a swift recovery.\n\nIf you have any lingering concerns about the procedure or financing options, we are here to support you every step of the way.\n\nBest regards,\nThe Hanlan OC Care Team`;
       } else if (type === 'POSTCARE') {
-        mockResponse = `Dear ${lead.name.split(' ')[0]},\n\nThank you for trusting Hanlan OC with your care! We are delighted with the success of your ${lead.service || 'procedure'}.\n\n**Vital Recovery Protocol:**\n- Please get plenty of rest for the next 24-48 hours.\n- Maintain hydration and avoid strenuous activity.\n- Follow the custom medication schedule provided to you.\n- If your procedure involved sensitive areas or surgery, utilize cold compresses as directed.\n\nShould you need anything, please do not hesitate to contact us. We look forward to seeing your final results!\n\nWith gratitude,\nDr. Hanlan`;
+        mockResponse = `Dear ${lead.name.split(' ')[0]},\n\nThank you for trusting Hanlan OC with your care! We are delighted with the success of your ${lead.service || 'procedure'}. ${toneAdaptation}\n\n**Vital Recovery Protocol:**\n- Please get plenty of rest for the next 24-48 hours.\n- Maintain hydration and avoid strenuous activity.\n- Follow the custom medication schedule provided to you.\n- If your procedure involved sensitive areas or surgery, utilize cold compresses as directed.\n\nShould you need anything, please do not hesitate to contact us. We look forward to seeing your final results!\n\nWith gratitude,\nDr. Hanlan`;
       }
 
       setAiModal(prev => ({ ...prev, content: mockResponse, isLoading: false }));
@@ -241,7 +253,7 @@ export const PatientCard = React.memo(function PatientCard({
           <div className="flex justify-between items-start mb-3">
             <div className="flex-1 pr-2">
               <h4 className="font-bold text-slate-900 text-sm tracking-tighter leading-none truncate mb-1.5" data-hj-suppress>
-                {lead.name}
+                {lead.name} {lead.age ? <span className="text-[10px] text-slate-400 font-medium tracking-widest align-bottom ml-1">({lead.age}y)</span> : ''}
               </h4>
               <div className="flex items-center gap-1.5 mb-1.5">
                 <div className="w-1 h-1 rounded-full bg-slate-300" />
@@ -380,10 +392,10 @@ export const PatientCard = React.memo(function PatientCard({
                   <div className="flex items-center gap-2">
                     <Sparkles className="w-5 h-5 text-indigo-500" strokeWidth={1.5} />
                     <h3 className="text-sm font-bold text-slate-900 tracking-tighter uppercase">
-                      {aiModal.type === 'DRAFT' && 'AI Consultation Draft'}
-                      {aiModal.type === 'PROPOSAL' && 'AI Premium Proposal'}
-                      {aiModal.type === 'FOLLOWUP' && 'AI Reassurance Guide'}
-                      {aiModal.type === 'POSTCARE' && 'AI Post-Care Protocol'}
+                      {aiModal.type === 'DRAFT' && `AI Consultation Draft - ${lead.name} ${lead.age ? `(${lead.age}y)` : ''}`}
+                      {aiModal.type === 'PROPOSAL' && `AI Premium Proposal - ${lead.name} ${lead.age ? `(${lead.age}y)` : ''}`}
+                      {aiModal.type === 'FOLLOWUP' && `AI Reassurance Guide - ${lead.name} ${lead.age ? `(${lead.age}y)` : ''}`}
+                      {aiModal.type === 'POSTCARE' && `AI Post-Care Protocol - ${lead.name} ${lead.age ? `(${lead.age}y)` : ''}`}
                     </h3>
                   </div>
                   <button

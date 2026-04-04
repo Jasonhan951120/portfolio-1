@@ -81,6 +81,7 @@ export type ConsultationRequest = {
     pt_after_image?: string;
     pt_booking_url?: string;
     ai_draft_context?: string;
+    age?: number;
 };
 
 export type Resource = {
