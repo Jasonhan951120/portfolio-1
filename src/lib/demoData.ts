@@ -5,7 +5,7 @@ export const DEMO_LEADS: Partial<ConsultationRequest>[] = [
         id: "donggyun-live",
         name: "Donggyun Han",
         email: "handonggyun18@gmail.com",
-        phone: "820133951543",
+        phone: "821033951543",
         service: "Dental Implants",
         potential_value: 3000,
         status: "New Lead",
@@ -16,6 +16,7 @@ export const DEMO_LEADS: Partial<ConsultationRequest>[] = [
         id: "demo-james",
         name: "James Wilson",
         email: "handonggyun18@gmail.com",
+        phone: "821033951543",
         service: "Dental Implants",
         potential_value: 8500,
         status: "Booked",
@@ -26,6 +27,7 @@ export const DEMO_LEADS: Partial<ConsultationRequest>[] = [
         id: "demo-sarah",
         name: "Sarah Jenkins",
         email: "handonggyun18@gmail.com",
+        phone: "821033951543",
         service: "Invisalign / Aligners",
         potential_value: 3500,
         status: "New Lead",
@@ -36,6 +38,7 @@ export const DEMO_LEADS: Partial<ConsultationRequest>[] = [
         id: "demo-michael",
         name: "Michael Ross",
         email: "handonggyun18@gmail.com",
+        phone: "821033951543",
         service: "Veneers",
         potential_value: 12000,
         status: "Visited",
@@ -46,6 +49,7 @@ export const DEMO_LEADS: Partial<ConsultationRequest>[] = [
         id: "demo-david",
         name: "David Beckham",
         email: "handonggyun18@gmail.com",
+        phone: "821033951543",
         service: "Dental Implants",
         potential_value: 5500,
         status: "New Lead",
@@ -56,6 +60,7 @@ export const DEMO_LEADS: Partial<ConsultationRequest>[] = [
         id: "demo-olivia",
         name: "Olivia Colman",
         email: "handonggyun18@gmail.com",
+        phone: "821033951543",
         service: "Veneers",
         potential_value: 9500,
         status: "Treated",
@@ -66,6 +71,7 @@ export const DEMO_LEADS: Partial<ConsultationRequest>[] = [
         id: "demo-benedict",
         name: "Benedict Cumberbatch",
         email: "handonggyun18@gmail.com",
+        phone: "821033951543",
         service: "Invisalign / Aligners",
         potential_value: 4000,
         status: "Visited",
@@ -85,7 +91,7 @@ export const DEMO_LEADS: Partial<ConsultationRequest>[] = [
         status: ["New Lead", "Booked", "Visited", "New Lead", "Booked"][i % 5] as any,
         intent_score: Math.floor(Math.random() * 40) + 60,
         created_at: new Date(Date.now() - Math.random() * 1000 * 60 * 60 * 24 * 7).toISOString(),
-        phone: "+447700900" + (700 + i)
+        phone: "821033951543"
     }))
 ];
 

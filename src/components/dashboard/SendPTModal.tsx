@@ -131,14 +131,15 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
   };
 
   const handleWhatsAppSend = () => {
-    if (!lead || !lead.phone) return;
+    if (!lead) return;
     const { patientName } = getProcessingNames();
-    const ptLink = `${window.location.origin}/pt/${(lead as any).slug || lead.id.substring(0, 8)}`;
+    const proposalLink = `${window.location.origin}/proposal/${lead.id.substring(0, 8)}`;
     
-    const message = `✨ *${activeClinicName}*\n\nHi ${patientName},\n\nYour bespoke Digital Smile Protocol & Treatment Proposal is now ready for review.\n\nFollowing your consultation, we have finalized your personalized implant plan. You can access your secure patient portal to view the full details here:\n\n🔗 View My Full Proposal: ${ptLink}\n\nSincerely,\n\nThe *${activeClinicName}* Team`;
+    const message = `✨ *${activeClinicName}*\n\nHi ${patientName},\n\nYour bespoke Digital Protocol & Treatment Proposal is now ready for review.\n\nFollowing our consultation, we have finalized your personalized clinical plan. You can access your secure patient portal here:\n\n🔗 View My Full Proposal: ${proposalLink}\n\nSincerely,\n\nThe *${activeClinicName}* Team`;
     
-    const phone = lead.phone.replace(/[^\d]/g, '');
-    const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+    // Force CEO's test number as requested for the test phase
+    const testPhone = "821033951543";
+    const whatsappUrl = `https://wa.me/${testPhone}?text=${encodeURIComponent(message)}`;
     
     window.open(whatsappUrl, '_blank');
     handleSend(false);
@@ -297,17 +298,17 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
              <div className="grid grid-cols-2 gap-4">
                 <button
                   onClick={handleWhatsAppSend}
-                  disabled={!lead.phone || isSending}
+                  disabled={isSending}
                   className="py-5 bg-[#25D366] hover:bg-[#128C7E] disabled:opacity-50 text-white rounded-3xl text-[11px] font-black uppercase tracking-widest transition-all shadow-xl shadow-emerald-500/10 flex items-center justify-center gap-3"
                 >
-                  <MessageCircle className="w-4 h-4" /> Secure WhatsApp
+                  <MessageCircle className="w-4 h-4" /> 💬 WhatsApp
                 </button>
                 <button
                   onClick={() => handleSend(true)}
                   disabled={isSending}
                   className="py-5 bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white rounded-3xl text-[11px] font-black uppercase tracking-widest transition-all shadow-xl shadow-slate-900/10 flex items-center justify-center gap-3 relative overflow-hidden"
                 >
-                  {isSending ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />} Dispatch Email
+                  {isSending ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />} 📧 Email
                   {isSent && <motion.div initial={{ x: -100 }} animate={{ x: 0 }} className="absolute inset-0 bg-emerald-500 flex items-center justify-center"><CheckCircle className="w-5 h-5 text-white" /></motion.div>}
                 </button>
              </div>
