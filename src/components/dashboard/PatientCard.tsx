@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Send, MessageCircle, Shield, AlertTriangle, Sparkles, Users, Hand, CalendarCheck, ShieldCheck, FileText, Mail, FileCog, HeartPulse, MessageSquare, Heart, X, Loader2 } from 'lucide-react';
-import { type ConsultationRequest } from "../../lib/supabase";
+import { supabase, type ConsultationRequest } from "../../lib/supabase";
 import { useDashboardStore } from "../../store/useDashboardStore";
 import { INDUSTRY_TEMPLATES } from "../../lib/treatmentTemplates";
 import { calculateFuzzyMatch } from "../../lib/autoMatcher";
@@ -426,20 +426,70 @@ export const PatientCard = React.memo(function PatientCard({
                   )}
                 </div>
 
-                <div className="mt-4 pt-4 border-t border-slate-100 flex justify-end">
-                  <button
-                    onClick={(e) => { 
-                      e.stopPropagation(); 
-                      if (aiModal.type === 'DRAFT') {
+                <div className="mt-4 pt-4 border-t border-slate-100 flex justify-end w-full">
+                  {aiModal.type === 'DRAFT' ? (
+                    <button
+                      onClick={(e) => { 
+                        e.stopPropagation(); 
                         updateLead(lead.id, { ai_draft_context: aiModal.content });
-                      }
-                      setAiModal(prev => ({ ...prev, isOpen: false })); 
-                    }}
-                    className="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-full font-bold text-[10px] tracking-widest uppercase transition-colors flex items-center justify-center min-w-[120px]"
-                    disabled={aiModal.isLoading}
-                  >
-                    {aiModal.type === 'DRAFT' ? 'Save Draft' : 'Save & Send'}
-                  </button>
+                        setAiModal(prev => ({ ...prev, isOpen: false })); 
+                      }}
+                      className="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-full font-bold text-[10px] tracking-widest uppercase transition-colors flex items-center justify-center min-w-[120px]"
+                      disabled={aiModal.isLoading}
+                    >
+                      Save Draft
+                    </button>
+                  ) : (
+                    <div className="flex gap-3 w-full sm:w-auto">
+                        <button
+                          onClick={(e) => {
+                              e.stopPropagation();
+                              if (aiModal.isLoading) return;
+                              const testPhone = "821033951543";
+                              const whatsappUrl = `https://wa.me/${testPhone}?text=${encodeURIComponent(aiModal.content)}`;
+                              window.open(whatsappUrl, '_blank');
+                              setAiModal(prev => ({ ...prev, isOpen: false }));
+                          }}
+                          className="flex-1 sm:flex-none px-6 py-2.5 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-full font-bold text-[10px] tracking-widest uppercase transition-colors flex items-center justify-center gap-2 shadow-sm"
+                          disabled={aiModal.isLoading}
+                        >
+                          <MessageCircle className="w-3.5 h-3.5" /> 💬 Send via WhatsApp
+                        </button>
+                        <button
+                          onClick={async (e) => {
+                              e.stopPropagation();
+                              if (aiModal.isLoading) return;
+                              const testEmail = "handonggyun18@gmail.com";
+                              let subject = "";
+                              if (aiModal.type === 'PROPOSAL') subject = `Bespoke Clinical Protocol - ${lead.name}`;
+                              else if (aiModal.type === 'FOLLOWUP') subject = `Clinical Follow-up & Care Guide - ${lead.name}`;
+                              else if (aiModal.type === 'POSTCARE') subject = `Recovery Protocol & Thank You - ${lead.name}`;
+                      
+                              try {
+                                  await supabase.functions.invoke('send-pt-v2', {
+                                    body: {
+                                      lead_id: lead.id,
+                                      name: lead.name,
+                                      email: testEmail,
+                                      subject: subject,
+                                      service: lead.service || "Treatment",
+                                      origin: window.location.origin,
+                                      clinic_name: clinicData?.name || "Hanlan OC",
+                                      personalized_note: aiModal.content
+                                    }
+                                  });
+                              } catch (err) {
+                                  console.error("Email send error", err);
+                              }
+                              setAiModal(prev => ({ ...prev, isOpen: false }));
+                          }}
+                          className="flex-1 sm:flex-none px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-full font-bold text-[10px] tracking-widest uppercase transition-colors flex items-center justify-center gap-2 shadow-sm"
+                          disabled={aiModal.isLoading}
+                        >
+                          <Mail className="w-3.5 h-3.5" /> 📧 Send via Email
+                        </button>
+                    </div>
+                  )}
                 </div>
               </motion.div>
             </div>
