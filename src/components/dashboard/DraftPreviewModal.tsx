@@ -51,13 +51,13 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
   const contextualImage = getContextualImage();
 
   return (
-    <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 sm:p-6 overflow-hidden" onClick={(e) => { e.stopPropagation(); onClose(); }}>
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 overflow-hidden" onClick={(e) => { e.stopPropagation(); onClose(); }}>
       {/* Backdrop: Full Focus Overlay */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="absolute inset-0 bg-black/40 backdrop-blur-[10px] w-full h-full"
+        className="absolute inset-0 bg-black/70 backdrop-blur-[15px] w-full h-full"
       />
       
       {/* Modal Container */}

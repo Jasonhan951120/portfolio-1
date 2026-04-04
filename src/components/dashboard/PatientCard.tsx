@@ -12,7 +12,15 @@ import { DraftPreviewModal } from "./DraftPreviewModal";
 
 const generateUniversalAIPrompt = (type: string, service: string, patientName: string, draftContext: string = '', age?: number) => {
   const agePrompt = age ? `\nCurrent Patient Age: [${age}].\nMandate: You MUST adjust your tone of voice and the psychological benefits you highlight based on this age. \nExample: For a 70-year-old, don't talk about 'looking cool on social media'; talk about 'enjoying meals with family comfortably'.` : '';
-  const baseInstruction = `You are an elite medical concierge AI. Use your expert medical knowledge to provide highly accurate, specialty-specific advice.${agePrompt}`;
+  
+  let treatmentSpecifics = '';
+  if (service.toLowerCase().includes('veneer')) {
+    treatmentSpecifics = "\nSPECIFIC KEYWORDS: Use phrases like 'smile transformation' and 'aesthetic porcelain'. Focus on visual harmony and confidence.";
+  } else if (service.toLowerCase().includes('implant')) {
+    treatmentSpecifics = "\nSPECIFIC KEYWORDS: Use phrases like 'structural restoration' and 'gold standard'. Focus on functional longevity and bone health.";
+  }
+
+  const baseInstruction = `You are an elite medical concierge AI. Use your expert medical knowledge to provide highly accurate, specialty-specific advice.${agePrompt}${treatmentSpecifics}`;
 
   switch (type) {
     case 'DRAFT':
