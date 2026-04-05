@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { motion } from 'motion/react';
 import { Sparkles, MessageCircle, Mail, X, Loader2, Target, Heart, HeartPulse, Stethoscope } from 'lucide-react';
 import { useDashboardStore } from '../../store/useDashboardStore';
@@ -31,6 +32,12 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
 }) => {
   const { clinicLogo, clinicSignatureImage, activeTreatments, templates } = useDashboardStore();
   
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Background Scroll Lock - Critical Fix
   useEffect(() => {
     if (isOpen) {
@@ -42,7 +49,7 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
     }
   }, [isOpen]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted || typeof document === 'undefined') return null;
 
   // Chameleon UI Image Logic
   const getContextualImage = () => {
@@ -61,10 +68,9 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
 
   const contextualImage = getContextualImage();
 
-  return (
+  return createPortal(
     <div 
-      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 overflow-hidden" 
-      style={{ zIndex: 9999 }}
+      className="fixed inset-0 !z-[9999] flex items-center justify-center p-4 sm:p-6 overflow-hidden" 
       onClick={(e) => { e.stopPropagation(); onClose(); }}
     >
       {/* Backdrop: Absolute "Fog of War" Isolation Fix */}
@@ -72,7 +78,8 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/70 backdrop-blur-[15px] w-screen h-screen"
+        className="fixed inset-0 w-screen h-screen !z-[9998]"
+        style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)', backdropFilter: 'blur(15px)' }}
       />
       
       {/* Modal Container */}
@@ -80,7 +87,7 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        className="relative w-full max-w-5xl bg-white rounded-[40px] shadow-2xl flex flex-col lg:flex-row overflow-hidden border border-white/20"
+        className="relative w-full max-w-5xl bg-white rounded-[40px] shadow-2xl flex flex-col lg:flex-row overflow-hidden border border-white/20 !z-[9999]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Left: Chameleon Visual UI - Premium Ceramic Studio Detail */}
@@ -208,6 +215,7 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
           </div>
         </div>
       </motion.div>
-    </div>
+    </div>,
+    document.body
   );
 };
