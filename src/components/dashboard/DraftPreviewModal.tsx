@@ -89,12 +89,12 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
             }}
           />
           
-          {/* [MODAL CONTAINER]: "Private Sales Room" Authority */}
+          {/* [MODAL CONTAINER]: "Private Sales Room" Authority - Now Re-compacted */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative w-full max-w-5xl bg-white rounded-[40px] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5),0_0_80px_rgba(0,0,0,0.1)] flex flex-col lg:flex-row overflow-hidden border border-white/20 !z-[9999]"
+            className="relative w-[70vw] max-w-[1100px] h-[80vh] max-h-[850px] bg-white rounded-[40px] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5),0_0_80px_rgba(0,0,0,0.2)] flex flex-col lg:flex-row overflow-hidden border border-white/10 !z-[9999]"
             style={{ zIndex: 9999 }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -113,109 +113,110 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
                 </>
               ) : (
                 <div className="absolute inset-0 bg-gradient-to-br from-[#121212] to-[#1A1A1A]">
-                  <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.05) 1px, transparent 0)', backgroundSize: '24px 24px' }}></div>
+                  {/* Microscopic Medical Grid Pattern */}
+                  <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '15px 15px' }}></div>
                   <div className="absolute inset-0 flex items-center justify-center opacity-5">
-                    <span className="text-[240px] font-serif font-bold text-white tracking-tighter leading-none select-none">H</span>
+                    <span className="text-[200px] font-serif font-bold text-white tracking-tighter leading-none select-none">H</span>
                   </div>
                 </div>
               )}
               {/* Refined "Text Pop" Overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/100 via-black/40 to-transparent pointer-events-none" />
               
-              <div className="absolute bottom-12 left-10 right-10 z-20">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.8)] animate-pulse" />
-                  <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/90 drop-shadow-md">
-                    Clinical Precision Loop
+              <div className="absolute bottom-10 left-8 right-8 z-20">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.8)] animate-pulse" />
+                  <span className="text-[9px] font-black uppercase tracking-[0.4em] text-white/80 drop-shadow-md">
+                    Clinical Precision
                   </span>
                 </div>
-                <h3 className="text-3xl font-serif font-medium text-white tracking-tight leading-[1.1] drop-shadow-2xl">
+                <h3 className="text-2xl font-serif font-medium text-white tracking-tight leading-[1.2] drop-shadow-2xl">
                    {lead.name} <br/>
-                   <span className="text-emerald-400/90 italic font-display text-2xl">{lead.service || lead.treatment_name || 'Veneers'}</span>
+                   <span className="text-emerald-400/90 italic font-display text-xl">{lead.service || lead.treatment_name || 'Veneers'}</span>
                 </h3>
               </div>
             </div>
 
-            {/* Right: AI Brain Interface */}
-            <div className="flex-1 p-8 lg:p-14 flex flex-col bg-white">
-              <div className="flex justify-between items-start mb-10">
+            {/* Right: AI Brain Interface - Tightened for Compactness */}
+            <div className="flex-1 p-6 lg:p-10 flex flex-col bg-white overflow-y-auto">
+              <div className="flex justify-between items-start mb-8">
                 <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Sparkles className="w-4 h-4 text-indigo-600" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-600/60">AI STRATEGIC DISPATCH</span>
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-indigo-600/60">AI STRATEGIC DISPATCH</span>
                   </div>
-                  <h2 className="text-2xl font-display font-semibold text-slate-900 tracking-tight">
-                    {lead.service || 'Case'} Context for {lead.name}
+                  <h2 className="text-xl font-display font-semibold text-slate-900 tracking-tight">
+                    {lead.service || 'Case'} Context: {lead.name}
                   </h2>
-                  <p className="text-sm text-slate-500 mt-1">Refining clinical communication for maximum impact.</p>
+                  <p className="text-xs text-slate-500 mt-0.5">Clinical narrative optimization protocol in progress.</p>
                 </div>
-                <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
+                <button onClick={onClose} className="p-1.5 hover:bg-slate-100 rounded-full transition-colors">
                   <X className="w-5 h-5 text-slate-400" />
                 </button>
               </div>
 
-              <div className="flex-1 flex flex-col lg:flex-row gap-8 mb-10">
-                <div className="flex-1 min-h-[350px] relative flex flex-col">
+              <div className="flex-1 flex flex-col lg:flex-row gap-6 mb-8 min-h-0">
+                <div className="flex-1 relative flex flex-col min-h-[300px]">
                   {isLoading ? (
                     <div className="flex-1 flex flex-col items-center justify-center gap-4">
                       <Loader2 className="w-10 h-10 text-indigo-600 animate-spin" strokeWidth={1} />
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest animate-pulse">
+                      <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest animate-pulse">
                         Synthesizing Narrative...
                       </p>
                     </div>
                   ) : (
-                    <div className="flex-1 bg-[#FBFBFB] border border-slate-100 rounded-3xl p-8 flex flex-col">
-                      <div className="mb-4 pb-4 border-b border-slate-200/50">
-                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Subject:</span>
-                        <span className="ml-2 text-sm font-medium text-slate-800">Your personalized {lead.service || 'treatment'} journey</span>
+                    <div className="flex-1 bg-[#FBFBFB] border border-slate-100 rounded-3xl p-6 flex flex-col">
+                      <div className="mb-3 pb-3 border-b border-slate-200/50">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Subject:</span>
+                        <span className="ml-2 text-xs font-medium text-slate-800">Your personalized {lead.service || 'treatment'} journey</span>
                       </div>
                       <textarea
                         value={content}
                         onChange={(e) => onContentChange(e.target.value)}
-                        className="flex-1 w-full bg-transparent text-sm text-slate-700 font-medium leading-relaxed resize-none focus:outline-none custom-scrollbar"
+                        className="flex-1 w-full bg-transparent text-xs text-slate-700 font-medium leading-relaxed resize-none focus:outline-none custom-scrollbar"
                         placeholder="AI Brain synthesizing..."
                       />
                     </div>
                   )}
                 </div>
 
-                <div className="w-full lg:w-64 flex flex-col gap-6">
-                  <div className="p-6 bg-slate-50 rounded-3xl border border-slate-100">
-                    <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-4">Drafting Settings</h4>
-                    <button className="w-full flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl hover:border-indigo-600 transition-all group">
-                      <span className="text-xs font-semibold text-slate-600">AI Re-draft</span>
-                      <Sparkles className="w-4 h-4 text-indigo-400 group-hover:text-indigo-600" />
+                <div className="w-full lg:w-56 flex flex-col gap-5">
+                  <div className="p-5 bg-slate-50 rounded-3xl border border-slate-100">
+                    <h4 className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3">Settings</h4>
+                    <button className="w-full flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-xl hover:border-indigo-600 transition-all group">
+                      <span className="text-[10px] font-semibold text-slate-600">AI Re-draft</span>
+                      <Sparkles className="w-3.5 h-3.5 text-indigo-400 group-hover:text-indigo-600" />
                     </button>
                   </div>
-                  <div className="p-6 bg-indigo-50/50 rounded-3xl border border-indigo-100/50">
-                    <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-400 mb-2">Stage Context</h4>
-                    <p className="text-[11px] font-medium text-indigo-900/60 leading-relaxed capitalize">
-                      {lead.status} stage: Optimized for high-conversion empathy and clinical authority.
+                  <div className="p-5 bg-indigo-50/50 rounded-3xl border border-indigo-100/50">
+                    <h4 className="text-[9px] font-black uppercase tracking-[0.2em] text-indigo-400 mb-1.5">Context</h4>
+                    <p className="text-[10px] font-medium text-indigo-900/60 leading-relaxed capitalize">
+                      {lead.status} stage: Empathy-driven conversion logic active.
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-3">
                 {type === 'DRAFT' ? (
-                  <button onClick={onSave} className="w-full py-5 bg-slate-950 text-white rounded-full font-black text-[11px] uppercase tracking-widest shadow-xl hover:bg-slate-900 transition-all active:scale-95">
-                    Sync with Clinical Strategy
+                  <button onClick={onSave} className="w-full py-3.5 bg-slate-950 text-white rounded-full font-black text-[10px] uppercase tracking-widest shadow-lg hover:bg-slate-900 transition-all active:scale-95">
+                    Sync Strategy
                   </button>
                 ) : (
                   <>
-                    <button onClick={onSendWhatsApp} className="flex-1 py-5 bg-[#25D366] text-white rounded-full font-black text-[11px] uppercase tracking-widest shadow-xl hover:bg-[#128C7E] transition-all flex items-center justify-center gap-2 active:scale-95">
-                      <MessageCircle className="w-4 h-4" /> WhatsApp Dispatch
+                    <button onClick={onSendWhatsApp} className="flex-1 py-3.5 bg-[#25D366] text-white rounded-full font-black text-[10px] uppercase tracking-widest shadow-lg hover:bg-[#128C7E] transition-all flex items-center justify-center gap-2 active:scale-95">
+                      <MessageCircle className="w-3.5 h-3.5" /> WhatsApp Dispatch
                     </button>
-                    <button onClick={onSendEmail} className="flex-1 py-5 bg-slate-950 text-white rounded-full font-black text-[11px] uppercase tracking-widest shadow-xl hover:bg-slate-900 transition-all flex items-center justify-center gap-2 active:scale-95">
-                      <Mail className="w-4 h-4" /> Professional Email
+                    <button onClick={onSendEmail} className="flex-1 py-3.5 bg-slate-950 text-white rounded-full font-black text-[10px] uppercase tracking-widest shadow-lg hover:bg-slate-900 transition-all flex items-center justify-center gap-2 active:scale-95">
+                      <Mail className="w-3.5 h-3.5" /> Professional Email
                     </button>
                   </>
                 )}
               </div>
 
-              <div className="mt-8 flex items-center justify-center gap-3 opacity-20">
-                 <Stethoscope className="w-4 h-4" />
-                 <span className="text-[9px] font-black uppercase tracking-[0.4em]">Hanlan Intelligence Suite</span>
+              <div className="mt-6 flex items-center justify-center gap-2 opacity-20">
+                 <Stethoscope className="w-3.5 h-3.5" />
+                 <span className="text-[8px] font-black uppercase tracking-[0.3em]">Precision Engine V2</span>
               </div>
             </div>
           </motion.div>
