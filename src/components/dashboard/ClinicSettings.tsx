@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Plus, Trash2, Camera, Settings, List, Globe, ShieldCheck, MessageSquare, Briefcase, Zap, User, ArrowRight, Calendar, Save, Info } from 'lucide-react';
+import { X, Plus, Trash2, Camera, Settings, List, Globe, ShieldCheck, MessageSquare, Briefcase, Zap, User, ArrowRight, Calendar, Save, Info, RefreshCw, Star } from 'lucide-react';
 import { useDashboardStore } from '../../store/useDashboardStore';
 
 interface TreatmentTemplate {
@@ -29,8 +29,18 @@ export function ClinicSettings({
     templates = [],
     setTemplates 
 }: ClinicSettingsProps) {
-    const { clinicType, setClinicType, clinicName, setClinicName, clinicLogo, setClinicLogo, clinicSignatureImage, setClinicSignatureImage } = useDashboardStore();
+    const { 
+        clinicType, setClinicType, 
+        clinicName, setClinicName, 
+        clinicLogo, setClinicLogo, 
+        clinicSignatureImage, setClinicSignatureImage,
+        googlePlaceId, setGooglePlaceId
+    } = useDashboardStore();
     const [activeTab, setActiveTab] = useState<'menu' | 'general' | 'support'>('menu');
+    const [isSyncing, setIsSyncing] = useState(false);
+    const [syncStatus, setSyncStatus] = useState<'idle' | 'synced'>(googlePlaceId ? 'synced' : 'idle');
+    const [searchQuery, setSearchQuery] = useState('');
+    const [showResults, setShowResults] = useState(false);
     const [editingTemplate, setEditingTemplate] = useState<TreatmentTemplate | null>(null);
     const [activeTheme, setActiveTheme] = useState<'white' | 'dark'>('white');
     const [communicationTone, setCommunicationTone] = useState<'Warm & Empathetic' | 'Refined & Professional'>('Refined & Professional');
@@ -355,6 +365,137 @@ export function ClinicSettings({
                                                                 <option value="Warm & Empathetic">Warm & Empathetic</option>
                                                             </select>
                                                         </div>
+                                                    </div>
+                                                </div>
+
+                                                {/* Social Proof & Reputation Integration [NEW] */}
+                                                <div className={`mt-8 p-8 ${cardBg} border ${borderColor} rounded-[2.5rem] relative overflow-hidden group shadow-luxury`}>
+                                                    <div className="absolute top-0 right-0 p-4">
+                                                        {syncStatus === 'synced' && (
+                                                            <motion.div 
+                                                                initial={{ scale: 0 }} 
+                                                                animate={{ scale: 1 }} 
+                                                                className="flex items-center gap-2 px-3 py-1 bg-emerald-50 border border-emerald-100 rounded-full"
+                                                            >
+                                                                <ShieldCheck className="w-3 h-3 text-emerald-500" />
+                                                                <span className="text-[9px] font-black text-emerald-600 uppercase tracking-widest">Verified Profile</span>
+                                                            </motion.div>
+                                                        )}
+                                                    </div>
+
+                                                    <div className="flex items-center gap-5 mb-8">
+                                                        <div className="w-12 h-12 rounded-2xl bg-[#4285F4]/10 border border-[#4285F4]/20 flex items-center justify-center">
+                                                            <Globe className="w-6 h-6 text-[#4285F4]" strokeWidth={1.5} />
+                                                        </div>
+                                                        <div>
+                                                            <h3 className={`text-xl font-black ${textColor} uppercase tracking-tight`}>Social Proof & Reputation</h3>
+                                                            <p className={`text-xs ${subTextColor} font-medium`}>Sync Google Business Profile for AI-curated reviews.</p>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="space-y-6">
+                                                        <div className="relative">
+                                                            <label className="text-[10px] font-black uppercase text-slate-400 mb-2 block tracking-[0.2em]">Search Your Clinic on Google Maps</label>
+                                                            <div className="relative group">
+                                                                <div className="absolute left-5 top-1/2 -translate-y-1/2">
+                                                                    <Globe className="w-4 h-4 text-slate-300 group-focus-within:text-[#4285F4] transition-colors" />
+                                                                </div>
+                                                                <input 
+                                                                    type="text" 
+                                                                    placeholder="Search practice name or address..."
+                                                                    value={searchQuery}
+                                                                    onChange={(e) => {
+                                                                        setSearchQuery(e.target.value);
+                                                                        setShowResults(e.target.value.length > 2);
+                                                                    }}
+                                                                    className={`w-full ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-black/5'} border pl-12 pr-5 py-4 rounded-2xl text-sm font-bold ${textColor} focus:ring-2 focus:ring-[#4285F4]/20 focus:border-[#4285F4]/40 outline-none transition-all shadow-inner`}
+                                                                />
+                                                                
+                                                                {/* Google Places Simulation Dropdown */}
+                                                                <AnimatePresence>
+                                                                    {showResults && (
+                                                                        <motion.div 
+                                                                            initial={{ opacity: 0, y: 10 }}
+                                                                            animate={{ opacity: 1, y: 0 }}
+                                                                            exit={{ opacity: 0, y: 10 }}
+                                                                            className={`absolute top-full left-0 right-0 z-50 mt-2 ${isDark ? 'bg-[#151C2F]' : 'bg-white'} border ${borderColor} rounded-2xl shadow-2xl overflow-hidden`}
+                                                                        >
+                                                                            {[
+                                                                                { name: clinicName || 'Your Clinic', address: '123 Harley Street, London', id: 'ChIJ...789' },
+                                                                                { name: 'London Smile Specialists', address: '45 Dental Row, London', id: 'ChIJ...456' }
+                                                                            ].map((res, i) => (
+                                                                                <button 
+                                                                                    key={i}
+                                                                                    onClick={() => {
+                                                                                        setSearchQuery(res.name);
+                                                                                        setShowResults(false);
+                                                                                        setGooglePlaceId(res.id);
+                                                                                    }}
+                                                                                    className={`w-full p-4 flex items-center gap-4 hover:bg-[#4285F4]/5 transition-colors border-b ${borderColor} last:border-0 text-left`}
+                                                                                >
+                                                                                    <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center shrink-0">
+                                                                                        <Globe className="w-4 h-4 text-[#4285F4]" />
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        <p className={`text-xs font-bold ${textColor}`}>{res.name}</p>
+                                                                                        <p className="text-[10px] text-slate-400 font-medium">{res.address}</p>
+                                                                                    </div>
+                                                                                </button>
+                                                                            ))}
+                                                                        </motion.div>
+                                                                    )}
+                                                                </AnimatePresence>
+                                                            </div>
+                                                        </div>
+
+                                                        {googlePlaceId && (
+                                                            <motion.div 
+                                                                initial={{ opacity: 0, y: 20 }}
+                                                                animate={{ opacity: 1, y: 0 }}
+                                                                className="pt-4 space-y-4"
+                                                            >
+                                                                <button 
+                                                                    onClick={async () => {
+                                                                        setIsSyncing(true);
+                                                                        await new Promise(r => setTimeout(r, 2000));
+                                                                        setIsSyncing(false);
+                                                                        setSyncStatus('synced');
+                                                                    }}
+                                                                    disabled={isSyncing || syncStatus === 'synced'}
+                                                                    className={`w-full py-4 ${syncStatus === 'synced' ? 'bg-emerald-500' : 'bg-[#4285F4]'} text-white rounded-2xl font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 shadow-xl transform transition-all hover:scale-[1.01] active:scale-95 disabled:hover:scale-100`}
+                                                                >
+                                                                    {isSyncing ? (
+                                                                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                                                    ) : syncStatus === 'synced' ? (
+                                                                        <ShieldCheck className="w-5 h-5" />
+                                                                    ) : (
+                                                                        <RefreshCw className="w-5 h-5" />
+                                                                    )}
+                                                                    {isSyncing ? 'Synchronising Business Intelligence...' : syncStatus === 'synced' ? 'Reputation Synced' : 'Sync Business Profile'}
+                                                                </button>
+
+                                                                {syncStatus === 'synced' && (
+                                                                    <div className="space-y-3 pt-4">
+                                                                        <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-4">Latest Curated Reviews</p>
+                                                                        {[
+                                                                            { author: 'James P.', text: 'The veneers completely changed my confidence. Precision at its best.', rating: 5 },
+                                                                            { author: 'Sarah L.', text: 'Incredible clinic atmosphere and expert staff. Highly recommend.', rating: 5 },
+                                                                            { author: 'Michael R.', text: 'Fast, professional, and world-class results.', rating: 5 }
+                                                                        ].map((rev, i) => (
+                                                                            <div key={i} className={`p-4 ${isDark ? 'bg-white/5' : 'bg-slate-50'} border ${borderColor} rounded-2xl flex flex-col gap-2`}>
+                                                                                <div className="flex items-center justify-between">
+                                                                                    <span className={`text-[10px] font-bold ${textColor}`}>{rev.author}</span>
+                                                                                    <div className="flex gap-0.5">
+                                                                                        {[...Array(rev.rating)].map((_, i) => <Star key={i} className="w-2.5 h-2.5 text-yellow-400 fill-yellow-400" />)}
+                                                                                    </div>
+                                                                                </div>
+                                                                                <p className="text-[11px] text-slate-500 font-medium italic">"{rev.text}"</p>
+                                                                            </div>
+                                                                        ))}
+                                                                    </div>
+                                                                )}
+                                                            </motion.div>
+                                                        )}
                                                     </div>
                                                 </div>
                                             </div>

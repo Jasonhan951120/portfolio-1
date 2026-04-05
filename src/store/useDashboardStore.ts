@@ -54,6 +54,8 @@ interface DashboardState {
   setTemplates: (templates: TreatmentTemplate[]) => void;
   activeTreatments: any[];
   setActiveTreatments: (treatments: any[]) => void;
+  googlePlaceId: string;
+  setGooglePlaceId: (id: string) => void;
 
   // Security & Audit State
   auditLogs: Record<string, any[]>;
@@ -244,6 +246,11 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
 
   activeTreatments: [],
   setActiveTreatments: (treatments) => set({ activeTreatments: treatments }),
+  googlePlaceId: localStorage.getItem('google_place_id') || '',
+  setGooglePlaceId: (id) => {
+    localStorage.setItem('google_place_id', id);
+    set({ googlePlaceId: id });
+  },
 
   updateLead: (id, updates) => set((state) => ({
     leads: state.leads.map((l) => l.id === id ? { ...l, ...updates } : l)
