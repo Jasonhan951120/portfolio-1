@@ -89,13 +89,16 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
             }}
           />
           
-          {/* [MODAL CONTAINER]: "Private Sales Room" Authority - Now Re-compacted */}
+          {/* [MODAL CONTAINER]: "Private Sales Room" Authority - Final Textural Polish */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative w-[70vw] max-w-[1100px] h-[80vh] max-h-[850px] bg-white rounded-[40px] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5),0_0_80px_rgba(0,0,0,0.2)] flex flex-col lg:flex-row overflow-hidden border border-white/10 !z-[9999]"
-            style={{ zIndex: 9999 }}
+            className="relative w-[70vw] max-w-[1100px] h-[80vh] max-h-[850px] bg-[#F9FAFB] rounded-[40px] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5),0_0_80px_rgba(0,0,0,0.2)] flex flex-col lg:flex-row overflow-hidden border border-white/10 !z-[9999]"
+            style={{ 
+              zIndex: 9999,
+              boxShadow: 'inset 0 0 0 1px rgba(255, 255, 255, 0.1), 0 50px 100px -20px rgba(0,0,0,0.5), 0 0 80px rgba(0,0,0,0.2)'
+            }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Left: Chameleon Visual UI - Signature Lounge Visual / Abstract Fallback */}
@@ -123,7 +126,7 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
               {/* Refined "Text Pop" Overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/100 via-black/40 to-transparent pointer-events-none" />
               
-              <div className="absolute bottom-10 left-8 right-8 z-20">
+              <div className="absolute bottom-16 left-8 right-8 z-20">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.8)] animate-pulse" />
                   <span className="text-[9px] font-black uppercase tracking-[0.4em] text-white/80 drop-shadow-md">
@@ -137,8 +140,8 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
               </div>
             </div>
 
-            {/* Right: AI Brain Interface - Tightened for Compactness */}
-            <div className="flex-1 p-6 lg:p-10 flex flex-col bg-white overflow-y-auto">
+            {/* Right: AI Brain Interface - Final Texture Polish */}
+            <div className="flex-1 p-6 lg:p-10 flex flex-col bg-[#F9FAFB] overflow-y-auto">
               <div className="flex justify-between items-start mb-8">
                 <div>
                   <div className="flex items-center gap-2 mb-1.5">
@@ -150,7 +153,7 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
                   </h2>
                   <p className="text-xs text-slate-500 mt-0.5">Clinical narrative optimization protocol in progress.</p>
                 </div>
-                <button onClick={onClose} className="p-1.5 hover:bg-slate-100 rounded-full transition-colors">
+                <button onClick={onClose} className="p-1.5 hover:bg-slate-200/50 rounded-full transition-colors">
                   <X className="w-5 h-5 text-slate-400" />
                 </button>
               </div>
@@ -165,8 +168,8 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
                       </p>
                     </div>
                   ) : (
-                    <div className="flex-1 bg-[#FBFBFB] border border-slate-100 rounded-3xl p-6 flex flex-col">
-                      <div className="mb-3 pb-3 border-b border-slate-200/50">
+                    <div className="flex-1 bg-white border border-slate-200/60 rounded-3xl p-6 flex flex-col shadow-sm">
+                      <div className="mb-3 pb-3 border-b border-slate-100">
                         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Subject:</span>
                         <span className="ml-2 text-xs font-medium text-slate-800">Your personalized {lead.service || 'treatment'} journey</span>
                       </div>
@@ -181,14 +184,14 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
                 </div>
 
                 <div className="w-full lg:w-56 flex flex-col gap-5">
-                  <div className="p-5 bg-slate-50 rounded-3xl border border-slate-100">
+                  <div className="p-5 bg-white rounded-3xl border border-slate-100 shadow-sm">
                     <h4 className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3">Settings</h4>
-                    <button className="w-full flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-xl hover:border-indigo-600 transition-all group">
+                    <button className="w-full flex items-center justify-between p-2.5 bg-slate-50 border border-slate-200 rounded-xl hover:border-indigo-600 transition-all group shadow-[0_2px_4px_rgba(0,0,0,0.02),0_1px_2px_rgba(0,0,0,0.06)] active:shadow-inner">
                       <span className="text-[10px] font-semibold text-slate-600">AI Re-draft</span>
                       <Sparkles className="w-3.5 h-3.5 text-indigo-400 group-hover:text-indigo-600" />
                     </button>
                   </div>
-                  <div className="p-5 bg-indigo-50/50 rounded-3xl border border-indigo-100/50">
+                  <div className="p-5 bg-indigo-50/30 rounded-3xl border border-indigo-100/50 shadow-sm">
                     <h4 className="text-[9px] font-black uppercase tracking-[0.2em] text-indigo-400 mb-1.5">Context</h4>
                     <p className="text-[10px] font-medium text-indigo-900/60 leading-relaxed capitalize">
                       {lead.status} stage: Empathy-driven conversion logic active.
@@ -199,15 +202,21 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
 
               <div className="flex flex-col sm:flex-row gap-3">
                 {type === 'DRAFT' ? (
-                  <button onClick={onSave} className="w-full py-3.5 bg-slate-950 text-white rounded-full font-black text-[10px] uppercase tracking-widest shadow-lg hover:bg-slate-900 transition-all active:scale-95">
+                  <button onClick={onSave} className="w-full py-3.5 bg-slate-950 text-white rounded-full font-black text-[10px] uppercase tracking-widest shadow-[0_4px_12px_rgba(0,0,0,0.2),0_1px_1px_rgba(255,255,255,0.1)_inset] hover:bg-slate-900 transition-all active:scale-95">
                     Sync Strategy
                   </button>
                 ) : (
                   <>
-                    <button onClick={onSendWhatsApp} className="flex-1 py-3.5 bg-[#25D366] text-white rounded-full font-black text-[10px] uppercase tracking-widest shadow-lg hover:bg-[#128C7E] transition-all flex items-center justify-center gap-2 active:scale-95">
+                    <button 
+                      onClick={onSendWhatsApp} 
+                      className="flex-[0.8] py-3.5 bg-[#25D366] text-white rounded-full font-black text-[10px] uppercase tracking-widest shadow-[0_4px_12px_rgba(37,211,102,0.2),0_1px_1px_rgba(255,255,255,0.2)_inset] hover:bg-[#128C7E] transition-all flex items-center justify-center gap-2 active:scale-95"
+                    >
                       <MessageCircle className="w-3.5 h-3.5" /> WhatsApp Dispatch
                     </button>
-                    <button onClick={onSendEmail} className="flex-1 py-3.5 bg-slate-950 text-white rounded-full font-black text-[10px] uppercase tracking-widest shadow-lg hover:bg-slate-900 transition-all flex items-center justify-center gap-2 active:scale-95">
+                    <button 
+                      onClick={onSendEmail} 
+                      className="flex-1 py-3.5 bg-slate-950 text-white rounded-full font-black text-[10px] uppercase tracking-widest shadow-[0_4px_12px_rgba(0,0,0,0.2),0_1px_1px_rgba(255,255,255,0.1)_inset] hover:bg-slate-900 transition-all flex items-center justify-center gap-2 active:scale-95"
+                    >
                       <Mail className="w-3.5 h-3.5" /> Professional Email
                     </button>
                   </>
