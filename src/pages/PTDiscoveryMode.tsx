@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "motion/react";
 import {
     ChevronRight, ArrowRight, ShieldCheck,
     Calendar, CheckCircle2, Star, CreditCard,
-    Lock as LockIcon, ArrowLeft, Play, Sparkles
+    Lock as LockIcon, ArrowLeft, Play, Sparkles, MessageCircle
 } from "lucide-react";
 import { supabase } from "../lib/supabase";
 import { DEMO_LEADS } from "../lib/demoData";
@@ -239,89 +239,45 @@ const PTDiscoveryMode: React.FC = () => {
                     )}
                 </div>
 
-                {/* 4. The Financing Card (Glassmorphism) - BENTO/GLASS BOX */}
+                {/* 4. Clinical Value & Expert Access (Glassmorphism) - BENTO/GLASS BOX */}
                 <div className={`col-span-1 lg:col-span-7 ${glassBoxClass} flex flex-col justify-between group hover:border-[#87A96B]/30 transition-all duration-500`}>
                     <div className="absolute top-0 right-0 w-32 h-32 bg-[#87A96B]/10 rounded-full -mr-16 -mt-16 blur-3xl transition-all group-hover:bg-[#87A96B]/20" />
                     
                     <div className="relative z-10 w-full max-w-lg mx-auto">
-                        <div className="flex justify-between items-start mb-8">
-                            <div>
-                                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Monthly Investment</p>
-                                <div className="flex items-baseline gap-2 mb-1">
-                                    <span className="text-5xl font-display font-bold text-[#1E3A8A] tracking-tight">£{dynamicMonthly.toLocaleString()}</span>
-                                    <span className="text-slate-400 font-bold text-sm uppercase tracking-widest">/mo</span>
-                                </div>
-                                <span className="text-[12px] text-[#1E3A8A]/70 font-bold uppercase tracking-widest">Accessible Premium Care</span>
-                            </div>
-                            <div className="text-right">
-                                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Total Value</p>
-                                <span className="text-lg font-medium text-slate-400">£{dynamicTotalValue.toLocaleString()}</span>
+                        <div className="flex flex-col items-center justify-center mb-8 text-center border-b border-black/5 pb-8">
+                            <p className="text-[10px] font-black uppercase tracking-widest text-[#87A96B] mb-2">All-Inclusive Treatment Value</p>
+                            <div className="flex items-baseline gap-2 mb-1 justify-center">
+                                <span className="text-5xl font-display font-bold text-slate-900 tracking-tight">£{dynamicTotalValue.toLocaleString()}</span>
                             </div>
                         </div>
 
-                        <div className="flex justify-between items-center mb-10 pb-6 border-b border-black/5">
-                            <span className="text-[11px] font-bold text-slate-600 flex items-center gap-2">
-                                <ShieldCheck className="w-4 h-4 text-[#87A96B]" /> 0% Interest Available
-                            </span>
-                            <span className="text-[11px] font-bold text-slate-600 flex items-center gap-2">
-                                <CreditCard className="w-4 h-4 text-[#87A96B]" /> Fully Transparent
-                            </span>
+                        <div className="flex justify-center flex-wrap gap-3 mb-10">
+                            <div className="px-3 py-1.5 bg-[#87A96B]/5 border border-[#87A96B]/20 rounded-full text-[10px] font-bold text-[#87A96B] uppercase tracking-widest">Premium Material</div>
+                            <div className="px-3 py-1.5 bg-[#87A96B]/5 border border-[#87A96B]/20 rounded-full text-[10px] font-bold text-[#87A96B] uppercase tracking-widest">Digital Simulation</div>
+                            <div className="px-3 py-1.5 bg-[#87A96B]/5 border border-[#87A96B]/20 rounded-full text-[10px] font-bold text-[#87A96B] uppercase tracking-widest">Aftercare Suite</div>
                         </div>
 
-                        {/* Restored CTA Section for Financing Card */}
+                        {/* Ultimate Conversion CTA - WhatsApp Concierge */}
                         <motion.button
                             whileHover={{ scale: 1.01, y: -2 }}
                             whileTap={{ scale: 0.98 }}
                             onClick={() => {
-                                if (displayBookingUrl) {
-                                  window.open(displayBookingUrl, '_blank');
-                                } else {
-                                  alert("Booking confirmed. Initializing secure payment portal...");
-                                }
+                                window.open('https://wa.me/821033951543', '_blank');
                             }}
                             className="w-full py-5 bg-slate-950 rounded-2xl text-white font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 shadow-xl hover:shadow-2xl transition-all overflow-hidden relative"
                         >
                             <span className="relative z-10 flex items-center justify-center gap-3">
-                                Accept & Book Now <ArrowRight className="w-4 h-4" />
+                                <MessageCircle className="w-5 h-5 text-[#25D366]" fill="#25D366" stroke="none" /> OPEN MY PRIVATE CLINICAL LINE
                             </span>
                             <div className="absolute inset-0 bg-gradient-to-r from-[#87A96B]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                         </motion.button>
                         <div className="text-center mt-6">
-                            <p className="text-center text-[10px] text-slate-400 font-medium tracking-wide uppercase">Powered by Secure London Protocol</p>
+                            <p className="text-center text-xs text-slate-500 font-medium tracking-wide">Connect directly with your dedicated specialist to finalize your smile transformation.</p>
                         </div>
                     </div>
                 </div>
 
             </main>
-
-            {/* 4. [Call to Action (CTA) - Sticky Bottom Bar] designed for conversion, slimmed down */}
-            <footer className="fixed bottom-0 left-0 right-0 w-full px-6 py-3 bg-white/95 backdrop-blur-3xl border-t border-slate-100 shadow-[0_-12px_40px_rgba(0,0,0,0.08)] z-50 flex flex-col items-center justify-center">
-                <div className="flex items-center gap-2 mb-2">
-                    <p className="text-xs text-slate-700 font-bold">Secure Your Harley Street Priority Slot Today. Valid for</p>
-                    <span className="text-[13px] font-black text-rose-600 bg-rose-50 px-2 py-0.5 rounded flex items-center gap-1.5 shadow-sm border border-rose-100 tracking-wider">
-                        ⏰ {formatTime(timeLeft)}
-                    </span>
-                </div>
-                <div className="flex flex-col sm:flex-row items-center gap-4">
-                    <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={() => {
-                            if (displayBookingUrl) {
-                                window.open(displayBookingUrl, '_blank');
-                            } else {
-                                alert("Booking confirmed. Initializing secure payment portal...");
-                            }
-                        }}
-                        className="px-8 py-3 bg-slate-950 rounded-full text-white font-black uppercase tracking-[0.1em] text-xs flex items-center justify-center shadow-lg hover:shadow-xl transition-all border border-slate-800"
-                    >
-                        Secure My Priority Slot
-                    </motion.button>
-                    <button className="text-[10px] font-bold text-slate-400 uppercase tracking-widest hover:text-slate-900 transition-colors underline underline-offset-4 decoration-slate-300">
-                        Download PDF
-                    </button>
-                </div>
-            </footer>
         </div>
     );
 };
