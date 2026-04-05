@@ -76,49 +76,53 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
           className="fixed inset-0 !z-[9999] flex items-center justify-center p-4 sm:p-6 overflow-hidden" 
           onClick={(e) => { e.stopPropagation(); onClose(); }}
         >
-          {/* [BACKDROP OVERLAY - 9998]: Absolute "Fog of War" Isolation */}
+          {/* [BLACKOUT BACKDROP]: Absolute "Fog of War" Isolation */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 w-screen h-screen !z-[9998]"
             style={{ 
-              backgroundColor: 'rgba(0, 0, 0, 0.7)', 
-              backdropFilter: 'blur(15px)',
+              backgroundColor: 'rgba(0, 0, 0, 0.85)', 
+              backdropFilter: 'blur(25px)',
               zIndex: 9998 
             }}
           />
           
-          {/* [MODAL CONTAINER - 9999]: ABSOLUTE FRONT layer */}
+          {/* [MODAL CONTAINER]: "Private Sales Room" Authority */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative w-full max-w-5xl bg-white rounded-[40px] shadow-2xl flex flex-col lg:flex-row overflow-hidden border border-white/20 !z-[9999]"
+            className="relative w-full max-w-5xl bg-white rounded-[40px] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5),0_0_80px_rgba(0,0,0,0.1)] flex flex-col lg:flex-row overflow-hidden border border-white/20 !z-[9999]"
             style={{ zIndex: 9999 }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Left: Chameleon Visual UI */}
+            {/* Left: Chameleon Visual UI - Signature Lounge Visual */}
             <div className="w-full lg:w-[35%] relative h-48 lg:h-auto bg-slate-900 overflow-hidden">
               {contextualImage ? (
-                <img 
+                <motion.img 
+                  initial={{ scale: 1.1, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 0.9 }}
                   src={contextualImage} 
                   alt="Clinical Context" 
-                  className="absolute inset-0 w-full h-full object-cover transition-all duration-[2s] hover:scale-110 opacity-80"
+                  className="absolute inset-0 w-full h-full object-cover grayscale-[0.2] contrast-[1.1]"
                 />
               ) : (
-                <div className="absolute inset-0 bg-gradient-to-br from-[#1a1c2c] via-[#4a192c] to-[#121212] animate-gradient-slow opacity-100" />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#111111] via-[#222222] to-[#000000] animate-gradient-slow opacity-100" />
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+              {/* Refined "Text Pop" Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/100 via-black/40 to-transparent" />
+              <div className="absolute inset-0 bg-black/20" />
               
-              <div className="absolute bottom-10 left-10 right-10">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/70">
+              <div className="absolute bottom-12 left-12 right-12 z-20">
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.8)] animate-pulse" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.5em] text-white/90 drop-shadow-md">
                     {type === 'FOLLOWUP' ? "Michael's Veneers Case: /london.clinic/Ross" : "Clinical Precision Loop"}
                   </span>
                 </div>
-                <h3 className="text-3xl font-display font-medium text-white tracking-tight leading-[1.1] italic max-w-[200px]">
+                <h3 className="text-4xl font-display font-medium text-white tracking-tight leading-[1.05] italic drop-shadow-2xl">
                    {type === 'PROPOSAL' && 'Restoring Your Confidence'}
                    {type === 'FOLLOWUP' && 'A Supportive Path'}
                    {type === 'POSTCARE' && 'Celebrating Your Transformation'}
