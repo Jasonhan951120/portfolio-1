@@ -19,8 +19,8 @@ export const INDUSTRY_TEMPLATES: Record<string, Record<string, TreatmentTemplate
             investment: "£3,500",
             monthly: "£145.83",
             term: "24 Months",
-            features: ["Custom Abutment", "Premium Titanium Post", "Hand-crafted Porcelain Crown", "Lifetime Guarantee"],
-            description: "Dental implants are the gold standard for tooth replacement. This comprehensive procedure ensures maximum durability, aesthetic integration, and restored functional bite strength, providing a permanent solution that looks and feels completely natural.",
+            features: ["Digital Smile Simulation", "Micro-Precision Porcelain Sculpting", "Multi-layered Aesthetic Veneers", "Lifetime Guarantee"],
+            description: "Hand-crafted porcelain veneers are the ultimate blend of art and dental science. This comprehensive procedure ensures maximum durability, aesthetic integration, and restored functional bite strength, providing a permanent solution that looks and feels completely natural.",
             beforeAfter: {
                 before: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=1200",
                 after: "https://images.unsplash.com/photo-1606811841660-1b51e9ed27ff?auto=format&fit=crop&q=80&w=1200"

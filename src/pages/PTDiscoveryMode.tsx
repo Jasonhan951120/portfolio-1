@@ -187,7 +187,7 @@ const PTDiscoveryMode: React.FC = () => {
                         ) : null}
 
                         <h3 className="text-xl font-display font-bold text-slate-900 tracking-tight mb-1">
-                            {lead?.name ? `${lead.name}'s Bespoke Smile Protocol` : 'Bespoke Smile Protocol'}
+                            {lead?.name ? `${lead.name}'s Personalized Smile Transformation: A New Standard of Confidence` : 'Personalized Smile Transformation: A New Standard of Confidence'}
                         </h3>
                         <p className="text-sm text-slate-500 italic mb-6 border-b border-black/5 pb-4">Crafted with Harley Street Excellence</p>
 
