@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Sparkles, MessageCircle, Mail, X, Loader2, Target, Heart, HeartPulse, Stethoscope } from 'lucide-react';
 import { useDashboardStore } from '../../store/useDashboardStore';
@@ -31,6 +31,17 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
 }) => {
   const { clinicLogo, clinicSignatureImage, activeTreatments, templates } = useDashboardStore();
   
+  // Background Scroll Lock - Critical Fix
+  useEffect(() => {
+    if (isOpen) {
+      const originalStyle = window.getComputedStyle(document.body).overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalStyle;
+      };
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   // Chameleon UI Image Logic
@@ -51,13 +62,17 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
   const contextualImage = getContextualImage();
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 overflow-hidden" onClick={(e) => { e.stopPropagation(); onClose(); }}>
-      {/* Backdrop: Full Focus Overlay with specific fix for LeadCard leakage */}
+    <div 
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 overflow-hidden" 
+      style={{ zIndex: 9999 }}
+      onClick={(e) => { e.stopPropagation(); onClose(); }}
+    >
+      {/* Backdrop: Absolute "Fog of War" Isolation Fix */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="absolute inset-0 bg-black/60 backdrop-blur-[10px] w-full h-full"
+        className="fixed inset-0 bg-black/70 backdrop-blur-[15px] w-screen h-screen"
       />
       
       {/* Modal Container */}
