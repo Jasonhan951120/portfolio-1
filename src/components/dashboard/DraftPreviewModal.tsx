@@ -140,10 +140,10 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
               </div>
             </div>
 
-            {/* Right: AI Brain Interface - Fixed Layout with no Overlap */}
-            <div className="flex-1 p-6 lg:p-10 flex flex-col bg-[#F9FAFB] h-full overflow-hidden">
+            {/* Right: AI Brain Interface - Strict Vertical Hierarchy Fix */}
+            <div className="flex-1 pt-6 px-6 lg:pt-10 lg:px-10 flex flex-col bg-[#F9FAFB] h-full overflow-hidden">
               {/* Top Section: Header */}
-              <div className="flex justify-between items-start mb-8 shrink-0">
+              <div className="flex justify-between items-start mb-6 shrink-0">
                 <div>
                   <div className="flex items-center gap-2 mb-1.5">
                     <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
@@ -159,9 +159,10 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
                 </button>
               </div>
 
-              {/* Middle Section: Scrollable Drafting Area */}
-              <div className="flex-1 flex flex-col lg:flex-row gap-6 mb-8 overflow-hidden">
-                <div className="flex-1 relative flex flex-col overflow-hidden">
+              {/* Middle Section: Scrollable Drafting Area & Settings */}
+              <div className="flex-1 overflow-hidden flex flex-col lg:flex-row gap-6 min-h-0">
+                {/* Drafting Box Container (z-10) */}
+                <div className="flex-1 relative flex flex-col min-h-0 overflow-hidden z-10">
                   {isLoading ? (
                     <div className="flex-1 flex flex-col items-center justify-center gap-4">
                       <Loader2 className="w-10 h-10 text-indigo-600 animate-spin" strokeWidth={1} />
@@ -170,7 +171,7 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
                       </p>
                     </div>
                   ) : (
-                    <div className="flex-1 bg-white border border-slate-200/60 rounded-3xl p-6 flex flex-col shadow-sm overflow-hidden">
+                    <div className="flex-1 bg-white border border-slate-200/60 rounded-3xl p-6 flex flex-col shadow-sm min-h-0 max-h-[calc(100vh-250px)]">
                       <div className="mb-3 pb-3 border-b border-slate-100 shrink-0">
                         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Subject:</span>
                         <span className="ml-2 text-xs font-medium text-slate-800">Your personalized {lead.service || 'treatment'} journey</span>
@@ -178,14 +179,15 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
                       <textarea
                         value={content}
                         onChange={(e) => onContentChange(e.target.value)}
-                        className="flex-1 w-full bg-transparent text-xs text-slate-700 font-medium leading-relaxed resize-none focus:outline-none custom-scrollbar overflow-y-auto"
+                        className="flex-1 w-full bg-transparent text-xs text-slate-700 font-medium leading-relaxed resize-none focus:outline-none custom-scrollbar overflow-y-auto pb-4"
                         placeholder="AI Brain synthesizing..."
                       />
                     </div>
                   )}
                 </div>
 
-                <div className="w-full lg:w-56 flex flex-col gap-5 shrink-0">
+                {/* Settings Panel */}
+                <div className="w-full lg:w-56 flex flex-col gap-5 shrink-0 z-10 overflow-y-auto pb-4">
                   <div className="p-5 bg-white rounded-3xl border border-slate-100 shadow-sm">
                     <h4 className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3">Settings</h4>
                     <button className="w-full flex items-center justify-between p-2.5 bg-slate-50 border border-slate-200 rounded-xl hover:border-indigo-600 transition-all group shadow-[0_2px_4px_rgba(0,0,0,0.02),0_1px_2px_rgba(0,0,0,0.06)] active:shadow-inner">
@@ -202,9 +204,10 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
                 </div>
               </div>
 
-              {/* Bottom Section: Fixed Action Buttons */}
-              <div className="mt-auto shrink-0">
-                <div className="flex flex-col sm:flex-row gap-3">
+              {/* Bottom Section: Fixed Action Buttons (z-20) */}
+              <div className="mt-auto shrink-0 z-20 py-4 lg:py-6 bg-white/50 backdrop-blur-sm border-t border-slate-200/40 relative">
+                <div className="absolute inset-x-0 -top-6 h-6 bg-gradient-to-t from-[#F9FAFB] to-transparent pointer-events-none" />
+                <div className="flex flex-col sm:flex-row gap-3 relative z-30">
                   {type === 'DRAFT' ? (
                     <button onClick={onSave} className="w-full py-3.5 bg-slate-950 text-white rounded-full font-black text-[10px] uppercase tracking-widest shadow-[0_4px_12px_rgba(0,0,0,0.2),0_1px_1px_rgba(255,255,255,0.1)_inset] hover:bg-slate-900 transition-all active:scale-95">
                       Sync Strategy
@@ -219,7 +222,7 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
                       </button>
                       <button 
                         onClick={onSendEmail} 
-                        className="flex-1 py-3.5 bg-slate-950 text-white rounded-full font-black text-[10px] uppercase tracking-widest shadow-[0_4px_12_rgba(0,0,0,0.2),0_1px_1px_rgba(255,255,255,0.1)_inset] hover:bg-slate-900 transition-all flex items-center justify-center gap-2 active:scale-95"
+                        className="flex-1 py-3.5 bg-slate-950 text-white rounded-full font-black text-[10px] uppercase tracking-widest shadow-[0_4px_12px_rgba(0,0,0,0.2),0_1px_1px_rgba(255,255,255,0.1)_inset] hover:bg-slate-900 transition-all flex items-center justify-center gap-2 active:scale-95"
                       >
                         <Mail className="w-3.5 h-3.5" /> Professional Email
                       </button>
@@ -227,7 +230,7 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
                   )}
                 </div>
 
-                <div className="mt-6 flex items-center justify-center gap-2 opacity-20">
+                <div className="mt-4 flex items-center justify-center gap-2 opacity-20 relative z-30">
                    <Stethoscope className="w-3.5 h-3.5" />
                    <span className="text-[8px] font-black uppercase tracking-[0.3em]">Precision Engine V2</span>
                 </div>
