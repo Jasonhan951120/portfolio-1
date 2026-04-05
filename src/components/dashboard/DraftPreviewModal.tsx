@@ -83,8 +83,8 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
             exit={{ opacity: 0 }}
             className="fixed inset-0 w-screen h-screen !z-[9998]"
             style={{ 
-              backgroundColor: 'rgba(0, 0, 0, 0.85)', 
-              backdropFilter: 'blur(25px)',
+              backgroundColor: 'rgba(0, 0, 0, 0.8)', 
+              backdropFilter: 'blur(20px)',
               zIndex: 9998 
             }}
           />
@@ -98,34 +98,40 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
             style={{ zIndex: 9999 }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Left: Chameleon Visual UI - Signature Lounge Visual */}
-            <div className="w-full lg:w-[35%] relative h-48 lg:h-auto bg-slate-900 overflow-hidden">
+            {/* Left: Chameleon Visual UI - Signature Lounge Visual / Abstract Fallback */}
+            <div className="w-full lg:w-[30%] relative h-48 lg:h-auto bg-[#121212] overflow-hidden">
               {contextualImage ? (
-                <motion.img 
-                  initial={{ scale: 1.1, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 0.9 }}
-                  src={contextualImage} 
-                  alt="Clinical Context" 
-                  className="absolute inset-0 w-full h-full object-cover grayscale-[0.2] contrast-[1.1]"
-                />
+                <>
+                  <motion.img 
+                    initial={{ scale: 1.1, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 0.9 }}
+                    src={contextualImage} 
+                    alt="Clinical Context" 
+                    className="absolute inset-0 w-full h-full object-cover grayscale-[0.2] contrast-[1.1]"
+                  />
+                  <div className="absolute inset-0 bg-black/30" />
+                </>
               ) : (
-                <div className="absolute inset-0 bg-gradient-to-br from-[#111111] via-[#222222] to-[#000000] animate-gradient-slow opacity-100" />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#121212] to-[#1A1A1A]">
+                  <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.05) 1px, transparent 0)', backgroundSize: '24px 24px' }}></div>
+                  <div className="absolute inset-0 flex items-center justify-center opacity-5">
+                    <span className="text-[240px] font-serif font-bold text-white tracking-tighter leading-none select-none">H</span>
+                  </div>
+                </div>
               )}
               {/* Refined "Text Pop" Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/100 via-black/40 to-transparent" />
-              <div className="absolute inset-0 bg-black/20" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/100 via-black/40 to-transparent pointer-events-none" />
               
-              <div className="absolute bottom-12 left-12 right-12 z-20">
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.8)] animate-pulse" />
-                  <span className="text-[10px] font-black uppercase tracking-[0.5em] text-white/90 drop-shadow-md">
-                    {type === 'FOLLOWUP' ? "Michael's Veneers Case: /london.clinic/Ross" : "Clinical Precision Loop"}
+              <div className="absolute bottom-12 left-10 right-10 z-20">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.8)] animate-pulse" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/90 drop-shadow-md">
+                    Clinical Precision Loop
                   </span>
                 </div>
-                <h3 className="text-4xl font-display font-medium text-white tracking-tight leading-[1.05] italic drop-shadow-2xl">
-                   {type === 'PROPOSAL' && 'Restoring Your Confidence'}
-                   {type === 'FOLLOWUP' && 'A Supportive Path'}
-                   {type === 'POSTCARE' && 'Celebrating Your Transformation'}
+                <h3 className="text-3xl font-serif font-medium text-white tracking-tight leading-[1.1] drop-shadow-2xl">
+                   {lead.name} <br/>
+                   <span className="text-emerald-400/90 italic font-display text-2xl">{lead.service || lead.treatment_name || 'Veneers'}</span>
                 </h3>
               </div>
             </div>
