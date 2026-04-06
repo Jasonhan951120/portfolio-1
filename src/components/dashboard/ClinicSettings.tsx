@@ -420,6 +420,7 @@ export function ClinicSettings({
                                                                             onPlaceSelected={(place: any) => {
                                                                                 console.log("PLACE_SELECTED:", place?.name);
                                                                                 if (place && place.place_id) {
+                                                                                    console.log(`SUCCESS: CAPTURED PLACE_ID = ${place.place_id}`);
                                                                                     setGooglePlaceId(place.place_id);
                                                                                     if (place.name) setClinicName(place.name);
                                                                                     setSyncStatus('synced');

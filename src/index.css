@@ -341,3 +341,8 @@
 .btn-outline:hover {
   background: #F9FAFB;
 }
+
+/* ─── Google Places Autocomplete Fix ─── */
+.pac-container {
+  z-index: 99999 !important;
+}
