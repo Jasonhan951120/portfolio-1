@@ -49,7 +49,16 @@ export function ClinicSettings({
     const [editingTreatmentId, setEditingTreatmentId] = useState<string| null>(null);
     const [liveReviews, setLiveReviews] = useState<any[]>([]);
 
-    const GOOGLE_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || (typeof process !== 'undefined' ? process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY : '');
+    const GOOGLE_API_KEY = (import.meta.env.VITE_GOOGLE_MAPS_API_KEY || (typeof process !== 'undefined' ? process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY : '')) as string;
+
+    // DEBUG: Force Recognition Check
+    useEffect(() => {
+        console.log("GOOGLE_API_KEY_LOAD_CHECK:", GOOGLE_API_KEY ? "DETECTED" : "MISSING");
+        if (!GOOGLE_API_KEY) {
+            console.warn("CRITICAL: Google Maps API key is not being recognized by the bundler. Check Vercel/Local environment variables.");
+        }
+    }, [GOOGLE_API_KEY]);
+
 
     // Persistence Logic
     useEffect(() => {
@@ -409,6 +418,7 @@ export function ClinicSettings({
                                                                         <Autocomplete
                                                                             apiKey={GOOGLE_API_KEY}
                                                                             onPlaceSelected={(place: any) => {
+                                                                                console.log("PLACE_SELECTED:", place?.name);
                                                                                 if (place && place.place_id) {
                                                                                     setGooglePlaceId(place.place_id);
                                                                                     if (place.name) setClinicName(place.name);
@@ -433,16 +443,10 @@ export function ClinicSettings({
                                                                             className={`w-full ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-black/5'} border pl-16 pr-8 py-6 rounded-[2rem] text-lg font-bold ${textColor} focus:ring-4 focus:ring-[#4285F4]/10 focus:border-[#4285F4]/40 outline-none transition-all shadow-inner`}
                                                                         />
                                                                     ) : (
-                                                                        <input 
-                                                                            type="text" 
-                                                                            placeholder="Enter practice name or official address..."
-                                                                            value={searchQuery}
-                                                                            onChange={(e) => {
-                                                                                setSearchQuery(e.target.value);
-                                                                                setShowResults(e.target.value.length > 2);
-                                                                            }}
-                                                                            className={`w-full ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-black/5'} border pl-16 pr-8 py-6 rounded-[2rem] text-lg font-bold ${textColor} focus:ring-4 focus:ring-[#4285F4]/10 focus:border-[#4285F4]/40 outline-none transition-all shadow-inner`}
-                                                                        />
+                                                                        <div className={`w-full ${isDark ? 'bg-white/5' : 'bg-slate-50'} border-2 border-dashed border-red-500/50 p-6 rounded-[2rem] flex flex-col items-center gap-2`}>
+                                                                            <span className="text-red-500 font-black text-xs uppercase tracking-widest">Environment Engine Error</span>
+                                                                            <p className="text-[10px] text-slate-400 font-medium tracking-tight">VITE_GOOGLE_MAPS_API_KEY not recognized. Check Vercel project settings.</p>
+                                                                        </div>
                                                                     )}
                                                                     
                                                                     <AnimatePresence>

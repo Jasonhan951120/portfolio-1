@@ -11,13 +11,19 @@ export interface GMBMetrics {
 }
 
 export const fetchGMBMetrics = async (placeId?: string): Promise<GMBMetrics> => {
-  // Use strictly standard environment variables
-  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || (typeof process !== 'undefined' ? process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY : '');
+  // CLARITY CHECK: In Vite, variables must have VITE_ prefix.
+  const apiKey = (import.meta.env.VITE_GOOGLE_MAPS_API_KEY || (typeof process !== 'undefined' ? process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY : '')) as string;
   
+  // DEBUG: Service level key check
+  console.log("REPUTATION_ENGINE_INIT: Key presence:", apiKey ? "VALID" : "NULL");
+
   // Fallback to the saved placeId if not provided
   const targetPlaceId = placeId || localStorage.getItem('google_place_id');
 
   if (!apiKey || !targetPlaceId) {
+    if (!apiKey) {
+      console.warn("CRITICAL_RECOGNITION_ERROR: Google Maps API Key is not detected in Client Environment. Ensure VERCEL variables have VITE_ prefix.");
+    }
     console.warn("Google Maps API Key or Place ID missing. Check Reputation Settings.");
     return {
       rating: 4.8,
