@@ -20,10 +20,10 @@ export interface TreatmentTemplate {
 interface DashboardState {
   leads: ConsultationRequest[];
   activeCategory: string;
-  activeTab: 'PIPELINE' | 'VAULT' | 'SECURITY' | 'INTELLIGENCE';
+  activeTab: 'PIPELINE' | 'VAULT' | 'SECURITY' | 'INTELLIGENCE' | 'REPUTATION';
   setLeads: (leads: ConsultationRequest[] | ((prev: ConsultationRequest[]) => ConsultationRequest[])) => void;
   setActiveCategory: (category: string) => void;
-  setActiveTab: (tab: 'PIPELINE' | 'VAULT' | 'SECURITY' | 'INTELLIGENCE') => void;
+  setActiveTab: (tab: 'PIPELINE' | 'VAULT' | 'SECURITY' | 'INTELLIGENCE' | 'REPUTATION') => void;
   updateLead: (id: string, updates: Partial<ConsultationRequest>) => void;
   injectSampleData: () => void;
   region: 'UK' | 'US';
@@ -194,7 +194,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
   })),
 
   setActiveCategory: (category) => set({ activeCategory: category }),
-  setActiveTab: (tab) => set({ activeTab: tab }),
+  setActiveTab: (tab: 'PIPELINE' | 'VAULT' | 'SECURITY' | 'INTELLIGENCE' | 'REPUTATION') => set({ activeTab: tab }),
   setRegion: (region) => set({ region, currency: region === 'UK' ? '£' : '$' }),
   setCurrency: (currency) => set({ currency, region: currency === '£' ? 'UK' : 'US' }),
   setGoogleConnected: (isConnected, profile) => set({ isGoogleConnected: isConnected, googleProfile: profile || null }),
