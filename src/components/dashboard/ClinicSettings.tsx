@@ -438,6 +438,7 @@ export function ClinicSettings({
                                                                             }}
                                                                             options={{
                                                                                 types: ['dentist'],
+                                                                                componentRestrictions: { country: ['gb', 'us', 'ca', 'de', 'fr'] },
                                                                                 fields: ['name', 'formatted_address', 'place_id', 'reviews', 'rating']
                                                                             }}
                                                                             placeholder="Enter practice name or official address..."
