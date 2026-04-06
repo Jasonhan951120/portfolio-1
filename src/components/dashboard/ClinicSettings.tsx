@@ -426,7 +426,7 @@ export function ClinicSettings({
                                                                                 }
                                                                             }}
                                                                             options={{
-                                                                                types: ['dentist', 'health', 'establishment'],
+                                                                                types: ['dentist'],
                                                                                 fields: ['name', 'formatted_address', 'place_id', 'reviews', 'rating']
                                                                             }}
                                                                             placeholder="Enter practice name or official address..."
@@ -451,32 +451,12 @@ export function ClinicSettings({
                                                                                 initial={{ opacity: 0, y: 15 }}
                                                                                 animate={{ opacity: 1, y: 0 }}
                                                                                 exit={{ opacity: 0, y: 15 }}
-                                                                                className={`absolute top-full left-0 right-0 z-50 mt-4 ${isDark ? 'bg-[#151C2F]' : 'bg-white'} border ${borderColor} rounded-[2.5rem] shadow-2xl overflow-hidden`}
+                                                                                className={`absolute top-full left-0 right-0 z-50 mt-4 ${isDark ? 'bg-[#151C2F]' : 'bg-white'} border border-red-500 rounded-[2.5rem] shadow-2xl overflow-hidden`}
                                                                             >
-                                                                                {[
-                                                                                    { name: clinicName || 'Your Clinic', address: '123 Harley Street, London', id: 'ChIJ...789' },
-                                                                                    { name: 'London Aesthetic Institute', address: '45 Kensington Row, London', id: 'ChIJ...456' }
-                                                                                ].map((res, i) => (
-                                                                                    <button 
-                                                                                        key={i}
-                                                                                        onClick={() => {
-                                                                                            setSearchQuery(res.name);
-                                                                                            setShowResults(false);
-                                                                                            setGooglePlaceId(res.id);
-                                                                                            setSyncStatus('synced');
-                                                                                        }}
-                                                                                        className={`w-full p-6 flex items-center gap-6 hover:bg-[#4285F4]/5 transition-colors border-b ${borderColor} last:border-0 text-left`}
-                                                                                    >
-                                                                                        <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center shrink-0 shadow-inner">
-                                                                                            <Globe className="w-6 h-6 text-[#4285F4]" />
-                                                                                        </div>
-                                                                                        <div>
-                                                                                            <p className={`text-base font-black ${textColor} mb-1`}>{res.name}</p>
-                                                                                            <p className="text-[11px] text-slate-400 font-bold uppercase tracking-widest">{res.address}</p>
-                                                                                        </div>
-                                                                                        <ChevronRight className="w-5 h-5 text-slate-300 ml-auto" />
-                                                                                    </button>
-                                                                                ))}
+                                                                                <div className="w-full p-6 flex flex-col items-center gap-2 text-center">
+                                                                                    <span className="text-red-500 font-bold">API Key Missing</span>
+                                                                                    <p className="text-[11px] text-slate-400 font-medium">Please provide a valid Google Maps API Key to enable search.</p>
+                                                                                </div>
                                                                             </motion.div>
                                                                         )}
                                                                     </AnimatePresence>

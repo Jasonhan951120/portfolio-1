@@ -15,13 +15,7 @@ export const fetchGMBMetrics = async (clinicId?: string): Promise<GMBMetrics> =>
   const locationId = import.meta.env.VITE_GMB_LOCATION_ID;
 
   if (!apiKey || !locationId) {
-    // Robust Mock Fallback for Development/Demo
-    console.warn("GMB API keys missing. Using mock-fallback reputation data.");
-    return {
-      rating: 4.8,
-      reviewCount: 124,
-      name: "Hanlan OC Clinical Hub"
-    };
+    throw new Error("GMB API keys or Location ID missing.");
   }
 
   try {
