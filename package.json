@@ -38,6 +38,7 @@
     "react-countup": "^6.5.3",
     "react-dom": "^19.0.0",
     "react-facebook-login": "^4.1.1",
+    "react-google-autocomplete": "^2.7.5",
     "react-is": "^19.0.0",
     "react-router-dom": "^7.13.0",
     "react-window": "^2.2.7",

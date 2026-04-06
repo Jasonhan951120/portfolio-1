@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Plus, Trash2, Camera, Settings, List, Globe, ShieldCheck, MessageSquare, Briefcase, Zap, User, ArrowRight, Calendar, Save, Info, RefreshCw, Star, ChevronRight, Sparkles, Palette } from 'lucide-react';
+import Autocomplete from 'react-google-autocomplete';
 import { useDashboardStore } from '../../store/useDashboardStore';
 
 interface TreatmentTemplate {
@@ -46,6 +47,17 @@ export function ClinicSettings({
     const [communicationTone, setCommunicationTone] = useState<'Warm & Empathetic' | 'Refined & Professional'>('Refined & Professional');
     const [locale, setLocale] = useState('en-GB');
     const [editingTreatmentId, setEditingTreatmentId] = useState<string| null>(null);
+    const [liveReviews, setLiveReviews] = useState<any[]>([]);
+
+    const GOOGLE_API_KEY = import.meta.env?.VITE_GOOGLE_MAPS_API_KEY || (typeof process !== 'undefined' ? process.env?.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY : '');
+    const MOCK_REVIEWS = [
+        { author: 'James P.', raw: 'The veneers completely changed my confidence. Precision at its best.', ai: 'Hand-crafted porcelain veneers that define confidence through clinical precision.', date: '2 days ago' },
+        { author: 'Sarah L.', raw: 'Incredible clinic atmosphere and expert staff. Highly recommend.', ai: 'A sanctuary of world-class expertise and empathetic patient-first care.', date: '1 week ago' },
+        { author: 'Michael R.', raw: 'Fast, professional, and world-class results.', ai: 'Efficient, high-precision results tailored to personal aesthetic goals.', date: '2 weeks ago' },
+        { author: 'Elena G.', raw: 'Best dentist I have ever been to. No pain at all.', ai: 'A painless, professional dental journey ensuring absolute patient comfort.', date: '1 month ago' },
+        { author: 'David W.', raw: 'Great value for the level of care provided.', ai: 'Exceptional clinical value delivered through expert accessibility.', date: '1 month ago' }
+    ];
+    const displayReviews = liveReviews.length > 0 ? liveReviews : MOCK_REVIEWS;
 
     // Persistence Logic
     useEffect(() => {
@@ -401,19 +413,47 @@ export function ClinicSettings({
                                                                     <div className="absolute left-6 top-1/2 -translate-y-1/2">
                                                                         <Globe className="w-6 h-6 text-slate-300 group-focus-within:text-[#4285F4] transition-colors" />
                                                                     </div>
-                                                                    <input 
-                                                                        type="text" 
-                                                                        placeholder="Enter practice name or official address..."
-                                                                        value={searchQuery}
-                                                                        onChange={(e) => {
-                                                                            setSearchQuery(e.target.value);
-                                                                            setShowResults(e.target.value.length > 2);
-                                                                        }}
-                                                                        className={`w-full ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-black/5'} border pl-16 pr-8 py-6 rounded-[2rem] text-lg font-bold ${textColor} focus:ring-4 focus:ring-[#4285F4]/10 focus:border-[#4285F4]/40 outline-none transition-all shadow-inner`}
-                                                                    />
+                                                                    {GOOGLE_API_KEY ? (
+                                                                        <Autocomplete
+                                                                            apiKey={GOOGLE_API_KEY}
+                                                                            onPlaceSelected={(place: any) => {
+                                                                                if (place && place.place_id) {
+                                                                                    setGooglePlaceId(place.place_id);
+                                                                                    setSyncStatus('synced');
+                                                                                    if (place.reviews) {
+                                                                                        const mappedReviews = place.reviews.map((r: any) => ({
+                                                                                            author: r.author_name,
+                                                                                            raw: r.text,
+                                                                                            ai: `AI formalised: ${r.text.substring(0, 80)}...`,
+                                                                                            date: r.relative_time_description,
+                                                                                            rating: r.rating
+                                                                                        }));
+                                                                                        setLiveReviews(mappedReviews);
+                                                                                    }
+                                                                                }
+                                                                            }}
+                                                                            options={{
+                                                                                types: ['dentist', 'health', 'establishment'],
+                                                                                fields: ['name', 'formatted_address', 'place_id', 'reviews', 'rating']
+                                                                            }}
+                                                                            placeholder="Enter practice name or official address..."
+                                                                            className={`w-full ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-black/5'} border pl-16 pr-8 py-6 rounded-[2rem] text-lg font-bold ${textColor} focus:ring-4 focus:ring-[#4285F4]/10 focus:border-[#4285F4]/40 outline-none transition-all shadow-inner`}
+                                                                        />
+                                                                    ) : (
+                                                                        <input 
+                                                                            type="text" 
+                                                                            placeholder="Enter practice name or official address..."
+                                                                            value={searchQuery}
+                                                                            onChange={(e) => {
+                                                                                setSearchQuery(e.target.value);
+                                                                                setShowResults(e.target.value.length > 2);
+                                                                            }}
+                                                                            className={`w-full ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-black/5'} border pl-16 pr-8 py-6 rounded-[2rem] text-lg font-bold ${textColor} focus:ring-4 focus:ring-[#4285F4]/10 focus:border-[#4285F4]/40 outline-none transition-all shadow-inner`}
+                                                                        />
+                                                                    )}
                                                                     
                                                                     <AnimatePresence>
-                                                                        {showResults && (
+                                                                        {!GOOGLE_API_KEY && showResults && (
                                                                             <motion.div 
                                                                                 initial={{ opacity: 0, y: 15 }}
                                                                                 animate={{ opacity: 1, y: 0 }}
@@ -460,13 +500,7 @@ export function ClinicSettings({
                                                                     </div>
                                                                     
                                                                     <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-                                                                        {[
-                                                                            { author: 'James P.', raw: 'The veneers completely changed my confidence. Precision at its best.', ai: 'Hand-crafted porcelain veneers that define confidence through clinical precision.', date: '2 days ago' },
-                                                                            { author: 'Sarah L.', raw: 'Incredible clinic atmosphere and expert staff. Highly recommend.', ai: 'A sanctuary of world-class expertise and empathetic patient-first care.', date: '1 week ago' },
-                                                                            { author: 'Michael R.', raw: 'Fast, professional, and world-class results.', ai: 'Efficient, high-precision results tailored to personal aesthetic goals.', date: '2 weeks ago' },
-                                                                            { author: 'Elena G.', raw: 'Best dentist I have ever been to. No pain at all.', ai: 'A painless, professional dental journey ensuring absolute patient comfort.', date: '1 month ago' },
-                                                                            { author: 'David W.', raw: 'Great value for the level of care provided.', ai: 'Exceptional clinical value delivered through expert accessibility.', date: '1 month ago' }
-                                                                        ].map((rev, i) => (
+                                                                        {displayReviews.map((rev: any, i: number) => (
                                                                             <div key={i} className={`p-6 ${isDark ? 'bg-white/5' : 'bg-slate-50'} border ${borderColor} rounded-[2rem] space-y-4`}>
                                                                                 <div className="flex justify-between items-center mb-2">
                                                                                     <span className={`text-xs font-black ${textColor}`}>{rev.author}</span>
@@ -513,13 +547,13 @@ export function ClinicSettings({
                                                                     {[...Array(5)].map((_, i) => <Star key={i} className="w-3.5 h-3.5 text-[#c5a059] fill-[#c5a059]" />)}
                                                                 </div>
                                                                 <p className="text-xl font-serif italic text-slate-800 leading-relaxed">
-                                                                    "The veneers completely changed my confidence. Precision at its best."
+                                                                    "{displayReviews[0]?.ai || displayReviews[0]?.raw || 'The veneers completely changed my confidence. Precision at its best.'}"
                                                                 </p>
                                                                 <div className="flex items-center gap-4 pt-4 border-t border-slate-100">
-                                                                    <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-xs font-black text-slate-400">JP</div>
+                                                                    <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-xs font-black text-slate-400">{displayReviews[0]?.author?.substring(0,2)?.toUpperCase() || 'JP'}</div>
                                                                     <div>
-                                                                        <p className="text-xs font-black text-slate-900 tracking-tight uppercase">James Peterson</p>
-                                                                        <p className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">Verified Patient</p>
+                                                                        <p className="text-xs font-black text-slate-900 tracking-tight uppercase">{displayReviews[0]?.author || 'James Peterson'}</p>
+                                                                        <p className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">{displayReviews[0]?.date || 'Verified Patient'}</p>
                                                                     </div>
                                                                 </div>
                                                             </div>
