@@ -23,12 +23,8 @@ export const fetchGMBMetrics = async (placeId?: string): Promise<GMBMetrics> => 
     if (!apiKey) {
       console.warn("CRITICAL_RECOGNITION_ERROR: Google Maps API Key is not detected in Client Environment. Ensure VERCEL variables have VITE_ prefix.");
     }
-    console.warn("Google Maps API Key or Place ID missing. Check Reputation Settings.");
-    return {
-      rating: 4.8,
-      reviewCount: 124,
-      name: "Hanlan OC (Mock Data)"
-    };
+    console.error("Google Maps API Key or Place ID missing. Cannot fetch live establishment metrics.");
+    throw new Error("Missing Reputation Configuration. Ensure Place ID is captured via Search.");
   }
 
   try {
