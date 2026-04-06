@@ -342,7 +342,50 @@
   background: #F9FAFB;
 }
 
-/* ─── Google Places Autocomplete Fix ─── */
+/* ─── Google Places Autocomplete Premium Lounge UI ─── */
 .pac-container {
-  z-index: 99999 !important;
+  border: none !important;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.08) !important;
+  border-radius: 16px !important;
+  margin-top: 8px !important;
+  z-index: 10000 !important;
+  padding: 8px 0 !important;
+  font-family: inherit !important;
+}
+
+.pac-item {
+  padding: 12px 16px !important;
+  font-family: inherit !important;
+  font-size: 14px !important;
+  color: #6B7280 !important;
+  border-top: 1px solid #F3F4F6 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.pac-item:first-child {
+  border-top: none !important;
+}
+
+.pac-item:hover {
+  background-color: #f9f9f9 !important;
+}
+
+.pac-item-query {
+  font-size: 15px !important;
+  color: #111827 !important;
+  font-weight: 400 !important;
+  margin-right: 6px !important;
+}
+
+.pac-icon {
+  display: none !important;
+}
+
+.pac-logo {
+  opacity: 0.5 !important;
+  padding: 10px !important;
+  transform: scale(0.9) !important;
+  transform-origin: right !important;
+  border-top: 1px solid #F3F4F6 !important;
 }
