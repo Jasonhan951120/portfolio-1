@@ -418,9 +418,9 @@ export function ClinicSettings({
                                                                         <Autocomplete
                                                                             apiKey={GOOGLE_API_KEY}
                                                                             onPlaceSelected={(place: any) => {
-                                                                                console.log("PLACE_SELECTED:", place?.name);
+                                                                                console.log("PLACE_SELECTED_NAME:", place?.name);
                                                                                 if (place && place.place_id) {
-                                                                                    console.log(`SUCCESS: CAPTURED PLACE_ID = ${place.place_id}`);
+                                                                                    console.log(`SUCCESS: CAPTURED BRANCH_ID = ${place.place_id}`);
                                                                                     setGooglePlaceId(place.place_id);
                                                                                     if (place.name) setClinicName(place.name);
                                                                                     setSyncStatus('synced');
@@ -439,7 +439,8 @@ export function ClinicSettings({
                                                                             options={{
                                                                                 types: ['establishment'],
                                                                                 componentRestrictions: { country: ['gb', 'us', 'ca', 'au', 'nz'] },
-                                                                                fields: ['name', 'formatted_address', 'place_id', 'reviews', 'rating', 'user_ratings_total', 'types', 'geometry']
+                                                                                fields: ['name', 'formatted_address', 'place_id', 'reviews', 'rating', 'user_ratings_total', 'types', 'geometry'],
+                                                                                strictBounds: false
                                                                             }}
                                                                             placeholder="Search for a clinic or hospital (e.g., London Dermatology)..."
                                                                             className={`w-full ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-black/5'} border pl-16 pr-8 py-6 rounded-[2rem] text-lg font-bold ${textColor} focus:ring-4 focus:ring-[#4285F4]/10 focus:border-[#4285F4]/40 outline-none transition-all shadow-inner`}
