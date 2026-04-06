@@ -126,6 +126,7 @@ export function ClinicSettings({
                                 {[
                                     { id: 'menu', icon: List, label: 'Treatment Menu' },
                                     { id: 'general', icon: Globe, label: 'Bespoke Identities' },
+                                    { id: 'reputation', icon: Star, label: 'Reputation' },
                                     { id: 'support', icon: ShieldCheck, label: 'Support & Help' }
                                 ].map(tab => (
                                     <button 
