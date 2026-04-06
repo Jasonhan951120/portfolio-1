@@ -49,7 +49,7 @@ export function ClinicSettings({
     const [editingTreatmentId, setEditingTreatmentId] = useState<string| null>(null);
     const [liveReviews, setLiveReviews] = useState<any[]>([]);
 
-    const GOOGLE_API_KEY = import.meta.env?.VITE_GOOGLE_MAPS_API_KEY || (typeof process !== 'undefined' ? process.env?.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY : '');
+    const GOOGLE_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || (typeof process !== 'undefined' ? process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY : '');
 
     // Persistence Logic
     useEffect(() => {

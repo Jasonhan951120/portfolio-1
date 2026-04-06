@@ -6,7 +6,7 @@ import { SlotNumber } from '../SlotNumber';
 import { fetchGMBMetrics } from '../../lib/gmb-service';
 
 export const NorthStarSummaryCards: React.FC<{ currency?: string }> = ({ currency: propCurrency }) => {
-    const { leads, getStats, googleProfile, setGoogleProfile, region } = useDashboardStore();
+    const { leads, getStats, googleProfile, setGoogleProfile, region, googlePlaceId } = useDashboardStore();
     const { pipelineValue } = getStats();
     const currency = propCurrency || (region === 'UK' ? '£' : '$');
 
@@ -14,14 +14,14 @@ export const NorthStarSummaryCards: React.FC<{ currency?: string }> = ({ currenc
     useEffect(() => {
         const loadGMBData = async () => {
             try {
-                const metrics = await fetchGMBMetrics();
+                const metrics = await fetchGMBMetrics(googlePlaceId);
                 setGoogleProfile(metrics);
             } catch (error) {
                 console.error("GMB Fetch Error:", error);
             }
         };
         loadGMBData();
-    }, [setGoogleProfile]);
+    }, [setGoogleProfile, googlePlaceId]);
 
     const highIntentCount = useMemo(() => {
         return leads.filter(l => (l.intent_score || 0) >= 80).length;
