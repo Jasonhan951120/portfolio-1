@@ -437,15 +437,15 @@ export function ClinicSettings({
                                                                                 }
                                                                             }}
                                                                             options={{
-                                                                                // Senior Engineer Note: 'establishment' is critical to prioritize specific business entities 
-                                                                                // over generic regions or landmarks to solve the "Branch Identification" issue.
-                                                                                types: ['establishment'],
+                                                                                // Senior Engineer Note: Empty types array prevents Google from filtering out GPs 
+                                                                                // or clinics that aren't strictly categorized as 'establishment' or 'dentist'.
+                                                                                types: [],
                                                                                 componentRestrictions: { country: ['gb', 'us', 'ca'] },
                                                                                 fields: ['name', 'formatted_address', 'place_id', 'reviews', 'rating', 'user_ratings_total', 'types', 'geometry'],
                                                                                 strictBounds: false
                                                                             }}
                                                                             placeholder="Search for a clinic or hospital (e.g., London Dermatology)..."
-                                                                            className={`w-full ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-black/5'} border pl-16 pr-8 py-6 rounded-[2rem] text-lg font-bold ${textColor} focus:ring-4 focus:ring-[#4285F4]/10 focus:border-[#4285F4]/40 outline-none transition-all shadow-inner`}
+                                                                            className={`w-full block opacity-100 relative z-[9999] ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-black/5'} border pl-16 pr-8 py-6 rounded-[2rem] text-lg font-bold ${textColor} focus:ring-4 focus:ring-[#4285F4]/10 focus:border-[#4285F4]/40 outline-none transition-all shadow-inner`}
                                                                         />
                                                                     ) : (
                                                                         <div className={`w-full ${isDark ? 'bg-white/5' : 'bg-slate-50'} border-2 border-dashed border-red-500/50 p-6 rounded-[2rem] flex flex-col items-center gap-2`}>
