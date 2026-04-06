@@ -437,9 +437,9 @@ export function ClinicSettings({
                                                                                 }
                                                                             }}
                                                                             options={{
-                                                                                types: ['dentist'],
-                                                                                componentRestrictions: { country: ['gb', 'us', 'ca', 'de', 'fr'] },
-                                                                                fields: ['name', 'formatted_address', 'place_id', 'reviews', 'rating']
+                                                                                types: ['establishment'],
+                                                                                componentRestrictions: { country: ['gb', 'us', 'ca', 'au', 'de', 'fr'] },
+                                                                                fields: ['name', 'formatted_address', 'place_id', 'reviews', 'rating', 'types']
                                                                             }}
                                                                             placeholder="Enter practice name or official address..."
                                                                             className={`w-full ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-black/5'} border pl-16 pr-8 py-6 rounded-[2rem] text-lg font-bold ${textColor} focus:ring-4 focus:ring-[#4285F4]/10 focus:border-[#4285F4]/40 outline-none transition-all shadow-inner`}

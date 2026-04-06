@@ -11,7 +11,6 @@ export interface GMBMetrics {
 }
 
 export const fetchGMBMetrics = async (placeId?: string): Promise<GMBMetrics> => {
-  // CLARITY CHECK: In Vite, variables must have VITE_ prefix.
   const apiKey = (import.meta.env.VITE_GOOGLE_MAPS_API_KEY || (typeof process !== 'undefined' ? process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY : '')) as string;
   
   // DEBUG: Service level key check
