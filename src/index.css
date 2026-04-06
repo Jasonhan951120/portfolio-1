@@ -342,14 +342,16 @@
   background: #F9FAFB;
 }
 
-/* ─── Google Places Autocomplete High-Visibility Premium UI ─── */
+/* ─── Google Places Autocomplete High-Contrast UI ─── */
 .pac-container {
   background-color: #ffffff !important;
   border: 1px solid #E5E7EB !important;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
   border-radius: 12px !important;
   margin-top: 8px !important;
   z-index: 10000 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
   padding: 8px 0 !important;
   font-family: inherit !important;
 }
@@ -358,7 +360,7 @@
   padding: 12px 16px !important;
   font-family: inherit !important;
   font-size: 13px !important;
-  color: #4B5563 !important;
+  color: #4B5563 !important; /* Dark Grey secondary text */
   border-top: 1px solid #F3F4F6 !important;
   cursor: pointer !important;
   transition: all 0.2s ease !important;
@@ -368,15 +370,20 @@
   border-top: none !important;
 }
 
-.pac-item:hover {
-  background-color: #F9FAFB !important;
-}
-
 .pac-item-query {
   font-size: 15px !important;
-  color: #111827 !important;
+  color: #111827 !important; /* Semi-Black primary text */
   font-weight: 600 !important;
   margin-right: 6px !important;
+}
+
+.pac-matched {
+  color: #000000 !important;
+  font-weight: 700 !important;
+}
+
+.pac-item:hover {
+  background-color: #F9FAFB !important;
 }
 
 .pac-icon {
@@ -386,7 +393,5 @@
 .pac-logo {
   opacity: 0.5 !important;
   padding: 10px !important;
-  transform: scale(0.9) !important;
-  transform-origin: right !important;
   border-top: 1px solid #F3F4F6 !important;
 }
