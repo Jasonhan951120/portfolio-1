@@ -437,8 +437,10 @@ export function ClinicSettings({
                                                                                 }
                                                                             }}
                                                                             options={{
+                                                                                // Senior Engineer Note: 'establishment' is critical to prioritize specific business entities 
+                                                                                // over generic regions or landmarks to solve the "Branch Identification" issue.
                                                                                 types: ['establishment'],
-                                                                                componentRestrictions: { country: ['gb', 'us', 'ca', 'au', 'nz'] },
+                                                                                componentRestrictions: { country: ['gb', 'us', 'ca'] },
                                                                                 fields: ['name', 'formatted_address', 'place_id', 'reviews', 'rating', 'user_ratings_total', 'types', 'geometry'],
                                                                                 strictBounds: false
                                                                             }}
