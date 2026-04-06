@@ -50,14 +50,6 @@ export function ClinicSettings({
     const [liveReviews, setLiveReviews] = useState<any[]>([]);
 
     const GOOGLE_API_KEY = import.meta.env?.VITE_GOOGLE_MAPS_API_KEY || (typeof process !== 'undefined' ? process.env?.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY : '');
-    const MOCK_REVIEWS = [
-        { author: 'James P.', raw: 'The veneers completely changed my confidence. Precision at its best.', ai: 'Hand-crafted porcelain veneers that define confidence through clinical precision.', date: '2 days ago' },
-        { author: 'Sarah L.', raw: 'Incredible clinic atmosphere and expert staff. Highly recommend.', ai: 'A sanctuary of world-class expertise and empathetic patient-first care.', date: '1 week ago' },
-        { author: 'Michael R.', raw: 'Fast, professional, and world-class results.', ai: 'Efficient, high-precision results tailored to personal aesthetic goals.', date: '2 weeks ago' },
-        { author: 'Elena G.', raw: 'Best dentist I have ever been to. No pain at all.', ai: 'A painless, professional dental journey ensuring absolute patient comfort.', date: '1 month ago' },
-        { author: 'David W.', raw: 'Great value for the level of care provided.', ai: 'Exceptional clinical value delivered through expert accessibility.', date: '1 month ago' }
-    ];
-    const displayReviews = liveReviews.length > 0 ? liveReviews : MOCK_REVIEWS;
 
     // Persistence Logic
     useEffect(() => {
@@ -419,6 +411,7 @@ export function ClinicSettings({
                                                                             onPlaceSelected={(place: any) => {
                                                                                 if (place && place.place_id) {
                                                                                     setGooglePlaceId(place.place_id);
+                                                                                    if (place.name) setClinicName(place.name);
                                                                                     setSyncStatus('synced');
                                                                                     if (place.reviews) {
                                                                                         const mappedReviews = place.reviews.map((r: any) => ({
@@ -500,7 +493,7 @@ export function ClinicSettings({
                                                                     </div>
                                                                     
                                                                     <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-                                                                        {displayReviews.map((rev: any, i: number) => (
+                                                                        {liveReviews.map((rev: any, i: number) => (
                                                                             <div key={i} className={`p-6 ${isDark ? 'bg-white/5' : 'bg-slate-50'} border ${borderColor} rounded-[2rem] space-y-4`}>
                                                                                 <div className="flex justify-between items-center mb-2">
                                                                                     <span className={`text-xs font-black ${textColor}`}>{rev.author}</span>
@@ -536,7 +529,7 @@ export function ClinicSettings({
                                                         
                                                         <div className="mb-10">
                                                             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400 block mb-6">Patient Proposal Preview</span>
-                                                            <h4 className={`text-4xl font-serif italic ${textColor} mb-4`}>The Signature Experience</h4>
+                                                            <h4 className={`text-4xl font-serif italic ${textColor} mb-4`}>{clinicName || 'The Signature Experience'}</h4>
                                                             <div className="h-[2px] w-12 bg-[#c5a059] mb-8" />
                                                         </div>
 
@@ -544,16 +537,16 @@ export function ClinicSettings({
                                                             {/* Review Card Mockup */}
                                                             <div className="bg-white p-8 rounded-[2.5rem] shadow-xl border border-black/5 space-y-6 transform hover:scale-[1.02] transition-transform duration-500">
                                                                 <div className="flex gap-1 mb-2">
-                                                                    {[...Array(5)].map((_, i) => <Star key={i} className="w-3.5 h-3.5 text-[#c5a059] fill-[#c5a059]" />)}
+                                                                    {[...Array(liveReviews[0]?.rating ? Math.floor(liveReviews[0].rating) : 5)].map((_, i) => <Star key={i} className="w-3.5 h-3.5 text-[#c5a059] fill-[#c5a059]" />)}
                                                                 </div>
                                                                 <p className="text-xl font-serif italic text-slate-800 leading-relaxed">
-                                                                    "{displayReviews[0]?.ai || displayReviews[0]?.raw || 'The veneers completely changed my confidence. Precision at its best.'}"
+                                                                    "{liveReviews[0]?.ai || liveReviews[0]?.raw || 'Awaiting Google Review connection...'}"
                                                                 </p>
                                                                 <div className="flex items-center gap-4 pt-4 border-t border-slate-100">
-                                                                    <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-xs font-black text-slate-400">{displayReviews[0]?.author?.substring(0,2)?.toUpperCase() || 'JP'}</div>
+                                                                    <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-xs font-black text-slate-400">{liveReviews[0]?.author?.substring(0,2)?.toUpperCase() || '--'}</div>
                                                                     <div>
-                                                                        <p className="text-xs font-black text-slate-900 tracking-tight uppercase">{displayReviews[0]?.author || 'James Peterson'}</p>
-                                                                        <p className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">{displayReviews[0]?.date || 'Verified Patient'}</p>
+                                                                        <p className="text-xs font-black text-slate-900 tracking-tight uppercase">{liveReviews[0]?.author || 'Pending'}</p>
+                                                                        <p className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">{liveReviews[0]?.date || 'Awaiting Verification'}</p>
                                                                     </div>
                                                                 </div>
                                                             </div>
