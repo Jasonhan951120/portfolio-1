@@ -344,14 +344,14 @@
 
 /* ─── Google Places Autocomplete: Nuclear Visibility Fix ─── */
 .pac-container {
-  width: 560px !important; /* EXACT match with input */
+  width: 560px !important; /* HERO SYNC: Matches 560px input precisely */
   background-color: #ffffff !important;
   opacity: 1 !important;
   border: 1px solid #E5E7EB !important;
   border-top: none !important;
-  border-radius: 0 0 12px 12px !important;
+  border-radius: 12px !important; /* Premium medical rounded corners */
   box-shadow: 0 10px 30px rgba(0,0,0,0.08) !important;
-  margin-top: 8px !important; /* Detached for breathing room */
+  margin-top: 8px !important; /* Detached link for airy UI */
   z-index: 9999 !important;
   max-height: 280px !important;
   overflow-y: auto !important;
