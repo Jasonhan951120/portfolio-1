@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { X, Plus, Trash2, Camera, Settings, List, Globe, ShieldCheck, MessageSquare, Briefcase, Zap, User, ArrowRight, Calendar, Save, Info, RefreshCw, Star, ChevronRight, Sparkles, Palette } from 'lucide-react';
 import Autocomplete from 'react-google-autocomplete';
 import { useDashboardStore } from '../../store/useDashboardStore';
+import { ReviewCard } from './ReviewCard';
 
 interface TreatmentTemplate {
     id: string;
@@ -386,8 +387,7 @@ export function ClinicSettings({
                                             </div>
                                         </div>
                                     )}
-
-                                    {activeTab === 'reputation' && (
+                                    {activeTab === 'reputation' && (
                                             <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 h-full flex flex-col overflow-visible">
                                                 <div className="text-inter">
                                                     <h3 className={`text-5xl font-serif italic ${textColor} tracking-tight mb-2`}>Clinical Reputation Engine</h3>
@@ -461,26 +461,16 @@ export function ClinicSettings({
                                                                         </div>
                                                                     </div>
                                                                     
-                                                                    <div className="space-y-6 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+                                                                    <div className="grid grid-cols-1 gap-6 max-h-[800px] overflow-y-auto pr-2 custom-scrollbar">
                                                                         {liveReviews.map((rev: any, i: number) => (
-                                                                            <div key={i} className={`p-8 ${cardBg} border ${borderColor} rounded-[3rem] shadow-sm`}>
-                                                                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 relative">
-                                                                                    <div className={`p-8 ${isDark ? 'bg-white/5' : 'bg-[#F9FAFB]'} rounded-[2.5rem] relative`}>
-                                                                                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">ORIGINAL REVIEW</p>
-                                                                                        <p className={`text-[15px] ${isDark ? 'text-slate-300' : 'text-[#111827]'} font-medium italic`} style={{ lineHeight: '1.7' }}>
-                                                                                            "{rev.raw}"
-                                                                                        </p>
-                                                                                    </div>
-                                                                                    <div className={`p-8 ${isDark ? 'bg-white/10' : 'bg-white'} rounded-[2.5rem] shadow-[0_0_40px_rgba(42,245,152,0.12)] relative z-10`}>
-                                                                                        <div className="px-4 py-1.5 bg-gradient-to-r from-[#4285F4]/10 to-[#34A853]/10 border border-[#34A853]/20 rounded-full inline-flex items-center gap-2 mb-4">
-                                                                                            <span className="text-[9px] font-black text-emerald-700 uppercase tracking-[0.15em]">AI Formalised</span>
-                                                                                        </div>
-                                                                                        <p className={`text-[15px] ${textColor} font-bold h-auto`} style={{ lineHeight: '1.7' }}>
-                                                                                            {rev.ai}
-                                                                                        </p>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
+                                                                            <ReviewCard 
+                                                                                key={i}
+                                                                                rev={rev}
+                                                                                isDark={isDark}
+                                                                                cardBg={cardBg}
+                                                                                borderColor={borderColor}
+                                                                                textColor={textColor}
+                                                                            />
                                                                         ))}
                                                                     </div>
                                                                 </div>
@@ -507,8 +497,8 @@ export function ClinicSettings({
                                                             <div className="h-[2px] w-12 bg-[#c5a059] mb-8" />
                                                         </div>
 
-                                                        <div className="space-y-6 flex-1">
-                                                            {/* Review Card Mockup */}
+                                                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 flex-1">
+                                                            {/* Hero Review (Left) */}
                                                             <div className="bg-white p-8 rounded-[2.5rem] shadow-xl border border-black/5 space-y-6 transform hover:scale-[1.02] transition-transform duration-500">
                                                                 <div className="flex gap-1 mb-2">
                                                                     {[...Array(liveReviews[0]?.rating ? Math.floor(liveReviews[0].rating) : 5)].map((_, i) => <Star key={i} className="w-3.5 h-3.5 text-[#c5a059] fill-[#c5a059]" />)}
@@ -525,14 +515,27 @@ export function ClinicSettings({
                                                                 </div>
                                                             </div>
 
-                                                            <div className="bg-white/40 p-8 rounded-[2.5rem] border border-white/60 space-y-4 blur-[0.5px]">
-                                                                <div className="h-4 w-1/3 bg-slate-200 rounded-full animate-pulse" />
-                                                                <div className="h-4 w-full bg-slate-200 rounded-full animate-pulse" />
-                                                                <div className="h-4 w-2/3 bg-slate-200 rounded-full animate-pulse" />
+                                                            {/* AI Insights (Right) */}
+                                                            <div className="bg-white/40 p-8 rounded-[2.5rem] border border-white/60 space-y-6 h-full flex flex-col">
+                                                                <div className="flex items-center gap-3">
+                                                                    <Sparkles className="w-5 h-5 text-[#c5a059]" />
+                                                                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">AI Trust Insight</span>
+                                                                </div>
+                                                                <div className="flex-1 space-y-4">
+                                                                    <div className="h-4 w-full bg-slate-200/50 rounded-full animate-pulse" />
+                                                                    <div className="h-4 w-5/6 bg-slate-200/50 rounded-full animate-pulse" />
+                                                                    <div className="h-4 w-4/6 bg-slate-200/50 rounded-full animate-pulse" />
+                                                                </div>
+                                                                <div className="pt-4 mt-auto">
+                                                                    <div className="px-4 py-2 bg-emerald-50 rounded-full inline-flex items-center gap-2">
+                                                                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                                                                        <span className="text-[8px] font-black uppercase text-emerald-700 tracking-widest">Growth Factor: +24%</span>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
 
-                                                        <div className="mt-auto pt-8 border-t border-slate-200/40">
+                                                        <div className="mt-12 pt-8 border-t border-slate-200/40">
                                                             <p className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] text-center">
                                                                 Powered by Hanlan Clinical AI Engine
                                                             </p>
@@ -542,7 +545,7 @@ export function ClinicSettings({
                                             </div>
                                         </div>
                                     )}
-
+                                    
                                     {activeTab === 'support' && (
                                         <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
                                             <div className="text-center mb-10 text-inter">
