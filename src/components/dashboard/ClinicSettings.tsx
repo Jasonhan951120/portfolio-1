@@ -244,32 +244,67 @@ export function ClinicSettings({
                                                 <h3 className={`text-xl font-black ${textColor} uppercase tracking-tight text-inter`}>Signature Menu Builder</h3>
                                             </div>
 
-                                            {/* [FIXED]: Mapping strictly from parent props 'templates' */}
-                                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                                            {/* [FIXED]: Mapping strictly from parent props 'templates' with LUXURY UI Upgrade */}
+                                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                                 {templates.map(template => (
-                                                    <div key={template.id} className={`${cardBg} rounded-[2rem] border ${borderColor} p-6 shadow-inner hover:scale-[1.03] transition-all duration-500 group relative overflow-hidden flex flex-col h-full`}>
-                                                        <div className="flex justify-between items-start mb-4 text-inter">
-                                                            <div className="flex-1">
-                                                                <h4 className={`${textColor} font-black text-sm truncate uppercase tracking-widest`}>{template.name}</h4>
-                                                                <p className={`${accentColor} font-black text-xl mt-1 tracking-tight`}>{currency}{template.price.toLocaleString()}</p>
+                                                    <div key={template.id} className={`${cardBg} rounded-[2.5rem] border ${borderColor} p-10 shadow-luxury hover:shadow-2xl hover:scale-[1.02] transition-all duration-700 group relative overflow-hidden flex flex-col h-full bg-gradient-to-br from-white to-slate-50/50`}>
+                                                        {/* Luxury Hover Actions Overlay */}
+                                                        <div className="absolute inset-0 bg-white/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center gap-4 z-20">
+                                                            <button 
+                                                                onClick={() => { setEditingTreatmentId(template.id); setEditingTemplate(template); }} 
+                                                                className="w-12 h-12 flex items-center justify-center bg-[#111827] text-white rounded-full shadow-xl hover:scale-110 active:scale-95 transition-all"
+                                                            >
+                                                                <Settings className="w-5 h-5" />
+                                                            </button>
+                                                            <button 
+                                                                onClick={() => handleDeleteTemplate(template.id)} 
+                                                                className="w-12 h-12 flex items-center justify-center bg-white text-red-500 border border-red-100 rounded-full shadow-xl hover:scale-110 active:scale-95 transition-all"
+                                                            >
+                                                                <Trash2 className="w-5 h-5" />
+                                                            </button>
+                                                        </div>
+
+                                                        <div className="space-y-6 flex-1 text-inter relative z-10">
+                                                            <div className="flex justify-between items-start">
+                                                                <div className="flex-1">
+                                                                    <h4 className={`text-[#111827] font-serif font-bold text-2xl tracking-tight leading-tight capitalize`}>
+                                                                        {template.name.toLowerCase()}
+                                                                    </h4>
+                                                                    <div className={`flex items-center gap-2 mt-3 px-3 py-1 rounded-full bg-emerald-50/50 border border-emerald-100/50 w-fit`}>
+                                                                        <div className={`w-1.5 h-1.5 rounded-full ${template.price > 0 ? 'bg-emerald-500 animate-pulse' : 'bg-amber-400'}`} />
+                                                                        <span className="text-[9px] font-black text-emerald-700/70 uppercase tracking-[0.15em]">{template.price > 0 ? 'Clinical Active' : 'Protocol Draft'}</span>
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                            <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0">
-                                                                <button onClick={() => { setEditingTreatmentId(template.id); setEditingTemplate(template); }} className={`w-9 h-9 flex items-center justify-center ${isDark ? 'bg-white/5 hover:bg-[#78dcca]/10' : 'bg-white hover:bg-slate-50'} rounded-xl border ${borderColor} shadow-sm transition-all shadow-inner`}><Settings className="w-4 h-4 text-slate-400" /></button>
-                                                                <button onClick={() => handleDeleteTemplate(template.id)} className={`w-9 h-9 flex items-center justify-center ${isDark ? 'bg-white/5 hover:bg-red-500/10' : 'bg-white hover:bg-red-50'} rounded-xl border ${borderColor} shadow-sm transition-all shadow-inner`}><Trash2 className="w-4 h-4 text-slate-400 hover:text-red-500" /></button>
+                                                            
+                                                            <div className="pt-2">
+                                                                <p className="text-[#111827] font-bold text-3xl tracking-tighter flex items-center gap-1">
+                                                                    <span className="text-sm font-medium text-slate-400 align-top mt-1">{currency}</span>
+                                                                    {template.price.toLocaleString()}
+                                                                </p>
                                                             </div>
                                                         </div>
                                                         
-                                                        <div className={`mt-auto pt-6 border-t ${borderColor} flex items-center justify-between`}>
-                                                            <div className="flex items-center gap-x-4">
+                                                        {/* Thin Iconography Footer */}
+                                                        <div className={`mt-10 pt-8 border-t border-slate-100/60 flex items-center justify-between relative z-10`}>
+                                                            <div className="flex items-center gap-x-5">
                                                                 {[template.beforeImg, template.afterImg].map((img, i) => (
-                                                                    <div key={i} className={`w-9 h-9 rounded-full border-2 ${isDark ? 'border-[#0A0F1E]' : 'border-white'} ${isDark ? 'bg-[#151C2F]' : 'bg-white'} flex items-center justify-center shadow-lg overflow-hidden transition-transform group-hover:scale-110 shadow-inner`}>
-                                                                        {img ? <img src={img} className="w-full h-full object-cover" alt="" /> : <Camera className="w-4 h-4 text-slate-400" />}
+                                                                    <div key={i} className="flex flex-col items-center gap-2">
+                                                                        <div className={`w-12 h-12 rounded-2xl border border-slate-100 bg-white flex items-center justify-center shadow-sm overflow-hidden transition-all group-hover:border-emerald-200`}>
+                                                                            {img ? <img src={img} className="w-full h-full object-cover" alt="" /> : <Camera className="w-5 h-5 text-slate-300 stroke-[1.2]" />}
+                                                                        </div>
+                                                                        <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">{i === 0 ? 'Pre' : 'Post'}</span>
                                                                     </div>
                                                                 ))}
                                                             </div>
-                                                            <div className={`flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border ${borderColor} backdrop-blur-md shadow-inner`}>
-                                                                <div className="w-2 h-2 rounded-full shadow-[0_0_8px_rgba(135,169,107,0.5)]" style={{ backgroundColor: template.price > 0 ? sageGreen : '#fbbf24' }} />
-                                                                <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] text-inter">{template.price > 0 ? 'Active' : 'Draft'}</span>
+                                                            
+                                                            <div className="h-8 w-[1px] bg-slate-100 hidden sm:block" />
+                                                            
+                                                            <div className="text-right">
+                                                                <span className="text-[9px] font-black text-slate-300 uppercase tracking-[0.3em] block mb-1">Hanlan Verified</span>
+                                                                <div className="flex justify-end gap-0.5">
+                                                                    {[...Array(5)].map((_, i) => <Star key={i} className="w-2.5 h-2.5 text-emerald-500/30 fill-emerald-500/30" />)}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
