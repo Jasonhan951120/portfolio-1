@@ -410,8 +410,8 @@ export function ClinicSettings({
                                                         <div className="space-y-8">
                                                                 <div className="space-y-4 mb-5">
                                                                     <label className="text-[11px] font-black uppercase text-slate-400 tracking-[0.3em] ml-1">Search Your Global Clinic Identity</label>
-                                                                    <div className="flex flex-wrap items-center gap-4">
-                                                                        <div className="relative group w-[560px] max-w-full">
+                                                                    <div className="flex flex-wrap items-center gap-[12px]">
+                                                                        <div className="relative group w-[560px] max-w-[560px] shrink-0" style={{ width: '560px !important', maxWidth: '560px !important' } as any}>
                                                                             <div className="absolute left-6 top-1/2 -translate-y-1/2">
                                                                                 <Globe className="w-6 h-6 text-slate-300 group-focus-within:text-[#4285F4] transition-colors" />
                                                                             </div>
