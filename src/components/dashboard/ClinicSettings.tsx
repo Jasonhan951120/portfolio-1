@@ -244,68 +244,68 @@ export function ClinicSettings({
                                                 <h3 className={`text-xl font-black ${textColor} uppercase tracking-tight text-inter`}>Signature Menu Builder</h3>
                                             </div>
 
-                                            {/* [FIXED]: Mapping strictly from parent props 'templates' with CALIBRATED LUXURY UI */}
-                                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                                                {templates.map(template => (
-                                                    <div key={template.id} className={`${cardBg} rounded-[2rem] border ${borderColor} p-10 shadow-luxury hover:shadow-2xl hover:scale-[1.02] transition-all duration-700 group relative overflow-visible flex flex-col h-full bg-gradient-to-br from-white to-slate-50/50`}>
+                                            {/* [FINAL LUXURY REFACTOR]: 3x2 Compact Horizontal Grid */}
+                                            <div className="w-full !max-w-none">
+                                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 w-full mb-20">
+                                                    {templates.map(template => (
+                                                        <div key={template.id} className={`${cardBg} rounded-[2.5rem] border ${borderColor} p-10 shadow-luxury hover:shadow-2xl transition-all duration-700 group relative overflow-visible flex flex-col bg-white h-[580px]`}>
                                                         
-                                                        {/* Top Branding & Subtle Actions */}
-                                                        <div className="flex justify-between items-start mb-6 relative z-10">
-                                                            <div className="flex-1 pr-6">
-                                                                <h4 className={`text-[#111827] font-serif font-bold text-2xl tracking-tight leading-tight capitalize truncate`}>
+                                                        <div className="flex-1 space-y-8 relative z-10">
+                                                            <div className="pr-16 relative">
+                                                                <h4 className={`text-[#111827] font-serif font-bold text-3xl tracking-tight leading-[1.1] capitalize truncate`}>
                                                                     {template.name.toLowerCase()}
                                                                 </h4>
-                                                                <div className={`mt-2 flex items-center gap-2`}>
-                                                                    <div className={`w-1.5 h-1.5 rounded-full ${template.price > 0 ? 'bg-emerald-500 animate-pulse' : 'bg-amber-400'}`} />
-                                                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{template.price > 0 ? 'Verified Clinical' : 'Draft Protocol'}</span>
+                                                                <div className="flex items-center gap-2 mt-4">
+                                                                    <div className="px-3 py-1 bg-emerald-50 border border-emerald-100 rounded-full flex items-center gap-2">
+                                                                        <div className={`w-1.5 h-1.5 rounded-full ${template.price > 0 ? 'bg-emerald-500 animate-pulse' : 'bg-amber-400'}`} />
+                                                                        <span className="text-[10px] font-black text-emerald-700/70 uppercase tracking-[0.15em]">{template.price > 0 ? 'Active' : 'Draft'}</span>
+                                                                    </div>
+                                                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Protocol V.2</span>
+                                                                </div>
+                                                                
+                                                                {/* Elegant Corner Icons */}
+                                                                <div className="absolute -top-2 -right-8 flex gap-2 z-30">
+                                                                    <button 
+                                                                        onClick={(e) => { e.stopPropagation(); setEditingTreatmentId(template.id); setEditingTemplate(template); }} 
+                                                                        className="w-9 h-9 flex items-center justify-center text-slate-300 hover:text-slate-900 hover:bg-slate-50 rounded-full transition-all border border-transparent hover:border-slate-100"
+                                                                    >
+                                                                        <Settings className="w-4 h-4" />
+                                                                    </button>
+                                                                    <button 
+                                                                        onClick={(e) => { e.stopPropagation(); handleDeleteTemplate(template.id); }} 
+                                                                        className="w-9 h-9 flex items-center justify-center text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-full transition-all border border-transparent hover:border-red-100"
+                                                                    >
+                                                                        <Trash2 className="w-4 h-4" />
+                                                                    </button>
                                                                 </div>
                                                             </div>
-                                                            <div className="flex gap-2 relative z-30">
-                                                                <button 
-                                                                    onClick={(e) => { e.stopPropagation(); setEditingTreatmentId(template.id); setEditingTemplate(template); }} 
-                                                                    className="w-10 h-10 flex items-center justify-center text-slate-300 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition-all"
-                                                                >
-                                                                    <Settings className="w-5 h-5" />
-                                                                </button>
-                                                                <button 
-                                                                    onClick={(e) => { e.stopPropagation(); handleDeleteTemplate(template.id); }} 
-                                                                    className="w-10 h-10 flex items-center justify-center text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
-                                                                >
-                                                                    <Trash2 className="w-5 h-5" />
-                                                                </button>
-                                                            </div>
-                                                        </div>
 
-                                                        <div className="mb-10 pt-2 relative z-10">
-                                                            <p className="text-[#111827] font-bold text-4xl tracking-tighter flex items-center gap-1">
-                                                                <span className="text-sm font-medium text-slate-300 align-top mt-1">{currency}</span>
-                                                                {template.price.toLocaleString()}
-                                                            </p>
-                                                        </div>
-                                                        
-                                                        {/* Calibrated Symmetry: Pre/Post Slot Logic */}
-                                                        <div className="grid grid-cols-2 gap-6 mt-auto relative z-10">
-                                                            {/* Pre Section */}
-                                                            <div className="flex flex-col gap-3">
-                                                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] text-center w-full">PRE</span>
-                                                                <div 
-                                                                    onClick={() => document.getElementById(`upload-before-${template.id}`)?.click()}
-                                                                    className={`aspect-square h-32 w-full rounded-2xl border-2 border-dashed border-slate-100 hover:border-emerald-200 bg-white flex items-center justify-center shadow-inner cursor-pointer transition-all overflow-hidden group/box`}
-                                                                >
-                                                                    {template.beforeImg ? (
-                                                                        <img src={template.beforeImg} className="w-full h-full object-cover group-hover/box:scale-110 transition-transform duration-700" alt="" />
-                                                                    ) : (
-                                                                        <div className="flex flex-col items-center gap-2">
-                                                                            <Camera className="w-6 h-6 text-slate-200 stroke-[1.2]" />
-                                                                            <span className="text-[8px] font-bold text-slate-300 uppercase tracking-[0.2em]">Upload</span>
-                                                                        </div>
-                                                                    )}
-                                                                    <input 
-                                                                        id={`upload-before-${template.id}`} 
-                                                                        type="file" className="hidden" 
-                                                                        accept="image/*"
-                                                                        onMouseDown={(e) => e.stopPropagation()}
-                                                                        onChange={(e) => {
+                                                            <div className="pt-4 border-t border-slate-50">
+                                                                <p className="text-[#111827] font-bold text-4xl tracking-tighter flex items-center gap-1">
+                                                                    <span className="text-sm font-medium text-slate-400 align-top mt-1">{currency}</span>
+                                                                    {template.price.toLocaleString()}
+                                                                </p>
+                                                                <p className="text-[11px] text-[#374151] font-bold uppercase tracking-[0.1em] mt-2 opacity-50">Global Surgical Fee</p>
+                                                            </div>
+                                                            
+                                                            {/* Calibrated Symmetry: Interactive Image Slots */}
+                                                            <div className="grid grid-cols-2 gap-8 pt-4">
+                                                                {/* Pre Slot */}
+                                                                <div className="space-y-3">
+                                                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] text-center block">PRE</span>
+                                                                    <div 
+                                                                        onClick={() => document.getElementById(`upload-before-${template.id}`)?.click()}
+                                                                        className={`aspect-square w-full rounded-2xl border-2 border-dashed border-slate-100 hover:border-emerald-300 bg-slate-50/30 flex items-center justify-center shadow-inner cursor-pointer transition-all overflow-hidden group/img`}
+                                                                    >
+                                                                        {template.beforeImg ? (
+                                                                            <img src={template.beforeImg} className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-700" alt="" />
+                                                                        ) : (
+                                                                            <div className="flex flex-col items-center gap-3">
+                                                                                <Camera className="w-7 h-7 text-slate-200 stroke-[1.2]" />
+                                                                                <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest">Upload Photo</span>
+                                                                            </div>
+                                                                        )}
+                                                                        <input id={`upload-before-${template.id}`} type="file" className="hidden" accept="image/*" onChange={(e) => {
                                                                             const file = e.target.files?.[0];
                                                                             if (file) {
                                                                                 const reader = new FileReader();
@@ -315,32 +315,26 @@ export function ClinicSettings({
                                                                                 };
                                                                                 reader.readAsDataURL(file);
                                                                             }
-                                                                        }}
-                                                                    />
+                                                                        }} />
+                                                                    </div>
                                                                 </div>
-                                                            </div>
 
-                                                            {/* Post Section */}
-                                                            <div className="flex flex-col gap-3">
-                                                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] text-center w-full">POST</span>
-                                                                <div 
-                                                                    onClick={() => document.getElementById(`upload-after-${template.id}`)?.click()}
-                                                                    className={`aspect-square h-32 w-full rounded-2xl border-2 border-dashed border-slate-100 hover:border-emerald-200 bg-white flex items-center justify-center shadow-inner cursor-pointer transition-all overflow-hidden group/box`}
-                                                                >
-                                                                    {template.afterImg ? (
-                                                                        <img src={template.afterImg} className="w-full h-full object-cover group-hover/box:scale-110 transition-transform duration-700" alt="" />
-                                                                    ) : (
-                                                                        <div className="flex flex-col items-center gap-2">
-                                                                            <Camera className="w-6 h-6 text-slate-200 stroke-[1.2]" />
-                                                                            <span className="text-[8px] font-bold text-slate-300 uppercase tracking-[0.2em]">Upload</span>
-                                                                        </div>
-                                                                    )}
-                                                                    <input 
-                                                                        id={`upload-after-${template.id}`} 
-                                                                        type="file" className="hidden" 
-                                                                        accept="image/*"
-                                                                        onMouseDown={(e) => e.stopPropagation()}
-                                                                        onChange={(e) => {
+                                                                {/* Post Slot */}
+                                                                <div className="space-y-3">
+                                                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] text-center block">POST</span>
+                                                                    <div 
+                                                                        onClick={() => document.getElementById(`upload-after-${template.id}`)?.click()}
+                                                                        className={`aspect-square w-full rounded-2xl border-2 border-dashed border-slate-100 hover:border-emerald-300 bg-slate-50/30 flex items-center justify-center shadow-inner cursor-pointer transition-all overflow-hidden group/img`}
+                                                                    >
+                                                                        {template.afterImg ? (
+                                                                            <img src={template.afterImg} className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-700" alt="" />
+                                                                        ) : (
+                                                                            <div className="flex flex-col items-center gap-3">
+                                                                                <Camera className="w-7 h-7 text-slate-200 stroke-[1.2]" />
+                                                                                <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest">Upload Photo</span>
+                                                                            </div>
+                                                                        )}
+                                                                        <input id={`upload-after-${template.id}`} type="file" className="hidden" accept="image/*" onChange={(e) => {
                                                                             const file = e.target.files?.[0];
                                                                             if (file) {
                                                                                 const reader = new FileReader();
@@ -350,25 +344,28 @@ export function ClinicSettings({
                                                                                 };
                                                                                 reader.readAsDataURL(file);
                                                                             }
-                                                                        }}
-                                                                    />
+                                                                        }} />
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
 
-                                                        {/* Luxury Verification Footer */}
-                                                        <div className="mt-8 pt-8 border-t border-slate-50 flex items-center justify-between opacity-60">
-                                                            <div className="flex items-center gap-1.5 px-3 py-1 bg-slate-50 border border-slate-100 rounded-lg">
-                                                                <ShieldCheck className="w-3 h-3 text-emerald-600" />
-                                                                <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Protocol Secured</span>
+                                                        {/* Luxury Verified Branding */}
+                                                        <div className="mt-auto pt-8 border-t border-slate-50 flex items-center justify-between opacity-80">
+                                                            <div className="flex items-center gap-2">
+                                                                <div className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center border border-emerald-100">
+                                                                    <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                                                                </div>
+                                                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Protocol Secured</span>
                                                             </div>
                                                             <div className="flex gap-0.5">
-                                                                {[...Array(5)].map((_, i) => <Star key={i} className="w-2.5 h-2.5 text-emerald-500/20 fill-emerald-500/20" />)}
+                                                                {[...Array(5)].map((_, i) => <Star key={i} className="w-2.5 h-2.5 text-emerald-500/30 fill-emerald-500/30" />)}
                                                             </div>
                                                         </div>
                                                     </div>
                                                 ))}
                                             </div>
+                                        </div>
                                         </div>
                                     )}
 
