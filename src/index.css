@@ -344,48 +344,21 @@
 
 /* ─── Google Places Autocomplete: Nuclear Visibility Fix ─── */
 .pac-container {
-  background-color: #ffffff !important;
-  max-height: 250px !important;
-  overflow-y: auto !important;
+  width: 580px !important; /* Matches the new input width exactly */
+  background-color: #ffffff !important; /* Force solid white */
+  opacity: 1 !important; /* No more transparency */
+  max-height: 250px !important; /* Cage the height - no more overflow */
+  overflow-y: auto !important; /* Enable internal scrolling */
+  border-radius: 0 0 12px 12px !important; /* Seamless connection */
+  border: 1px solid #E5E7EB !important;
+  border-top: none !important; /* Makes it look like it's part of the input */
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
+  margin-top: -1px !important; /* Pull it up to touch the input */
   z-index: 9999 !important;
 }
 
-.pac-item {
-  padding: 12px 16px !important;
-  font-family: inherit !important;
-  font-size: 14px !important;
-  color: #4B5563 !important; /* Address text */
-  border-top: 1px solid #F3F4F6 !important;
-  cursor: pointer !important;
-  transition: all 0.2s ease !important;
-}
+.pac-item { padding: 12px 16px !important; border-top: 1px solid #F3F4F6 !important; }
+.pac-item-query { color: #111827 !important; font-weight: 600 !important; }
+.pac-icon { display: none !important; }
 
-.pac-item:first-child {
-  border-top: none !important;
-}
-
-.pac-item-query {
-  font-size: 15px !important;
-  color: #111827 !important; /* Business name */
-  font-weight: 600 !important;
-  margin-right: 6px !important;
-}
-
-.pac-matched {
-  color: #000000 !important;
-  font-weight: 800 !important;
-}
-
-.pac-item:hover {
-  background-color: #F8FAFC !important;
-}
-
-.pac-icon {
-  display: none !important;
-}
-
-.pac-logo {
-  opacity: 0.6 !important;
-  padding: 12px !important;
-  border-top: 1px solid #F3F4F6 !important;
-}
+

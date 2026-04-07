@@ -410,7 +410,7 @@ export function ClinicSettings({
                                                         <div className="space-y-8">
                                                             <div className="space-y-4">
                                                                 <label className="text-[11px] font-black uppercase text-slate-400 tracking-[0.3em] ml-1">Search Your Global Clinic Identity</label>
-                                                                <div className="relative group">
+                                                                <div className="relative group w-[580px] max-w-full mx-auto lg:mx-0">
                                                                     <div className="absolute left-6 top-1/2 -translate-y-1/2">
                                                                         <Globe className="w-6 h-6 text-slate-300 group-focus-within:text-[#4285F4] transition-colors" />
                                                                     </div>
