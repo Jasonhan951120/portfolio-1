@@ -244,38 +244,22 @@ export function ClinicSettings({
                                                 <h3 className={`text-xl font-black ${textColor} uppercase tracking-tight text-inter`}>Signature Menu Builder</h3>
                                             </div>
 
-                                            {/* [FINAL LUXURY REFACTOR]: 3x2 Slim Horizontal Grid */}
+                                            {/* [FINAL LUXURY REFACTOR]: 3x2 Symmetric 2-Photo Grid */}
                                             <div className="w-full !max-w-none">
                                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full mb-20">
                                                     {templates.map(template => (
-                                                        <div key={template.id} className={`${cardBg} rounded-[2.5rem] border ${borderColor} p-6 shadow-luxury hover:shadow-2xl transition-all duration-700 group relative overflow-hidden flex flex-col bg-white h-[350px]`}>
+                                                        <div key={template.id} className={`${cardBg} rounded-[2.5rem] border ${borderColor} p-4 shadow-luxury hover:shadow-2xl transition-all duration-700 group relative overflow-hidden flex flex-col bg-white h-[350px]`}>
                                                         
-                                                        <div className="flex-1 space-y-4 relative z-10">
-                                                            <div className="pr-12 relative">
-                                                                <h4 className={`text-[#111827] font-serif font-bold text-xl tracking-tight leading-tight capitalize truncate`}>
+                                                        <div className="flex-1 space-y-3 relative z-10">
+                                                            <div className="relative">
+                                                                <h4 className={`text-[#111827] font-serif font-bold text-base tracking-tight leading-tight capitalize truncate`}>
                                                                     {template.name.toLowerCase()}
                                                                 </h4>
-                                                                
-                                                                {/* Elegant Corner Icons */}
-                                                                <div className="absolute -top-1 -right-6 flex gap-1 z-30">
-                                                                    <button 
-                                                                        onClick={(e) => { e.stopPropagation(); setEditingTreatmentId(template.id); setEditingTemplate(template); }} 
-                                                                        className="w-7 h-7 flex items-center justify-center text-slate-300 hover:text-slate-900 hover:bg-slate-50 rounded-full transition-all border border-transparent hover:border-slate-100"
-                                                                    >
-                                                                        <Settings className="w-3.5 h-3.5" />
-                                                                    </button>
-                                                                    <button 
-                                                                        onClick={(e) => { e.stopPropagation(); handleDeleteTemplate(template.id); }} 
-                                                                        className="w-7 h-7 flex items-center justify-center text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-full transition-all border border-transparent hover:border-red-100"
-                                                                    >
-                                                                        <Trash2 className="w-3.5 h-3.5" />
-                                                                    </button>
-                                                                </div>
                                                             </div>
 
-                                                            <div className="flex items-center justify-between pt-2 border-t border-slate-50">
+                                                            <div className="flex items-center justify-between pt-1.5 border-t border-slate-50">
                                                                 <div>
-                                                                    <p className="text-[#111827] font-bold text-2xl tracking-tighter flex items-center gap-0.5">
+                                                                    <p className="text-[#111827] font-bold text-xl tracking-tighter flex items-center gap-0.5">
                                                                         <span className="text-[10px] font-medium text-slate-400 align-top mt-0.5">{currency}</span>
                                                                         {template.price.toLocaleString()}
                                                                     </p>
@@ -287,21 +271,21 @@ export function ClinicSettings({
                                                                 </div>
                                                             </div>
                                                             
-                                                            {/* Horizontal Photo Alignment: 1 Pre, 2 Post */}
-                                                            <div className="flex flex-row items-end gap-3 pt-2">
+                                                            {/* Symmetric Photo Alignment: 1 Pre, 1 Post (1:1 Layout) */}
+                                                            <div className="flex flex-row justify-center gap-4 pt-3">
                                                                 {/* Pre Slot */}
                                                                 <div className="space-y-1.5">
-                                                                    <span className="text-[8px] font-black text-slate-400 uppercase tracking-[0.3em] text-center block">PRE</span>
+                                                                    <span className="text-[10px] font-bold text-[#374151] uppercase tracking-[0.2em] text-center block whitespace-nowrap">PRE</span>
                                                                     <div 
                                                                         onClick={() => document.getElementById(`upload-before-${template.id}`)?.click()}
-                                                                        className={`w-20 h-20 rounded-xl border-2 border-dashed border-slate-100 hover:border-emerald-300 bg-slate-50/30 flex items-center justify-center shadow-inner cursor-pointer transition-all overflow-hidden group/img shrink-0`}
+                                                                        className={`w-28 h-28 rounded-2xl border-2 border-dashed border-slate-100 hover:border-emerald-300 bg-slate-50/30 flex items-center justify-center shadow-inner cursor-pointer transition-all overflow-hidden group/img shrink-0`}
                                                                     >
                                                                         {template.beforeImg ? (
                                                                             <img src={template.beforeImg} className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-700" alt="" />
                                                                         ) : (
-                                                                            <div className="flex flex-col items-center gap-1 px-1">
-                                                                                <Camera className="w-5 h-5 text-slate-200 stroke-[1.2]" />
-                                                                                <span className="text-[8px] font-black text-slate-300 uppercase tracking-tighter text-center leading-tight">Upload<br/>Photo</span>
+                                                                            <div className="flex flex-col items-center gap-1.5 px-2">
+                                                                                <Camera className="w-6 h-6 text-slate-200 stroke-[1.2]" />
+                                                                                <span className="text-[10px] font-medium text-slate-400 uppercase tracking-tight text-center leading-tight whitespace-nowrap">Upload Photo</span>
                                                                             </div>
                                                                         )}
                                                                         <input id={`upload-before-${template.id}`} type="file" className="hidden" accept="image/*" onChange={(e) => {
@@ -318,51 +302,57 @@ export function ClinicSettings({
                                                                     </div>
                                                                 </div>
 
-                                                                {/* Post Slots (Two Boxes) */}
-                                                                <div className="space-y-1.5 flex-1">
-                                                                    <span className="text-[8px] font-black text-slate-400 uppercase tracking-[0.3em] text-center block">POST</span>
-                                                                    <div className="flex gap-2">
-                                                                        {[1, 2].map((idx) => (
-                                                                            <div 
-                                                                                key={idx}
-                                                                                onClick={() => document.getElementById(`upload-after-${template.id}-${idx}`)?.click()}
-                                                                                className={`w-20 h-20 rounded-xl border-2 border-dashed border-slate-100 hover:border-emerald-300 bg-slate-50/30 flex items-center justify-center shadow-inner cursor-pointer transition-all overflow-hidden group/img shrink-0`}
-                                                                            >
-                                                                                {template.afterImg && idx === 1 ? (
-                                                                                    <img src={template.afterImg} className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-700" alt="" />
-                                                                                ) : (
-                                                                                    <div className="flex flex-col items-center gap-1 px-1">
-                                                                                        <Camera className="w-5 h-5 text-slate-200 stroke-[1.2]" />
-                                                                                        <span className="text-[8px] font-black text-slate-300 uppercase tracking-tighter text-center leading-tight">Upload<br/>Photo</span>
-                                                                                    </div>
-                                                                                )}
-                                                                                <input id={`upload-after-${template.id}-${idx}`} type="file" className="hidden" accept="image/*" onChange={(e) => {
-                                                                                    const file = e.target.files?.[0];
-                                                                                    if (file) {
-                                                                                        const reader = new FileReader();
-                                                                                        reader.onload = (revet) => {
-                                                                                            // Map to afterImg for now (or afterImg2 if supported)
-                                                                                            const updated = { ...template, afterImg: revet.target?.result as string };
-                                                                                            setTemplates(prev => prev.map(t => t.id === template.id ? updated : t));
-                                                                                        };
-                                                                                        reader.readAsDataURL(file);
-                                                                                    }
-                                                                                }} />
+                                                                {/* Post Slot */}
+                                                                <div className="space-y-1.5">
+                                                                    <span className="text-[10px] font-bold text-[#374151] uppercase tracking-[0.2em] text-center block whitespace-nowrap">POST</span>
+                                                                    <div 
+                                                                        onClick={() => document.getElementById(`upload-after-${template.id}`)?.click()}
+                                                                        className={`w-28 h-28 rounded-2xl border-2 border-dashed border-slate-100 hover:border-emerald-300 bg-slate-50/30 flex items-center justify-center shadow-inner cursor-pointer transition-all overflow-hidden group/img shrink-0`}
+                                                                    >
+                                                                        {template.afterImg ? (
+                                                                            <img src={template.afterImg} className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-700" alt="" />
+                                                                        ) : (
+                                                                            <div className="flex flex-col items-center gap-1.5 px-2">
+                                                                                <Camera className="w-6 h-6 text-slate-200 stroke-[1.2]" />
+                                                                                <span className="text-[10px] font-medium text-slate-400 uppercase tracking-tight text-center leading-tight whitespace-nowrap">Upload Photo</span>
                                                                             </div>
-                                                                        ))}
+                                                                        )}
+                                                                        <input id={`upload-after-${template.id}`} type="file" className="hidden" accept="image/*" onChange={(e) => {
+                                                                            const file = e.target.files?.[0];
+                                                                            if (file) {
+                                                                                const reader = new FileReader();
+                                                                                reader.onload = (revet) => {
+                                                                                    const updated = { ...template, afterImg: revet.target?.result as string };
+                                                                                    setTemplates(prev => prev.map(t => t.id === template.id ? updated : t));
+                                                                                };
+                                                                                reader.readAsDataURL(file);
+                                                                            }
+                                                                        }} />
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
 
-                                                        {/* Luxury Verified Branding */}
-                                                        <div className="mt-4 pt-4 border-t border-slate-50 flex items-center justify-between opacity-60">
-                                                            <div className="flex items-center gap-1.5">
+                                                        {/* Luxury Footer Actions & Branding */}
+                                                        <div className="mt-4 pt-4 border-t border-slate-50 flex items-center justify-between">
+                                                            <div className="flex items-center gap-1.5 opacity-60">
                                                                 <ShieldCheck className="w-3 h-3 text-emerald-600" />
                                                                 <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Protocol Secured</span>
                                                             </div>
-                                                            <div className="flex gap-0.5">
-                                                                {[...Array(5)].map((_, i) => <Star key={i} className="w-2 h-2 text-emerald-500/30 fill-emerald-500/30" />)}
+                                                            
+                                                            <div className="flex items-center gap-2">
+                                                                <button 
+                                                                    onClick={(e) => { e.stopPropagation(); setEditingTreatmentId(template.id); setEditingTemplate(template); }} 
+                                                                    className="w-7 h-7 flex items-center justify-center text-slate-400 hover:text-slate-900 transition-colors"
+                                                                >
+                                                                    <Settings className="w-3.5 h-3.5" />
+                                                                </button>
+                                                                <button 
+                                                                    onClick={(e) => { e.stopPropagation(); handleDeleteTemplate(template.id); }} 
+                                                                    className="w-7 h-7 flex items-center justify-center text-slate-400 hover:text-red-500 transition-colors"
+                                                                >
+                                                                    <Trash2 className="w-3.5 h-3.5" />
+                                                                </button>
                                                             </div>
                                                         </div>
                                                     </div>
