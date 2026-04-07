@@ -408,46 +408,47 @@ export function ClinicSettings({
                                                         </div>
 
                                                         <div className="space-y-8">
-                                                            <div className="space-y-4">
-                                                                <label className="text-[11px] font-black uppercase text-slate-400 tracking-[0.3em] ml-1">Search Your Global Clinic Identity</label>
-                                                                <div className="relative group w-[580px] max-w-full mx-auto lg:mx-0">
-                                                                    <div className="absolute left-6 top-1/2 -translate-y-1/2">
-                                                                        <Globe className="w-6 h-6 text-slate-300 group-focus-within:text-[#4285F4] transition-colors" />
-                                                                    </div>
-                                                                    {GOOGLE_API_KEY ? (
-                                                                        <Autocomplete
-                                                                            apiKey={GOOGLE_API_KEY}
-                                                                            onPlaceSelected={(place: any) => {
-                                                                                console.log("PLACE_SELECTED_NAME:", place?.name);
-                                                                                if (place && place.place_id) {
-                                                                                    console.log(`SUCCESS: CAPTURED BRANCH_ID = ${place.place_id}`);
-                                                                                    setGooglePlaceId(place.place_id);
-                                                                                    if (place.name) setClinicName(place.name);
-                                                                                    setSyncStatus('synced');
-                                                                                    if (place.reviews) {
-                                                                                        const mappedReviews = place.reviews.map((r: any) => ({
-                                                                                            author: r.author_name,
-                                                                                            raw: r.text,
-                                                                                            ai: `AI formalised: ${r.text.substring(0, 80)}...`,
-                                                                                            date: r.relative_time_description,
-                                                                                            rating: r.rating
-                                                                                        }));
-                                                                                        setLiveReviews(mappedReviews);
-                                                                                    }
-                                                                                }
-                                                                            }}
-                                                                            options={{
-                                                                                // Senior Engineer Note: Empty types array prevents Google from filtering out GPs 
-                                                                                // or clinics that aren't strictly categorized as 'establishment' or 'dentist'.
-                                                                                types: [],
-                                                                                componentRestrictions: { country: ['gb', 'us', 'ca'] },
-                                                                                fields: ['name', 'formatted_address', 'place_id', 'reviews', 'rating', 'user_ratings_total', 'types', 'geometry'],
-                                                                                strictBounds: false
-                                                                            }}
-                                                                            placeholder="Search for a clinic or hospital (e.g., London Dermatology)..."
-                                                                            className={`w-full block opacity-100 relative z-[9999] ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-black/5'} border pl-16 pr-8 py-6 rounded-[2rem] text-lg font-bold ${textColor} focus:ring-4 focus:ring-[#4285F4]/10 focus:border-[#4285F4]/40 outline-none transition-all shadow-inner`}
-                                                                        />
-                                                                    ) : (
+                                                                <div className="space-y-4 mb-5">
+                                                                    <label className="text-[11px] font-black uppercase text-slate-400 tracking-[0.3em] ml-1">Search Your Global Clinic Identity</label>
+                                                                    <div className="flex flex-wrap items-center gap-4">
+                                                                        <div className="relative group w-[560px] max-w-full">
+                                                                            <div className="absolute left-6 top-1/2 -translate-y-1/2">
+                                                                                <Globe className="w-6 h-6 text-slate-300 group-focus-within:text-[#4285F4] transition-colors" />
+                                                                            </div>
+                                                                            {GOOGLE_API_KEY ? (
+                                                                                <Autocomplete
+                                                                                    apiKey={GOOGLE_API_KEY}
+                                                                                    onPlaceSelected={(place: any) => {
+                                                                                        console.log("PLACE_SELECTED_NAME:", place?.name);
+                                                                                        if (place && place.place_id) {
+                                                                                            console.log(`SUCCESS: CAPTURED BRANCH_ID = ${place.place_id}`);
+                                                                                            setGooglePlaceId(place.place_id);
+                                                                                            if (place.name) setClinicName(place.name);
+                                                                                            setSyncStatus('synced');
+                                                                                            if (place.reviews) {
+                                                                                                const mappedReviews = place.reviews.map((r: any) => ({
+                                                                                                    author: r.author_name,
+                                                                                                    raw: r.text,
+                                                                                                    ai: `AI formalised: ${r.text.substring(0, 80)}...`,
+                                                                                                    date: r.relative_time_description,
+                                                                                                    rating: r.rating
+                                                                                                }));
+                                                                                                setLiveReviews(mappedReviews);
+                                                                                            }
+                                                                                        }
+                                                                                    }}
+                                                                                    options={{
+                                                                                        // Senior Engineer Note: Empty types array prevents Google from filtering out GPs 
+                                                                                        // or clinics that aren't strictly categorized as 'establishment' or 'dentist'.
+                                                                                        types: [],
+                                                                                        componentRestrictions: { country: ['gb', 'us', 'ca'] },
+                                                                                        fields: ['name', 'formatted_address', 'place_id', 'reviews', 'rating', 'user_ratings_total', 'types', 'geometry'],
+                                                                                        strictBounds: false
+                                                                                    }}
+                                                                                    placeholder="Search for a clinic or hospital (e.g., London Dermatology)..."
+                                                                                    className={`w-full block opacity-100 relative z-[9999] ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-black/5'} border pl-16 pr-8 h-[48px] rounded-[2rem] text-sm font-bold ${textColor} focus:ring-4 focus:ring-[#4285F4]/10 focus:border-[#4285F4]/40 outline-none transition-all shadow-inner`}
+                                                                                />
+                                                                            ) : (
                                                                         <div className={`w-full ${isDark ? 'bg-white/5' : 'bg-slate-50'} border-2 border-dashed border-red-500/50 p-6 rounded-[2rem] flex flex-col items-center gap-2`}>
                                                                             <span className="text-red-500 font-black text-xs uppercase tracking-widest">Environment Engine Error</span>
                                                                             <p className="text-[10px] text-slate-400 font-medium tracking-tight">VITE_GOOGLE_MAPS_API_KEY not recognized. Check Vercel project settings.</p>
@@ -471,6 +472,7 @@ export function ClinicSettings({
                                                                     </AnimatePresence>
                                                                 </div>
                                                             </div>
+                                                        </div>
 
                                                             {googlePlaceId && (
                                                                 <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">

@@ -344,16 +344,14 @@
 
 /* ─── Google Places Autocomplete: Nuclear Visibility Fix ─── */
 .pac-container {
-  width: 580px !important; /* Matches the new input width exactly */
+  width: 560px !important; /* Unified 560px width */
   background-color: #ffffff !important; /* Force solid white */
   opacity: 1 !important; /* No more transparency */
-  max-height: 250px !important; /* Cage the height - no more overflow */
+  max-height: 250px !important; /* Cage the height */
   overflow-y: auto !important; /* Enable internal scrolling */
-  border-radius: 0 0 12px 12px !important; /* Seamless connection */
+  border-radius: 12px !important; /* Premium rounded finish */
   border: 1px solid #E5E7EB !important;
-  border-top: none !important; /* Makes it look like it's part of the input */
   box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
-  margin-top: -1px !important; /* Pull it up to touch the input */
   z-index: 9999 !important;
 }
 
