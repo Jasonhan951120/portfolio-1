@@ -343,21 +343,22 @@
 }
 
 /* ─── Google Places Autocomplete: Nuclear Visibility Fix ─── */
-.pac-container {
-  width: 560px !important; /* HERO SYNC: Matches 560px input precisely */
+.pac-container { 
+  width: 560px !important; 
   background-color: #ffffff !important;
-  opacity: 1 !important;
+  margin-top: 5px !important; 
+  border-radius: 8px !important; 
+  z-index: 9999 !important; 
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
   border: 1px solid #E5E7EB !important;
-  border-top: none !important;
-  border-radius: 12px !important; /* Premium medical rounded corners */
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08) !important;
-  margin-top: 8px !important; /* Detached link for airy UI */
-  z-index: 9999 !important;
-  max-height: 280px !important;
-  overflow-y: auto !important;
 }
 .pac-item { padding: 14px 16px !important; cursor: pointer; }
 .pac-item-query { font-size: 15px !important; color: #111827 !important; }
 .pac-icon { display: none !important; }
+
+input::placeholder { 
+  color: #9CA3AF !important; 
+  font-size: 14px !important; 
+}
 
 
