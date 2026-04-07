@@ -387,18 +387,18 @@ export function ClinicSettings({
                                             </div>
                                         </div>
                                     )}
-                                    {activeTab === 'reputation' && (
-                                            <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 h-full flex flex-col overflow-visible">
-                                                <div className="text-inter">
-                                                    <h3 className={`text-5xl font-serif italic ${textColor} tracking-tight mb-2`}>Clinical Reputation Engine</h3>
-                                                    <p className="text-lg text-slate-500 font-medium tracking-tight">Elevate your practice through AI-curated authentic patient reviews.</p>
+                                    {activeTab === 'reputation' && (
+                                            <div className="space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-700 h-full flex flex-col overflow-visible">
+                                                <div className="text-center">
+                                                    <h3 className={`text-6xl font-serif italic ${textColor} tracking-tight mb-4`}>Clinical Reputation Engine</h3>
+                                                    <p className="text-xl text-slate-500 font-medium tracking-tight">Elevate your practice through AI-curated authentic patient reviews.</p>
                                                 </div>
 
-                                                {/* ROW 1: Search & Reputation Optimization */}
-                                                <div className="w-full flex flex-col items-center gap-10 overflow-visible">
-                                                    {/* Forced 560px Search Bar */}
-                                                    <div className="w-full flex justify-center mb-4 overflow-visible">
-                                                        <div className="relative group shadow-xl hover:shadow-2xl transition-all duration-500 rounded-[2rem]" style={{ width: '560px' }}>
+                                                {/* ROW 1: MISSION CONTROL (Search Hero) */}
+                                                <div className="w-full flex flex-col items-center gap-12 overflow-visible">
+                                                    {/* EXACT 560x48px Centered Search Bar */}
+                                                    <div className="w-full flex justify-center overflow-visible">
+                                                        <div className="relative group shadow-2xl hover:shadow-[#34A853]/10 transition-all duration-700 rounded-[2rem] bg-white p-1" style={{ width: '560px' }}>
                                                             <div className="absolute left-6 top-1/2 -translate-y-1/2 z-10">
                                                                 <Globe className="w-5 h-5 text-slate-300 group-focus-within:text-[#4285F4] transition-colors" />
                                                             </div>
@@ -414,7 +414,7 @@ export function ClinicSettings({
                                                                                 const mappedReviews = place.reviews.map((r: any) => ({
                                                                                     author: r.author_name,
                                                                                     raw: r.text,
-                                                                                    ai: `AI formalised: ${r.text.substring(0, 80)}...`,
+                                                                                    ai: r.text, // Will be prefixed in ReviewCard
                                                                                     date: r.relative_time_description,
                                                                                     rating: r.rating
                                                                                 }));
@@ -428,8 +428,8 @@ export function ClinicSettings({
                                                                         fields: ['name', 'formatted_address', 'place_id', 'reviews', 'rating', 'user_ratings_total', 'types', 'geometry'],
                                                                         strictBounds: false
                                                                     }}
-                                                                    placeholder="Search for your clinic..."
-                                                                    className={`w-full block opacity-100 relative ${isDark ? 'bg-[#1e293b] border-white/10' : 'bg-white border-black/5'} border pl-16 pr-8 rounded-[2rem] text-sm font-bold ${textColor} focus:ring-4 focus:ring-[#4285F4]/10 focus:border-[#4285F4]/40 outline-none transition-all`}
+                                                                    placeholder="Search for your clinic to unlock AI reputation..."
+                                                                    className={`w-full block opacity-100 relative ${isDark ? 'bg-[#1e293b] border-white/10' : 'bg-white border-transparent'} pl-16 pr-8 rounded-[1.8rem] text-sm font-bold ${textColor} focus:ring-0 outline-none transition-all placeholder:text-slate-300`}
                                                                     style={{ width: '560px', height: '48px' }}
                                                                 />
                                                             ) : (
@@ -440,111 +440,111 @@ export function ClinicSettings({
                                                         </div>
                                                     </div>
 
-                                                    {/* Reputation Status / Reviews */}
-                                                    <div className={`w-full !max-w-none p-10 ${cardBg} border ${borderColor} rounded-[3rem] shadow-luxury relative`}>
-                                                        <div className="absolute top-0 right-0 p-6">
-                                                            {syncStatus === 'synced' && (
-                                                                <div className="flex items-center gap-3 px-4 py-2 bg-emerald-50 border border-emerald-100 rounded-full">
-                                                                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                                                                    <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Connection Strength: High</span>
+                                                    {/* Integrated Reputation Status Area (Centered) */}
+                                                    <div className="w-full max-w-2xl flex flex-col items-center gap-6">
+                                                        {googlePlaceId ? (
+                                                            <div className="flex flex-col items-center gap-4 animate-in fade-in duration-1000">
+                                                                <div className="flex items-center gap-2">
+                                                                    {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 text-emerald-500 fill-emerald-500" />)}
                                                                 </div>
-                                                            )}
-                                                        </div>
-
-                                                        <div className="space-y-6">
-                                                            {googlePlaceId ? (
-                                                                <div className="space-y-6 animate-in fade-in duration-1000">
-                                                                    <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-                                                                        <h4 className="text-[11px] font-black uppercase text-slate-400 tracking-[0.2em]">Reputation Optimization Status</h4>
-                                                                        <div className="flex gap-2">
-                                                                            {[...Array(5)].map((_, i) => <Star key={i} className="w-3 h-3 text-yellow-400 fill-yellow-400" />)}
-                                                                        </div>
+                                                                <div className="flex items-center gap-4">
+                                                                    <div className="px-5 py-2 bg-emerald-50 border border-emerald-100 rounded-full flex items-center gap-2">
+                                                                        <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                                                                        <span className="text-[11px] font-black text-emerald-600 uppercase tracking-widest">Reputation Synced</span>
                                                                     </div>
-                                                                    
-                                                                    <div className="grid grid-cols-1 gap-6 max-h-[800px] overflow-y-auto pr-2 custom-scrollbar">
-                                                                        {liveReviews.map((rev: any, i: number) => (
-                                                                            <ReviewCard 
-                                                                                key={i}
-                                                                                rev={rev}
-                                                                                isDark={isDark}
-                                                                                cardBg={cardBg}
-                                                                                borderColor={borderColor}
-                                                                                textColor={textColor}
-                                                                            />
-                                                                        ))}
-                                                                    </div>
+                                                                    <span className="text-[12px] font-black text-slate-400 uppercase tracking-widest">Protocol Verified</span>
                                                                 </div>
-                                                            ) : (
-                                                                <div className="h-40 flex flex-col items-center justify-center text-center space-y-4">
-                                                                    <p className="text-slate-400 font-medium">Enter your practice identity above to unlock the AI reputation engine.</p>
-                                                                </div>
-                                                            )}
-                                                        </div>
+                                                            </div>
+                                                        ) : (
+                                                            <div className="text-center">
+                                                                <p className="text-slate-400 font-serif italic text-lg tracking-wide">Enter your practice identity above to begin optimization.</p>
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 </div>
 
-                                                {/* ROW 2: Dental Smile Preview */}
-                                                <div className="w-full pt-10 border-t border-slate-100 flex flex-col items-center">
+                                                {/* ROW 2: THE REPUTATION SHOWCASE (Expanded Side-by-Side Cards) */}
+                                                <div className="w-full space-y-12 overflow-visible">
+                                                    {googlePlaceId && (
+                                                        <div className="grid grid-cols-1 gap-12 animate-in fade-in duration-1000">
+                                                            {liveReviews.map((rev: any, i: number) => (
+                                                                <ReviewCard 
+                                                                    key={i}
+                                                                    rev={rev}
+                                                                    isDark={isDark}
+                                                                    cardBg={cardBg}
+                                                                    borderColor={borderColor}
+                                                                    textColor={textColor}
+                                                                />
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                {/* ROW 3 (Optional / Footer): Dental Smile Preview */}
+                                                <div className="w-full pt-20 border-t border-slate-100 flex flex-col items-center">
                                                     <div className="w-full max-w-5xl">
-                                                    <div className={`h-full p-8 ${isDark ? 'bg-[#0F172A]' : 'bg-[#F8FAFC]'} border ${borderColor} rounded-[3rem] shadow-inner relative overflow-hidden flex flex-col`}>
-                                                        <div className="absolute top-0 right-0 p-8">
-                                                            <div className="w-10 h-10 rounded-full border border-black/5 bg-white flex items-center justify-center font-serif italic text-lg shadow-sm">H</div>
-                                                        </div>
-                                                        
-                                                        <div className="mb-10">
-                                                            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400 block mb-6">Patient Proposal Preview</span>
-                                                            <h4 className={`text-4xl font-serif italic ${textColor} mb-4`}>{clinicName || 'The Signature Experience'}</h4>
-                                                            <div className="h-[2px] w-12 bg-[#c5a059] mb-8" />
-                                                        </div>
+                                                        <div className={`h-full p-12 ${isDark ? 'bg-[#0F172A]' : 'bg-[#F8FAFC]'} border ${borderColor} rounded-[3rem] shadow-inner relative overflow-hidden flex flex-col`}>
+                                                            <div className="absolute top-0 right-0 p-12">
+                                                                <div className="w-12 h-12 rounded-full border border-black/5 bg-white flex items-center justify-center font-serif italic text-xl shadow-sm">H</div>
+                                                            </div>
+                                                            
+                                                            <div className="mb-12">
+                                                                <span className="text-[11px] font-black uppercase tracking-[0.4em] text-slate-400 block mb-8">Patient Proposal Preview</span>
+                                                                <h4 className={`text-5xl font-serif italic ${textColor} mb-6`}>{clinicName || 'The Signature Experience'}</h4>
+                                                                <div className="h-[2px] w-16 bg-[#c5a059] mb-10" />
+                                                            </div>
 
-                                                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 flex-1">
-                                                            {/* Hero Review (Left) */}
-                                                            <div className="bg-white p-8 rounded-[2.5rem] shadow-xl border border-black/5 space-y-6 transform hover:scale-[1.02] transition-transform duration-500">
-                                                                <div className="flex gap-1 mb-2">
-                                                                    {[...Array(liveReviews[0]?.rating ? Math.floor(liveReviews[0].rating) : 5)].map((_, i) => <Star key={i} className="w-3.5 h-3.5 text-[#c5a059] fill-[#c5a059]" />)}
+                                                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 flex-1">
+                                                                {/* Hero Review (Left) */}
+                                                                <div className="bg-white p-10 rounded-[2.5rem] shadow-xl border border-black/5 space-y-8 transform hover:scale-[1.02] transition-transform duration-500">
+                                                                    <div className="flex gap-1 mb-2">
+                                                                        {[...Array(liveReviews[0]?.rating ? Math.floor(liveReviews[0].rating) : 5)].map((_, i) => <Star key={i} className="w-4 h-4 text-[#c5a059] fill-[#c5a059]" />)}
+                                                                    </div>
+                                                                    <p className="text-2xl font-serif italic text-slate-800 leading-relaxed">
+                                                                        "{liveReviews[0]?.ai || liveReviews[0]?.raw || 'Awaiting Google Review connection...'}"
+                                                                    </p>
+                                                                    <div className="flex items-center gap-5 pt-6 border-t border-slate-100">
+                                                                        <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-sm font-black text-slate-400 shadow-inner">
+                                                                           {liveReviews[0]?.author?.substring(0,2)?.toUpperCase() || '--'}
+                                                                        </div>
+                                                                        <div>
+                                                                            <p className="text-xs font-black text-slate-900 tracking-tight uppercase">{liveReviews[0]?.author || 'Pending'}</p>
+                                                                            <p className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">{liveReviews[0]?.date || 'Awaiting Verification'}</p>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                                <p className="text-xl font-serif italic text-slate-800 leading-relaxed">
-                                                                    "{liveReviews[0]?.ai || liveReviews[0]?.raw || 'Awaiting Google Review connection...'}"
+
+                                                                {/* AI Insights (Right) */}
+                                                                <div className="bg-white/40 p-10 rounded-[2.5rem] border border-white/60 space-y-8 h-full flex flex-col">
+                                                                    <div className="flex items-center gap-3">
+                                                                        <Sparkles className="w-6 h-6 text-[#c5a059]" />
+                                                                        <span className="text-[11px] font-black uppercase tracking-widest text-slate-500">AI Trust Insight</span>
+                                                                    </div>
+                                                                    <div className="flex-1 space-y-6">
+                                                                        <div className="h-5 w-full bg-slate-200/50 rounded-full animate-pulse" />
+                                                                        <div className="h-5 w-5/6 bg-slate-200/50 rounded-full animate-pulse" />
+                                                                        <div className="h-5 w-4/6 bg-slate-200/50 rounded-full animate-pulse" />
+                                                                    </div>
+                                                                    <div className="pt-6 mt-auto">
+                                                                        <div className="px-5 py-3 bg-emerald-50 rounded-full inline-flex items-center gap-3">
+                                                                            <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                                                                            <span className="text-[10px] font-black uppercase text-emerald-700 tracking-widest">Growth Factor: +24%</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div className="mt-16 pt-10 border-t border-slate-200/40">
+                                                                <p className="text-[11px] font-black uppercase text-slate-400 tracking-[0.2em] text-center">
+                                                                    Powered by Hanlan Clinical AI Engine
                                                                 </p>
-                                                                <div className="flex items-center gap-4 pt-4 border-t border-slate-100">
-                                                                    <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-xs font-black text-slate-400">{liveReviews[0]?.author?.substring(0,2)?.toUpperCase() || '--'}</div>
-                                                                    <div>
-                                                                        <p className="text-xs font-black text-slate-900 tracking-tight uppercase">{liveReviews[0]?.author || 'Pending'}</p>
-                                                                        <p className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">{liveReviews[0]?.date || 'Awaiting Verification'}</p>
-                                                                    </div>
-                                                                </div>
                                                             </div>
-
-                                                            {/* AI Insights (Right) */}
-                                                            <div className="bg-white/40 p-8 rounded-[2.5rem] border border-white/60 space-y-6 h-full flex flex-col">
-                                                                <div className="flex items-center gap-3">
-                                                                    <Sparkles className="w-5 h-5 text-[#c5a059]" />
-                                                                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">AI Trust Insight</span>
-                                                                </div>
-                                                                <div className="flex-1 space-y-4">
-                                                                    <div className="h-4 w-full bg-slate-200/50 rounded-full animate-pulse" />
-                                                                    <div className="h-4 w-5/6 bg-slate-200/50 rounded-full animate-pulse" />
-                                                                    <div className="h-4 w-4/6 bg-slate-200/50 rounded-full animate-pulse" />
-                                                                </div>
-                                                                <div className="pt-4 mt-auto">
-                                                                    <div className="px-4 py-2 bg-emerald-50 rounded-full inline-flex items-center gap-2">
-                                                                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                                                                        <span className="text-[8px] font-black uppercase text-emerald-700 tracking-widest">Growth Factor: +24%</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="mt-12 pt-8 border-t border-slate-200/40">
-                                                            <p className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] text-center">
-                                                                Powered by Hanlan Clinical AI Engine
-                                                            </p>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    )}
+                                        )}
                                     
                                     {activeTab === 'support' && (
                                         <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
