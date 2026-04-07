@@ -468,21 +468,45 @@ export function ClinicSettings({
                                                                         
                                                                         <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
                                                                             {liveReviews.map((rev: any, i: number) => (
-                                                                                <div key={i} className={`p-6 ${isDark ? 'bg-white/5' : 'bg-slate-50'} border ${borderColor} rounded-[2rem] space-y-4`}>
-                                                                                    <div className="flex justify-between items-center mb-2">
-                                                                                        <span className={`text-xs font-black ${textColor}`}>{rev.author}</span>
-                                                                                        <span className="text-[10px] text-slate-400 font-bold uppercase">{rev.date}</span>
-                                                                                    </div>
-                                                                                    <div className="grid grid-cols-2 gap-6">
-                                                                                        <div>
-                                                                                            <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Original Review</p>
-                                                                                            <p className="text-[11px] text-slate-400 font-medium italic">"{rev.raw}"</p>
+                                                                                <div key={i} className={`p-8 ${cardBg} border ${borderColor} rounded-[3rem] shadow-sm relative overflow-hidden group hover:shadow-md transition-all duration-500`}>
+                                                                                    <div className="flex justify-between items-center mb-6">
+                                                                                        <div className="flex items-center gap-3">
+                                                                                            <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-[10px] font-black text-slate-400 uppercase tracking-tighter">{rev.author?.substring(0,2)}</div>
+                                                                                            <span className={`text-[13px] font-black ${textColor} uppercase tracking-tight`}>{rev.author}</span>
                                                                                         </div>
-                                                                                        <div className="border-l border-slate-200 pl-6">
-                                                                                            <p className="text-[9px] font-black text-emerald-500 uppercase tracking-widest mb-1 flex items-center gap-1">
-                                                                                                <Sparkles className="w-2.5 h-2.5" /> AI formalised
+                                                                                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest bg-slate-50 px-3 py-1 rounded-full">{rev.date}</span>
+                                                                                    </div>
+                                                                                    
+                                                                                    {/* Laboratory Comparison Layout */}
+                                                                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 relative">
+                                                                                        {/* AI Magic Transition Icon */}
+                                                                                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 hidden lg:flex items-center justify-center">
+                                                                                            <div className="w-10 h-10 rounded-full bg-white border border-emerald-100 shadow-lg flex items-center justify-center animate-pulse">
+                                                                                                <Sparkles className="w-5 h-5 text-emerald-500" />
+                                                                                            </div>
+                                                                                        </div>
+
+                                                                                        {/* Left: Original Review Card */}
+                                                                                        <div className={`p-8 ${isDark ? 'bg-white/5' : 'bg-[#F9FAFB]'} rounded-l-[2.5rem] border-r border-slate-100 relative`}>
+                                                                                            <p className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.2em] mb-4">ORIGINAL REVIEW</p>
+                                                                                            <p className={`text-[15px] leading-[1.6] ${isDark ? 'text-slate-300' : 'text-[#374151]'} font-medium italic`}>
+                                                                                                "{rev.raw}"
                                                                                             </p>
-                                                                                            <p className={`text-[11px] ${textColor} font-bold`}>{rev.ai}</p>
+                                                                                        </div>
+
+                                                                                        {/* Right: AI Formalised Card */}
+                                                                                        <div className={`p-8 ${isDark ? 'bg-white/10' : 'bg-white'} rounded-r-[2.5rem] relative ${isDark ? '' : 'shadow-[0_0_40px_rgba(42,245,152,0.12)]'} z-10`}>
+                                                                                            <div className="flex items-center justify-between mb-4">
+                                                                                                <p className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.2em] flex items-center gap-1">
+                                                                                                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" /> AI formalised
+                                                                                                </p>
+                                                                                                <div className="px-3 py-1 bg-emerald-50 border border-emerald-100 rounded-full">
+                                                                                                    <span className="text-[8px] font-black text-emerald-600 uppercase tracking-widest leading-none">Clinical / Professional Tone</span>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <p className={`text-[15px] leading-[1.6] ${textColor} font-bold h-auto max-h-[300px] overflow-y-auto pr-4 custom-scrollbar`}>
+                                                                                                {rev.ai}
+                                                                                            </p>
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
