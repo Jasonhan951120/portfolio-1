@@ -388,131 +388,121 @@ export function ClinicSettings({
                                     )}
 
                                     {activeTab === 'reputation' && (
-                                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 h-full flex flex-col">
-                                            <div className="mb-10 text-inter">
-                                                <h3 className={`text-5xl font-serif italic ${textColor} tracking-tight mb-2`}>Clinical Reputation Engine</h3>
-                                                <p className="text-lg text-slate-500 font-medium tracking-tight">Elevate your practice through AI-curated authentic patient reviews.</p>
-                                            </div>
+                                            <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 h-full flex flex-col">
+                                                <div className="text-inter">
+                                                    <h3 className={`text-5xl font-serif italic ${textColor} tracking-tight mb-2`}>Clinical Reputation Engine</h3>
+                                                    <p className="text-lg text-slate-500 font-medium tracking-tight">Elevate your practice through AI-curated authentic patient reviews.</p>
+                                                </div>
 
-                                            <div className="grid grid-cols-12 gap-8 flex-1">
-                                                {/* Left side: Implementation & Search */}
-                                                <div className="col-span-12 lg:col-span-7 space-y-8">
-                                                    <div className={`p-10 ${cardBg} border ${borderColor} rounded-[3rem] shadow-luxury relative overflow-hidden`}>
-                                                        <div className="absolute top-0 right-0 p-6">
-                                                            {syncStatus === 'synced' && (
-                                                                <div className="flex items-center gap-3 px-4 py-2 bg-emerald-50 border border-emerald-100 rounded-full">
-                                                                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                                                                    <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Connection Strength: High</span>
-                                                                </div>
-                                                            )}
-                                                        </div>
-
-                                                        <div className="space-y-8">
-                                                                <div className="space-y-4 mb-5">
-                                                                    <label className="text-[11px] font-black uppercase text-slate-400 tracking-[0.3em] ml-1">Search Your Global Clinic Identity</label>
-                                                                    <div className="flex flex-wrap items-center gap-[12px]">
-                                                                        <div className="relative group w-[560px] max-w-[560px] shrink-0" style={{ width: '560px !important', maxWidth: '560px !important' } as any}>
-                                                                            <div className="absolute left-6 top-1/2 -translate-y-1/2">
-                                                                                <Globe className="w-6 h-6 text-slate-300 group-focus-within:text-[#4285F4] transition-colors" />
-                                                                            </div>
-                                                                            {GOOGLE_API_KEY ? (
-                                                                                <Autocomplete
-                                                                                    apiKey={GOOGLE_API_KEY}
-                                                                                    onPlaceSelected={(place: any) => {
-                                                                                        console.log("PLACE_SELECTED_NAME:", place?.name);
-                                                                                        if (place && place.place_id) {
-                                                                                            console.log(`SUCCESS: CAPTURED BRANCH_ID = ${place.place_id}`);
-                                                                                            setGooglePlaceId(place.place_id);
-                                                                                            if (place.name) setClinicName(place.name);
-                                                                                            setSyncStatus('synced');
-                                                                                            if (place.reviews) {
-                                                                                                const mappedReviews = place.reviews.map((r: any) => ({
-                                                                                                    author: r.author_name,
-                                                                                                    raw: r.text,
-                                                                                                    ai: `AI formalised: ${r.text.substring(0, 80)}...`,
-                                                                                                    date: r.relative_time_description,
-                                                                                                    rating: r.rating
-                                                                                                }));
-                                                                                                setLiveReviews(mappedReviews);
-                                                                                            }
-                                                                                        }
-                                                                                    }}
-                                                                                    options={{
-                                                                                        // Senior Engineer Note: Empty types array prevents Google from filtering out GPs 
-                                                                                        // or clinics that aren't strictly categorized as 'establishment' or 'dentist'.
-                                                                                        types: [],
-                                                                                        componentRestrictions: { country: ['gb', 'us', 'ca'] },
-                                                                                        fields: ['name', 'formatted_address', 'place_id', 'reviews', 'rating', 'user_ratings_total', 'types', 'geometry'],
-                                                                                        strictBounds: false
-                                                                                    }}
-                                                                                    placeholder="Search for a clinic or hospital (e.g., London Dermatology)..."
-                                                                                    className={`w-full block opacity-100 relative z-[9999] ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-black/5'} border pl-16 pr-8 h-[48px] rounded-[2rem] text-sm font-bold ${textColor} focus:ring-4 focus:ring-[#4285F4]/10 focus:border-[#4285F4]/40 outline-none transition-all shadow-inner`}
-                                                                                />
-                                                                            ) : (
-                                                                        <div className={`w-full ${isDark ? 'bg-white/5' : 'bg-slate-50'} border-2 border-dashed border-red-500/50 p-6 rounded-[2rem] flex flex-col items-center gap-2`}>
-                                                                            <span className="text-red-500 font-black text-xs uppercase tracking-widest">Environment Engine Error</span>
-                                                                            <p className="text-[10px] text-slate-400 font-medium tracking-tight">VITE_GOOGLE_MAPS_API_KEY not recognized. Check Vercel project settings.</p>
-                                                                        </div>
-                                                                    )}
-                                                                    
-                                                                    <AnimatePresence>
-                                                                        {!GOOGLE_API_KEY && showResults && (
-                                                                            <motion.div 
-                                                                                initial={{ opacity: 0, y: 15 }}
-                                                                                animate={{ opacity: 1, y: 0 }}
-                                                                                exit={{ opacity: 0, y: 15 }}
-                                                                                className={`absolute top-full left-0 right-0 z-50 mt-4 ${isDark ? 'bg-[#151C2F]' : 'bg-white'} border border-red-500 rounded-[2.5rem] shadow-2xl overflow-hidden`}
-                                                                            >
-                                                                                <div className="w-full p-6 flex flex-col items-center gap-2 text-center">
-                                                                                    <span className="text-red-500 font-bold">API Key Missing</span>
-                                                                                    <p className="text-[11px] text-slate-400 font-medium">Please provide a valid Google Maps API Key to enable search.</p>
-                                                                                </div>
-                                                                            </motion.div>
-                                                                        )}
-                                                                    </AnimatePresence>
-                                                                </div>
+                                                {/* Hero Row: Premium Search Interface */}
+                                                <div className="w-full flex flex-col items-center justify-center py-6 relative z-50">
+                                                    <div className="space-y-6 w-full max-w-[560px] mx-auto">
+                                                        <label className="text-[11px] font-black uppercase text-slate-400 tracking-[0.4em] block text-center mb-2">Search Your Global Clinic Identity</label>
+                                                        <div className={`relative group w-full ${isDark ? 'shadow-[0_20px_50px_rgba(42,245,152,0.15)]' : 'shadow-2xl'} transition-all duration-500 hover:scale-[1.01]`} style={{ width: '560px !important', maxWidth: '100% !important' } as any}>
+                                                            <div className="absolute left-6 top-1/2 -translate-y-1/2 z-10">
+                                                                <Globe className="w-6 h-6 text-slate-300 group-focus-within:text-[#4285F4] transition-colors" />
                                                             </div>
-                                                        </div>
-
-                                                            {googlePlaceId && (
-                                                                <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-                                                                    <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-                                                                        <h4 className="text-[11px] font-black uppercase text-slate-400 tracking-[0.2em]">Reputation Optimization Status</h4>
-                                                                        <div className="flex gap-2">
-                                                                            {[...Array(5)].map((_, i) => <Star key={i} className="w-3 h-3 text-yellow-400 fill-yellow-400" />)}
-                                                                        </div>
-                                                                    </div>
-                                                                    
-                                                                    <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-                                                                        {liveReviews.map((rev: any, i: number) => (
-                                                                            <div key={i} className={`p-6 ${isDark ? 'bg-white/5' : 'bg-slate-50'} border ${borderColor} rounded-[2rem] space-y-4`}>
-                                                                                <div className="flex justify-between items-center mb-2">
-                                                                                    <span className={`text-xs font-black ${textColor}`}>{rev.author}</span>
-                                                                                    <span className="text-[10px] text-slate-400 font-bold uppercase">{rev.date}</span>
-                                                                                </div>
-                                                                                <div className="grid grid-cols-2 gap-6">
-                                                                                    <div>
-                                                                                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Original Review</p>
-                                                                                        <p className="text-[11px] text-slate-400 font-medium italic">"{rev.raw}"</p>
-                                                                                    </div>
-                                                                                    <div className="border-l border-slate-200 pl-6">
-                                                                                        <p className="text-[9px] font-black text-emerald-500 uppercase tracking-widest mb-1 flex items-center gap-1">
-                                                                                            <Sparkles className="w-2.5 h-2.5" /> AI formalised
-                                                                                        </p>
-                                                                                        <p className={`text-[11px] ${textColor} font-bold`}>{rev.ai}</p>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        ))}
-                                                                    </div>
+                                                            {GOOGLE_API_KEY ? (
+                                                                <Autocomplete
+                                                                    apiKey={GOOGLE_API_KEY}
+                                                                    onPlaceSelected={(place: any) => {
+                                                                        console.log("PLACE_SELECTED_NAME:", place?.name);
+                                                                        if (place && place.place_id) {
+                                                                            console.log(`SUCCESS: CAPTURED BRANCH_ID = ${place.place_id}`);
+                                                                            setGooglePlaceId(place.place_id);
+                                                                            if (place.name) setClinicName(place.name);
+                                                                            setSyncStatus('synced');
+                                                                            if (place.reviews) {
+                                                                                const mappedReviews = place.reviews.map((r: any) => ({
+                                                                                    author: r.author_name,
+                                                                                    raw: r.text,
+                                                                                    ai: `AI formalised: ${r.text.substring(0, 80)}...`,
+                                                                                    date: r.relative_time_description,
+                                                                                    rating: r.rating
+                                                                                }));
+                                                                                setLiveReviews(mappedReviews);
+                                                                            }
+                                                                        }
+                                                                    }}
+                                                                    options={{
+                                                                        types: [],
+                                                                        componentRestrictions: { country: ['gb', 'us', 'ca'] },
+                                                                        fields: ['name', 'formatted_address', 'place_id', 'reviews', 'rating', 'user_ratings_total', 'types', 'geometry'],
+                                                                        strictBounds: false
+                                                                    }}
+                                                                    placeholder="Search for a clinic or hospital (e.g., London Dermatology)..."
+                                                                    className={`w-full block opacity-100 relative ${isDark ? 'bg-[#1e293b]/80 border-white/10' : 'bg-white border-black/5'} border pl-16 pr-8 h-[64px] rounded-[2rem] text-sm font-bold ${textColor} focus:ring-4 focus:ring-[#4285F4]/10 focus:border-[#4285F4]/40 outline-none transition-all`}
+                                                                />
+                                                            ) : (
+                                                                <div className={`w-full ${isDark ? 'bg-white/5' : 'bg-slate-50'} border-2 border-dashed border-red-500/50 p-6 rounded-[2rem] flex flex-col items-center gap-2`}>
+                                                                    <span className="text-red-500 font-black text-xs uppercase tracking-widest">Environment Engine Error</span>
+                                                                    <p className="text-[10px] text-slate-400 font-medium tracking-tight">VITE_GOOGLE_MAPS_API_KEY not recognized.</p>
                                                                 </div>
                                                             )}
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                {/* Right side: Live Preview Mockup */}
-                                                <div className="col-span-12 lg:col-span-5 h-full">
+                                                <div className="grid grid-cols-12 gap-8 flex-1">
+                                                    {/* Row 2: Status & Reviews */}
+                                                    <div className="col-span-12 lg:col-span-7 space-y-8">
+                                                        <div className={`p-10 ${cardBg} border ${borderColor} rounded-[3rem] shadow-luxury relative overflow-hidden h-full flex flex-col`}>
+                                                            <div className="absolute top-0 right-0 p-6">
+                                                                {syncStatus === 'synced' && (
+                                                                    <div className="flex items-center gap-3 px-4 py-2 bg-emerald-50 border border-emerald-100 rounded-full">
+                                                                        <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                                                                        <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Connection Strength: High</span>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+
+                                                            <div className="space-y-6 flex-1">
+                                                                {googlePlaceId ? (
+                                                                    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+                                                                        <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                                                                            <h4 className="text-[11px] font-black uppercase text-slate-400 tracking-[0.2em]">Reputation Optimization Status</h4>
+                                                                            <div className="flex gap-2">
+                                                                                {[...Array(5)].map((_, i) => <Star key={i} className="w-3 h-3 text-yellow-400 fill-yellow-400" />)}
+                                                                            </div>
+                                                                        </div>
+                                                                        
+                                                                        <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+                                                                            {liveReviews.map((rev: any, i: number) => (
+                                                                                <div key={i} className={`p-6 ${isDark ? 'bg-white/5' : 'bg-slate-50'} border ${borderColor} rounded-[2rem] space-y-4`}>
+                                                                                    <div className="flex justify-between items-center mb-2">
+                                                                                        <span className={`text-xs font-black ${textColor}`}>{rev.author}</span>
+                                                                                        <span className="text-[10px] text-slate-400 font-bold uppercase">{rev.date}</span>
+                                                                                    </div>
+                                                                                    <div className="grid grid-cols-2 gap-6">
+                                                                                        <div>
+                                                                                            <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Original Review</p>
+                                                                                            <p className="text-[11px] text-slate-400 font-medium italic">"{rev.raw}"</p>
+                                                                                        </div>
+                                                                                        <div className="border-l border-slate-200 pl-6">
+                                                                                            <p className="text-[9px] font-black text-emerald-500 uppercase tracking-widest mb-1 flex items-center gap-1">
+                                                                                                <Sparkles className="w-2.5 h-2.5" /> AI formalised
+                                                                                            </p>
+                                                                                            <p className={`text-[11px] ${textColor} font-bold`}>{rev.ai}</p>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            ))}
+                                                                        </div>
+                                                                    </div>
+                                                                ) : (
+                                                                    <div className="h-full flex flex-col items-center justify-center text-center p-12 space-y-4">
+                                                                        <div className="w-20 h-20 rounded-full bg-slate-50 flex items-center justify-center">
+                                                                            <Globe className="w-10 h-10 text-slate-200" />
+                                                                        </div>
+                                                                        <p className="text-slate-400 font-medium max-w-xs">Enter your practice identity above to unlock the AI reputation engine.</p>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Right side: Live Preview Mockup */}
+                                                    <div className="col-span-12 lg:col-span-5 h-full">
                                                     <div className={`h-full p-8 ${isDark ? 'bg-[#0F172A]' : 'bg-[#F8FAFC]'} border ${borderColor} rounded-[3rem] shadow-inner relative overflow-hidden flex flex-col`}>
                                                         <div className="absolute top-0 right-0 p-8">
                                                             <div className="w-10 h-10 rounded-full border border-black/5 bg-white flex items-center justify-center font-serif italic text-lg shadow-sm">H</div>
