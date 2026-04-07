@@ -244,67 +244,126 @@ export function ClinicSettings({
                                                 <h3 className={`text-xl font-black ${textColor} uppercase tracking-tight text-inter`}>Signature Menu Builder</h3>
                                             </div>
 
-                                            {/* [FIXED]: Mapping strictly from parent props 'templates' with LUXURY UI Upgrade */}
+                                            {/* [FIXED]: Mapping strictly from parent props 'templates' with CALIBRATED LUXURY UI */}
                                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                                 {templates.map(template => (
-                                                    <div key={template.id} className={`${cardBg} rounded-[2.5rem] border ${borderColor} p-10 shadow-luxury hover:shadow-2xl hover:scale-[1.02] transition-all duration-700 group relative overflow-hidden flex flex-col h-full bg-gradient-to-br from-white to-slate-50/50`}>
-                                                        {/* Luxury Hover Actions Overlay */}
-                                                        <div className="absolute inset-0 bg-white/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center gap-4 z-20">
-                                                            <button 
-                                                                onClick={() => { setEditingTreatmentId(template.id); setEditingTemplate(template); }} 
-                                                                className="w-12 h-12 flex items-center justify-center bg-[#111827] text-white rounded-full shadow-xl hover:scale-110 active:scale-95 transition-all"
-                                                            >
-                                                                <Settings className="w-5 h-5" />
-                                                            </button>
-                                                            <button 
-                                                                onClick={() => handleDeleteTemplate(template.id)} 
-                                                                className="w-12 h-12 flex items-center justify-center bg-white text-red-500 border border-red-100 rounded-full shadow-xl hover:scale-110 active:scale-95 transition-all"
-                                                            >
-                                                                <Trash2 className="w-5 h-5" />
-                                                            </button>
+                                                    <div key={template.id} className={`${cardBg} rounded-[2rem] border ${borderColor} p-10 shadow-luxury hover:shadow-2xl hover:scale-[1.02] transition-all duration-700 group relative overflow-visible flex flex-col h-full bg-gradient-to-br from-white to-slate-50/50`}>
+                                                        
+                                                        {/* Top Branding & Subtle Actions */}
+                                                        <div className="flex justify-between items-start mb-6 relative z-10">
+                                                            <div className="flex-1 pr-6">
+                                                                <h4 className={`text-[#111827] font-serif font-bold text-2xl tracking-tight leading-tight capitalize truncate`}>
+                                                                    {template.name.toLowerCase()}
+                                                                </h4>
+                                                                <div className={`mt-2 flex items-center gap-2`}>
+                                                                    <div className={`w-1.5 h-1.5 rounded-full ${template.price > 0 ? 'bg-emerald-500 animate-pulse' : 'bg-amber-400'}`} />
+                                                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{template.price > 0 ? 'Verified Clinical' : 'Draft Protocol'}</span>
+                                                                </div>
+                                                            </div>
+                                                            <div className="flex gap-2 relative z-30">
+                                                                <button 
+                                                                    onClick={(e) => { e.stopPropagation(); setEditingTreatmentId(template.id); setEditingTemplate(template); }} 
+                                                                    className="w-10 h-10 flex items-center justify-center text-slate-300 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition-all"
+                                                                >
+                                                                    <Settings className="w-5 h-5" />
+                                                                </button>
+                                                                <button 
+                                                                    onClick={(e) => { e.stopPropagation(); handleDeleteTemplate(template.id); }} 
+                                                                    className="w-10 h-10 flex items-center justify-center text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
+                                                                >
+                                                                    <Trash2 className="w-5 h-5" />
+                                                                </button>
+                                                            </div>
                                                         </div>
 
-                                                        <div className="space-y-6 flex-1 text-inter relative z-10">
-                                                            <div className="flex justify-between items-start">
-                                                                <div className="flex-1">
-                                                                    <h4 className={`text-[#111827] font-serif font-bold text-2xl tracking-tight leading-tight capitalize`}>
-                                                                        {template.name.toLowerCase()}
-                                                                    </h4>
-                                                                    <div className={`flex items-center gap-2 mt-3 px-3 py-1 rounded-full bg-emerald-50/50 border border-emerald-100/50 w-fit`}>
-                                                                        <div className={`w-1.5 h-1.5 rounded-full ${template.price > 0 ? 'bg-emerald-500 animate-pulse' : 'bg-amber-400'}`} />
-                                                                        <span className="text-[9px] font-black text-emerald-700/70 uppercase tracking-[0.15em]">{template.price > 0 ? 'Clinical Active' : 'Protocol Draft'}</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            
-                                                            <div className="pt-2">
-                                                                <p className="text-[#111827] font-bold text-3xl tracking-tighter flex items-center gap-1">
-                                                                    <span className="text-sm font-medium text-slate-400 align-top mt-1">{currency}</span>
-                                                                    {template.price.toLocaleString()}
-                                                                </p>
-                                                            </div>
+                                                        <div className="mb-10 pt-2 relative z-10">
+                                                            <p className="text-[#111827] font-bold text-4xl tracking-tighter flex items-center gap-1">
+                                                                <span className="text-sm font-medium text-slate-300 align-top mt-1">{currency}</span>
+                                                                {template.price.toLocaleString()}
+                                                            </p>
                                                         </div>
                                                         
-                                                        {/* Thin Iconography Footer */}
-                                                        <div className={`mt-10 pt-8 border-t border-slate-100/60 flex items-center justify-between relative z-10`}>
-                                                            <div className="flex items-center gap-x-5">
-                                                                {[template.beforeImg, template.afterImg].map((img, i) => (
-                                                                    <div key={i} className="flex flex-col items-center gap-2">
-                                                                        <div className={`w-12 h-12 rounded-2xl border border-slate-100 bg-white flex items-center justify-center shadow-sm overflow-hidden transition-all group-hover:border-emerald-200`}>
-                                                                            {img ? <img src={img} className="w-full h-full object-cover" alt="" /> : <Camera className="w-5 h-5 text-slate-300 stroke-[1.2]" />}
+                                                        {/* Calibrated Symmetry: Pre/Post Slot Logic */}
+                                                        <div className="grid grid-cols-2 gap-6 mt-auto relative z-10">
+                                                            {/* Pre Section */}
+                                                            <div className="flex flex-col gap-3">
+                                                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] text-center w-full">PRE</span>
+                                                                <div 
+                                                                    onClick={() => document.getElementById(`upload-before-${template.id}`)?.click()}
+                                                                    className={`aspect-square h-32 w-full rounded-2xl border-2 border-dashed border-slate-100 hover:border-emerald-200 bg-white flex items-center justify-center shadow-inner cursor-pointer transition-all overflow-hidden group/box`}
+                                                                >
+                                                                    {template.beforeImg ? (
+                                                                        <img src={template.beforeImg} className="w-full h-full object-cover group-hover/box:scale-110 transition-transform duration-700" alt="" />
+                                                                    ) : (
+                                                                        <div className="flex flex-col items-center gap-2">
+                                                                            <Camera className="w-6 h-6 text-slate-200 stroke-[1.2]" />
+                                                                            <span className="text-[8px] font-bold text-slate-300 uppercase tracking-[0.2em]">Upload</span>
                                                                         </div>
-                                                                        <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">{i === 0 ? 'Pre' : 'Post'}</span>
-                                                                    </div>
-                                                                ))}
-                                                            </div>
-                                                            
-                                                            <div className="h-8 w-[1px] bg-slate-100 hidden sm:block" />
-                                                            
-                                                            <div className="text-right">
-                                                                <span className="text-[9px] font-black text-slate-300 uppercase tracking-[0.3em] block mb-1">Hanlan Verified</span>
-                                                                <div className="flex justify-end gap-0.5">
-                                                                    {[...Array(5)].map((_, i) => <Star key={i} className="w-2.5 h-2.5 text-emerald-500/30 fill-emerald-500/30" />)}
+                                                                    )}
+                                                                    <input 
+                                                                        id={`upload-before-${template.id}`} 
+                                                                        type="file" className="hidden" 
+                                                                        accept="image/*"
+                                                                        onMouseDown={(e) => e.stopPropagation()}
+                                                                        onChange={(e) => {
+                                                                            const file = e.target.files?.[0];
+                                                                            if (file) {
+                                                                                const reader = new FileReader();
+                                                                                reader.onload = (revet) => {
+                                                                                    const updated = { ...template, beforeImg: revet.target?.result as string };
+                                                                                    setTemplates(prev => prev.map(t => t.id === template.id ? updated : t));
+                                                                                };
+                                                                                reader.readAsDataURL(file);
+                                                                            }
+                                                                        }}
+                                                                    />
                                                                 </div>
+                                                            </div>
+
+                                                            {/* Post Section */}
+                                                            <div className="flex flex-col gap-3">
+                                                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] text-center w-full">POST</span>
+                                                                <div 
+                                                                    onClick={() => document.getElementById(`upload-after-${template.id}`)?.click()}
+                                                                    className={`aspect-square h-32 w-full rounded-2xl border-2 border-dashed border-slate-100 hover:border-emerald-200 bg-white flex items-center justify-center shadow-inner cursor-pointer transition-all overflow-hidden group/box`}
+                                                                >
+                                                                    {template.afterImg ? (
+                                                                        <img src={template.afterImg} className="w-full h-full object-cover group-hover/box:scale-110 transition-transform duration-700" alt="" />
+                                                                    ) : (
+                                                                        <div className="flex flex-col items-center gap-2">
+                                                                            <Camera className="w-6 h-6 text-slate-200 stroke-[1.2]" />
+                                                                            <span className="text-[8px] font-bold text-slate-300 uppercase tracking-[0.2em]">Upload</span>
+                                                                        </div>
+                                                                    )}
+                                                                    <input 
+                                                                        id={`upload-after-${template.id}`} 
+                                                                        type="file" className="hidden" 
+                                                                        accept="image/*"
+                                                                        onMouseDown={(e) => e.stopPropagation()}
+                                                                        onChange={(e) => {
+                                                                            const file = e.target.files?.[0];
+                                                                            if (file) {
+                                                                                const reader = new FileReader();
+                                                                                reader.onload = (revet) => {
+                                                                                    const updated = { ...template, afterImg: revet.target?.result as string };
+                                                                                    setTemplates(prev => prev.map(t => t.id === template.id ? updated : t));
+                                                                                };
+                                                                                reader.readAsDataURL(file);
+                                                                            }
+                                                                        }}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Luxury Verification Footer */}
+                                                        <div className="mt-8 pt-8 border-t border-slate-50 flex items-center justify-between opacity-60">
+                                                            <div className="flex items-center gap-1.5 px-3 py-1 bg-slate-50 border border-slate-100 rounded-lg">
+                                                                <ShieldCheck className="w-3 h-3 text-emerald-600" />
+                                                                <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Protocol Secured</span>
+                                                            </div>
+                                                            <div className="flex gap-0.5">
+                                                                {[...Array(5)].map((_, i) => <Star key={i} className="w-2.5 h-2.5 text-emerald-500/20 fill-emerald-500/20" />)}
                                                             </div>
                                                         </div>
                                                     </div>
