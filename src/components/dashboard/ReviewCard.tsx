@@ -62,7 +62,9 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({ rev, isDark, cardBg, bor
             </div>
           </div>
           <p className={`text-[17px] text-[#111827] font-serif italic font-bold h-auto leading-[1.8] flex-1`} style={{ whiteSpace: 'pre-wrap' }}>
-            {rev.ai.startsWith('AI formalised:') ? rev.ai : `AI formalised: ${rev.ai}`}
+            {rev.ai 
+              ? (rev.ai.startsWith('AI formalised:') ? rev.ai : `AI formalised: ${rev.ai}`)
+              : 'AI Formalisation in progress...'}
           </p>
           
           <div className="mt-8 pt-6 border-t border-emerald-50 flex items-center gap-3">
