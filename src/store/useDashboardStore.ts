@@ -58,6 +58,8 @@ interface DashboardState {
   setActiveTreatments: (treatments: any[]) => void;
   googlePlaceId: string;
   setGooglePlaceId: (id: string) => void;
+  isSynced: boolean;
+  setIsSynced: (isSynced: boolean) => void;
 
   // Security & Audit State
   auditLogs: Record<string, any[]>;
@@ -251,9 +253,14 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
   activeTreatments: [],
   setActiveTreatments: (treatments) => set({ activeTreatments: treatments }),
   googlePlaceId: localStorage.getItem('google_place_id') || '',
-  setGooglePlaceId: (id) => {
+  setGooglePlaceId: (id: string) => {
     localStorage.setItem('google_place_id', id);
     set({ googlePlaceId: id });
+  },
+  isSynced: localStorage.getItem('is_synced') === 'true',
+  setIsSynced: (isSynced: boolean) => {
+    localStorage.setItem('is_synced', isSynced.toString());
+    set({ isSynced });
   },
 
   updateLead: (id, updates) => set((state) => ({

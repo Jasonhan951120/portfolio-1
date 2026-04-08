@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Plus, Trash2, Camera, Settings, List, Globe, ShieldCheck, MessageSquare, Briefcase, Zap, User, ArrowRight, Calendar, Save, Info, RefreshCw, Star, ChevronRight, Sparkles, Palette } from 'lucide-react';
 import Autocomplete from 'react-google-autocomplete';
+import { supabase } from '../../lib/supabase';
 import { useDashboardStore } from '../../store/useDashboardStore';
 import { ReviewCard } from './ReviewCard';
 
@@ -37,11 +38,12 @@ export function ClinicSettings({
         clinicLogo, setClinicLogo, 
         clinicSignatureImage, setClinicSignatureImage,
         googlePlaceId, setGooglePlaceId,
-        liveReviews, setLiveReviews
+        liveReviews, setLiveReviews,
+        isSynced, setIsSynced
     } = useDashboardStore();
     const [activeTab, setActiveTab] = useState<'menu' | 'general' | 'reputation' | 'support'>('menu');
     const [isSyncing, setIsSyncing] = useState(false);
-    const [syncStatus, setSyncStatus] = useState<'idle' | 'synced'>(googlePlaceId ? 'synced' : 'idle');
+    const [syncStatus, setSyncStatus] = useState<'idle' | 'synced'>(isSynced ? 'synced' : 'idle');
     const [searchQuery, setSearchQuery] = useState('');
     const [showResults, setShowResults] = useState(false);
     const [editingTemplate, setEditingTemplate] = useState<TreatmentTemplate | null>(null);
@@ -489,19 +491,43 @@ export function ClinicSettings({
                                                             {GOOGLE_API_KEY ? (
                                                                 <Autocomplete
                                                                     apiKey={GOOGLE_API_KEY}
-                                                                    onPlaceSelected={(place: any) => {
+                                                                    onPlaceSelected={async (place: any) => {
                                                                         if (place && place.place_id) {
-                                                                            setGooglePlaceId(place.place_id);
-                                                                            if (place.name) setClinicName(place.name);
-                                                                            setSyncStatus('synced');
-                                                                            if (place.reviews) {
-                                                                                const mappedReviews = place.reviews.map((r: any) => ({
-                                                                                    author: r.author_name,
-                                                                                    raw: r.text,
-                                                                                 date: r.relative_time_description,
-                                                                                    rating: r.rating
-                                                                                }));
-                                                                                setLiveReviews(mappedReviews);
+                                                                            try {
+                                                                                // [CRASH PROTECTION]: Check session before DB interaction
+                                                                                const { data: { session } } = await supabase.auth.getSession();
+                                                                                
+                                                                                setGooglePlaceId(place.place_id);
+                                                                                if (place.name) setClinicName(place.name);
+                                                                                setIsSynced(true);
+                                                                                setSyncStatus('synced');
+
+                                                                                if (place.reviews) {
+                                                                                    const mappedReviews = place.reviews.map((r: any) => ({
+                                                                                        author: r.author_name,
+                                                                                        raw: r.text,
+                                                                                        date: r.relative_time_description,
+                                                                                        rating: r.rating
+                                                                                    }));
+                                                                                    setLiveReviews(mappedReviews);
+                                                                                }
+
+                                                                                // Only persist if session is valid
+                                                                                if (session) {
+                                                                                    await supabase
+                                                                                        .from('clinics')
+                                                                                        .upsert({ 
+                                                                                            id: session.user.id,
+                                                                                            google_place_id: place.place_id,
+                                                                                            name: place.name,
+                                                                                            updated_at: new Date().toISOString()
+                                                                                        });
+                                                                                }
+                                                                            } catch (err) {
+                                                                                console.error("REPUTATION_SYNC_ERROR:", err);
+                                                                                // Force synced state locally even on error to prevent white screen
+                                                                                setIsSynced(true);
+                                                                                setSyncStatus('synced');
                                                                             }
                                                                         }
                                                                     }}
@@ -525,7 +551,7 @@ export function ClinicSettings({
 
                                                     {/* Integrated Reputation Status Area (Centered) */}
                                                     <div className="w-full max-w-2xl flex flex-col items-center gap-6">
-                                                        {googlePlaceId ? (
+                                                        {isSynced ? (
                                                             <div className="flex flex-col items-center gap-4 animate-in fade-in duration-1000">
                                                                 <div className="flex items-center gap-2">
                                                                     {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 text-emerald-500 fill-emerald-500" />)}

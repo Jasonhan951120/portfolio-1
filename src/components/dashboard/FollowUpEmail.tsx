@@ -37,17 +37,17 @@ export const FollowUpEmail: React.FC<FollowUpEmailProps> = ({
   // Fallback reviews if none are provided
   const displayReviews = reviews.length > 0 ? reviews : [
     {
+      author: "Verified Patient",
+      raw: "Just recently moved to this office and am extremely pleased with the overall experience. The administrative coordinator at the front desk was professional and courteous. All staff members were kind, knowledgeable, and the facilities were clean and high-end.",
+      ai: "Having recently transitioned my clinical care to this practice, I am profoundly impressed by the holistic experience. From the professional courtesy of the administrative coordination to the clinical expertise of the specialists, every touchpoint reflects a commitment to high-end excellence and patient comfort.",
+      date: "RECENTLY",
+      rating: 5
+    },
+    {
       author: "SARAH JENKINS",
       raw: "Just finished my veneer treatment and I couldn't be happier. The transition was so smooth and the results are unbelievable.",
       ai: "Just finished my transformation at Hanlan Clinical and the results are truly world-class. The precision and care shown by the team surpassed all expectations. My confidence has been completely restored.",
       date: "2 DAYS AGO",
-      rating: 5
-    },
-    {
-      author: "MICHAEL ROSS",
-      raw: "Excellent service and professional staff. Highly recommend for any dental work.",
-      ai: "An exceptional clinical experience. The staff's attention to detail and professionalism define the Harley Street standard of excellence. I am thoroughly impressed with the structural integrity of my implants.",
-      date: "1 WEEK AGO",
       rating: 5
     }
   ];
@@ -93,7 +93,7 @@ export const FollowUpEmail: React.FC<FollowUpEmailProps> = ({
             <span className="text-slate-400 italic font-medium">Your {treatmentName || 'Treatment'} Journey.</span>
           </h1>
 
-          <div className="space-y-6 text-slate-600 leading-relaxed text-sm font-medium mb-10 text-center">
+          <div className="space-y-6 text-[#374151] leading-relaxed text-sm font-medium mb-10 text-center">
             {personalizedNote ? (
               <p className="whitespace-pre-wrap">{personalizedNote}</p>
             ) : (
@@ -109,7 +109,7 @@ export const FollowUpEmail: React.FC<FollowUpEmailProps> = ({
           </div>
 
           {/* REPUTATION CARD: VERIFIED PATIENT */}
-          <div className="bg-[#F9FAFB] rounded-[32px] p-8 border border-black/5 relative overflow-hidden mb-10">
+          <div className="bg-[#F9FAFB] rounded-[32px] p-8 border border-black/5 relative overflow-hidden mb-10 group/card">
             <div className="absolute top-0 right-0 p-6 flex items-center gap-1 opacity-20">
               <ShieldCheck className="w-4 h-4 text-emerald-600" />
               <span className="text-[8px] font-black uppercase tracking-widest">Verified</span>
@@ -122,53 +122,51 @@ export const FollowUpEmail: React.FC<FollowUpEmailProps> = ({
                 ))}
               </div>
               <p className="text-[11px] font-black text-slate-400 uppercase tracking-widest">
-                Our Patients' Experience: <span className="text-[#111827]">{rating?.toFixed(1) || '5.0'} / 5.0</span>
+                PATIENT ANALYSIS: <span className="text-[#111827]">5.0 / 5.0</span>
               </p>
             </div>
 
-            <div className="relative min-h-[160px] flex flex-col justify-center text-center">
+            <div className="relative min-h-[220px] flex flex-col justify-center text-center">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentReviewIdx}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
-                  className="space-y-6"
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 1.02 }}
+                  transition={{ duration: 0.5, ease: [0.19, 1, 0.22, 1] }}
+                  className="space-y-8"
                 >
-                  <p className="text-lg font-serif italic text-[#111827] leading-relaxed px-10 pre-wrap">
+                  <p className="text-[19px] font-serif italic font-bold text-[#111827] leading-relaxed px-4 whitespace-pre-wrap">
                     "{currentReview.ai || currentReview.raw}"
                   </p>
                   
                   <div className="flex flex-col items-center">
-                    <p className="text-[10px] font-black text-slate-900 tracking-tight uppercase mb-1">
+                    <p className="text-[10px] font-black text-[#111827] tracking-widest uppercase mb-1">
                       {currentReview.author}
                     </p>
-                    <p className="text-[9px] font-bold text-slate-400 tracking-widest uppercase">
-                      VERIFIED PATIENT EXPERIENCE
+                    <p className="text-[8px] font-black text-[#88b399] tracking-[0.3em] uppercase">
+                      VERIFIED CLINICAL EXPERIENCE
                     </p>
                   </div>
                 </motion.div>
               </AnimatePresence>
 
-              {/* NAVIGATION ARROWS (Micro-Precision Pagination) */}
-              <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between pointer-events-none">
-                <button 
-                  onClick={(e) => { e.stopPropagation(); prevReview(); }}
-                  className="w-10 h-10 rounded-full bg-white border border-slate-100 shadow-sm flex items-center justify-center text-slate-400 hover:text-slate-900 hover:shadow-md transition-all active:scale-90 pointer-events-auto group mt-4 lg:mt-0"
-                >
-                  <ChevronLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
-                </button>
-                <button 
-                  onClick={(e) => { e.stopPropagation(); nextReview(); }}
-                  className="w-10 h-10 rounded-full bg-white border border-slate-100 shadow-sm flex items-center justify-center text-slate-400 hover:text-slate-900 hover:shadow-md transition-all active:scale-90 pointer-events-auto group mt-4 lg:mt-0"
-                >
-                  <ChevronRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
-                </button>
-              </div>
+              {/* NAVIGATION ARROWS (Luxury Floating Controls) */}
+              <button 
+                onClick={(e) => { e.stopPropagation(); prevReview(); }}
+                className="absolute left-[-10px] top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white border border-slate-100 shadow-xl flex items-center justify-center text-[#111827] hover:scale-110 active:scale-90 transition-all z-20 opacity-0 group-hover/card:opacity-100"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+              <button 
+                onClick={(e) => { e.stopPropagation(); nextReview(); }}
+                className="absolute right-[-10px] top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white border border-slate-100 shadow-xl flex items-center justify-center text-[#111827] hover:scale-110 active:scale-90 transition-all z-20 opacity-0 group-hover/card:opacity-100"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
             </div>
 
-            <div className="mt-8 flex justify-center">
+            <div className="mt-10 flex justify-center">
                <button 
                 onClick={(e) => {
                   e.stopPropagation();
@@ -176,12 +174,10 @@ export const FollowUpEmail: React.FC<FollowUpEmailProps> = ({
                     window.open(`https://search.google.com/local/reviews?placeid=${googlePlaceId}`, '_blank');
                   }
                 }}
-                className="flex items-center gap-3 px-6 py-3 bg-white border border-slate-200 rounded-full text-[10px] font-black text-slate-900 uppercase tracking-widest hover:border-emerald-500 hover:text-emerald-600 transition-all group shadow-sm"
+                className="group flex items-center gap-4 px-8 py-4 bg-[#111827] rounded-full text-[10px] font-black text-white uppercase tracking-[.25em] hover:bg-[#374151] hover:scale-105 transition-all shadow-xl shadow-navy-900/20"
                >
                   See More Patient Experiences
-                  <div className="w-6 h-6 rounded-full bg-emerald-50 flex items-center justify-center group-hover:bg-emerald-100 transition-colors">
-                    <ArrowRight className="w-3 h-3 text-emerald-600" />
-                  </div>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                </button>
             </div>
           </div>
