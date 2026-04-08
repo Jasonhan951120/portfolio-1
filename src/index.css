@@ -1,37 +1,39 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
 @theme {
-  --color-primary: #004d40;
+  --color-primary: #111827;
   --color-slate-50: #FAFAFA;
   --color-slate-100: #F1F5F9;
   --color-slate-200: #E2E8F0;
-  --color-slate-400: #88b399;
-  --color-slate-500: #4f4f4f;
-  --color-slate-800: #1a1a1a;
-  --color-slate-900: #1a1a1a;
-  --color-emerald-400: #88b399;
-  --color-emerald-500: #004d40;
-  --color-emerald-600: #003d33;
+  --color-slate-400: #374151;
+  --color-slate-500: #1f2937;
+  --color-slate-800: #111827;
+  --color-slate-900: #0f172a;
+  --color-emerald-400: #10b981;
+  --color-emerald-500: #047857;
+  --color-emerald-600: #064e3b;
   
   /* Force Neutralization of Dark Tokens */
-  --color-navy: #1a1a1a;
+  --color-navy: #111827;
   --color-surface: #FFFFFF;
   
   /* Clinical White Palette */
-  --accent-emerald: #004d40;
-  --accent-slate: #4f4f4f;
+  --accent-navy: #111827;
+  --accent-charcoal: #374151;
+  --accent-emerald: #059669;
   --accent-gold: #c5a059;
   
   --font-sans: "Inter", -apple-system, sans-serif;
   --font-display: "Inter", -apple-system, sans-serif;
+  --font-serif: "Playfair Display", serif;
   --font-inter: "Inter", -apple-system, sans-serif;
   --font-montserrat: "Montserrat", sans-serif;
 
   /* First-Class Luxury Shadows (Floating Jewel Effect) */
-  --shadow-luxury: 0 4px 15px rgba(26,26,26,0.05), 0 10px 25px rgba(26,26,26,0.02);
-  --shadow-luxury-hover: 0 16px 48px rgba(26,26,26,0.08), 0 4px 12px rgba(26,26,26,0.03);
-  --shadow-luxury-pulsed: 0 0 0 4px rgba(0, 77, 64, 0.05);
+  --shadow-luxury: 0 4px 20px rgba(17, 24, 39, 0.05), 0 10px 30px rgba(17, 24, 39, 0.02);
+  --shadow-luxury-hover: 0 20px 50px rgba(17, 24, 39, 0.08), 0 5px 15px rgba(17, 24, 39, 0.03);
+  --shadow-luxury-pulsed: 0 0 0 4px rgba(17, 24, 39, 0.05);
 
   @keyframes pulse-gentle {
     0%, 100% { opacity: 1; transform: scale(1); }
@@ -52,13 +54,14 @@
     font-family: "Inter", -apple-system, sans-serif !important;
     background-color: #FAFAFA !important;
     background: #FAFAFA !important;
-    color: #1a1a1a !important;
+    color: #111827 !important;
   }
 
   h1, h2, h3, h4 {
     @apply font-bold tracking-tight leading-tight text-slate-900;
-    color: #1a1a1a !important;
-    letter-spacing: -0.025em;
+    font-family: "Playfair Display", serif !important;
+    color: #111827 !important;
+    letter-spacing: -0.01em;
   }
 }
 

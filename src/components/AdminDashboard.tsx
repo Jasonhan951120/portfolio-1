@@ -2501,32 +2501,32 @@ export default function AdminDashboard() {
           <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm shrink-0">
             <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between gap-6">
 
-              {/* Left: Authority Metric Overlay (Dynamic Focus) */}
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-3 px-4 py-2 bg-white/90 backdrop-blur-md rounded-xl border border-slate-200/60 shadow-sm transition-all hover:shadow-md cursor-default">
-                  <div className="h-6 w-[2px] bg-red-400 rounded-full" />
+              {/* Left: Authority Metric Overlay (Aligned with Main Grid) */}
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3 px-5 py-2.5 bg-white border border-slate-200/60 shadow-sm rounded-2xl transition-all hover:shadow-md cursor-default">
+                  <div className="h-8 w-[3px] bg-slate-800 rounded-full" />
                   <div className="flex flex-col">
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] leading-none flex items-center gap-1 mb-1">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none flex items-center gap-1 mb-1.5 font-sans">
                       Unsecured
-                      <TrendingUp className="w-3 h-3 text-red-400 rotate-180" strokeWidth={3} />
+                      <TrendingUp className="w-3 h-3 text-slate-400 rotate-180" strokeWidth={3} />
                     </span>
                     <div className="flex items-baseline gap-1">
-                      <span className="text-xl font-black tabular-nums text-slate-900 tracking-tighter">
+                      <span className="text-2xl font-black tabular-nums text-slate-900 tracking-tighter font-sans">
                         <SlotNumber value={unsecuredPipeline} prefix={currency} />
                       </span>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 px-4 py-2 bg-white/90 backdrop-blur-md rounded-xl border border-slate-200/60 shadow-sm transition-all hover:shadow-md cursor-default">
-                  <div className="h-6 w-[2px] bg-emerald-500 rounded-full" />
+                <div className="flex items-center gap-3 px-5 py-2.5 bg-white border border-slate-200/60 shadow-sm rounded-2xl transition-all hover:shadow-md cursor-default">
+                  <div className="h-8 w-[3px] bg-slate-900 rounded-full" />
                   <div className="flex flex-col">
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] leading-none flex items-center gap-1 mb-1">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none flex items-center gap-1 mb-1.5 font-sans">
                       Secured
                       <TrendingUp className="w-3 h-3 text-emerald-500" strokeWidth={3} />
                     </span>
                     <div className="flex items-baseline gap-1">
-                      <span className="text-xl font-black tabular-nums text-slate-900 tracking-tighter">
+                      <span className="text-2xl font-black tabular-nums text-slate-900 tracking-tighter font-sans">
                         <SlotNumber value={totalRevenue} prefix={currency} />
                       </span>
                     </div>
@@ -2555,8 +2555,8 @@ export default function AdminDashboard() {
                 </button>
               </div>
 
-              {/* ── TIER 1: GLOBAL NAVIGATION (Apple-grade) ── */}
-              <div className="flex bg-slate-100/50 p-1 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden group">
+              {/* ── TIER 1: GLOBAL NAVIGATION (Anti-clipping Fix) ── */}
+              <div className="flex bg-slate-100/80 p-1.5 rounded-2xl border border-slate-200/80 shadow-inner relative overflow-hidden group">
                 {(['PIPELINE', 'INTELLIGENCE', 'VAULT', 'SECURITY'] as const).map(tab => (
                   <div key={tab} className="relative">
                     <button
@@ -2564,17 +2564,23 @@ export default function AdminDashboard() {
                         setActiveTab(tab);
                         if (tab === 'VAULT') setShowOnboardingTooltip(false);
                       }}
-                      className={`px-8 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.25em] transition-all duration-300 relative z-10 ${activeTab === tab
-                          ? 'text-emerald-700'
+                      className={`px-6 py-2 rounded-xl text-[11px] font-bold uppercase tracking-widest transition-all duration-300 relative z-10 font-sans ${activeTab === tab
+                          ? 'text-slate-900 translate-y-[-1px]'
                           : 'text-slate-400 hover:text-slate-600'
                         }`}
                     >
                       {activeTab === tab && (
-                        <motion.div
-                          layoutId="activeTabGlobal"
-                          className="absolute inset-0 bg-slate-50/80 rounded-xl shadow-[0_1px_0_rgba(0,0,0,0.05)] z-[-1]"
-                          transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                        />
+                        <>
+                          <motion.div
+                            layoutId="activeTabGlobal"
+                            className="absolute inset-0 bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] z-[-1]"
+                            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                          />
+                          <motion.div 
+                            layoutId="activeTabUnderline"
+                            className="absolute bottom-1 left-1/2 -translate-x-1/2 w-4 h-[2px] bg-emerald-500 rounded-full"
+                          />
+                        </>
                       )}
                       {tab}
                       {tab === 'VAULT' && showOnboardingTooltip && (

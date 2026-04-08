@@ -57,42 +57,46 @@ export const NorthStarSummaryCards: React.FC<{ currency?: string }> = ({ currenc
     ];
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
             {cards.map((card, idx) => (
                 <motion.div
                     key={card.title}
-                    initial={{ opacity: 0, y: 10 }}
+                    initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.1, duration: 0.4, ease: "easeOut" }}
-                    className="relative group bg-white/90 backdrop-blur-xl border border-slate-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl p-6 md:p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)]"
+                    transition={{ delay: idx * 0.1, duration: 0.5, ease: "easeOut" }}
+                    className="group bg-white border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] rounded-3xl p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] flex flex-col justify-between min-h-[220px]"
                 >
-                    <div className="flex justify-between items-start mb-6">
-                        <card.icon className="w-5 h-5 text-slate-400" strokeWidth={1.2} />
-                        <div className={`uppercase tracking-[0.2em] text-[10px] font-bold px-2 py-1 rounded-md flex items-center justify-center ${card.trend.includes('%') || card.trend === 'PRIORITY' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-slate-50 text-slate-400 border border-slate-100'}`}>
+                    <div className="flex justify-between items-start">
+                        <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center border border-slate-50 transition-colors group-hover:border-emerald-100 group-hover:bg-emerald-50/30">
+                            <card.icon className="w-6 h-6 text-slate-400 group-hover:text-emerald-600 transition-colors" strokeWidth={1} />
+                        </div>
+                        <div className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.2em] border ${card.trend.includes('%') || card.trend === 'PRIORITY' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-slate-50 text-slate-400 border-slate-100'}`}>
                             {card.trend.toUpperCase()}
                         </div>
                     </div>
 
-                    <div className="space-y-1">
-                        <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">{card.title}</h3>
+                    <div className="mt-8">
+                        <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest font-sans mb-1">{card.title}</h3>
                         <div className="flex items-baseline gap-1">
-                            <span className="text-4xl font-semibold text-slate-900 tracking-tight">
+                            <span className="text-4xl font-black text-slate-900 tracking-tighter font-serif">
                                 {typeof card.value === 'number' && card.title !== "Reputation Power" ? (
                                     <SlotNumber value={card.value} prefix={card.prefix} />
                                 ) : (
                                     <>
-                                        <span className="text-2xl text-slate-400 font-medium mr-1">{card.prefix}</span>
+                                        <span className="text-2xl text-slate-300 font-medium mr-1 font-sans">{card.prefix}</span>
                                         {card.value}
-                                        <span className="text-xl text-slate-400 font-medium ml-1">{card.suffix}</span>
+                                        <span className="text-xl text-slate-300 font-medium ml-1 font-sans">{card.suffix}</span>
                                     </>
                                 )}
                             </span>
                         </div>
                     </div>
 
-                    <div className="mt-8 flex items-center justify-between">
-                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 group-hover:text-slate-900 transition-colors">{card.description}</p>
-                        <ArrowUpRight className="w-4 h-4 text-slate-300 group-hover:text-emerald-500 transition-colors" strokeWidth={1.5} />
+                    <div className="mt-6 pt-6 border-t border-slate-50 flex items-center justify-between">
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 group-hover:text-slate-900 transition-colors font-sans">{card.description}</p>
+                        <div className="w-6 h-6 rounded-full bg-slate-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-4 group-hover:translate-x-0">
+                             <ArrowUpRight className="w-3.5 h-3.5 text-emerald-500" strokeWidth={2} />
+                        </div>
                     </div>
                 </motion.div>
             ))}
