@@ -552,65 +552,10 @@ export function ClinicSettings({
                                                         </div>
                                                     </div>
 
-                                                    {/* [NEW]: Reputation Performance Protocol (Horizontal Mode Selection) */}
-                                                    <div className="w-full max-w-5xl animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
-                                                        <div className="flex flex-col items-center gap-8">
-                                                            <div className="flex items-center gap-4">
-                                                                <div className="h-[1px] w-20 bg-slate-200" />
-                                                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] whitespace-nowrap">Clinical Performance Protocol</span>
-                                                                <div className="h-[1px] w-20 bg-slate-200" />
-                                                            </div>
-                                                            
-                                                            <div className="grid grid-cols-1 gap-4 w-full">
-                                                                {[
-                                                                    { id: 'Booster', title: 'Booster Mode', icon: <Zap />, desc: 'High aggression, AI assigns leads to Top Performers.' },
-                                                                    { id: 'Steady', title: 'Steady Mode', icon: <Target />, desc: 'Balanced volume, standard lead distribution logic.' },
-                                                                    { id: 'Saver', title: 'Saver Mode', icon: <TrendingUp />, desc: 'Conservative, AI focuses on low-cost high-convert leads.' }
-                                                                ].map((mode) => (
-                                                                    <button
-                                                                        key={mode.id}
-                                                                        onClick={() => setReputationMode(mode.id as any)}
-                                                                        className={`group relative overflow-hidden p-7 rounded-[2rem] border-2 transition-all duration-500 text-left w-full bg-white ${
-                                                                            reputationMode === mode.id
-                                                                                ? 'border-slate-900 shadow-lg scale-[1.005]'
-                                                                                : 'border-black/[0.03] shadow-sm hover:border-slate-200'
-                                                                        }`}
-                                                                    >
-                                                                        <div className="flex items-center justify-between relative z-10 gap-10">
-                                                                            <div className="flex items-center flex-1 gap-8">
-                                                                                {/* Icon Container - Minimal Style */}
-                                                                                <div className={`p-3.5 rounded-2xl border transition-colors duration-500 flex-shrink-0 bg-slate-50 border-black/5`}>
-                                                                                    <div className="text-slate-900">
-                                                                                        {mode.icon}
-                                                                                    </div>
-                                                                                </div>
-
-                                                                                {/* [MINIMAL HORIZONTAL]: Title & Description Side-by-Side */}
-                                                                                <div className="flex flex-row items-center gap-10 flex-1">
-                                                                                    <h4 className="text-xl font-serif italic tracking-tight whitespace-nowrap flex-shrink-0 text-slate-900">
-                                                                                        {mode.title}
-                                                                                    </h4>
-                                                                                    <p className="text-lg font-medium leading-relaxed transition-colors duration-500 text-slate-500">
-                                                                                        {mode.desc}
-                                                                                    </p>
-                                                                                </div>
-                                                                            </div>
-
-                                                                            {/* Selection Indicator (Minimalist) */}
-                                                                            {reputationMode === mode.id && (
-                                                                                <div className="bg-slate-900 text-white p-1.5 rounded-full shadow-lg flex-shrink-0 animate-in fade-in zoom-in-95">
-                                                                                    <Check className="w-3.5 h-3.5" strokeWidth={4} />
-                                                                                </div>
-                                                                            )}
-                                                                        </div>
-                                                                    </button>
-                                                                ))}
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    <div className="w-full h-8" /> 
 
                                                     {/* Integrated Reputation Status Area (Centered) */}
-                                                    <div className="w-full max-w-2xl flex flex-col items-center gap-6">
+                                                    <div className="w-full max-w-2xl flex flex-col items-center gap-6 mt-12">
                                                         {isSynced ? (
                                                             <div className="flex flex-col items-center gap-4 animate-in fade-in duration-1000">
                                                                 <div className="flex items-center gap-2">
