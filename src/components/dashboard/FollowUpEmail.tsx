@@ -38,17 +38,17 @@ export const FollowUpEmail: React.FC<FollowUpEmailProps> = ({
   const displayReviews = reviews.length > 0 ? reviews : [
     {
       author: "Verified Patient",
-      raw: "Just recently moved to this office and am extremely pleased with the overall experience. The administrative coordinator at the front desk was professional and courteous. All staff members were kind, knowledgeable, and the facilities were clean and high-end.",
-      ai: "Having recently transitioned my clinical care to this practice, I am profoundly impressed by the holistic experience. From the professional courtesy of the administrative coordination to the clinical expertise of the specialists, every touchpoint reflects a commitment to high-end excellence and patient comfort.",
+      raw: "Just recently moved to this office and am very happy I did! Everyone is extremely friendly and they take the time to listen to your questions - you don't feel rushed. Highly recommend!",
+      ai: "Just recently moved to this office and am very happy I did! Everyone is extremely friendly and they take the time to listen to your questions - you don't feel rushed. Highly recommend!",
       date: "RECENTLY",
-      rating: 5
+      rating: 5.0
     },
     {
       author: "SARAH JENKINS",
       raw: "Just finished my veneer treatment and I couldn't be happier. The transition was so smooth and the results are unbelievable.",
       ai: "Just finished my transformation at Hanlan Clinical and the results are truly world-class. The precision and care shown by the team surpassed all expectations. My confidence has been completely restored.",
       date: "2 DAYS AGO",
-      rating: 5
+      rating: 5.0
     }
   ];
 

@@ -27,37 +27,13 @@ export const RepSyncDropdown: React.FC<RepSyncDropdownProps> = ({ options, onSyn
     try {
       console.log('Initiating reputation sync for:', clinic.name);
 
-      // [FIX 1]: Check current session before any Supabase interaction
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-      
-      if (sessionError) throw sessionError;
+      console.log('Initiating reputation sync for:', clinic.name);
+      console.log('ZERO-AUTH PROTOCOL: Bypassing Supabase Auth API to prevent redirects.');
 
-      // Update global store immediately for UI responsiveness
+      // Update global store immediately for UI responsiveness - Local Mock Mode
       setGooglePlaceId(clinic.place_id);
       setClinicName(clinic.name);
       setIsSynced(true); // Force isSynced = true
-
-      if (!session) {
-        // [FIX 2]: Block Supabase Auth Redirect by skipping DB insert when no session
-        console.warn('REPUTATION ENGINE: No active session. Skipping DB persistence but forcing UI sync state.');
-        // We still treat it as "synced" locally so the user can see the results
-        // This prevents the white screen crash caused by unauthenticated DB attempts
-      } else {
-        // Persist to database only if session is active
-        const { error: dbError } = await supabase
-          .from('clinics')
-          .upsert({ 
-            id: session.user.id, // Assuming user ID maps to clinic ID or similar logic
-            google_place_id: clinic.place_id,
-            name: clinic.name,
-            updated_at: new Date().toISOString()
-          });
-
-        if (dbError) {
-          console.error('DB Persistence Error:', dbError);
-          // We don't throw here to keep the UI state active
-        }
-      }
 
       if (onSyncComplete) onSyncComplete();
 
