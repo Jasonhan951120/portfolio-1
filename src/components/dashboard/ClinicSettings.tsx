@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Plus, Trash2, Camera, Settings, List, Globe, ShieldCheck, MessageSquare, Briefcase, Zap, User, ArrowRight, Calendar, Save, Info, RefreshCw, Star, ChevronRight, Sparkles, Palette } from 'lucide-react';
+import { X, Plus, Trash2, Camera, Settings, List, Globe, ShieldCheck, MessageSquare, Briefcase, Zap, User, ArrowRight, Calendar, Save, Info, RefreshCw, Star, ChevronRight, Sparkles, Palette, Target, TrendingUp, Check } from 'lucide-react';
 import Autocomplete from 'react-google-autocomplete';
 import { supabase } from '../../lib/supabase';
 import { useDashboardStore } from '../../store/useDashboardStore';
@@ -39,7 +39,8 @@ export function ClinicSettings({
         clinicSignatureImage, setClinicSignatureImage,
         googlePlaceId, setGooglePlaceId,
         liveReviews, setLiveReviews,
-        isSynced, setIsSynced
+        isSynced, setIsSynced,
+        reputationMode, setReputationMode
     } = useDashboardStore();
     const [activeTab, setActiveTab] = useState<'menu' | 'general' | 'reputation' | 'support'>('menu');
     const [isSyncing, setIsSyncing] = useState(false);
@@ -548,6 +549,69 @@ export function ClinicSettings({
                                                                     <span className="text-red-500 font-bold text-[10px] uppercase">API Error</span>
                                                                 </div>
                                                             )}
+                                                        </div>
+                                                    </div>
+
+                                                    {/* [NEW]: Reputation Performance Protocol (Horizontal Mode Selection) */}
+                                                    <div className="w-full max-w-5xl animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
+                                                        <div className="flex flex-col items-center gap-8">
+                                                            <div className="flex items-center gap-4">
+                                                                <div className="h-[1px] w-20 bg-slate-200" />
+                                                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] whitespace-nowrap">Clinical Performance Protocol</span>
+                                                                <div className="h-[1px] w-20 bg-slate-200" />
+                                                            </div>
+                                                            
+                                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+                                                                {[
+                                                                    { id: 'Booster', title: 'Booster Mode', icon: <Zap />, desc: 'High aggression, AI assigns leads to Top Performers.' },
+                                                                    { id: 'Steady', title: 'Steady Mode', icon: <Target />, desc: 'Balanced volume, standard lead distribution logic.' },
+                                                                    { id: 'Saver', title: 'Saver Mode', icon: <TrendingUp />, desc: 'Conservative, AI focuses on low-cost high-convert leads.' }
+                                                                ].map((mode) => (
+                                                                    <button
+                                                                        key={mode.id}
+                                                                        onClick={() => setReputationMode(mode.id as any)}
+                                                                        className={`group relative overflow-hidden p-5 rounded-[1.8rem] border-2 transition-all duration-700 text-left ${
+                                                                            reputationMode === mode.id
+                                                                                ? 'border-slate-900 bg-slate-900 text-white shadow-2xl scale-[1.01]'
+                                                                                : 'border-black/[0.03] bg-white hover:border-slate-200 shadow-sm hover:shadow-md'
+                                                                        }`}
+                                                                    >
+                                                                        <div className="flex items-center justify-between relative z-10 gap-4">
+                                                                            <div className="flex items-center flex-1 gap-4">
+                                                                                {/* Icon Container */}
+                                                                                <div className={`p-2.5 rounded-2xl shadow-inner border transition-colors duration-500 ${
+                                                                                    reputationMode === mode.id ? 'bg-white/10 border-white/20' : 'bg-slate-50 border-black/5'
+                                                                                }`}>
+                                                                                    <div className={`${reputationMode === mode.id ? 'text-white' : 'text-slate-900'}`}>
+                                                                                        {mode.icon}
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                {/* Content Group */}
+                                                                                <div>
+                                                                                    <h4 className={`text-sm font-serif italic tracking-tight mb-0.5 ${
+                                                                                        reputationMode === mode.id ? 'text-white' : 'text-slate-900'
+                                                                                    }`}>
+                                                                                        {mode.title}
+                                                                                    </h4>
+                                                                                    <p className={`text-[11px] font-medium leading-tight opacity-70 ${
+                                                                                        reputationMode === mode.id ? 'text-slate-300' : 'text-[#374151]'
+                                                                                    }`}>
+                                                                                        {mode.desc}
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            {/* Selection Check */}
+                                                                            {reputationMode === mode.id && (
+                                                                                <div className="bg-white text-slate-900 p-1 rounded-full shadow-lg">
+                                                                                    <Check className="w-3 h-3" strokeWidth={4} />
+                                                                                </div>
+                                                                            )}
+                                                                        </div>
+                                                                    </button>
+                                                                ))}
+                                                            </div>
                                                         </div>
                                                     </div>
 

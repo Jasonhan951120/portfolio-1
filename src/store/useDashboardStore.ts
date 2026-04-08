@@ -60,6 +60,8 @@ interface DashboardState {
   setGooglePlaceId: (id: string) => void;
   isSynced: boolean;
   setIsSynced: (isSynced: boolean) => void;
+  reputationMode: 'Booster' | 'Steady' | 'Saver';
+  setReputationMode: (mode: 'Booster' | 'Steady' | 'Saver') => void;
 
   // Security & Audit State
   auditLogs: Record<string, any[]>;
@@ -261,6 +263,11 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
   setIsSynced: (isSynced: boolean) => {
     localStorage.setItem('is_synced', isSynced.toString());
     set({ isSynced });
+  },
+  reputationMode: (localStorage.getItem('reputation_mode') as 'Booster' | 'Steady' | 'Saver') || 'Steady',
+  setReputationMode: (mode) => {
+    localStorage.setItem('reputation_mode', mode);
+    set({ reputationMode: mode });
   },
 
   updateLead: (id, updates) => set((state) => ({

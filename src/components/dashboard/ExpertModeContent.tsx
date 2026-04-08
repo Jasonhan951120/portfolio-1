@@ -127,36 +127,50 @@ export function ExpertModeContent({
             {modes?.map((mode) => (
               <button
                 key={mode?.id}
-                onClick={() => setSelectedMode?.(mode?.id)}
-                className={`p-6 rounded-[32px] border transition-all duration-200 text-left group relative overflow-hidden active:scale-[0.98] ${
-                  selectedMode === mode?.id 
-                  ? `${mode?.accent} border-black/10 shadow-lg scale-[1.02]` 
-                  : 'bg-white border-black/[0.05] hover:border-black/10 hover:shadow-md'
+                onClick={() => setSelectedMode(mode?.id)}
+                className={`group relative overflow-hidden p-5 rounded-[1.8rem] border-2 transition-all duration-700 text-left ${
+                  selectedMode === mode?.id
+                    ? 'border-slate-900 bg-slate-900 text-white shadow-2xl scale-[1.01]'
+                    : 'border-black/[0.03] bg-white hover:border-slate-200 shadow-sm hover:shadow-md'
                 }`}
               >
-                <div className="flex items-start justify-between relative z-10">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2.5 bg-white rounded-2xl shadow-sm border border-black/[0.03]">
+                <div className="flex items-center justify-between relative z-10 gap-8">
+                  <div className="flex items-center flex-1 gap-6">
+                    {/* Icon Container */}
+                    <div className={`p-3 rounded-2xl shadow-inner border transition-colors duration-500 ${
+                      selectedMode === mode?.id ? 'bg-white/10 border-white/20' : 'bg-slate-50 border-black/5'
+                    }`}>
+                      <div className={`${selectedMode === mode?.id ? 'text-white' : 'text-slate-900'}`}>
                         {mode?.icon}
                       </div>
-                      <h4 className="font-black text-slate-900 tracking-tight">{mode?.title}</h4>
                     </div>
-                    <p className="text-xs text-slate-500 font-medium leading-relaxed max-w-[80%]">
-                      {mode?.desc}
-                    </p>
+
+                    {/* Content Group: Title & Description side-by-side */}
+                    <div className="flex items-center gap-10 flex-1">
+                      <h4 className={`text-xl font-serif italic tracking-tight whitespace-nowrap ${
+                        selectedMode === mode?.id ? 'text-white' : 'text-slate-900'
+                      }`}>
+                        {mode?.title}
+                      </h4>
+                      <p className={`text-base font-medium leading-relaxed transition-colors duration-500 ${
+                        selectedMode === mode?.id ? 'text-slate-300' : 'text-[#374151]'
+                      }`}>
+                        {mode?.desc}
+                      </p>
+                    </div>
                   </div>
+
+                  {/* Selection Indicator */}
                   {selectedMode === mode?.id && (
-                    <div className="bg-[#2AF598] p-1.5 rounded-full shadow-sm">
-                      <Check className="w-4 h-4 text-black" />
-                    </div>
+                    <motion.div
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      className="bg-white text-slate-900 p-1.5 rounded-full shadow-lg"
+                    >
+                      <Check className="w-4 h-4" strokeWidth={3} />
+                    </motion.div>
                   )}
                 </div>
-                
-                {/* Subtle background glow for active state */}
-                {selectedMode === mode?.id && (
-                  <div className="absolute -right-4 -bottom-4 w-32 h-32 bg-[#2AF598]/10 blur-3xl rounded-full" />
-                )}
               </button>
             ))}
           </div>
