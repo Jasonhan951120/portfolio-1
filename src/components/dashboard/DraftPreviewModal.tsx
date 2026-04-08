@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, MessageCircle, Mail, X, Loader2, Stethoscope } from 'lucide-react';
 import { useDashboardStore } from '../../store/useDashboardStore';
 import { type ConsultationRequest } from '../../lib/supabase';
+import { FollowUpEmail } from './FollowUpEmail';
 
 interface DraftPreviewModalProps {
   isOpen: boolean;
@@ -30,7 +31,16 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
   onSendWhatsApp,
   onSendEmail
 }) => {
-  const { clinicLogo, clinicSignatureImage, activeTreatments, templates } = useDashboardStore();
+  const { 
+    clinicLogo, 
+    clinicSignatureImage, 
+    activeTreatments, 
+    templates, 
+    clinicName,
+    liveReviews,
+    googleProfile,
+    googlePlaceId 
+  } = useDashboardStore();
   
   const [mounted, setMounted] = useState(false);
 
@@ -171,17 +181,47 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
                       </p>
                     </div>
                   ) : (
-                    <div className="flex-1 bg-white border border-slate-200/60 rounded-3xl p-6 flex flex-col shadow-sm min-h-0 max-h-[calc(100vh-250px)]">
+                    <div className="flex-1 bg-white border border-slate-200/60 rounded-3xl p-6 flex flex-col shadow-sm min-h-0 max-h-[calc(100vh-250px)] overflow-hidden">
                       <div className="mb-3 pb-3 border-b border-slate-100 shrink-0">
                         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Subject:</span>
                         <span className="ml-2 text-xs font-medium text-slate-800">Your personalized {lead.service || 'treatment'} journey</span>
                       </div>
-                      <textarea
-                        value={content}
-                        onChange={(e) => onContentChange(e.target.value)}
-                        className="flex-1 w-full bg-transparent text-xs text-slate-700 font-medium leading-relaxed resize-none focus:outline-none custom-scrollbar overflow-y-auto pb-4"
-                        placeholder="AI Brain synthesizing..."
-                      />
+                      
+                      {type === 'FOLLOWUP' ? (
+                        <div className="flex-1 flex flex-col lg:flex-row gap-6 overflow-hidden">
+                          {/* Rich Preview */}
+                          <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 rounded-2xl bg-slate-50/50 p-4 border border-slate-100">
+                            <FollowUpEmail 
+                              leadName={lead.name}
+                              clinicName={clinicName}
+                              clinicLogo={clinicLogo}
+                              treatmentName={lead.service || lead.treatment_name || 'Treatment'}
+                              reviews={liveReviews}
+                              rating={googleProfile?.rating}
+                              googlePlaceId={googlePlaceId}
+                              personalizedNote={content}
+                            />
+                          </div>
+                          
+                          {/* Live Editor */}
+                          <div className="w-full lg:w-1/3 flex flex-col border-t lg:border-t-0 lg:border-l border-slate-100 pt-4 lg:pt-0 lg:pl-4">
+                            <label className="text-[10px] font-black uppercase text-slate-400 mb-2 tracking-widest">Personalize Note</label>
+                            <textarea
+                              value={content}
+                              onChange={(e) => onContentChange(e.target.value)}
+                              className="flex-1 w-full bg-transparent text-xs text-slate-700 font-medium leading-relaxed resize-none focus:outline-none custom-scrollbar overflow-y-auto"
+                              placeholder="Personalize the clinical message..."
+                            />
+                          </div>
+                        </div>
+                      ) : (
+                        <textarea
+                          value={content}
+                          onChange={(e) => onContentChange(e.target.value)}
+                          className="flex-1 w-full bg-transparent text-xs text-slate-700 font-medium leading-relaxed resize-none focus:outline-none custom-scrollbar overflow-y-auto pb-4"
+                          placeholder="AI Brain synthesizing..."
+                        />
+                      )}
                     </div>
                   )}
                 </div>

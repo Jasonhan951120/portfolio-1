@@ -32,6 +32,8 @@ interface DashboardState {
   googleProfile: { name: string, rating: number, reviewCount: number } | null;
   setGoogleConnected: (isConnected: boolean, profile?: { name: string, rating: number, reviewCount: number }) => void;
   setGoogleProfile: (profile: { name: string, rating: number, reviewCount: number } | null) => void;
+  liveReviews: any[];
+  setLiveReviews: (reviews: any[]) => void;
   clinicId: string;
   setClinicId: (id: string) => void;
   subscribeToLeads: () => () => void;
@@ -199,6 +201,8 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
   setCurrency: (currency) => set({ currency, region: currency === '£' ? 'UK' : 'US' }),
   setGoogleConnected: (isConnected, profile) => set({ isGoogleConnected: isConnected, googleProfile: profile || null }),
   setGoogleProfile: (profile) => set({ googleProfile: profile }),
+  liveReviews: [],
+  setLiveReviews: (reviews) => set({ liveReviews: reviews }),
 
   clinicType: (localStorage.getItem('clinic_type') as 'Dental' | 'Aesthetic' | 'Wellness') || 'Dental',
   setClinicType: (type) => {

@@ -36,7 +36,8 @@ export function ClinicSettings({
         clinicName, setClinicName, 
         clinicLogo, setClinicLogo, 
         clinicSignatureImage, setClinicSignatureImage,
-        googlePlaceId, setGooglePlaceId
+        googlePlaceId, setGooglePlaceId,
+        liveReviews, setLiveReviews
     } = useDashboardStore();
     const [activeTab, setActiveTab] = useState<'menu' | 'general' | 'reputation' | 'support'>('menu');
     const [isSyncing, setIsSyncing] = useState(false);
@@ -48,7 +49,6 @@ export function ClinicSettings({
     const [communicationTone, setCommunicationTone] = useState<'Warm & Empathetic' | 'Refined & Professional'>('Refined & Professional');
     const [locale, setLocale] = useState('en-GB');
     const [editingTreatmentId, setEditingTreatmentId] = useState<string| null>(null);
-    const [liveReviews, setLiveReviews] = useState<any[]>([]);
 
     const GOOGLE_API_KEY = (import.meta.env.VITE_GOOGLE_MAPS_API_KEY || (typeof process !== 'undefined' ? process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY : '')) as string;
 
@@ -498,8 +498,7 @@ export function ClinicSettings({
                                                                                 const mappedReviews = place.reviews.map((r: any) => ({
                                                                                     author: r.author_name,
                                                                                     raw: r.text,
-                                                                                    ai: r.text, // Will be prefixed in ReviewCard
-                                                                                    date: r.relative_time_description,
+                                                                                 date: r.relative_time_description,
                                                                                     rating: r.rating
                                                                                 }));
                                                                                 setLiveReviews(mappedReviews);
