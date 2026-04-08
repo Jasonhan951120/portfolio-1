@@ -20,6 +20,7 @@ interface FollowUpEmailProps {
   reviewCount?: number;
   googlePlaceId?: string;
   personalizedNote?: string;
+  reputationMode?: 'Booster' | 'Steady' | 'Saver';
 }
 
 export const FollowUpEmail: React.FC<FollowUpEmailProps> = ({
@@ -30,7 +31,8 @@ export const FollowUpEmail: React.FC<FollowUpEmailProps> = ({
   reviews = [],
   rating = 4.9,
   googlePlaceId,
-  personalizedNote
+  personalizedNote,
+  reputationMode = 'Steady'
 }) => {
   const [currentReviewIdx, setCurrentReviewIdx] = useState(0);
 
@@ -49,8 +51,28 @@ export const FollowUpEmail: React.FC<FollowUpEmailProps> = ({
       ai: "Just finished my transformation at Hanlan Clinical and the results are truly world-class. The precision and care shown by the team surpassed all expectations. My confidence has been completely restored.",
       date: "2 DAYS AGO",
       rating: 5.0
+    },
+    {
+        author: "ALEX MONROE",
+        raw: "Five stars across the board for Hanlan. The wait was minimal and the service was world-class.",
+        ai: "The clinical standard at Hanlan is unparalleled. Every detail of my protocol was executed with surgical precision. Highly recommended for those seeking VVIP care.",
+        date: "1 WEEK AGO",
+        rating: 5.0
     }
   ];
+
+  // Logic for Dynamic Review Selection based on Reputation Mode
+  let selectedReviews: Review[] = [];
+  if (reputationMode === 'Booster') {
+      selectedReviews = displayReviews.slice(0, 3);
+  } else if (reputationMode === 'Saver') {
+      // Find the best review
+      const best = [...displayReviews].sort((a, b) => b.rating - a.rating)[0];
+      selectedReviews = [best];
+  } else {
+      // Steady - use the first (most recent)
+      selectedReviews = [displayReviews[0]];
+  }
 
   const currentReview = displayReviews[currentReviewIdx];
 
@@ -108,65 +130,80 @@ export const FollowUpEmail: React.FC<FollowUpEmailProps> = ({
             )}
           </div>
 
-          {/* REPUTATION CARD: VERIFIED PATIENT */}
-          <div className="bg-[#F9FAFB] rounded-[32px] p-8 border border-black/5 relative overflow-hidden mb-10 group/card">
-            <div className="absolute top-0 right-0 p-6 flex items-center gap-1 opacity-20">
-              <ShieldCheck className="w-4 h-4 text-emerald-600" />
-              <span className="text-[8px] font-black uppercase tracking-widest">Verified</span>
-            </div>
-
-            <div className="flex flex-col items-center mb-8">
-              <div className="flex gap-1.5 mb-3">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 text-[#c5a059] fill-[#c5a059]" />
+          {/* DYNAMIC SOCIAL PROOF SECTION: Injected based on Reputation Mode */}
+          <div className="w-full mb-10">
+            {reputationMode === 'Booster' ? (
+              /* BOOSTER MODE: Triple Testimonial Prestige Stack */
+              <div className="space-y-4">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                     <div className="flex gap-0.5">
+                        {[...Array(5)].map((_, i) => <Star key={i} className="w-3 h-3 text-[#c5a059] fill-[#c5a059]" />)}
+                     </div>
+                     <span className="text-[10px] font-black text-[#111827] uppercase tracking-widest">Clinic Performance: 5.0</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 px-3 py-1 bg-emerald-50 rounded-full border border-emerald-100">
+                    <ShieldCheck className="w-3 h-3 text-emerald-600" />
+                    <span className="text-[8px] font-black text-emerald-700 uppercase tracking-widest">Verified Results</span>
+                  </div>
+                </div>
+                
+                {selectedReviews.map((rev, idx) => (
+                  <motion.div 
+                    key={idx}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.1 }}
+                    className="bg-[#F9FAFB] rounded-3xl p-6 border border-black/[0.03] shadow-sm hover:shadow-md transition-shadow"
+                  >
+                    <p className="text-[15px] font-serif italic font-bold text-[#111827] leading-relaxed mb-4">
+                      "{rev.ai || rev.raw}"
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{rev.author}</span>
+                      <span className="text-[8px] font-black text-[#c5a059] uppercase tracking-[0.2em]">Verified Patient</span>
+                    </div>
+                  </motion.div>
                 ))}
               </div>
-              <p className="text-[11px] font-black text-slate-400 uppercase tracking-widest">
-                PATIENT ANALYSIS: <span className="text-[#111827]">5.0 / 5.0</span>
-              </p>
-            </div>
+            ) : (
+              /* STEADY/SAVER MODE: Singular High-Impact Card */
+              <div className="bg-[#F9FAFB] rounded-[32px] p-8 border border-black/5 relative overflow-hidden group/card shadow-sm">
+                <div className="absolute top-0 right-0 p-6 flex items-center gap-1 opacity-20">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                  <span className="text-[8px] font-black uppercase tracking-widest">Verified</span>
+                </div>
 
-            <div className="relative min-h-[220px] flex flex-col justify-center text-center">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentReviewIdx}
-                  initial={{ opacity: 0, scale: 0.98 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1.02 }}
-                  transition={{ duration: 0.5, ease: [0.19, 1, 0.22, 1] }}
-                  className="space-y-8"
-                >
-                  <p className="text-[19px] font-serif italic font-bold text-[#111827] leading-relaxed px-4 whitespace-pre-wrap">
-                    "{currentReview.ai || currentReview.raw}"
+                <div className="flex flex-col items-center mb-8">
+                  <div className="flex gap-1.5 mb-3">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 text-[#c5a059] fill-[#c5a059]" />
+                    ))}
+                  </div>
+                  <p className="text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                    PATIENT ANALYSIS: <span className="text-[#111827]">5.0 / 5.0</span>
+                  </p>
+                </div>
+
+                <div className="text-center">
+                  <p className="text-[19px] font-serif italic font-bold text-[#111827] leading-relaxed px-4 whitespace-pre-wrap mb-8">
+                    "{selectedReviews[0]?.ai || selectedReviews[0]?.raw}"
                   </p>
                   
                   <div className="flex flex-col items-center">
                     <p className="text-[10px] font-black text-[#111827] tracking-widest uppercase mb-1">
-                      {currentReview.author}
+                      {selectedReviews[0]?.author}
                     </p>
                     <p className="text-[8px] font-black text-[#88b399] tracking-[0.3em] uppercase">
                       VERIFIED CLINICAL EXPERIENCE
                     </p>
                   </div>
-                </motion.div>
-              </AnimatePresence>
+                </div>
+              </div>
+            )}
 
-              {/* NAVIGATION ARROWS (Luxury Floating Controls) */}
-              <button 
-                onClick={(e) => { e.stopPropagation(); prevReview(); }}
-                className="absolute left-[-10px] top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white border border-slate-100 shadow-xl flex items-center justify-center text-[#111827] hover:scale-110 active:scale-90 transition-all z-20 opacity-0 group-hover/card:opacity-100"
-              >
-                <ChevronLeft className="w-6 h-6" />
-              </button>
-              <button 
-                onClick={(e) => { e.stopPropagation(); nextReview(); }}
-                className="absolute right-[-10px] top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white border border-slate-100 shadow-xl flex items-center justify-center text-[#111827] hover:scale-110 active:scale-90 transition-all z-20 opacity-0 group-hover/card:opacity-100"
-              >
-                <ChevronRight className="w-6 h-6" />
-              </button>
-            </div>
-
-            <div className="mt-10 flex justify-center">
+            {/* View More Logic (Common for all modes) */}
+            <div className="mt-8 flex justify-center">
                <button 
                 onClick={(e) => {
                   e.stopPropagation();

@@ -39,7 +39,8 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
     clinicName,
     liveReviews,
     googleProfile,
-    googlePlaceId 
+    googlePlaceId,
+    reputationMode 
   } = useDashboardStore();
   
   const [mounted, setMounted] = useState(false);
@@ -200,6 +201,7 @@ export const DraftPreviewModal: React.FC<DraftPreviewModalProps> = ({
                               rating={googleProfile?.rating}
                               googlePlaceId={googlePlaceId}
                               personalizedNote={content}
+                              reputationMode={reputationMode}
                             />
                           </div>
                           

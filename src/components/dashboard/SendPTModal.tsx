@@ -54,7 +54,7 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
   onUpdateLead,
   templates = []
 }) => {
-  const { clinicType, clinicName: globalClinicName } = useDashboardStore();
+  const { clinicType, clinicName: globalClinicName, reputationMode, liveReviews } = useDashboardStore();
   const activeClinicName = globalClinicName || clinicName;
   const [isSending, setIsSending] = useState(false);
   const [isSent, setIsSent] = useState(false);
@@ -79,7 +79,7 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
        setEmailSubject(`Bespoke ${treatmentName} Clinical Proposal - ${activeClinicName}`);
        
        const ptLink = `${window.location.origin}/pt/${lead.id.substring(0, 8)}`;
-       let initialNote = lead.pt_personalized_note || matchedTemplate?.emailContents || INDUSTRY_TEMPLATES[clinicType].professional;
+       let initialNote = lead.pt_personalized_note || matchedTemplate?.emailContents || INDUSTRY_TEMPLATES[clinicType as keyof typeof INDUSTRY_TEMPLATES].professional;
        initialNote = initialNote
            .replace(/{PatientName}/g, firstName)
            .replace(/{ClinicName}/g, activeClinicName)
@@ -88,7 +88,7 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
        setEmailTemplate(initialNote);
        setErrorMsg(null);
     }
-  }, [isOpen, lead, templates, clinicName, clinicType]);
+  }, [isOpen, lead, templates, clinicName, clinicType, activeClinicName]);
 
   const getProcessingNames = () => {
     const template = templates.find(t => t.id === selectedTemplateId);
@@ -100,14 +100,14 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
 
   const applyDualTemplate = (tone: 'friendly' | 'professional') => {
     const { patientName, treatmentName } = getProcessingNames();
-    const ptLink = `${window.location.origin}/pt/${lead?.id.substring(0, 8)}`;
+    const ptLink = `${window.location.origin}/proposal/${lead?.id.substring(0, 8)}`;
 
     if (tone === 'friendly') {
         setEmailSubject(`Your Transformation Journey: Bespoke ${treatmentName} Proposal`);
-        setEmailTemplate(`Hi ${patientName},\n\nIt was a true pleasure meeting you at the clinic today. I am so excited to help you start your ${treatmentName} journey. I've prepared a bespoke plan just for you to ensure you get the absolute best results.\n\n✨ [View Your Personal Proposal: ${window.location.origin}/proposal/${lead?.id.substring(0, 8)}]\n\nI can't wait to see your results!\n\nBest regards, The Hanlanoc Team`);
+        setEmailTemplate(`Hi ${patientName},\n\nIt was a true pleasure meeting you at the clinic today. I am so excited to help you start your ${treatmentName} journey. I've prepared a bespoke plan just for you to ensure you get the absolute best results.\n\n✨ [View Your Personal Proposal: ${ptLink}]\n\nI can't wait to see your results!\n\nBest regards, The Hanlanoc Team`);
     } else {
         setEmailSubject(`Clinical Proposal & Digital Protocol: ${treatmentName} - ${patientName}`);
-        setEmailTemplate(`Dear ${patientName},\n\nThank you for choosing our clinic for your ${treatmentName} consultation. Based on our comprehensive clinical evaluation, I have finalized your bespoke protocol and digital proposal.\n\n✨ [View Your Personal Proposal: ${window.location.origin}/proposal/${lead?.id.substring(0, 8)}]\n\nThis plan is meticulously designed to deliver optimal outcomes while prioritizing your unique requirements.\n\nBest regards, The Hanlanoc Team`);
+        setEmailTemplate(`Dear ${patientName},\n\nThank you for choosing our clinic for your ${treatmentName} consultation. Based on our comprehensive clinical evaluation, I have finalized your bespoke protocol and digital proposal.\n\n✨ [View Your Personal Proposal: ${ptLink}]\n\nThis plan is meticulously designed to deliver optimal outcomes while prioritizing your unique requirements.\n\nBest regards, The Hanlanoc Team`);
     }
   };
 
@@ -119,8 +119,7 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
       const { patientName, treatmentName } = getProcessingNames();
       setEmailSubject(`Your Bespoke ${treatmentName} Proposal - ${activeClinicName}`);
       
-      const ptLink = `${window.location.origin}/pt/${lead?.id.substring(0, 8)}`;
-      const rawBody = template.emailContents || INDUSTRY_TEMPLATES[clinicType].professional;
+      const rawBody = template.emailContents || INDUSTRY_TEMPLATES[clinicType as keyof typeof INDUSTRY_TEMPLATES].professional;
       const processedBody = rawBody
         .replace(/{PatientName}/g, patientName)
         .replace(/{ClinicName}/g, activeClinicName)
@@ -135,11 +134,24 @@ export const SendPTModal: React.FC<SendPTModalProps> = ({
     const { patientName } = getProcessingNames();
     const proposalLink = `${window.location.origin}/proposal/${lead.id.substring(0, 8)}`;
     
-    const message = `✨ *${activeClinicName}*\n\nHi ${patientName},\n\nYour bespoke Digital Protocol & Treatment Proposal is now ready for review.\n\nFollowing our consultation, we have finalized your personalized clinical plan. You can access your secure patient portal here:\n\n🔗 View My Full Proposal: ${proposalLink}\n\nSincerely,\n\nThe *${activeClinicName}* Team`;
+    // Select appropriate review based on mode
+    let reviewSnippet = "";
+    if (liveReviews && liveReviews.length > 0) {
+        let selectedReview;
+        if (reputationMode === 'Saver') {
+            selectedReview = [...liveReviews].sort((a, b) => b.rating - a.rating)[0];
+        } else {
+            selectedReview = liveReviews[0];
+        }
+        
+        if (selectedReview) {
+            reviewSnippet = `\n\n⭐ *${activeClinicName} 의료진을 만난 환자들의 후기:*\n"${selectedReview.ai || selectedReview.raw.substring(0, 100)}..." ⭐⭐⭐⭐⭐`;
+        }
+    }
+
+    const message = `✨ *${activeClinicName}*\n\nHi ${patientName},\n\nYour bespoke Digital Protocol & Treatment Proposal is now ready for review.\n\nFollowing our consultation, we have finalized your personalized clinical plan. You can access your secure patient portal here:\n\n🔗 View My Full Proposal: ${proposalLink}${reviewSnippet}\n\nSincerely,\n\nThe *${activeClinicName}* Team\n\n_// TODO: Integrate review image card generation API_`;
     
-    // Force CEO's test number as requested for the test phase
-    const testPhone = "821033951543";
-    const whatsappUrl = `https://wa.me/${testPhone}?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/${lead.phone.replace(/[^\D]/g, '')}?text=${encodeURIComponent(message)}`;
     
     window.open(whatsappUrl, '_blank');
     handleSend(false);

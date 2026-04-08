@@ -15,7 +15,7 @@ export const SendWhatsAppModal: React.FC<SendWhatsAppModalProps> = ({
   onClose,
   lead,
 }) => {
-  const { clinicName } = useDashboardStore();
+  const { clinicName, reputationMode, liveReviews } = useDashboardStore();
   const activeClinicName = clinicName || "Your Clinic";
   
   const [message, setMessage] = useState('');
@@ -28,6 +28,21 @@ export const SendWhatsAppModal: React.FC<SendWhatsAppModalProps> = ({
       const patientName = lead.name?.split(' ')[0] || "Patient";
       const ptLink = `${window.location.origin}/pt/${(lead as any).slug || lead.id.substring(0, 8)}`;
       
+      // Select appropriate review based on mode
+      let reviewSnippet = "";
+      if (liveReviews && liveReviews.length > 0) {
+          let selectedReview;
+          if (reputationMode === 'Saver') {
+              selectedReview = [...liveReviews].sort((a, b) => b.rating - a.rating)[0];
+          } else {
+              selectedReview = liveReviews[0];
+          }
+          
+          if (selectedReview) {
+              reviewSnippet = `\n\n⭐ *${activeClinicName} 의료진을 만난 환자들의 후기:*\n"${selectedReview.ai || selectedReview.raw.substring(0, 100)}..." ⭐⭐⭐⭐⭐`;
+          }
+      }
+
       let initialMessage = '';
 
       if (tone === 'professional') {
@@ -39,7 +54,9 @@ Your bespoke Digital Smile Protocol & Treatment Proposal is now ready for review
 
 Following your consultation, we have finalized your personalized implant plan. You can access your secure patient portal to view the full details here:
 
-🔗 View My Full Proposal: ${ptLink}`;
+🔗 View My Full Proposal: ${ptLink}${reviewSnippet}
+
+_// TODO: Integrate review image card generation API_`;
       } else {
         initialMessage = `✨ *${activeClinicName}*
 
@@ -49,13 +66,15 @@ Great news! Your personalized Smile Design Protocol is finished and looking incr
 
 We've crafted this plan just for you. Please check out all the exciting details on your private portal here:
 
-🔗 See Your Personal Plan: ${ptLink}`;
+🔗 See Your Personal Plan: ${ptLink}${reviewSnippet}
+
+_// TODO: Integrate review image card generation API_`;
       }
 
       setMessage(initialMessage);
       setErrorMsg(null);
     }
-  }, [isOpen, lead, activeClinicName, tone]);
+  }, [isOpen, lead, activeClinicName, tone, reputationMode, liveReviews]);
 
   const handleSend = () => {
     if (!lead || !lead.phone) {
