@@ -2564,7 +2564,7 @@ export default function AdminDashboard() {
                         setActiveTab(tab);
                         if (tab === 'VAULT') setShowOnboardingTooltip(false);
                       }}
-                      className={`px-6 py-2 rounded-xl text-[11px] font-bold uppercase tracking-widest transition-all duration-300 relative z-10 font-sans ${activeTab === tab
+                      className={`px-4 py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all duration-300 relative z-10 font-sans ${activeTab === tab
                           ? 'text-slate-900 translate-y-[-1px]'
                           : 'text-slate-400 hover:text-slate-600'
                         }`}

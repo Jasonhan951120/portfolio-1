@@ -67,25 +67,25 @@ export const NorthStarSummaryCards: React.FC<{ currency?: string }> = ({ currenc
                     className="group bg-white border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] rounded-3xl p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] flex flex-col justify-between min-h-[220px]"
                 >
                     <div className="flex justify-between items-start">
-                        <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center border border-slate-50 transition-colors group-hover:border-emerald-100 group-hover:bg-emerald-50/30">
+                        <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center border border-slate-50 transition-colors group-hover:border-emerald-100 group-hover:bg-emerald-50/30 shrink-0">
                             <card.icon className="w-6 h-6 text-slate-400 group-hover:text-emerald-600 transition-colors" strokeWidth={1} />
                         </div>
-                        <div className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.2em] border ${card.trend.includes('%') || card.trend === 'PRIORITY' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-slate-50 text-slate-400 border-slate-100'}`}>
+                        <div className={`px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider border ${card.trend.includes('%') || card.trend === 'PRIORITY' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-slate-50 text-slate-400 border-slate-100'}`}>
                             {card.trend.toUpperCase()}
                         </div>
                     </div>
 
-                    <div className="mt-8">
-                        <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest font-sans mb-1">{card.title}</h3>
+                    <div className="mt-6">
+                        <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] font-sans mb-1.5">{card.title}</h3>
                         <div className="flex items-baseline gap-1">
-                            <span className="text-4xl font-black text-slate-900 tracking-tighter font-serif">
+                            <span className="text-3xl font-black text-slate-900 tracking-tighter font-serif">
                                 {typeof card.value === 'number' && card.title !== "Reputation Power" ? (
                                     <SlotNumber value={card.value} prefix={card.prefix} />
                                 ) : (
                                     <>
-                                        <span className="text-2xl text-slate-300 font-medium mr-1 font-sans">{card.prefix}</span>
+                                        <span className="text-xl text-slate-300 font-medium mr-0.5 font-sans">{card.prefix}</span>
                                         {card.value}
-                                        <span className="text-xl text-slate-300 font-medium ml-1 font-sans">{card.suffix}</span>
+                                        <span className="text-lg text-slate-300 font-medium ml-0.5 font-sans">{card.suffix}</span>
                                     </>
                                 )}
                             </span>

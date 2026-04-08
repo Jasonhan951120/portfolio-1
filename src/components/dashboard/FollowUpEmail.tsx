@@ -126,7 +126,7 @@ export const FollowUpEmail: React.FC<FollowUpEmailProps> = ({
               </p>
             </div>
 
-            <div className="relative min-h-[140px] flex flex-col justify-center text-center">
+            <div className="relative min-h-[160px] flex flex-col justify-center text-center">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentReviewIdx}
@@ -136,7 +136,7 @@ export const FollowUpEmail: React.FC<FollowUpEmailProps> = ({
                   transition={{ duration: 0.4, ease: "easeOut" }}
                   className="space-y-6"
                 >
-                  <p className="text-lg font-serif italic text-[#111827] leading-relaxed px-4">
+                  <p className="text-lg font-serif italic text-[#111827] leading-relaxed px-10 pre-wrap">
                     "{currentReview.ai || currentReview.raw}"
                   </p>
                   
@@ -151,19 +151,19 @@ export const FollowUpEmail: React.FC<FollowUpEmailProps> = ({
                 </motion.div>
               </AnimatePresence>
 
-              {/* NAVIGATION ARROWS */}
+              {/* NAVIGATION ARROWS (Micro-Precision Pagination) */}
               <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between pointer-events-none">
                 <button 
                   onClick={(e) => { e.stopPropagation(); prevReview(); }}
-                  className="w-10 h-10 rounded-full bg-white border border-slate-100 shadow-sm flex items-center justify-center text-slate-400 hover:text-slate-900 hover:shadow-md transition-all active:scale-90 pointer-events-auto"
+                  className="w-10 h-10 rounded-full bg-white border border-slate-100 shadow-sm flex items-center justify-center text-slate-400 hover:text-slate-900 hover:shadow-md transition-all active:scale-90 pointer-events-auto group mt-4 lg:mt-0"
                 >
-                  <ChevronLeft className="w-5 h-5" />
+                  <ChevronLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
                 </button>
                 <button 
                   onClick={(e) => { e.stopPropagation(); nextReview(); }}
-                  className="w-10 h-10 rounded-full bg-white border border-slate-100 shadow-sm flex items-center justify-center text-slate-400 hover:text-slate-900 hover:shadow-md transition-all active:scale-90 pointer-events-auto"
+                  className="w-10 h-10 rounded-full bg-white border border-slate-100 shadow-sm flex items-center justify-center text-slate-400 hover:text-slate-900 hover:shadow-md transition-all active:scale-90 pointer-events-auto group mt-4 lg:mt-0"
                 >
-                  <ChevronRight className="w-5 h-5" />
+                  <ChevronRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
                 </button>
               </div>
             </div>
@@ -176,7 +176,7 @@ export const FollowUpEmail: React.FC<FollowUpEmailProps> = ({
                     window.open(`https://search.google.com/local/reviews?placeid=${googlePlaceId}`, '_blank');
                   }
                 }}
-                className="flex items-center gap-3 text-[10px] font-black text-emerald-600 uppercase tracking-widest hover:gap-5 transition-all group"
+                className="flex items-center gap-3 px-6 py-3 bg-white border border-slate-200 rounded-full text-[10px] font-black text-slate-900 uppercase tracking-widest hover:border-emerald-500 hover:text-emerald-600 transition-all group shadow-sm"
                >
                   See More Patient Experiences
                   <div className="w-6 h-6 rounded-full bg-emerald-50 flex items-center justify-center group-hover:bg-emerald-100 transition-colors">
