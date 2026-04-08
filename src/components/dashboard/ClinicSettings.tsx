@@ -561,7 +561,7 @@ export function ClinicSettings({
                                                                 <div className="h-[1px] w-20 bg-slate-200" />
                                                             </div>
                                                             
-                                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+                                                            <div className="grid grid-cols-1 gap-6 w-full">
                                                                 {[
                                                                     { id: 'Booster', title: 'Booster Mode', icon: <Zap />, desc: 'High aggression, AI assigns leads to Top Performers.' },
                                                                     { id: 'Steady', title: 'Steady Mode', icon: <Target />, desc: 'Balanced volume, standard lead distribution logic.' },
@@ -570,16 +570,16 @@ export function ClinicSettings({
                                                                     <button
                                                                         key={mode.id}
                                                                         onClick={() => setReputationMode(mode.id as any)}
-                                                                        className={`group relative overflow-hidden p-5 rounded-[1.8rem] border-2 transition-all duration-700 text-left ${
+                                                                        className={`group relative overflow-hidden p-8 rounded-[2.5rem] border-2 transition-all duration-700 text-left w-full ${
                                                                             reputationMode === mode.id
                                                                                 ? 'border-slate-900 bg-slate-900 text-white shadow-2xl scale-[1.01]'
-                                                                                : 'border-black/[0.03] bg-white hover:border-slate-200 shadow-sm hover:shadow-md'
+                                                                                : 'border-black/[0.05] bg-white hover:border-slate-200 shadow-sm hover:shadow-xl'
                                                                         }`}
                                                                     >
-                                                                        <div className="flex items-center justify-between relative z-10 gap-4">
-                                                                            <div className="flex items-center flex-1 gap-4">
+                                                                        <div className="flex items-center justify-between relative z-10 gap-12">
+                                                                            <div className="flex items-center flex-1 gap-10">
                                                                                 {/* Icon Container */}
-                                                                                <div className={`p-2.5 rounded-2xl shadow-inner border transition-colors duration-500 ${
+                                                                                <div className={`p-4 rounded-[1.5rem] shadow-inner border transition-colors duration-500 flex-shrink-0 ${
                                                                                     reputationMode === mode.id ? 'bg-white/10 border-white/20' : 'bg-slate-50 border-black/5'
                                                                                 }`}>
                                                                                     <div className={`${reputationMode === mode.id ? 'text-white' : 'text-slate-900'}`}>
@@ -587,15 +587,15 @@ export function ClinicSettings({
                                                                                     </div>
                                                                                 </div>
 
-                                                                                {/* Content Group */}
-                                                                                <div>
-                                                                                    <h4 className={`text-sm font-serif italic tracking-tight mb-0.5 ${
+                                                                                {/* [FORCE HORIZONTAL]: Title & Description Side-by-Side */}
+                                                                                <div className="flex flex-row items-center gap-12 flex-1">
+                                                                                    <h4 className={`text-2xl font-serif italic tracking-tight whitespace-nowrap flex-shrink-0 ${
                                                                                         reputationMode === mode.id ? 'text-white' : 'text-slate-900'
                                                                                     }`}>
                                                                                         {mode.title}
                                                                                     </h4>
-                                                                                    <p className={`text-[11px] font-medium leading-tight opacity-70 ${
-                                                                                        reputationMode === mode.id ? 'text-slate-300' : 'text-[#374151]'
+                                                                                    <p className={`text-xl font-bold leading-relaxed transition-colors duration-500 ${
+                                                                                        reputationMode === mode.id ? 'text-slate-300' : 'text-[#111827]'
                                                                                     }`}>
                                                                                         {mode.desc}
                                                                                     </p>
@@ -604,8 +604,8 @@ export function ClinicSettings({
 
                                                                             {/* Selection Check */}
                                                                             {reputationMode === mode.id && (
-                                                                                <div className="bg-white text-slate-900 p-1 rounded-full shadow-lg">
-                                                                                    <Check className="w-3 h-3" strokeWidth={4} />
+                                                                                <div className="bg-white text-slate-900 p-2 rounded-full shadow-lg flex-shrink-0">
+                                                                                    <Check className="w-5 h-5" strokeWidth={4} />
                                                                                 </div>
                                                                             )}
                                                                         </div>

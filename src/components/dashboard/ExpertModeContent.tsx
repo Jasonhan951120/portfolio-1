@@ -128,16 +128,16 @@ export function ExpertModeContent({
               <button
                 key={mode?.id}
                 onClick={() => setSelectedMode(mode?.id)}
-                className={`group relative overflow-hidden p-5 rounded-[1.8rem] border-2 transition-all duration-700 text-left ${
+                className={`group relative overflow-hidden p-8 rounded-[2.5rem] border-2 transition-all duration-700 text-left w-full ${
                   selectedMode === mode?.id
                     ? 'border-slate-900 bg-slate-900 text-white shadow-2xl scale-[1.01]'
-                    : 'border-black/[0.03] bg-white hover:border-slate-200 shadow-sm hover:shadow-md'
+                    : 'border-black/[0.05] bg-white hover:border-slate-200 shadow-sm hover:shadow-xl'
                 }`}
               >
-                <div className="flex items-center justify-between relative z-10 gap-8">
-                  <div className="flex items-center flex-1 gap-6">
+                <div className="flex items-center justify-between relative z-10 gap-12">
+                  <div className="flex items-center flex-1 gap-10">
                     {/* Icon Container */}
-                    <div className={`p-3 rounded-2xl shadow-inner border transition-colors duration-500 ${
+                    <div className={`p-4 rounded-[1.5rem] shadow-inner border transition-colors duration-500 flex-shrink-0 ${
                       selectedMode === mode?.id ? 'bg-white/10 border-white/20' : 'bg-slate-50 border-black/5'
                     }`}>
                       <div className={`${selectedMode === mode?.id ? 'text-white' : 'text-slate-900'}`}>
@@ -145,15 +145,15 @@ export function ExpertModeContent({
                       </div>
                     </div>
 
-                    {/* Content Group: Title & Description side-by-side */}
-                    <div className="flex items-center gap-10 flex-1">
-                      <h4 className={`text-xl font-serif italic tracking-tight whitespace-nowrap ${
+                    {/* [FORCE HORIZONTAL]: Title & Description Side-by-Side */}
+                    <div className="flex flex-row items-center gap-12 flex-1">
+                      <h4 className={`text-2xl font-serif italic tracking-tight whitespace-nowrap flex-shrink-0 ${
                         selectedMode === mode?.id ? 'text-white' : 'text-slate-900'
                       }`}>
                         {mode?.title}
                       </h4>
-                      <p className={`text-base font-medium leading-relaxed transition-colors duration-500 ${
-                        selectedMode === mode?.id ? 'text-slate-300' : 'text-[#374151]'
+                      <p className={`text-xl font-bold leading-relaxed transition-colors duration-500 ${
+                        selectedMode === mode?.id ? 'text-slate-300' : 'text-[#111827]'
                       }`}>
                         {mode?.desc}
                       </p>
@@ -165,9 +165,9 @@ export function ExpertModeContent({
                     <motion.div
                       initial={{ scale: 0, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
-                      className="bg-white text-slate-900 p-1.5 rounded-full shadow-lg"
+                      className="bg-white text-slate-900 p-2 rounded-full shadow-lg flex-shrink-0"
                     >
-                      <Check className="w-4 h-4" strokeWidth={3} />
+                      <Check className="w-5 h-5" strokeWidth={4} />
                     </motion.div>
                   )}
                 </div>
