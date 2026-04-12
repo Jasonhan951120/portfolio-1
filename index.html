@@ -8,6 +8,19 @@
 </head>
 
 <body>
+  <script>
+    // Medical Emergency Recovery Protocol (Clean Slate)
+    try {
+      if (window.location.search.indexOf('recovery=true') !== -1) {
+        console.warn("RECOVERY: Clearing all local/session storage as requested...");
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.href = window.location.pathname; // Reload without query flag
+      }
+    } catch (e) {
+      console.error("RECOVERY SCRIPT ERROR:", e);
+    }
+  </script>
   <div id="root"></div>
   <!-- DEPLOY_VERIFY_ID: 1774884399 -->
   <script type="module" src="/src/main.tsx"></script>
