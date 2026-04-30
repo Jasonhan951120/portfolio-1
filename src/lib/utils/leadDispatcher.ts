@@ -17,7 +17,6 @@ export const assignLeadToBestStaff = async (leadId: string, serviceType: string)
 
         if (staffError) throw staffError;
         if (!staffStats || staffStats.length === 0) {
-            console.warn('No active staff found for auto-assignment.');
             return null;
         }
 
@@ -31,10 +30,8 @@ export const assignLeadToBestStaff = async (leadId: string, serviceType: string)
 
         if (updateError) throw updateError;
 
-        console.log(`Lead ${leadId} automatically assigned to staff ${bestStaffId}`);
         return bestStaffId;
     } catch (err) {
-        console.error('Error in lead auto-assignment:', err);
         return null;
     }
 };

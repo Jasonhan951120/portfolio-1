@@ -25,10 +25,7 @@ export const RepSyncDropdown: React.FC<RepSyncDropdownProps> = ({ options, onSyn
     setError(null);
 
     try {
-      console.log('Initiating reputation sync for:', clinic.name);
 
-      console.log('Initiating reputation sync for:', clinic.name);
-      console.log('ZERO-AUTH PROTOCOL: Bypassing Supabase Auth API to prevent redirects.');
 
       // Update global store immediately for UI responsiveness - Local Mock Mode
       setGooglePlaceId(clinic.place_id);
@@ -38,7 +35,6 @@ export const RepSyncDropdown: React.FC<RepSyncDropdownProps> = ({ options, onSyn
       if (onSyncComplete) onSyncComplete();
 
     } catch (err: any) {
-      console.error('CRITICAL SYNC ERROR:', err);
       setError(err.message || 'An unexpected error occurred during clinical sync.');
       // [FIX 3]: Even on error, we don't crash. We show a graceful error state.
     } finally {

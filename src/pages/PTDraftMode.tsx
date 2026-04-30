@@ -40,7 +40,6 @@ const PTDraftMode: React.FC = () => {
                 const { data } = await supabase.from("consultation_requests").select("*").ilike("id", `${id}%`).single();
                 if (data) setLead(data);
             } catch (err) {
-                console.error(err);
             } finally {
                 setLoading(false);
             }
@@ -55,7 +54,7 @@ const PTDraftMode: React.FC = () => {
         if (saveToSettings) {
             try {
                 const { error } = await supabase.from('clinic_treatments').insert({
-                    clinic_id: lead?.clinic_id || clinicId || 'hanlan-clinical-01',
+                    clinic_id: lead?.clinic_id || clinicId || '',
                     service_name: treatmentQuery,
                     potential_revenue: dynamicTotalValue,
                     color: '#F4D03F', // Default Gold for AI injected
@@ -63,7 +62,6 @@ const PTDraftMode: React.FC = () => {
                 });
                 if (error) throw error;
             } catch (err) {
-                console.error("Failed to save to global settings:", err);
             }
         }
         setSaved(true);

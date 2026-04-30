@@ -68,7 +68,6 @@ export function UpsellOpportunities({ leads, currency = "£", className = "" }: 
                 return next;
             });
         } catch (err) {
-            console.error("Failed to trigger WhatsApp promo:", err);
         }
     };
 

@@ -108,7 +108,6 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
                 const chunk = inserts.slice(i, i + chunkSize);
                 const { error } = await supabase.from('consultation_requests').insert(chunk);
                 if (error) {
-                    console.error("Bulk insert failed for chunk:", error);
                     failCount += chunk.length;
                 } else {
                     successCount += chunk.length;
@@ -161,7 +160,6 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
                             const template = JSON.parse(savedTemplateRaw);
                             // If headers match exactly
                             if (JSON.stringify(template.headers) === JSON.stringify(headers)) {
-                                console.log("Saved template detected. Auto-mapping applied.");
                                 processData(data, template.mappings);
                                 return;
                             }
@@ -175,7 +173,6 @@ export function CSVImportZone({ clinicId, specialty, onImportComplete }: CSVImpo
                         setIsMappingModalOpen(true);
                     },
                     error: (error: any) => {
-                        console.error("CSV Parse Error:", error);
                         setResult({ success: 0, failed: 1, skipped: 0 });
                     }
                 });

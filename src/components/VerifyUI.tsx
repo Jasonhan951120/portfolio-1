@@ -40,7 +40,7 @@ export default function VerifyUI() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                     {mockTreatments.map(t => (
                         <div key={t.id} className="h-[500px]">
-                            <TreatmentCard treatment={t} onClick={(data) => console.log('Clicked:', data)} />
+                            <TreatmentCard treatment={t} onClick={() => {}} />
                         </div>
                     ))}
                 </div>

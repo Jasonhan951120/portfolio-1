@@ -27,7 +27,6 @@ export const SubscriptionGuard: React.FC<{ children: React.ReactNode }> = ({ chi
                 if (error) throw error;
                 setClinic(data);
             } catch (err) {
-                console.error('Error checking subscription:', err);
             } finally {
                 setSubscriptionLoading(false);
             }

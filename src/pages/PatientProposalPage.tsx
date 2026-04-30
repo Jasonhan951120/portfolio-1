@@ -45,7 +45,6 @@ const PatientProposalPage: React.FC = () => {
                     .single();
                 if (data) setLead(data);
             } catch (err) {
-                console.error(err);
             } finally {
                 setLoading(false);
             }
@@ -293,7 +292,7 @@ const PatientProposalPage: React.FC = () => {
                                             const patientName = lead?.name || 'a patient';
                                             const treatmentName = lead?.treatment_name || lead?.service || 'treatment';
                                             const message = `Hello Hanlanoc Clinic, this is ${patientName}. ✨\nI have reviewed my clinical strategy for ${treatmentName} at https://www.hanlanoc.com and I am ready to start my transformation! \nPlease let me know the next steps for scheduling my first appointment.`;
-                                            window.open(`https://wa.me/821033951543?text=${encodeURIComponent(message)}`, '_blank');
+                                            window.open(`https://wa.me/447700900000?text=${encodeURIComponent(message)}`, '_blank');
                                         }}
                                         className="w-full py-7 bg-slate-950 hover:bg-slate-900 text-white rounded-full font-black uppercase tracking-[0.2em] text-[12px] shadow-2xl transition-all shadow-indigo-200/20"
                                     >

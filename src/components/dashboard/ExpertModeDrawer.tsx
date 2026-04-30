@@ -32,8 +32,8 @@ class DiagnosticErrorBoundary extends React.Component<{ children: React.ReactNod
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error("DIAGNOSTIC ERROR CAUGHT:", error, errorInfo);
+  componentDidCatch(_error: Error, _errorInfo: React.ErrorInfo) {
+    // Errors are shown in the rendered fallback UI below
   }
 
   render() {

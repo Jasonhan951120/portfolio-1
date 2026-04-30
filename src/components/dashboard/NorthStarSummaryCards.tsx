@@ -17,7 +17,6 @@ export const NorthStarSummaryCards: React.FC<{ currency?: string }> = ({ currenc
                 const metrics = await fetchGMBMetrics(googlePlaceId);
                 setGoogleProfile(metrics);
             } catch (error) {
-                console.error("GMB Fetch Error:", error);
             }
         };
         loadGMBData();

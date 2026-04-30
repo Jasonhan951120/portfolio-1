@@ -4,8 +4,61 @@ dist/
 coverage/
 .DS_Store
 *.log
-.env*
+
+# Environment variables — never commit these
+.env
+.env.local
+.env.*.local
+.env.production
 !.env.example
 
+# Deployment
 .vercel
-.env*.local
+
+# Temporary / debug files
+tmp/
+tmp_*
+*.diff
+*_errors.txt
+*_output.txt
+*_log.txt
+build_*.txt
+lint_*.txt
+tsc_*.txt
+src_files*.txt
+hooks*.txt
+duplicates.txt
+dev_log.txt
+logs.txt
+stderr_output.txt
+plus_search.txt
+
+# Debug prototype HTML files (not part of the app)
+body.html
+preview*.html
+*-portfolio.html
+*-cinematic.html
+*-stream.html
+*-globe.html
+*-space.html
+*-diagram.html
+*-wave-text.html
+*-flow.html
+*-hero*.html
+debug-*.html
+
+# Frame captures
+correct_frame_*.png
+video_frame_*.png
+
+# Legacy / backup files
+legacy_root/
+original_*.tsx
+leads.db
+
+# Test scripts in root
+test-supabase.*
+test_upload.csv
+cleanup_and_update.ps1
+run-npx.ps1
+get_logs.mjs

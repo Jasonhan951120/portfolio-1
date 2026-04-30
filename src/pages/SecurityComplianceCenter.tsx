@@ -282,9 +282,9 @@ export default function SecurityComplianceCenter() {
 function ScrubbingSequence() {
     const [step, setStep] = useState(0);
     const scenarios = [
-        { name: "Emma Watson", phone: "07712345678", email: "handonggyun18@gmail.com" },
-        { name: "David Beckham", phone: "07888123456", email: "handonggyun18@gmail.com" },
-        { name: "Keira Knightley", phone: "07444999111", email: "handonggyun18@gmail.com" }
+        { name: "Emma Watson", phone: "07712345678", email: "demo@example.com" },
+        { name: "David Beckham", phone: "07888123456", email: "demo@example.com" },
+        { name: "Keira Knightley", phone: "07444999111", email: "demo@example.com" }
     ];
 
     useEffect(() => {

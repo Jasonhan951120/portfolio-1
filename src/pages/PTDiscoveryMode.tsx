@@ -57,7 +57,6 @@ const PTDiscoveryMode: React.FC = () => {
                     .single();
                 if (data) setLead(data);
             } catch (err) {
-                console.error(err);
             } finally {
                 setLoading(false);
             }
@@ -262,7 +261,7 @@ const PTDiscoveryMode: React.FC = () => {
                             whileHover={{ scale: 1.01, y: -2 }}
                             whileTap={{ scale: 0.98 }}
                             onClick={() => {
-                                window.open('https://wa.me/821033951543', '_blank');
+                                window.open('https://wa.me/447700900000', '_blank');
                             }}
                             className="w-full py-5 bg-slate-950 rounded-2xl text-white font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 shadow-xl hover:shadow-2xl transition-all overflow-hidden relative"
                         >

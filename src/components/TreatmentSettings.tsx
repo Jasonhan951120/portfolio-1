@@ -97,7 +97,6 @@ export const TreatmentSettings: React.FC<TreatmentSettingsProps> = ({ clinicId, 
             .order('order_index', { ascending: true });
 
         if (error) {
-            console.error('Error fetching treatments:', error);
             setError('Failed to load treatments');
         } else {
             setTreatments(data || []);
@@ -116,7 +115,6 @@ export const TreatmentSettings: React.FC<TreatmentSettingsProps> = ({ clinicId, 
             .eq('id', id);
 
         if (error) {
-            console.error('Error updating treatment:', error);
             setError('Failed to update treatment');
             fetchTreatments(); // Rollback
         } else {
@@ -165,7 +163,6 @@ export const TreatmentSettings: React.FC<TreatmentSettingsProps> = ({ clinicId, 
             await handleUpdateTreatment(treatmentId, { image_url: publicUrl });
 
         } catch (err: any) {
-            console.error('[IMAGE UPLOAD] Error:', err);
             setError(`Upload failed: ${err.message}`);
         } finally {
             setIsUploading(prev => ({ ...prev, [treatmentId]: false }));
@@ -182,7 +179,6 @@ export const TreatmentSettings: React.FC<TreatmentSettingsProps> = ({ clinicId, 
             .eq('id', id);
 
         if (error) {
-            console.error('Error deleting treatment:', error);
             setError('Failed to delete treatment');
             if (itemToDelete) setTreatments(prev => [...prev, itemToDelete].sort((a, b) => a.order_index - b.order_index));
         } else {
@@ -205,7 +201,6 @@ export const TreatmentSettings: React.FC<TreatmentSettingsProps> = ({ clinicId, 
             .upsert(updates);
 
         if (error) {
-            console.error('Error reordering treatments:', error);
         } else {
             onUpdate?.();
         }

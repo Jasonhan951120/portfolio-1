@@ -380,7 +380,7 @@ export const PatientCard = React.memo(function PatientCard({
           setAiModal(prev => ({ ...prev, isOpen: false }));
         }}
         onSendWhatsApp={() => {
-          const testPhone = "821033951543";
+          const testPhone = "447700900000";
           const patientName = lead.name || 'a patient';
           const treatmentName = lead.service || lead.treatment_name || 'treatment';
           
@@ -399,7 +399,7 @@ export const PatientCard = React.memo(function PatientCard({
           setAiModal(prev => ({ ...prev, isOpen: false }));
         }}
         onSendEmail={async () => {
-          const testEmail = "handonggyun18@gmail.com";
+          const testEmail = "demo@example.com";
           let subject = "";
           if (aiModal.type === 'PROPOSAL') subject = `Bespoke Clinical Protocol - ${lead.name}`;
           else if (aiModal.type === 'FOLLOWUP') subject = `Clinical Follow-up & Care Guide - ${lead.name}`;
@@ -419,7 +419,6 @@ export const PatientCard = React.memo(function PatientCard({
               }
             });
           } catch (err) {
-            console.error("Email send error", err);
           }
           setAiModal(prev => ({ ...prev, isOpen: false }));
         }}

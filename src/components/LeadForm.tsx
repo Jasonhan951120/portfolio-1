@@ -144,7 +144,7 @@ export default function LeadForm({ clinic }: { clinic: any }) {
       method: "POST",
       headers: { "Content-Type": "application/json", "apikey": import.meta.env.VITE_SUPABASE_ANON_KEY },
       body: JSON.stringify({ ...formData, clinic_id: clinic?.id }),
-    }).catch(console.warn);
+    }).catch(() => {});
   };
 
   const isStepValid = () => {

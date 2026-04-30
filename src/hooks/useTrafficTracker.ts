@@ -43,10 +43,8 @@ export const useTrafficTracker = () => {
                 if (!error) {
                     sessionStorage.setItem('hanlan_session_tracked', 'true');
                 } else {
-                    console.error('Traffic tracking error:', error);
                 }
             } catch (err) {
-                console.error('Failed to log traffic:', err);
             }
         };
 

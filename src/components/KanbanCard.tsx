@@ -105,7 +105,6 @@ export function KanbanCard({ lead, onClick }: KanbanCardProps) {
                         onClick={(e) => {
                             e.stopPropagation();
                             const { label } = getActionConfig(lead.status);
-                            console.log(`[ACTION] WhatsApp triggering: ${label}`);
                             
                             const phoneNum = lead.phone || "+447700900000";
                             let message = "";
@@ -148,7 +147,6 @@ export function KanbanCard({ lead, onClick }: KanbanCardProps) {
                         onClick={(e) => {
                             e.stopPropagation();
                             const { label } = getActionConfig(lead.status);
-                            console.log(`[ACTION] Email triggering: ${label}`);
                         }}
                         className="w-full flex items-center justify-between px-4 py-2 bg-white/50 border border-slate-200/60 shadow-sm rounded-2xl text-slate-900 hover:bg-white hover:border-slate-300 transition-all duration-300 group/email"
                     >

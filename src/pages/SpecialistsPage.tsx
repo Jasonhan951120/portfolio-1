@@ -21,7 +21,6 @@ export default function SpecialistsPage({ clinic }: { clinic: any }) {
                 if (error) throw error;
                 setSpecialists(data || []);
             } catch (err) {
-                console.error("Error fetching specialists:", err);
             } finally {
                 setLoading(false);
             }

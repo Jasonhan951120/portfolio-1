@@ -45,7 +45,6 @@ export const StaffROILeaderboard: React.FC<StaffROILeaderboardProps> = ({ clinic
             if (error) throw error;
             setPerformance(data || []);
         } catch (err) {
-            console.error('Error fetching staff performance:', err);
         } finally {
             setLoading(false);
         }
@@ -61,7 +60,6 @@ export const StaffROILeaderboard: React.FC<StaffROILeaderboardProps> = ({ clinic
                 'postgres_changes',
                 { event: '*', schema: 'public', table: 'consultation_requests', filter: `clinic_id=eq.${clinicId}` },
                 () => {
-                    console.log('ROI Update: Lead status changed, refreshing leaderboard...');
                     fetchPerformance();
                 }
             )
@@ -69,7 +67,6 @@ export const StaffROILeaderboard: React.FC<StaffROILeaderboardProps> = ({ clinic
                 'postgres_changes',
                 { event: 'INSERT', schema: 'public', table: 'messages', filter: `clinic_id=eq.${clinicId}` },
                 () => {
-                    console.log('ROI Update: New message sent, refreshing response metrics...');
                     fetchPerformance();
                 }
             )

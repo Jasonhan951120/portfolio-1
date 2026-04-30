@@ -42,7 +42,6 @@ export default function ContactPage({ clinic }: { clinic: any }) {
                 setFormData({ name: "", email: "", phone: "", service: "General Inquiry" });
             }
         } catch (error) {
-            console.error("Submission error:", error);
             setStatus("idle");
         }
     };
@@ -102,7 +101,7 @@ export default function ContactPage({ clinic }: { clinic: any }) {
                                         </div>
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-black uppercase tracking-widest text-muted ml-1">Email Address</label>
-                                            <input required type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full bg-[#FBFBFB] border border-black/5 rounded-2xl px-6 py-4 focus:border-primary focus:outline-none transition-all font-bold" placeholder="handonggyun18@gmail.com" />
+                                            <input required type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full bg-[#FBFBFB] border border-black/5 rounded-2xl px-6 py-4 focus:border-primary focus:outline-none transition-all font-bold" placeholder="demo@example.com" />
                                         </div>
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-black uppercase tracking-widest text-muted ml-1">Desired Treatment</label>

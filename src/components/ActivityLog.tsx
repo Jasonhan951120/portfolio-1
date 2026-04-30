@@ -34,7 +34,6 @@ export const ActivityLog: React.FC<{ clinicId: string }> = ({ clinicId }) => {
             if (error) throw error;
             setLogs(data || []);
         } catch (err) {
-            console.error('Error fetching audit logs:', err);
         } finally {
             setLoading(false);
         }

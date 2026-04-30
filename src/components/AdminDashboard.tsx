@@ -91,7 +91,6 @@ function useDebounce<T>(value: T, delay: number): T {
   // GDPR: Forced Client-Side Data Destruction (Zero-Trace Logic)
   useEffect(() => {
     const cleanupPII = () => {
-      console.log("GDPR Activity: Enforcing zero-trace local data destruction.");
       sessionStorage.clear();
     };
 
@@ -791,7 +790,7 @@ export default function AdminDashboard() {
   
   const vvipLead = {
     name: "Donggyun Han",
-    email: "handonggyun18@gmail.com",
+    email: "demo@example.com",
     phone: "+82 10-3395-1543",
     value: 3000,
     category: "DENTAL IMPLANTS",
@@ -1499,10 +1498,8 @@ export default function AdminDashboard() {
         .eq('id', leadId);
         
       if (error) {
-        console.warn("Mock DB error ignored for prototype phase:", error);
       }
     } catch (e) {
-      console.warn("Mock DB exception ignored for prototype phase:", e);
     }
 
     // Always show success and KEEP the optimistic UI state (no rollback)
@@ -1534,7 +1531,6 @@ export default function AdminDashboard() {
       if (error) throw error;
       setToast({ message: `Broadcast sent to ${data.count} matching patients!`, type: 'success' });
     } catch (err: any) {
-      console.error('Broadcast failed:', err);
       setToast({ message: "Broadcast failed. Check logs.", type: 'error' });
     } finally {
       setIsBroadcasting(false);
@@ -1549,7 +1545,6 @@ export default function AdminDashboard() {
       .select('*');
 
     if (error) {
-      console.error('Error fetching Marketing ROI:', error);
       return;
     }
     setMarketingROI(data || []);
@@ -1664,7 +1659,7 @@ export default function AdminDashboard() {
       {
         id: "mock-" + Math.random().toString(36).substr(2, 9),
         name: "James Wilson (VIP)",
-        email: "handonggyun18@gmail.com",
+        email: "demo@example.com",
         phone: "+447700900001",
         service: "Dental Implants",
         status: "New Lead",
@@ -1676,7 +1671,7 @@ export default function AdminDashboard() {
       {
         id: "mock-" + Math.random().toString(36).substr(2, 9),
         name: "Sarah Jenkins",
-        email: "handonggyun18@gmail.com",
+        email: "demo@example.com",
         phone: "+447700900002",
         service: "Invisalign",
         status: "Booked",
@@ -1688,7 +1683,7 @@ export default function AdminDashboard() {
       {
         id: "mock-" + Math.random().toString(36).substr(2, 9),
         name: "Michael Ross",
-        email: "handonggyun18@gmail.com",
+        email: "demo@example.com",
         phone: "+447700900003",
         service: "Veneers",
         status: "Visited",
@@ -1699,7 +1694,7 @@ export default function AdminDashboard() {
       {
         id: "mock-" + Math.random().toString(36).substr(2, 9),
         name: "Emma Thompson",
-        email: "handonggyun18@gmail.com",
+        email: "demo@example.com",
         phone: "+447700900004",
         service: "Dental Implants",
         status: "Sale Closed",
@@ -1711,7 +1706,7 @@ export default function AdminDashboard() {
       {
         id: "mock-" + Math.random().toString(36).substr(2, 9),
         name: "David Beckham",
-        email: "handonggyun18@gmail.com",
+        email: "demo@example.com",
         phone: "+447700900005",
         service: "Veneers",
         status: "New Lead",
@@ -1723,7 +1718,7 @@ export default function AdminDashboard() {
       {
         id: "mock-" + Math.random().toString(36).substr(2, 9),
         name: "Olivia Colman",
-        email: "handonggyun18@gmail.com",
+        email: "demo@example.com",
         phone: "+447700900006",
         service: "Invisalign",
         status: "Booked",
@@ -1735,7 +1730,7 @@ export default function AdminDashboard() {
       {
         id: "mock-" + Math.random().toString(36).substr(2, 9),
         name: "Benedict Cumberbatch",
-        email: "handonggyun18@gmail.com",
+        email: "demo@example.com",
         phone: "+447700900007",
         service: "Dental Implants",
         status: "Visited",
@@ -1746,7 +1741,7 @@ export default function AdminDashboard() {
       {
         id: "mock-" + Math.random().toString(36).substr(2, 9),
         name: "Helen Mirren",
-        email: "handonggyun18@gmail.com",
+        email: "demo@example.com",
         phone: "+447700900008",
         service: "Veneers",
         status: "Sale Closed",
@@ -1783,7 +1778,6 @@ export default function AdminDashboard() {
         .limit(currentLimit);
 
       if (error) {
-        console.error("Error fetching leads:", error);
         if (append) setHasMore(false);
       } else {
         let finalLeads = data || [];
@@ -1803,7 +1797,6 @@ export default function AdminDashboard() {
         }
       }
     } catch (err) {
-      console.error("Critical fetchLeads failure:", err);
       setHasMore(false);
     } finally {
       fetchLock.current = false;
@@ -1822,7 +1815,6 @@ export default function AdminDashboard() {
       try {
         setLeads(JSON.parse(cachedLeadsStr));
       } catch (e) {
-        console.error("Failed to parse cached leads");
       }
     }
 
@@ -1915,7 +1907,6 @@ export default function AdminDashboard() {
           expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
           created_at: new Date().toISOString()
         };
-        console.log("Demo mode: Mocked invitation created.", data);
       } else {
         const { data: dbData, error } = await supabase
           .from('invitations')
@@ -1963,7 +1954,6 @@ export default function AdminDashboard() {
 
             alert("Invitation created and emailed successfully!");
           } catch (err: any) {
-            console.error("Failed to trigger invite email:", err);
             alert(`Invitation created in database, but email failed:\n\n${err.message || String(err)}`);
           }
         } else {
@@ -1973,7 +1963,6 @@ export default function AdminDashboard() {
         }
       }
     } catch (err: any) {
-      console.error("Invite error:", err);
       alert(`Failed to create invitation: ${err.message}`);
     }
   };
@@ -2005,7 +1994,6 @@ export default function AdminDashboard() {
           new_value: params.newValue
         }]);
     } catch (err) {
-      console.error("Failed to write audit log:", err);
       // Silent fail as per Postel's Law
     }
   };
@@ -2034,7 +2022,7 @@ export default function AdminDashboard() {
         type: "success"
       });
     } catch (err: any) {
-      console.error("[BROADCAST ERROR]", err);
+      
       setToast({ message: "Broadcast Failed. Please try again.", type: "error" });
     } finally {
       setIsBroadcasting(false);
@@ -2055,7 +2043,7 @@ export default function AdminDashboard() {
       trackEvent('status_change', { lead_id: id, new_status: newStatus });
 
     } catch (err: any) {
-      console.error("[UPDATE STATUS ERROR]", err);
+      
       setToast({ message: "Update Failed. Please check connection.", type: "error" });
     }
   };
@@ -2072,7 +2060,6 @@ export default function AdminDashboard() {
       .eq('id', inviteId);
 
     if (error) {
-      console.error("Error revoking invite:", error);
       alert(`Failed to revoke invitation: ${error.message}`);
       // Refresh to restore state on error
       const { data } = await supabase.from('invitations').select('*').eq('clinic_id', profile?.clinic_id).eq('status', 'pending');
@@ -2096,14 +2083,12 @@ export default function AdminDashboard() {
         newStatus = overLead.status;
       } else {
         // Validation: If it's still not a column name, it's invalid
-        console.warn("Invalid drop target:", newStatus);
         return;
       }
     }
 
     // Safety: Ensure newStatus is a valid column name and NOT a UUID
     if (!KANBAN_COLUMNS.includes(newStatus)) {
-      console.error("Critical: newStatus is not a valid column:", newStatus);
       return;
     }
 
@@ -2270,7 +2255,6 @@ export default function AdminDashboard() {
       setSchedulingLead(null);
       fetchLeads();
     } catch (err: any) {
-      console.error("Booking failed:", err);
       alert(`Booking failed: ${err.message}`);
     } finally {
       setLoading(false);
@@ -2327,7 +2311,6 @@ export default function AdminDashboard() {
       setTreatmentModal(null);
       fetchLeads();
     } catch (err: any) {
-      console.error("Logging treatment failed:", err);
       alert(`Logging treatment failed: ${err.message}`);
     } finally {
       setLoading(false);
@@ -2356,7 +2339,6 @@ export default function AdminDashboard() {
     };
 
     recognition.onerror = (event: any) => {
-      console.error("Speech recognition error", event.error);
       setIsRecording(false);
     };
 

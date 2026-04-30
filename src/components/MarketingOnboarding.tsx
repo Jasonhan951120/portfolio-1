@@ -33,7 +33,6 @@ const MarketingOnboarding: React.FC<MarketingOnboardingProps> = ({ clinicId, onC
 
             // If Edge Function is not deployed or fails, we fall back to a direct DB upsert for simulation
             if (error || !data?.success) {
-                console.warn("Edge Function failed or missing. Falling back to frontend simulation.");
 
                 const { error: upsertError } = await supabase
                     .from('ad_platform_connections')
@@ -54,7 +53,6 @@ const MarketingOnboarding: React.FC<MarketingOnboardingProps> = ({ clinicId, onC
                 setTimeout(() => onComplete(), 1000);
             }
         } catch (err) {
-            console.error("Connection failed:", err);
             // Even if the DB upsert fails (RLS), we allow the UI to finish for demo purposes
             setStep(3);
             if (onComplete) setTimeout(() => onComplete(), 1000);

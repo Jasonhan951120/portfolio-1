@@ -40,7 +40,7 @@ interface DashboardState {
   updateLeadStatus: (id: string, newStatus: string) => Promise<void>;
   currency: '£' | '$';
   setCurrency: (currency: '£' | '$') => void;
-  
+
   // Clinic Profile
   clinicType: 'Dental' | 'Aesthetic' | 'Wellness';
   setClinicType: (type: 'Dental' | 'Aesthetic' | 'Wellness') => void;
@@ -50,8 +50,8 @@ interface DashboardState {
   setClinicLogo: (url: string) => void;
   clinicSignatureImage: string;
   setClinicSignatureImage: (url: string) => void;
-  
-  // Clinic Settings (The Warehouse)
+
+  // Clinic Settings
   templates: TreatmentTemplate[];
   setTemplates: (templates: TreatmentTemplate[]) => void;
   activeTreatments: any[];
@@ -67,7 +67,6 @@ interface DashboardState {
   auditLogs: Record<string, any[]>;
   addAuditLog: (leadId: string, action: string, method: string) => void;
 
-  // Derived selectors (implemented as functions or used via compute)
   getFilteredLeads: () => ConsultationRequest[];
   getDynamicCategories: () => { name: string, value: number }[];
   getEngineLogs: () => { name: string, value: number }[];
@@ -83,124 +82,21 @@ interface DashboardState {
 }
 
 export const useDashboardStore = create<DashboardState>((set, get) => ({
-  leads: [
-    {
-      id: "donggyun-live",
-      name: "Donggyun Han",
-      email: "handonggyun18@gmail.com",
-      phone: "821033951543",
-      service: "Dental Implants",
-      status: "New Lead",
-      potential_value: 3000,
-      intent_score: 99,
-      age: 28,
-      created_at: new Date().toISOString()
-    } as ConsultationRequest,
-    {
-      id: "demo-james",
-      name: "James Wilson",
-      email: "handonggyun18@gmail.com",
-      phone: "821033951543",
-      service: "Dental Implants",
-      potential_value: 8500,
-      status: "Booked",
-      intent_score: 99,
-      age: 72,
-      created_at: new Date().toISOString()
-    } as ConsultationRequest,
-    {
-      id: "demo-sarah",
-      name: "Sarah Jenkins",
-      email: "handonggyun18@gmail.com",
-      phone: "821033951543",
-      service: "Invisalign / Aligners",
-      potential_value: 3500,
-      status: "New Lead",
-      intent_score: 88,
-      age: 32,
-      created_at: new Date(Date.now() - 1000 * 60 * 120).toISOString()
-    } as ConsultationRequest,
-    {
-      id: "demo-michael",
-      name: "Michael Ross",
-      email: "handonggyun18@gmail.com",
-      phone: "821033951543",
-      service: "Veneers",
-      potential_value: 12000,
-      status: "Visited",
-      intent_score: 91,
-      age: 45,
-      created_at: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString()
-    } as ConsultationRequest,
-    {
-      id: "demo-david",
-      name: "David Beckham",
-      email: "handonggyun18@gmail.com",
-      phone: "821033951543",
-      service: "Dental Implants",
-      potential_value: 5500,
-      status: "New Lead",
-      intent_score: 82,
-      age: 55,
-      created_at: new Date(Date.now() - 1000 * 60 * 30).toISOString()
-    } as ConsultationRequest,
-    {
-      id: "demo-olivia",
-      name: "Olivia Colman",
-      email: "handonggyun18@gmail.com",
-      phone: "821033951543",
-      service: "Veneers",
-      potential_value: 9500,
-      status: "Treated",
-      intent_score: 96,
-      age: 64,
-      created_at: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString()
-    } as ConsultationRequest,
-    {
-      id: "demo-benedict",
-      name: "Benedict Cumberbatch",
-      email: "handonggyun18@gmail.com",
-      phone: "821033951543",
-      service: "Invisalign / Aligners",
-      potential_value: 4000,
-      status: "Visited",
-      intent_score: 75,
-      age: 38,
-      created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString()
-    } as ConsultationRequest
-  ],
+  leads: [],
   activeCategory: 'All',
   activeTab: 'PIPELINE',
   region: 'UK',
   currency: '£',
   isGoogleConnected: false,
   googleProfile: null,
-  auditLogs: {
-    "demo-3": [
-      {
-        time: "[14 Mar 2026, 09:12:05 AM EST]",
-        action: "User: System - Action: System login and profile creation - Method: Automated Protocol",
-        type: 'security'
-      },
-      {
-        time: "[14 Mar 2026, 11:45:22 AM EST]",
-        action: "User: System - Action: Patient clinical data synced from EXACT API - Method: API Integration",
-        type: 'system'
-      },
-      {
-        time: "[15 Mar 2026, 02:20:11 PM EST]",
-        action: "User: Hanlan AI - Action: AI Potential Value & Insights successfully calculated - Method: Neural Engine",
-        type: 'ai'
-      }
-    ]
-  },
+  auditLogs: {},
 
   setLeads: (leads) => set((state) => ({
     leads: typeof leads === 'function' ? leads(state.leads) : leads
   })),
 
   setActiveCategory: (category) => set({ activeCategory: category }),
-  setActiveTab: (tab: 'PIPELINE' | 'VAULT' | 'SECURITY' | 'INTELLIGENCE' | 'REPUTATION') => set({ activeTab: tab }),
+  setActiveTab: (tab) => set({ activeTab: tab }),
   setRegion: (region) => set({ region, currency: region === 'UK' ? '£' : '$' }),
   setCurrency: (currency) => set({ currency, region: currency === '£' ? 'UK' : 'US' }),
   setGoogleConnected: (isConnected, profile) => set({ isGoogleConnected: isConnected, googleProfile: profile || null }),
@@ -214,7 +110,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
     set({ clinicType: type });
   },
 
-  clinicName: localStorage.getItem('clinic_name') || 'Hanlanoc Clinic',
+  clinicName: localStorage.getItem('clinic_name') || '',
   setClinicName: (name) => {
     localStorage.setItem('clinic_name', name);
     set({ clinicName: name });
@@ -236,8 +132,8 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
     if (saved) {
       try {
         return JSON.parse(saved);
-      } catch (e) {
-        console.error("Error parsing saved templates:", e);
+      } catch {
+        return [];
       }
     }
     return Object.entries(SERVICE_CONVERSION_VALUES).map(([name, price], idx) => ({
@@ -274,12 +170,15 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
     leads: state.leads.map((l) => l.id === id ? { ...l, ...updates } : l)
   })),
 
-  clinicId: 'hanlan-clinical-01', // Default clinic ID
+  clinicId: '',
   setClinicId: (id) => set({ clinicId: id }),
 
   subscribeToLeads: () => {
     const { clinicId } = get();
-    // Strict Tenant Isolation: Query patients only for the current clinic
+    if (!clinicId) {
+      return () => {};
+    }
+
     const q = query(
       collection(db, "patients"),
       where("clinicId", "==", clinicId),
@@ -293,120 +192,24 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
         leads.push({
           id: doc.id,
           ...data,
-          // Handle Firestore Timestamps
           created_at: data.created_at?.toDate?.()?.toISOString() || data.created_at,
           updated_at: data.updated_at?.toDate?.()?.toISOString() || data.updated_at,
         } as ConsultationRequest);
       });
-      const mockLeads: ConsultationRequest[] = [
-        {
-          id: "donggyun-live",
-          name: "Donggyun Han",
-          email: "handonggyun18@gmail.com",
-          phone: "821033951543",
-          service: "Dental Implants",
-          status: "New Lead",
-          potential_value: 3000,
-          intent_score: 99,
-          age: 28,
-          created_at: new Date().toISOString()
-        } as ConsultationRequest,
-        {
-          id: "demo-james",
-          name: "James Wilson",
-          email: "handonggyun18@gmail.com",
-          phone: "821033951543",
-          service: "Dental Implants",
-          potential_value: 8500,
-          status: "Booked",
-          intent_score: 99,
-          age: 72,
-          created_at: new Date().toISOString()
-        } as ConsultationRequest,
-        {
-          id: "demo-sarah",
-          name: "Sarah Jenkins",
-          email: "handonggyun18@gmail.com",
-          phone: "821033951543",
-          service: "Invisalign / Aligners",
-          potential_value: 3500,
-          status: "New Lead",
-          intent_score: 88,
-          age: 32,
-          created_at: new Date(Date.now() - 1000 * 60 * 120).toISOString()
-        } as ConsultationRequest,
-        {
-          id: "demo-michael",
-          name: "Michael Ross",
-          email: "handonggyun18@gmail.com",
-          phone: "821033951543",
-          service: "Veneers",
-          potential_value: 12000,
-          status: "Visited",
-          intent_score: 91,
-          age: 45,
-          created_at: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString()
-        } as ConsultationRequest,
-        {
-          id: "demo-david",
-          name: "David Beckham",
-          email: "handonggyun18@gmail.com",
-          phone: "821033951543",
-          service: "Dental Implants",
-          potential_value: 5500,
-          status: "New Lead",
-          intent_score: 82,
-          age: 55,
-          created_at: new Date(Date.now() - 1000 * 60 * 30).toISOString()
-        } as ConsultationRequest,
-        {
-          id: "demo-olivia",
-          name: "Olivia Colman",
-          email: "handonggyun18@gmail.com",
-          phone: "821033951543",
-          service: "Veneers",
-          potential_value: 9500,
-          status: "Treated",
-          intent_score: 96,
-          age: 64,
-          created_at: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString()
-        } as ConsultationRequest,
-        {
-          id: "demo-benedict",
-          name: "Benedict Cumberbatch",
-          email: "handonggyun18@gmail.com",
-          phone: "821033951543",
-          service: "Invisalign / Aligners",
-          potential_value: 4000,
-          status: "Visited",
-          intent_score: 75,
-          age: 38,
-          created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString()
-        } as ConsultationRequest
-      ];
-
-      set({ leads: [...mockLeads, ...leads] });
-    }, (error) => {
-      console.error("Firestore Subscription Error:", error);
+      set({ leads });
+    }, () => {
+      // Firestore subscription error — leads remain as-is
     });
 
     return unsubscribe;
   },
 
   updateLeadStatus: async (id, newStatus) => {
-    try {
-      const leadRef = doc(db, "patients", id);
-      await updateDoc(leadRef, {
-        status: newStatus,
-        updated_at: Timestamp.now()
-      });
-
-      // The update will trigger onSnapshot, so leads in state will update automatically.
-      console.log(`Lead ${id} status updated to ${newStatus} in Firestore.`);
-    } catch (error) {
-      console.error("Firestore Update Error:", error);
-      throw error;
-    }
+    const leadRef = doc(db, "patients", id);
+    await updateDoc(leadRef, {
+      status: newStatus,
+      updated_at: Timestamp.now()
+    });
   },
 
   injectSampleData: () => {
@@ -458,8 +261,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
     const filteredLeads = get().getFilteredLeads();
 
     const totalRevenue = (filteredLeads ?? []).reduce((sum, l) => {
-      const value = l.potential_value || 1000;
-      return sum + value;
+      return sum + (l.potential_value || 1000);
     }, 0);
 
     const unsecuredPipeline = (filteredLeads ?? [])
@@ -478,7 +280,6 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
     return { totalRevenue, unsecuredPipeline, pipelineValue };
   },
 
-  // AI Chat Implementation
   isAIChatOpen: false,
   setIsAIChatOpen: (isOpen) => set({ isAIChatOpen: isOpen }),
 }));

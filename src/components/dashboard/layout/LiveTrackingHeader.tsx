@@ -32,7 +32,6 @@ export function LiveTrackingHeader({ metrics, onSync }: LiveTrackingHeaderProps)
             if (onSync) await onSync();
             else await new Promise(r => setTimeout(r, 1800)); // Demo delay
         } catch (e) {
-            console.error("Sync error:", e);
         }
         setSyncState('success');
         setTimeout(() => setSyncState('idle'), 2500);

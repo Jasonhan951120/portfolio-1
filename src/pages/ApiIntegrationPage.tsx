@@ -224,14 +224,12 @@ export default function ApiIntegrationPage() {
                 await saveTokenToBackend("google", tokenResponse.access_token, clinicId);
                 fetchClinicInfo();
             } catch (err) {
-                console.error("Failed to save token:", err);
                 alert("연동 정보를 저장하는 데 실패했습니다.");
             } finally {
                 setIsGoogleConnecting(false);
             }
         },
         onError: (err) => {
-            console.error("Google Login Failed", err);
             setIsGoogleConnecting(false);
         },
         onNonOAuthError: () => setIsGoogleConnecting(false)
@@ -269,7 +267,6 @@ export default function ApiIntegrationPage() {
                 throw new Error("No clinic profile found for your account.");
             }
         } catch (err: any) {
-            console.error("fetchClinicInfo error:", err);
             setError(err.message || "An unexpected error occurred while fetching clinic data.");
         } finally {
             setLoading(false);

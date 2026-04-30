@@ -15,13 +15,12 @@ export default function AdminLogin() {
     const [processingInvite, setProcessingInvite] = useState(false);
     const [agreed, setAgreed] = useState(false);
 
-    // Helper to get IP for Audit Trail
     const getClientIP = async () => {
         try {
             const res = await fetch('https://api.ipify.org?format=json');
             const data = await res.json();
             return data.ip;
-        } catch (err) {
+        } catch {
             return 'unknown';
         }
     };
@@ -29,23 +28,14 @@ export default function AdminLogin() {
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
 
-        // Developer Bypass: Enable demo mode via URL parameter
-        if (params.get("demo") === "true") {
-            sessionStorage.setItem("demo_mode", "true");
-            window.location.href = "/admin";
-            return;
-        }
-
         const token = params.get("invite");
         if (token) {
             setInviteToken(token);
-            // Store token in session storage so it survives the OAuth redirect flow without disk residue
             sessionStorage.setItem('invite_token', token);
         }
 
         supabase.auth.getSession().then(async ({ data: { session } }) => {
             if (session && !localStorage.getItem('invite_token')) {
-                // Log consent for existing session if not already logged (simplified)
                 const ip = await getClientIP();
                 await supabase.from('consent_logs').insert({
                     user_id: session.user.id,
@@ -61,14 +51,11 @@ export default function AdminLogin() {
 
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
             if (session) {
-                // If we have an invite token, process it before redirecting
                 const storedToken = sessionStorage.getItem('invite_token');
 
                 if (storedToken && !processingInvite) {
-                    console.log("Session detected, processing stored invitation token:", storedToken);
                     setProcessingInvite(true);
                     try {
-                        // Invoking accept-invite for user
                         const { data, error } = await supabase.functions.invoke('accept-invite', {
                             body: {
                                 token: storedToken,
@@ -78,26 +65,18 @@ export default function AdminLogin() {
                             }
                         });
 
-                        if (error) {
-                            console.error("accept-invite Edge Function returned error:", error);
-                            throw error;
-                        }
+                        if (error) throw error;
 
-                        console.log("Invite processed successfully:", data);
-                        // Clear the token so we don't process it again
+                        void data;
                         sessionStorage.removeItem('invite_token');
                         setInviteToken(null);
-
-                        // Force a profile refresh in AuthContext so it picks up the new clinic_id from the DB
                         await refreshProfile();
-
                         navigate("/admin");
 
                     } catch (err: any) {
-                        console.error("Failed to process invite:", err);
                         alert(`Failed to accept invitation: ${err.message || 'Unknown error'}`);
                         setProcessingInvite(false);
-                        supabase.auth.signOut(); // Sign out if invite fails so they don't get stuck
+                        supabase.auth.signOut();
                     }
                 } else if (!storedToken) {
                     navigate("/admin");
@@ -118,7 +97,6 @@ export default function AdminLogin() {
             }
         });
         if (error) {
-            console.error("Login Error:", error.message);
             alert(`Google login is not enabled for this project yet. Please use Email Login instead.`);
             setLoading(false);
         }
@@ -135,7 +113,6 @@ export default function AdminLogin() {
             }
         });
         if (error) {
-            console.error("OTP Error:", error.message);
             alert(`Failed to send login link: ${error.message}`);
         } else {
             setEmailSent(true);
@@ -156,7 +133,6 @@ export default function AdminLogin() {
 
     return (
         <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 relative overflow-hidden">
-            {/* Decorative Blur */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none" />
 
             <div className="w-full max-w-md bg-white border border-slate-200/60 p-10 rounded-[44px] shadow-luxury relative z-10 text-center">

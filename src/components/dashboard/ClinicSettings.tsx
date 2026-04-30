@@ -57,9 +57,7 @@ export function ClinicSettings({
 
     // DEBUG: Force Recognition Check
     useEffect(() => {
-        console.log("GOOGLE_API_KEY_LOAD_CHECK:", GOOGLE_API_KEY ? "DETECTED" : "MISSING");
         if (!GOOGLE_API_KEY) {
-            console.warn("CRITICAL: Google Maps API key is not being recognized by the bundler. Check Vercel/Local environment variables.");
         }
     }, [GOOGLE_API_KEY]);
 
@@ -525,9 +523,7 @@ export function ClinicSettings({
                                                                                     setLiveReviews([luxuryReview]);
                                                                                 }
                                                                                 
-                                                                                console.log("EMERGENCY SYNC: Clinical identity locked & luxury data injected.");
                                                                             } catch (err) {
-                                                                                console.error("REPUTATION_SYNC_CRITICAL_FAIL:", err);
                                                                                 setIsSynced(true);
                                                                                 setSyncStatus('synced');
                                                                             }
